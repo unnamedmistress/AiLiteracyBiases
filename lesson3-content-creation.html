@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 3: AI Content Creation & Ethics 🎨</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #FF6B9D 0%, #C44569 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .game-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .game-header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-breadcrumb {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .nav-breadcrumb a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .nav-breadcrumb a:hover {
+            opacity: 1;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .xp-bar {
+            width: 200px;
+            height: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .game-content {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .game-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sidebar {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lesson-progress {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .progress-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+
+        .progress-item.completed {
+            opacity: 0.5;
+        }
+
+        .progress-item.active {
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .main-panel {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .mode-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 20px 40px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mode-btn:hover, .mode-btn.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #FFD700;
+            transform: translateY(-2px);
+        }
+
+        .challenge-section {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .challenge-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .challenge-desc {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .activity-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .activity-card:hover {
+            transform: translateY(-5px);
+            border-color: #FFD700;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .activity-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .activity-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .activity-desc {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+
+        .activity-reward {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .tool-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .tool-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+
+        .tool-card:hover {
+            border-color: #FFD700;
+            transform: scale(1.05);
+        }
+
+        .ethics-warning {
+            background: rgba(255, 68, 68, 0.2);
+            border: 2px solid #EF4444;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .ethics-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #EF4444;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            color: #000;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 15px 30px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .prompt-builder {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .prompt-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            font-size: 16px;
+            font-family: inherit;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .prompt-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .prompt-tips {
+            display: grid;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .tip-chip {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tip-chip:hover {
+            background: rgba(255, 215, 0, 0.3);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            border-color: #FFD700;
+        }
+
+        .achievements-panel {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .achievement-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #FF6B9D;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .achievement-item.completed {
+            border-left-color: #FFD700;
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.2), transparent);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .quiz-option:hover {
+            border-color: #FFD700;
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct {
+            background: rgba(16, 185, 129, 0.3);
+            border-color: #10B981;
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: #EF4444;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #10B981;
+            border-radius: 15px;
+            padding: 20px;
+            min-width: 300px;
+            z-index: 1000;
+            animation: slideIn 0.5s;
+        }
+
+        .notification.hidden {
+            display: none;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <div class="logo">
+                🎨 Lesson 3: AI Content Creation
+            </div>
+            <div class="nav-breadcrumb">
+                <a href="index.html">🏠 Home</a> / 
+                <a href="game.html">Lesson 2</a> / 
+                <span>Lesson 3</span>
+            </div>
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-label">Level</div>
+                    <div class="stat-value" id="level">3</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">XP</div>
+                    <div class="xp-bar">
+                        <div class="xp-fill" id="xpBar" style="width: 0%;">
+                            <span id="xpText">0/200</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Points</div>
+                    <div class="stat-value">
+                        <span id="points">0</span> 🏆
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-content">
+            <!-- Left Sidebar -->
+            <div class="sidebar">
+                <h3>📚 Lesson Progress</h3>
+                <div class="lesson-progress">
+                    <div class="progress-item completed">✅ Lesson 1: Intro</div>
+                    <div class="progress-item completed">✅ Lesson 2: AI Literacy</div>
+                    <div class="progress-item active">🎨 Lesson 3: Content Creation</div>
+                    <div class="progress-item">🔮 Lesson 4: Advanced Prompting</div>
+                    <div class="progress-item">🌐 Lesson 5: AI Workflows</div>
+                    <div class="progress-item">🎓 Lesson 6: Capstone</div>
+                </div>
+
+                <h3 style="margin-top: 30px;">🎯 Today's Goals</h3>
+                <div class="achievement-item" id="goal1">
+                    <div style="font-weight: bold;">Create an AI Image</div>
+                    <div style="font-size: 12px; opacity: 0.8;">0/1 completed</div>
+                </div>
+                <div class="achievement-item" id="goal2">
+                    <div style="font-weight: bold;">Learn Ethics Guidelines</div>
+                    <div style="font-size: 12px; opacity: 0.8;">0/1 completed</div>
+                </div>
+                <div class="achievement-item" id="goal3">
+                    <div style="font-weight: bold;">Complete Prompt Challenge</div>
+                    <div style="font-size: 12px; opacity: 0.8;">0/3 completed</div>
+                </div>
+            </div>
+
+            <!-- Main Panel -->
+            <div class="main-panel">
+                <div class="mode-selector">
+                    <button class="mode-btn active" onclick="switchMode('game')" id="gameBtn">
+                        🎮 Game Mode
+                    </button>
+                    <button class="mode-btn" onclick="switchMode('presentation')" id="presentBtn">
+                        📚 Presentation Mode
+                    </button>
+                </div>
+
+                <!-- Game Mode Content -->
+                <div id="gameMode">
+                    <div class="challenge-section">
+                        <h1 class="challenge-title">🎨 Master AI Content Creation</h1>
+                        <p class="challenge-desc">
+                            Welcome to the creative side of AI! In this lesson, you'll learn to create stunning images, videos, and text with AI tools while understanding the ethical implications. Let's turn you into an AI artist! 🚀
+                        </p>
+
+                        <div class="ethics-warning">
+                            <div class="ethics-title">⚠️ Ethics First!</div>
+                            <p>Before we create, remember: With great AI power comes great responsibility. Always consider copyright, consent, deepfakes, and misinformation.</p>
+                        </div>
+
+                        <h3 style="margin: 30px 0 20px 0;">🛠️ Your Creative Arsenal</h3>
+                        <div class="tool-showcase">
+                            <div class="tool-card">
+                                <div style="font-size: 40px; margin-bottom: 10px;">🖼️</div>
+                                <div style="font-weight: bold;">DALL-E 3</div>
+                                <div style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Via ChatGPT Plus</div>
+                            </div>
+                            <div class="tool-card">
+                                <div style="font-size: 40px; margin-bottom: 10px;">🎨</div>
+                                <div style="font-weight: bold;">Midjourney</div>
+                                <div style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Discord-based</div>
+                            </div>
+                            <div class="tool-card">
+                                <div style="font-size: 40px; margin-bottom: 10px;">🎬</div>
+                                <div style="font-weight: bold;">Runway</div>
+                                <div style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Video Generation</div>
+                            </div>
+                            <div class="tool-card">
+                                <div style="font-size: 40px; margin-bottom: 10px;">🎭</div>
+                                <div style="font-weight: bold;">Stable Diffusion</div>
+                                <div style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Open Source</div>
+                            </div>
+                            <div class="tool-card">
+                                <div style="font-size: 40px; margin-bottom: 10px;">🎵</div>
+                                <div style="font-weight: bold;">Suno AI</div>
+                                <div style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Music Creation</div>
+                            </div>
+                            <div class="tool-card">
+                                <div style="font-size: 40px; margin-bottom: 10px;">🗣️</div>
+                                <div style="font-weight: bold;">ElevenLabs</div>
+                                <div style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Voice Cloning</div>
+                            </div>
+                        </div>
+
+                        <h3 style="margin: 40px 0 20px 0;">🎯 Challenge 1: Image Creation Mastery</h3>
+                        <div class="activity-card" onclick="startActivity('image')">
+                            <div class="activity-icon">🖼️</div>
+                            <div class="activity-title">Create 3 Different AI Images</div>
+                            <div class="activity-desc">
+                                Use ChatGPT's DALL-E 3 or another tool to create:
+                                <ul style="margin: 10px 0 10px 20px;">
+                                    <li>A realistic photo</li>
+                                    <li>An artistic illustration</li>
+                                    <li>An abstract concept visualization</li>
+                                </ul>
+                            </div>
+                            <div class="activity-reward">+75 XP | Unlock "AI Artist" badge</div>
+                        </div>
+
+                        <h3 style="margin: 30px 0 20px 0;">🎬 Challenge 2: Video Generation</h3>
+                        <div class="activity-card" onclick="startActivity('video')">
+                            <div class="activity-icon">🎬</div>
+                            <div class="activity-title">Create a 5-Second AI Video</div>
+                            <div class="activity-desc">
+                                Use Runway Gen-3 or similar to create a short video from a text prompt or image. Focus on smooth motion and clear narrative.
+                            </div>
+                            <div class="activity-reward">+100 XP | Unlock "Motion Master" badge</div>
+                        </div>
+
+                        <h3 style="margin: 30px 0 20px 0;">⚖️ Challenge 3: Ethics Quiz</h3>
+                        <div id="ethicsQuiz" class="challenge-section" style="background: rgba(255, 68, 68, 0.1);">
+                            <p style="margin-bottom: 20px;">Test your understanding of AI content creation ethics:</p>
+                            <div id="quizContainer"></div>
+                        </div>
+
+                        <h3 style="margin: 30px 0 20px 0;">🎓 Challenge 4: Prompt Engineering</h3>
+                        <div class="prompt-builder">
+                            <p style="margin-bottom: 15px; font-weight: bold;">Build the perfect image prompt:</p>
+                            <textarea class="prompt-input" id="promptInput" placeholder="Example: A serene mountain landscape at sunset, with snow-capped peaks reflected in a crystal-clear lake, painted in the style of Bob Ross, warm colors, peaceful atmosphere, 8K quality"></textarea>
+                            
+                            <div class="prompt-tips">
+                                <div style="font-weight: bold; margin: 15px 0 10px 0;">💡 Prompt Formula:</div>
+                                <div class="tip-chip" onclick="addToPrompt('[Subject]')">Subject (What)</div>
+                                <div class="tip-chip" onclick="addToPrompt('[Style]')">Style (How it looks)</div>
+                                <div class="tip-chip" onclick="addToPrompt('[Mood/Atmosphere]')">Mood</div>
+                                <div class="tip-chip" onclick="addToPrompt('[Lighting]')">Lighting</div>
+                                <div class="tip-chip" onclick="addToPrompt('[Quality: 8K, detailed, professional]')">Quality specs</div>
+                            </div>
+                            
+                            <button class="btn-primary" style="margin-top: 15px;" onclick="analyzePrompt()">Analyze My Prompt</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Presentation Mode Content -->
+                <div id="presentationMode" class="hidden">
+                    <div class="challenge-section">
+                        <h1 class="challenge-title">🎨 AI Content Creation & Ethics</h1>
+                        
+                        <div style="margin: 30px 0;">
+                            <h2 style="font-size: 28px; margin-bottom: 15px;">📖 Overview</h2>
+                            <p style="font-size: 16px; line-height: 1.8; opacity: 0.9;">
+                                AI has revolutionized content creation, making it possible for anyone to generate professional-quality images, videos, music, and text in seconds. But with this power comes significant ethical responsibilities.
+                            </p>
+                        </div>
+
+                        <div style="margin: 30px 0;">
+                            <h2 style="font-size: 28px; margin-bottom: 15px;">🛠️ Popular AI Content Tools</h2>
+                            <div class="tool-showcase">
+                                <div class="tool-card">
+                                    <div style="font-size: 40px; margin-bottom: 10px;">🖼️</div>
+                                    <div style="font-weight: bold; margin-bottom: 10px;">DALL-E 3</div>
+                                    <div style="font-size: 13px; opacity: 0.8; line-height: 1.5;">
+                                        OpenAI's image generator. Best for realistic photos and precise instruction following. Integrated in ChatGPT Plus.
+                                    </div>
+                                </div>
+                                <div class="tool-card">
+                                    <div style="font-size: 40px; margin-bottom: 10px;">🎨</div>
+                                    <div style="font-weight: bold; margin-bottom: 10px;">Midjourney</div>
+                                    <div style="font-size: 13px; opacity: 0.8; line-height: 1.5;">
+                                        Artistic and stylized images. Known for beautiful aesthetics. Discord-based interface.
+                                    </div>
+                                </div>
+                                <div class="tool-card">
+                                    <div style="font-size: 40px; margin-bottom: 10px;">🎬</div>
+                                    <div style="font-weight: bold; margin-bottom: 10px;">Runway Gen-3</div>
+                                    <div style="font-size: 13px; opacity: 0.8; line-height: 1.5;">
+                                        Text-to-video and image-to-video. Creates short, high-quality video clips.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ethics-warning" style="margin: 40px 0;">
+                            <div class="ethics-title">⚠️ Critical Ethics Issues</div>
+                            <div style="margin-top: 15px; line-height: 1.8;">
+                                <p style="margin-bottom: 15px;"><strong>1. Copyright & Ownership</strong></p>
+                                <ul style="margin-left: 20px; margin-bottom: 20px;">
+                                    <li>AI models trained on copyrighted work without permission</li>
+                                    <li>Who owns AI-generated content? (Still legally unclear)</li>
+                                    <li>Can you sell AI art commercially?</li>
+                                </ul>
+
+                                <p style="margin-bottom: 15px;"><strong>2. Deepfakes & Misinformation</strong></p>
+                                <ul style="margin-left: 20px; margin-bottom: 20px;">
+                                    <li>Creating fake videos of real people</li>
+                                    <li>Manipulating public opinion</li>
+                                    <li>Revenge porn and harassment</li>
+                                </ul>
+
+                                <p style="margin-bottom: 15px;"><strong>3. Artist Impact</strong></p>
+                                <ul style="margin-left: 20px; margin-bottom: 20px;">
+                                    <li>AI trained on artists' work without consent</li>
+                                    <li>Job displacement for creatives</li>
+                                    <li>Devaluation of human creativity</li>
+                                </ul>
+
+                                <p style="margin-bottom: 15px;"><strong>4. Consent & Privacy</strong></p>
+                                <ul style="margin-left: 20px;">
+                                    <li>Voice cloning without permission</li>
+                                    <li>Using someone's likeness</li>
+                                    <li>Training data privacy concerns</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div style="margin: 40px 0;">
+                            <h2 style="font-size: 28px; margin-bottom: 15px;">✨ Prompt Engineering Mastery</h2>
+                            <div style="background: rgba(0, 0, 0, 0.3); border-radius: 15px; padding: 25px;">
+                                <p style="margin-bottom: 20px;"><strong>The Perfect Prompt Formula:</strong></p>
+                                <div style="background: rgba(255, 215, 0, 0.1); border-left: 4px solid #FFD700; padding: 15px; margin-bottom: 15px;">
+                                    <code style="font-size: 14px; line-height: 1.8;">
+                                        [Subject] + [Action/Pose] + [Style] + [Mood/Atmosphere] + [Lighting] + [Camera Angle] + [Quality Specs]
+                                    </code>
+                                </div>
+
+                                <p style="margin: 20px 0 15px 0;"><strong>Example Breakdown:</strong></p>
+                                <div style="background: rgba(0, 0, 0, 0.2); padding: 20px; border-radius: 10px; font-size: 14px; line-height: 1.8;">
+                                    <span style="color: #FFD700;">Subject:</span> "A majestic lion"<br>
+                                    <span style="color: #FF6B9D;">Action:</span> "roaring on a cliff edge"<br>
+                                    <span style="color: #9D4EDD;">Style:</span> "cinematic photography"<br>
+                                    <span style="color: #00D9FF;">Mood:</span> "powerful and dramatic"<br>
+                                    <span style="color: #10B981;">Lighting:</span> "golden hour backlighting"<br>
+                                    <span style="color: #F59E0B;">Camera:</span> "low angle shot"<br>
+                                    <span style="color: #EF4444;">Quality:</span> "8K, highly detailed, professional"
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin: 40px 0;">
+                            <h2 style="font-size: 28px; margin-bottom: 15px;">🎯 Best Practices</h2>
+                            <div style="display: grid; gap: 15px;">
+                                <div style="background: rgba(16, 185, 129, 0.2); border-left: 4px solid #10B981; padding: 20px; border-radius: 10px;">
+                                    <strong>✅ DO:</strong> Disclose when content is AI-generated
+                                </div>
+                                <div style="background: rgba(16, 185, 129, 0.2); border-left: 4px solid #10B981; padding: 20px; border-radius: 10px;">
+                                    <strong>✅ DO:</strong> Use AI to augment your creativity, not replace it
+                                </div>
+                                <div style="background: rgba(16, 185, 129, 0.2); border-left: 4px solid #10B981; padding: 20px; border-radius: 10px;">
+                                    <strong>✅ DO:</strong> Check usage rights before commercial use
+                                </div>
+                                <div style="background: rgba(239, 68, 68, 0.2); border-left: 4px solid #EF4444; padding: 20px; border-radius: 10px;">
+                                    <strong>❌ DON'T:</strong> Create deepfakes of real people without consent
+                                </div>
+                                <div style="background: rgba(239, 68, 68, 0.2); border-left: 4px solid #EF4444; padding: 20px; border-radius: 10px;">
+                                    <strong>❌ DON'T:</strong> Claim AI work as entirely your own creation
+                                </div>
+                                <div style="background: rgba(239, 68, 68, 0.2); border-left: 4px solid #EF4444; padding: 20px; border-radius: 10px;">
+                                    <strong>❌ DON'T:</strong> Use AI to spread misinformation
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 40px;">
+                            <button class="btn-primary" onclick="switchMode('game')">Start Activities →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="achievements-panel">
+                <h3 style="margin-bottom: 15px;">🏅 Badges</h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px;">
+                    <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px; text-align: center; font-size: 32px;" title="AI Artist">🎨</div>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; text-align: center; font-size: 32px; opacity: 0.3;" title="Locked">🎬</div>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; text-align: center; font-size: 32px; opacity: 0.3;" title="Locked">⚖️</div>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; text-align: center; font-size: 32px; opacity: 0.3;" title="Locked">✨</div>
+                </div>
+
+                <h3 style="margin: 30px 0 15px 0;">📊 Lesson Stats</h3>
+                <div class="achievement-item">
+                    <div style="font-weight: bold;">Completion</div>
+                    <div style="font-size: 12px; opacity: 0.8; margin-top: 5px;">0% complete</div>
+                    <div style="height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; margin-top: 8px; overflow: hidden;">
+                        <div style="height: 100%; width: 0%; background: #FFD700; transition: width 0.5s;"></div>
+                    </div>
+                </div>
+
+                <div class="achievement-item">
+                    <div style="font-weight: bold;">Images Created</div>
+                    <div style="font-size: 24px; font-weight: bold; color: #FFD700; margin-top: 5px;">0</div>
+                </div>
+
+                <div class="achievement-item">
+                    <div style="font-weight: bold;">Time Spent</div>
+                    <div style="font-size: 24px; font-weight: bold; color: #FFD700; margin-top: 5px;">0 min</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification hidden">
+        <div id="notificationContent"></div>
+    </div>
+
+    <script>
+        const gameState = {
+            xp: 0,
+            xpToNext: 200,
+            points: 0,
+            mode: 'game',
+            imagesCreated: 0,
+            ethicsScore: 0
+        };
+
+        const ethicsQuestions = [
+            {
+                q: "You create an AI image in the style of a famous artist. What should you do?",
+                options: [
+                    "Claim it as your original work",
+                    "Disclose it's AI-generated and mention the style inspiration",
+                    "Sell it without mentioning AI",
+                    "It's fine, AI art has no rules"
+                ],
+                correct: 1,
+                explanation: "Always disclose AI generation and acknowledge style influences. Transparency is key!"
+            },
+            {
+                q: "Can you create a deepfake video of a celebrity for your YouTube channel?",
+                options: [
+                    "Yes, if it's funny",
+                    "Yes, if I label it as parody",
+                    "No, not without explicit consent",
+                    "Only if I monetize it"
+                ],
+                correct: 2,
+                explanation: "Creating deepfakes without consent violates privacy and can cause harm, even with labels."
+            },
+            {
+                q: "Who owns the copyright to an AI-generated image?",
+                options: [
+                    "You, the user",
+                    "The AI company",
+                    "It's public domain",
+                    "It's legally unclear and varies by jurisdiction"
+                ],
+                correct: 3,
+                explanation: "AI copyright is still being determined in courts. Check your tool's terms and local laws!"
+            }
+        ];
+
+        function switchMode(mode) {
+            gameState.mode = mode;
+            if (mode === 'game') {
+                document.getElementById('gameMode').classList.remove('hidden');
+                document.getElementById('presentationMode').classList.add('hidden');
+                document.getElementById('gameBtn').classList.add('active');
+                document.getElementById('presentBtn').classList.remove('active');
+            } else {
+                document.getElementById('gameMode').classList.add('hidden');
+                document.getElementById('presentationMode').classList.remove('hidden');
+                document.getElementById('gameBtn').classList.remove('active');
+                document.getElementById('presentBtn').classList.add('active');
+            }
+        }
+
+        function startActivity(type) {
+            if (type === 'image') {
+                alert('🎨 Image Creation Challenge!\n\nGo to ChatGPT (with Plus) or another AI image tool and create 3 images:\n\n1. A realistic photo\n2. An artistic illustration\n3. An abstract concept\n\nWhen done, come back and click "Mark Complete" (feature coming soon!)');
+                addXP(75);
+            } else if (type === 'video') {
+                alert('🎬 Video Creation Challenge!\n\nGo to Runway (runway.ml) or similar tool and create a 5-second video.\n\nTry text-to-video or image-to-video!\n\nWhen done, come back and mark complete.');
+                addXP(100);
+            }
+        }
+
+        function addXP(amount) {
+            gameState.xp += amount;
+            gameState.points += amount;
+            updateUI();
+            showNotification(`+${amount} XP! 🎉`);
+        }
+
+        function updateUI() {
+            document.getElementById('points').textContent = gameState.points;
+            const xpPercent = (gameState.xp / gameState.xpToNext) * 100;
+            document.getElementById('xpBar').style.width = xpPercent + '%';
+            document.getElementById('xpText').textContent = `${gameState.xp}/${gameState.xpToNext}`;
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const content = document.getElementById('notificationContent');
+            content.innerHTML = `<div style="font-size: 18px; font-weight: bold;">${message}</div>`;
+            notification.className = 'notification';
+            setTimeout(() => notification.classList.add('hidden'), 3000);
+        }
+
+        function addToPrompt(text) {
+            const input = document.getElementById('promptInput');
+            input.value += (input.value ? ' ' : '') + text;
+            input.focus();
+        }
+
+        function analyzePrompt() {
+            const prompt = document.getElementById('promptInput').value;
+            if (!prompt.trim()) {
+                alert('Please enter a prompt first!');
+                return;
+            }
+
+            const components = {
+                subject: /(?:a |an |the )?\w+/i.test(prompt),
+                style: /(style|painted|photo|illustration|render)/i.test(prompt),
+                mood: /(atmosphere|mood|feeling|emotion)/i.test(prompt),
+                quality: /(8k|4k|detailed|high quality|professional)/i.test(prompt)
+            };
+
+            let score = Object.values(components).filter(Boolean).length;
+            let feedback = `Prompt Analysis: ${score}/4 components detected\n\n`;
+            
+            if (!components.subject) feedback += '❌ Add a clear subject\n';
+            else feedback += '✅ Subject found\n';
+            
+            if (!components.style) feedback += '❌ Add style/medium\n';
+            else feedback += '✅ Style found\n';
+            
+            if (!components.mood) feedback += '❌ Add mood/atmosphere\n';
+            else feedback += '✅ Mood found\n';
+            
+            if (!components.quality) feedback += '❌ Add quality specs\n';
+            else feedback += '✅ Quality specs found\n';
+
+            if (score >= 3) {
+                addXP(50);
+                feedback += '\n🎉 Great prompt! +50 XP';
+            }
+
+            alert(feedback);
+        }
+
+        // Load ethics quiz
+        function loadEthicsQuiz() {
+            let html = '';
+            ethicsQuestions.forEach((q, i) => {
+                html += `
+                    <div style="margin-bottom: 30px;">
+                        <div style="font-weight: bold; margin-bottom: 15px;">${i + 1}. ${q.q}</div>
+                        <div class="quiz-options" id="quiz${i}">
+                            ${q.options.map((opt, j) => `
+                                <div class="quiz-option" onclick="answerQuestion(${i}, ${j}, ${q.correct})">${opt}</div>
+                            `).join('')}
+                        </div>
+                        <div id="feedback${i}" style="display: none; margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 10px;"></div>
+                    </div>
+                `;
+            });
+            document.getElementById('quizContainer').innerHTML = html;
+        }
+
+        function answerQuestion(qIndex, answer, correct) {
+            const options = document.querySelectorAll(`#quiz${qIndex} .quiz-option`);
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+            
+            if (answer === correct) {
+                options[answer].classList.add('correct');
+                addXP(50);
+                document.getElementById(`feedback${qIndex}`).innerHTML = `
+                    <div style="color: #10B981; font-weight: bold; margin-bottom: 10px;">✅ Correct! +50 XP</div>
+                    <div>${ethicsQuestions[qIndex].explanation}</div>
+                `;
+            } else {
+                options[answer].classList.add('incorrect');
+                options[correct].classList.add('correct');
+                document.getElementById(`feedback${qIndex}`).innerHTML = `
+                    <div style="color: #EF4444; font-weight: bold; margin-bottom: 10px;">❌ Not quite!</div>
+                    <div>${ethicsQuestions[qIndex].explanation}</div>
+                `;
+            }
+            
+            document.getElementById(`feedback${qIndex}`).style.display = 'block';
+        }
+
+        // Initialize
+        loadEthicsQuiz();
+        updateUI();
+    </script>
+</body>
+</html>
