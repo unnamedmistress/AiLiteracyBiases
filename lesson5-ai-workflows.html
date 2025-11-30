@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 5: AI Workflows Ìºê</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #00C9FF 0%, #92FE9D 100%);
+            min-height: 100vh;
+            color: #1a1a1a;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .logo { font-size: 28px; font-weight: bold; color: #00C9FF; }
+        .nav { display: flex; gap: 15px; font-size: 14px; }
+        .nav a { color: #1a1a1a; text-decoration: none; opacity: 0.7; transition: 0.3s; }
+        .nav a:hover { opacity: 1; }
+        .stats { display: flex; gap: 20px; }
+        .stat-value { font-size: 20px; font-weight: bold; }
+        .xp-bar { width: 180px; height: 18px; background: rgba(0,0,0,0.1); border-radius: 10px; overflow: hidden; }
+        .xp-fill { height: 100%; background: linear-gradient(90deg, #00C9FF, #92FE9D); transition: width 0.5s; font-size: 11px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+        .content { display: grid; grid-template-columns: 200px 1fr 280px; gap: 20px; }
+        @media (max-width: 1200px) { .content { grid-template-columns: 1fr; } }
+        .sidebar, .panel { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 20px; padding: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        .mode-toggle { display: flex; gap: 15px; justify-content: center; margin-bottom: 25px; }
+        .mode-btn {
+            background: rgba(0,201,255,0.1);
+            border: 2px solid rgba(0,201,255,0.3);
+            border-radius: 12px;
+            padding: 15px 30px;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .mode-btn.active, .mode-btn:hover { background: rgba(0,201,255,0.2); border-color: #00C9FF; }
+        .workflow-canvas {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            min-height: 400px;
+            position: relative;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .workflow-node {
+            position: absolute;
+            background: white;
+            border: 3px solid #00C9FF;
+            border-radius: 12px;
+            padding: 15px 20px;
+            min-width: 140px;
+            text-align: center;
+            cursor: move;
+            box-shadow: 0 4px 12px rgba(0,201,255,0.2);
+            transition: 0.3s;
+        }
+        .workflow-node:hover { transform: scale(1.05); box-shadow: 0 8px 24px rgba(0,201,255,0.3); }
+        .workflow-node.input { border-color: #92FE9D; background: linear-gradient(135deg, #92FE9D, #00C9FF); color: white; }
+        .workflow-node.process { border-color: #00C9FF; }
+        .workflow-node.output { border-color: #FFD700; background: linear-gradient(135deg, #FFD700, #FFA500); color: white; }
+        .node-icon { font-size: 28px; margin-bottom: 8px; }
+        .node-title { font-weight: bold; font-size: 14px; }
+        .node-desc { font-size: 11px; opacity: 0.8; margin-top: 4px; }
+        .connection-line { position: absolute; height: 3px; background: #00C9FF; transform-origin: left center; }
+        .example-workflow {
+            background: rgba(0,201,255,0.05);
+            border-left: 4px solid #00C9FF;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .activity-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .activity-card:hover { transform: translateY(-5px); border-color: #00C9FF; box-shadow: 0 10px 30px rgba(0,201,255,0.2); }
+        .btn-primary {
+            background: linear-gradient(135deg, #00C9FF, #92FE9D);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,201,255,0.3); }
+        .hidden { display: none; }
+        .progress-item { padding: 8px 0; font-size: 13px; }
+        .progress-item.completed { opacity: 0.5; text-decoration: line-through; }
+        .progress-item.active { font-weight: bold; color: #00C9FF; }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 2px solid #10B981;
+            border-radius: 15px;
+            padding: 15px 20px;
+            min-width: 250px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: slideIn 0.5s;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin: 25px 0;
+            position: relative;
+        }
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: rgba(0,201,255,0.1);
+            border-radius: 10px;
+            margin: 0 5px;
+            position: relative;
+        }
+        .step.active { background: linear-gradient(135deg, #00C9FF, #92FE9D); color: white; }
+        .step-number { font-size: 24px; font-weight: bold; }
+        .step-label { font-size: 12px; margin-top: 5px; }
+        .tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .tool-card { background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 15px; text-align: center; transition: 0.3s; }
+        .tool-card:hover { border-color: #00C9FF; transform: translateY(-3px); }
+        .tool-icon { font-size: 36px; margin-bottom: 10px; }
+        svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Ìºê Lesson 5: AI Workflows</div>
+            <div class="nav">
+                <a href="index.html">Ìø† Home</a>
+                <a href="game.html">L2: Literacy</a>
+                <a href="lesson3-content-creation.html">L3: Content</a>
+                <a href="lesson4-advanced-prompting.html">L4: Prompting</a>
+                <span>L5: Workflows</span>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div style="font-size: 11px; opacity: 0.7;">Level</div>
+                    <div class="stat-value">5</div>
+                </div>
+                <div class="stat">
+                    <div style="font-size: 11px; opacity: 0.7;">XP</div>
+                    <div class="xp-bar"><div class="xp-fill" id="xpBar" style="width: 0%;"><span id="xpText">0/300</span></div></div>
+                </div>
+                <div class="stat">
+                    <div style="font-size: 11px; opacity: 0.7;">Points</div>
+                    <div class="stat-value"><span id="points">0</span> ÌøÜ</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="sidebar">
+                <h3 style="margin-bottom: 15px; font-size: 16px;">Ì≥ö Progress</h3>
+                <div class="progress-item completed">‚úÖ L1: Intro</div>
+                <div class="progress-item completed">‚úÖ L2: Literacy</div>
+                <div class="progress-item completed">‚úÖ L3: Content</div>
+                <div class="progress-item completed">‚úÖ L4: Prompting</div>
+                <div class="progress-item active">Ìºê L5: Workflows</div>
+                <div class="progress-item">Ìæì L6: Capstone</div>
+            </div>
+
+            <div class="panel">
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="switchMode('game')" id="gameBtn">ÌæÆ Interactive</button>
+                    <button class="mode-btn" onclick="switchMode('present')" id="presentBtn">Ì≥ö Learn</button>
+                </div>
+
+                <div id="gameMode">
+                    <h1 style="font-size: 28px; margin-bottom: 15px; color: #00C9FF;">Ìºê Build AI Workflows</h1>
+                    <p style="opacity: 0.8; margin-bottom: 30px;">
+                        Create powerful multi-AI systems by chaining tools together. Think of it like building with LEGO blocks!
+                    </p>
+
+                    <h3 style="margin: 25px 0 15px 0; color: #00C9FF;">ÌæØ Challenge 1: Content Creation Pipeline</h3>
+                    <div class="activity-card" onclick="startWorkflow('content')">
+                        <div style="font-size: 36px; margin-bottom: 10px;">Ì≥ù</div>
+                        <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">Build a Blog Post Factory</div>
+                        <div style="font-size: 14px; opacity: 0.8; margin-bottom: 15px;">
+                            Chain GPT-5 ‚Üí DALL-E 3 ‚Üí Grammarly AI ‚Üí SEO optimizer
+                        </div>
+                        <div class="step-indicator">
+                            <div class="step">
+                                <div class="step-number">1Ô∏è‚É£</div>
+                                <div class="step-label">Research</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2Ô∏è‚É£</div>
+                                <div class="step-label">Write</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3Ô∏è‚É£</div>
+                                <div class="step-label">Visualize</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4Ô∏è‚É£</div>
+                                <div class="step-label">Optimize</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(0,201,255,0.1); padding: 10px; border-radius: 8px; font-size: 12px; font-weight: bold; color: #00C9FF;">
+                            +150 XP | Workflow Master Badge
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 25px 0 15px 0; color: #00C9FF;">Ì¥¨ Challenge 2: Data Analysis Workflow</h3>
+                    <div class="activity-card" onclick="startWorkflow('data')">
+                        <div style="font-size: 36px; margin-bottom: 10px;">Ì≥ä</div>
+                        <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">Automate Data Insights</div>
+                        <div style="font-size: 14px; opacity: 0.8; margin-bottom: 15px;">
+                            CSV Upload ‚Üí Claude analysis ‚Üí GPT-5 visualization ‚Üí Executive summary
+                        </div>
+                        <div style="background: rgba(0,201,255,0.1); padding: 10px; border-radius: 8px; font-size: 12px; font-weight: bold; color: #00C9FF;">
+                            +120 XP | Data Pipeline Badge
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 25px 0 15px 0; color: #00C9FF;">Ì≤¨ Challenge 3: Customer Support Bot</h3>
+                    <div class="activity-card" onclick="startWorkflow('support')">
+                        <div style="font-size: 36px; margin-bottom: 10px;">Ì¥ñ</div>
+                        <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">Multi-Layer Support System</div>
+                        <div style="font-size: 14px; opacity: 0.8; margin-bottom: 15px;">
+                            Ticket ‚Üí Classify (GPT-5) ‚Üí Route ‚Üí Respond ‚Üí Sentiment check ‚Üí Human escalation
+                        </div>
+                        <div style="background: rgba(0,201,255,0.1); padding: 10px; border-radius: 8px; font-size: 12px; font-weight: bold; color: #00C9FF;">
+                            +130 XP | Automation Expert Badge
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 25px 0 15px 0; color: #00C9FF;">Ìæ® Interactive Workflow Builder</h3>
+                    <div class="workflow-canvas" id="canvas">
+                        <svg id="connections"></svg>
+                        <div class="workflow-node input" style="left: 50px; top: 50px;">
+                            <div class="node-icon">Ì≥•</div>
+                            <div class="node-title">Input</div>
+                            <div class="node-desc">User Request</div>
+                        </div>
+                        <div class="workflow-node process" style="left: 250px; top: 50px;">
+                            <div class="node-icon">Ì¥ñ</div>
+                            <div class="node-title">AI Process</div>
+                            <div class="node-desc">GPT-5</div>
+                        </div>
+                        <div class="workflow-node process" style="left: 250px; top: 180px;">
+                            <div class="node-icon">Ìæ®</div>
+                            <div class="node-title">Enhance</div>
+                            <div class="node-desc">DALL-E 3</div>
+                        </div>
+                        <div class="workflow-node output" style="left: 450px; top: 115px;">
+                            <div class="node-icon">‚úÖ</div>
+                            <div class="node-title">Output</div>
+                            <div class="node-desc">Final Result</div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; font-size: 13px; opacity: 0.7; margin-top: -10px;">
+                        Ì≤° This is a visual demo. Real workflow builders: Zapier, Make, n8n, LangChain
+                    </p>
+                </div>
+
+                <div id="presentMode" class="hidden">
+                    <h1 style="font-size: 28px; margin-bottom: 15px; color: #00C9FF;">Ìºê AI Workflow Patterns</h1>
+
+                    <h2 style="font-size: 22px; margin: 25px 0 15px 0; color: #00C9FF;">Ì¥Ñ Common Workflow Types</h2>
+                    
+                    <div class="example-workflow">
+                        <h3 style="font-size: 18px; margin-bottom: 10px;">1. Sequential Pipeline</h3>
+                        <p style="font-size: 14px; margin-bottom: 10px;">Each AI tool processes output from the previous one.</p>
+                        <div style="background: white; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 13px;">
+                            Input ‚Üí AI 1 (Draft) ‚Üí AI 2 (Edit) ‚Üí AI 3 (Format) ‚Üí Output
+                        </div>
+                        <p style="font-size: 12px; margin-top: 10px; opacity: 0.8;">‚úÖ Best for: Content creation, data transformation</p>
+                    </div>
+
+                    <div class="example-workflow">
+                        <h3 style="font-size: 18px; margin-bottom: 10px;">2. Parallel Processing</h3>
+                        <p style="font-size: 14px; margin-bottom: 10px;">Multiple AIs work simultaneously on the same input.</p>
+                        <div style="background: white; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 13px;">
+                            Input ‚Üí [AI 1 (Summary) | AI 2 (Keywords) | AI 3 (Sentiment)] ‚Üí Combine ‚Üí Output
+                        </div>
+                        <p style="font-size: 12px; margin-top: 10px; opacity: 0.8;">‚úÖ Best for: Multi-perspective analysis</p>
+                    </div>
+
+                    <div class="example-workflow">
+                        <h3 style="font-size: 18px; margin-bottom: 10px;">3. Conditional Routing</h3>
+                        <p style="font-size: 14px; margin-bottom: 10px;">AI decides which path to take based on input type.</p>
+                        <div style="background: white; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 13px;">
+                            Input ‚Üí Classifier ‚Üí [If urgent: Fast AI] OR [If complex: Deep AI] ‚Üí Output
+                        </div>
+                        <p style="font-size: 12px; margin-top: 10px; opacity: 0.8;">‚úÖ Best for: Customer support, triage systems</p>
+                    </div>
+
+                    <div class="example-workflow">
+                        <h3 style="font-size: 18px; margin-bottom: 10px;">4. Feedback Loop</h3>
+                        <p style="font-size: 14px; margin-bottom: 10px;">AI output gets reviewed and refined iteratively.</p>
+                        <div style="background: white; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 13px;">
+                            Input ‚Üí AI Generate ‚Üí Quality Check ‚Üí [If poor: Regenerate] ‚Üí Output
+                        </div>
+                        <p style="font-size: 12px; margin-top: 10px; opacity: 0.8;">‚úÖ Best for: High-quality output requirements</p>
+                    </div>
+
+                    <h2 style="font-size: 22px; margin: 30px 0 15px 0; color: #00C9FF;">Ìª†Ô∏è Popular Workflow Tools</h2>
+                    <div class="tool-grid">
+                        <div class="tool-card">
+                            <div class="tool-icon">‚ö°</div>
+                            <div style="font-weight: bold; margin-bottom: 5px;">Zapier</div>
+                            <div style="font-size: 12px; opacity: 0.8;">No-code automation</div>
+                        </div>
+                        <div class="tool-card">
+                            <div class="tool-icon">Ìæ≠</div>
+                            <div style="font-weight: bold; margin-bottom: 5px;">Make (Integromat)</div>
+                            <div style="font-size: 12px; opacity: 0.8;">Visual workflow builder</div>
+                        </div>
+                        <div class="tool-card">
+                            <div class="tool-icon">Ì¥ó</div>
+                            <div style="font-weight: bold; margin-bottom: 5px;">n8n</div>
+                            <div style="font-size: 12px; opacity: 0.8;">Open-source automation</div>
+                        </div>
+                        <div class="tool-card">
+                            <div class="tool-icon">Ì∞ç</div>
+                            <div style="font-weight: bold; margin-bottom: 5px;">LangChain</div>
+                            <div style="font-size: 12px; opacity: 0.8;">Python framework for LLMs</div>
+                        </div>
+                        <div class="tool-card">
+                            <div class="tool-icon">Ìºä</div>
+                            <div style="font-weight: bold; margin-bottom: 5px;">Flowise</div>
+                            <div style="font-size: 12px; opacity: 0.8;">Drag-and-drop LLM apps</div>
+                        </div>
+                        <div class="tool-card">
+                            <div class="tool-icon">ÌæØ</div>
+                            <div style="font-weight: bold; margin-bottom: 5px;">Pipedream</div>
+                            <div style="font-size: 12px; opacity: 0.8;">Code + no-code hybrid</div>
+                        </div>
+                    </div>
+
+                    <h2 style="font-size: 22px; margin: 30px 0 15px 0; color: #00C9FF;">Ì≤° Real-World Examples</h2>
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #e0e0e0;">
+                        <div style="margin-bottom: 20px;">
+                            <strong>Marketing Team Workflow:</strong>
+                            <div style="margin-top: 8px; padding-left: 15px; font-size: 14px; line-height: 1.8;">
+                                1. Topic brainstorm (GPT-5)<br>
+                                2. Blog post draft (Claude 3.7)<br>
+                                3. Generate images (DALL-E 3)<br>
+                                4. SEO optimization (Surfer SEO AI)<br>
+                                5. Social media posts (Jasper AI)<br>
+                                6. Schedule posts (Buffer/Hootsuite)
+                            </div>
+                        </div>
+                        <div>
+                            <strong>Software Development Workflow:</strong>
+                            <div style="margin-top: 8px; padding-left: 15px; font-size: 14px; line-height: 1.8;">
+                                1. Code generation (GitHub Copilot)<br>
+                                2. Security scan (Snyk AI)<br>
+                                3. Code review (CodeRabbit)<br>
+                                4. Documentation (Mintlify)<br>
+                                5. Test generation (Codium AI)<br>
+                                6. Deploy (automated CI/CD)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="btn-primary" onclick="switchMode('game')">Build Workflows ‚Üí</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3 style="margin-bottom: 15px; font-size: 16px; color: #00C9FF;">ÌæØ Workflows</h3>
+                <div style="background: rgba(0,201,255,0.1); border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 13px;">
+                    <div style="font-weight: bold;">Content Pipeline</div>
+                    <div style="font-size: 11px; opacity: 0.7; margin-top: 3px;">Not started</div>
+                </div>
+                <div style="background: rgba(0,201,255,0.1); border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 13px;">
+                    <div style="font-weight: bold;">Data Analysis</div>
+                    <div style="font-size: 11px; opacity: 0.7; margin-top: 3px;">Not started</div>
+                </div>
+                <div style="background: rgba(0,201,255,0.1); border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 13px;">
+                    <div style="font-weight: bold;">Support Bot</div>
+                    <div style="font-size: 11px; opacity: 0.7; margin-top: 3px;">Not started</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification hidden"><div id="notificationContent"></div></div>
+
+    <script>
+        const state = { xp: 0, xpToNext: 300, points: 0, mode: 'game' };
+
+        function switchMode(mode) {
+            state.mode = mode;
+            document.getElementById('gameMode').classList.toggle('hidden', mode !== 'game');
+            document.getElementById('presentMode').classList.toggle('hidden', mode !== 'present');
+            document.getElementById('gameBtn').classList.toggle('active', mode === 'game');
+            document.getElementById('presentBtn').classList.toggle('active', mode === 'present');
+        }
+
+        function startWorkflow(type) {
+            const workflows = {
+                content: { title: 'Content Creation Pipeline', instructions: 'Design a 4-step workflow:\n\n1. Research topic with GPT-5\n2. Generate first draft\n3. Create header image with DALL-E 3\n4. Optimize for SEO\n\nThink about what data flows between each step!', xp: 150 },
+                data: { title: 'Data Analysis Workflow', instructions: 'Build an automated analysis pipeline:\n\n1. Upload CSV data\n2. Claude analyzes trends\n3. GPT-5 creates visualizations\n4. Generate executive summary\n\nConsider error handling and data validation.', xp: 120 },
+                support: { title: 'Customer Support Bot', instructions: 'Create a multi-layer support system:\n\n1. Classify ticket urgency/type\n2. Route to appropriate AI specialist\n3. Generate response\n4. Sentiment analysis\n5. Escalate to human if needed\n\nThink about when humans should intervene!', xp: 130 }
+            };
+            const w = workflows[type];
+            alert(`${w.title}\n\n${w.instructions}\n\nWhen designed, return for +${w.xp} XP!`);
+            addXP(w.xp);
+        }
+
+        function addXP(amount) {
+            state.xp += amount;
+            state.points += amount;
+            updateUI();
+            showNotification(`+${amount} XP! Ìæâ`);
+        }
+
+        function updateUI() {
+            document.getElementById('points').textContent = state.points;
+            const pct = Math.min((state.xp / state.xpToNext) * 100, 100);
+            document.getElementById('xpBar').style.width = pct + '%';
+            document.getElementById('xpText').textContent = `${state.xp}/${state.xpToNext}`;
+        }
+
+        function showNotification(msg) {
+            const n = document.getElementById('notification');
+            document.getElementById('notificationContent').innerHTML = `<div style="font-size: 16px; font-weight: bold; color: #00C9FF;">${msg}</div>`;
+            n.className = 'notification';
+            setTimeout(() => n.classList.add('hidden'), 3000);
+        }
+
+        // Draw connection lines between workflow nodes
+        function drawConnections() {
+            const svg = document.getElementById('connections');
+            const nodes = document.querySelectorAll('.workflow-node');
+            const connections = [
+                [0, 1], [1, 2], [1, 3], [2, 3]
+            ];
+            
+            connections.forEach(([from, to]) => {
+                const fromNode = nodes[from];
+                const toNode = nodes[to];
+                const fromRect = fromNode.getBoundingClientRect();
+                const toRect = toNode.getBoundingClientRect();
+                const canvas = document.getElementById('canvas').getBoundingClientRect();
+                
+                const x1 = fromRect.left + fromRect.width - canvas.left;
+                const y1 = fromRect.top + fromRect.height / 2 - canvas.top;
+                const x2 = toRect.left - canvas.left;
+                const y2 = toRect.top + toRect.height / 2 - canvas.top;
+                
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', x1);
+                line.setAttribute('y1', y1);
+                line.setAttribute('x2', x2);
+                line.setAttribute('y2', y2);
+                line.setAttribute('stroke', '#00C9FF');
+                line.setAttribute('stroke-width', '3');
+                line.setAttribute('stroke-dasharray', '5,5');
+                svg.appendChild(line);
+            });
+        }
+
+        updateUI();
+        setTimeout(drawConnections, 100);
+    </script>
+</body>
+</html>

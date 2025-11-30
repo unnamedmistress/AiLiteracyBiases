@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 6: Capstone Project Ìæì</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .header {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .logo { font-size: 28px; font-weight: bold; }
+        .nav { display: flex; gap: 15px; font-size: 14px; flex-wrap: wrap; }
+        .nav a { color: white; text-decoration: none; opacity: 0.8; transition: 0.3s; }
+        .nav a:hover { opacity: 1; }
+        .stats { display: flex; gap: 20px; }
+        .stat-value { font-size: 20px; font-weight: bold; }
+        .xp-bar { width: 180px; height: 18px; background: rgba(0,0,0,0.3); border-radius: 10px; overflow: hidden; }
+        .xp-fill { height: 100%; background: linear-gradient(90deg, #FFD700, #FFA500); transition: width 0.5s; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+        .content { display: grid; grid-template-columns: 200px 1fr 280px; gap: 20px; }
+        @media (max-width: 1200px) { .content { grid-template-columns: 1fr; } }
+        .sidebar, .panel { background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); border-radius: 20px; padding: 20px; }
+        .challenge-header {
+            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,165,0,0.2));
+            border: 2px solid #FFD700;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .challenge-title { font-size: 36px; margin-bottom: 15px; }
+        .challenge-subtitle { font-size: 18px; opacity: 0.9; }
+        .deliverable {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+        .deliverable:hover { border-color: #FFD700; transform: translateY(-3px); }
+        .deliverable-header { display: flex; align-items: center; margin-bottom: 15px; }
+        .deliverable-icon { font-size: 36px; margin-right: 15px; }
+        .deliverable-title { font-size: 22px; font-weight: bold; }
+        .deliverable-desc { font-size: 14px; opacity: 0.9; line-height: 1.6; margin-bottom: 15px; }
+        .checklist { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 15px; }
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .checklist-item:hover { background: rgba(255,255,255,0.1); }
+        .checklist-item.completed { opacity: 0.6; text-decoration: line-through; }
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #FFD700;
+            border-radius: 6px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        .checkbox.checked { background: #FFD700; color: #000; }
+        .progress-tracker {
+            background: rgba(0,0,0,0.4);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .progress-bar-container {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            height: 30px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #10B981, #FFD700);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            color: #000;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            margin-top: 15px;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,215,0,0.4); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .certificate {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            display: none;
+            margin-top: 30px;
+            border: 5px solid #fff;
+        }
+        .certificate.visible { display: block; animation: slideDown 0.5s; }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .certificate-title { font-size: 42px; font-weight: bold; margin-bottom: 20px; }
+        .certificate-text { font-size: 18px; margin-bottom: 15px; }
+        .progress-item { padding: 8px 0; font-size: 13px; }
+        .progress-item.completed { opacity: 0.5; text-decoration: line-through; }
+        .progress-item.active { font-weight: bold; color: #FFD700; }
+        .hidden { display: none; }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.9);
+            border: 2px solid #10B981;
+            border-radius: 15px;
+            padding: 15px 20px;
+            min-width: 250px;
+            z-index: 1000;
+            animation: slideIn 0.5s;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .tip-box {
+            background: rgba(16,185,129,0.1);
+            border-left: 4px solid #10B981;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Ìæì Lesson 6: Capstone Project</div>
+            <div class="nav">
+                <a href="index.html">Ìø† Home</a>
+                <a href="game.html">L2: Literacy</a>
+                <a href="lesson3-content-creation.html">L3: Content</a>
+                <a href="lesson4-advanced-prompting.html">L4: Prompting</a>
+                <a href="lesson5-ai-workflows.html">L5: Workflows</a>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div style="font-size: 11px; opacity: 0.7;">Level</div>
+                    <div class="stat-value">6</div>
+                </div>
+                <div class="stat">
+                    <div style="font-size: 11px; opacity: 0.7;">XP</div>
+                    <div class="xp-bar"><div class="xp-fill" id="xpBar" style="width: 0%;"><span id="xpText">0/500</span></div></div>
+                </div>
+                <div class="stat">
+                    <div style="font-size: 11px; opacity: 0.7;">Points</div>
+                    <div class="stat-value"><span id="points">0</span> ÌøÜ</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="sidebar">
+                <h3 style="margin-bottom: 15px; font-size: 16px;">Ì≥ö Journey</h3>
+                <div class="progress-item completed">‚úÖ L1: Intro</div>
+                <div class="progress-item completed">‚úÖ L2: Literacy</div>
+                <div class="progress-item completed">‚úÖ L3: Content</div>
+                <div class="progress-item completed">‚úÖ L4: Prompting</div>
+                <div class="progress-item completed">‚úÖ L5: Workflows</div>
+                <div class="progress-item active">Ìæì L6: Capstone</div>
+                
+                <h3 style="margin-top: 25px; margin-bottom: 12px; font-size: 16px;">ÌøÜ Final Challenge</h3>
+                <p style="font-size: 12px; opacity: 0.9; line-height: 1.6;">
+                    Complete all deliverables to earn your AI Literacy Master certificate and 500 XP!
+                </p>
+            </div>
+
+            <div class="panel">
+                <div class="challenge-header">
+                    <div class="challenge-title">Ìæì Final Capstone Challenge</div>
+                    <div class="challenge-subtitle">Put Everything Together: Build a Complete AI Solution</div>
+                </div>
+
+                <div class="progress-tracker">
+                    <h3 style="font-size: 18px; margin-bottom: 10px;">Ì≥ä Overall Progress</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="overallProgress" style="width: 0%;">0%</div>
+                    </div>
+                    <p style="font-size: 13px; opacity: 0.8; text-align: center;">Complete all 4 deliverables to graduate!</p>
+                </div>
+
+                <div class="deliverable">
+                    <div class="deliverable-header">
+                        <div class="deliverable-icon">Ì¥ç</div>
+                        <div class="deliverable-title">Deliverable 1: AI Audit Report</div>
+                    </div>
+                    <div class="deliverable-desc">
+                        Choose a real AI tool (ChatGPT, Midjourney, Claude, etc.) and conduct a comprehensive audit identifying its pathologies, biases, and limitations using the F.A.C.T.S. framework.
+                    </div>
+                    <div class="checklist" data-deliverable="1">
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Identify 3+ pathologies (hallucination, bias, etc.)</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Document 2 real failure examples</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Apply F.A.C.T.S. verification to outputs</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Recommend 3 mitigation strategies</span>
+                        </div>
+                    </div>
+                    <div class="tip-box">
+                        Ì≤° <strong>Tip:</strong> Use the 32 pathologies from Lesson 2 as reference. Test with ambiguous or controversial topics.
+                    </div>
+                </div>
+
+                <div class="deliverable">
+                    <div class="deliverable-header">
+                        <div class="deliverable-icon">Ìæ®</div>
+                        <div class="deliverable-title">Deliverable 2: Content Strategy Plan</div>
+                    </div>
+                    <div class="deliverable-desc">
+                        Design a complete AI-powered content creation strategy for a fictional brand. Include tools, ethical guidelines, and quality control measures.
+                    </div>
+                    <div class="checklist" data-deliverable="2">
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Select 3+ AI tools with justification</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Create ethical guidelines document</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Design quality control checklist</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Plan human oversight procedures</span>
+                        </div>
+                    </div>
+                    <div class="tip-box">
+                        Ì≤° <strong>Tip:</strong> Reference Lesson 3's tools showcase. Balance automation with human review.
+                    </div>
+                </div>
+
+                <div class="deliverable">
+                    <div class="deliverable-header">
+                        <div class="deliverable-icon">Ì¥Æ</div>
+                        <div class="deliverable-title">Deliverable 3: Prompt Engineering Portfolio</div>
+                    </div>
+                    <div class="deliverable-desc">
+                        Create 5 advanced prompts demonstrating different techniques (Chain-of-Thought, Few-Shot, Role-Based, etc.) with documented results and iterations.
+                    </div>
+                    <div class="checklist" data-deliverable="3">
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Chain-of-Thought prompt with reasoning</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Few-Shot prompt with 3+ examples</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Role-Based prompt with persona</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Complex multi-step prompt</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Document before/after iterations</span>
+                        </div>
+                    </div>
+                    <div class="tip-box">
+                        Ì≤° <strong>Tip:</strong> Use Lesson 4's techniques. Show your refinement process‚Äîwhat improved and why?
+                    </div>
+                </div>
+
+                <div class="deliverable">
+                    <div class="deliverable-header">
+                        <div class="deliverable-icon">Ìºê</div>
+                        <div class="deliverable-title">Deliverable 4: AI Workflow Design</div>
+                    </div>
+                    <div class="deliverable-desc">
+                        Design a complete multi-AI workflow solving a real business problem. Include flowchart, tool selection, data flow, and error handling.
+                    </div>
+                    <div class="checklist" data-deliverable="4">
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Create visual workflow diagram</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Document each AI tool's role</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Map data flow between stages</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Define error handling & fallbacks</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checkbox"></div>
+                            <span>Include human escalation points</span>
+                        </div>
+                    </div>
+                    <div class="tip-box">
+                        Ì≤° <strong>Tip:</strong> Use Lesson 5's workflow patterns. Consider sequential, parallel, or conditional routing.
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="submitBtn" disabled onclick="submitCapstone()">
+                    Submit Capstone Project
+                </button>
+
+                <div class="certificate" id="certificate">
+                    <div class="certificate-title">ÌøÜ CERTIFICATE OF COMPLETION ÌøÜ</div>
+                    <div class="certificate-text" style="font-size: 24px; margin: 30px 0;">
+                        <strong>AI LITERACY MASTER</strong>
+                    </div>
+                    <div class="certificate-text">
+                        This certifies that you have successfully completed
+                    </div>
+                    <div class="certificate-text" style="font-size: 28px; font-weight: bold; margin: 20px 0;">
+                        The Complete AI Literacy Course
+                    </div>
+                    <div class="certificate-text">
+                        Demonstrating mastery in:
+                    </div>
+                    <div class="certificate-text" style="text-align: left; max-width: 500px; margin: 20px auto; line-height: 2;">
+                        ‚úì AI Pathologies & Bias Detection<br>
+                        ‚úì Ethical AI Content Creation<br>
+                        ‚úì Advanced Prompt Engineering<br>
+                        ‚úì Multi-AI Workflow Design<br>
+                        ‚úì Critical AI Evaluation
+                    </div>
+                    <div class="certificate-text" style="margin-top: 30px; font-size: 32px; font-weight: bold;">
+                        +500 XP EARNED!
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3 style="margin-bottom: 15px; font-size: 16px;">Ì≥ã Checklist</h3>
+                <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; margin-bottom: 10px;">
+                    <div style="font-weight: bold; margin-bottom: 8px;">Deliverable 1</div>
+                    <div style="font-size: 11px; opacity: 0.8;">AI Audit: <span id="d1Progress">0/4</span></div>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; margin-bottom: 10px;">
+                    <div style="font-weight: bold; margin-bottom: 8px;">Deliverable 2</div>
+                    <div style="font-size: 11px; opacity: 0.8;">Content Strategy: <span id="d2Progress">0/4</span></div>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; margin-bottom: 10px;">
+                    <div style="font-weight: bold; margin-bottom: 8px;">Deliverable 3</div>
+                    <div style="font-size: 11px; opacity: 0.8;">Prompt Portfolio: <span id="d3Progress">0/5</span></div>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px;">
+                    <div style="font-weight: bold; margin-bottom: 8px;">Deliverable 4</div>
+                    <div style="font-size: 11px; opacity: 0.8;">Workflow Design: <span id="d4Progress">0/5</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification hidden"><div id="notificationContent"></div></div>
+
+    <script>
+        const state = { xp: 0, xpToNext: 500, points: 0, completed: [0, 0, 0, 0], totals: [4, 4, 5, 5] };
+
+        function toggleCheck(item) {
+            const checkbox = item.querySelector('.checkbox');
+            const isChecked = checkbox.classList.contains('checked');
+            
+            if (isChecked) {
+                checkbox.classList.remove('checked');
+                checkbox.textContent = '';
+                item.classList.remove('completed');
+            } else {
+                checkbox.classList.add('checked');
+                checkbox.textContent = '‚úì';
+                item.classList.add('completed');
+            }
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            // Count completed items per deliverable
+            for (let i = 1; i <= 4; i++) {
+                const checklist = document.querySelector(`[data-deliverable="${i}"]`);
+                const items = checklist.querySelectorAll('.checklist-item');
+                const completed = checklist.querySelectorAll('.checklist-item.completed').length;
+                state.completed[i-1] = completed;
+                document.getElementById(`d${i}Progress`).textContent = `${completed}/${state.totals[i-1]}`;
+            }
+            
+            // Calculate overall progress
+            const totalCompleted = state.completed.reduce((a, b) => a + b, 0);
+            const totalTasks = state.totals.reduce((a, b) => a + b, 0);
+            const percentage = Math.round((totalCompleted / totalTasks) * 100);
+            
+            document.getElementById('overallProgress').style.width = percentage + '%';
+            document.getElementById('overallProgress').textContent = percentage + '%';
+            
+            // Enable submit button if all tasks completed
+            const allComplete = state.completed.every((count, i) => count === state.totals[i]);
+            document.getElementById('submitBtn').disabled = !allComplete;
+        }
+
+        function submitCapstone() {
+            addXP(500);
+            document.getElementById('certificate').classList.add('visible');
+            showNotification('Ìæâ CONGRATULATIONS! You are now an AI Literacy Master!');
+            
+            // Scroll to certificate
+            setTimeout(() => {
+                document.getElementById('certificate').scrollIntoView({ behavior: 'smooth' });
+            }, 500);
+        }
+
+        function addXP(amount) {
+            state.xp += amount;
+            state.points += amount;
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById('points').textContent = state.points;
+            const pct = Math.min((state.xp / state.xpToNext) * 100, 100);
+            document.getElementById('xpBar').style.width = pct + '%';
+            document.getElementById('xpText').textContent = `${state.xp}/${state.xpToNext}`;
+        }
+
+        function showNotification(msg) {
+            const n = document.getElementById('notification');
+            document.getElementById('notificationContent').innerHTML = `<div style="font-size: 16px; font-weight: bold;">${msg}</div>`;
+            n.className = 'notification';
+            setTimeout(() => n.classList.add('hidden'), 5000);
+        }
+
+        updateUI();
+    </script>
+</body>
+</html>

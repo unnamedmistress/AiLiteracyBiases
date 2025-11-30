@@ -1,105 +1,90 @@
-# AI Detective Academy ğŸ•µï¸
+# AI Literacy & Bias Education Platform
 
-ğŸ¤–ğŸ’¥ **Master AI Literacy Through Gamified Learning**
+A complete 6-lesson gamified course teaching critical AI literacy, ethical content creation, advanced prompting, and workflow design.
 
-## About This Project
+## íº€ Live Demo
 
-A fully gamified interactive app that teaches AI literacy through points, levels, badges, and real scenarios:
+- **Landing Page**: [https://unnamedmistress.github.io/AiLiteracyBiases/](https://unnamedmistress.github.io/AiLiteracyBiases/)
+- **Lesson 2**: [AI Literacy & Bias](https://unnamedmistress.github.io/AiLiteracyBiases/game.html)
+- **Lesson 3**: [Content Creation](https://unnamedmistress.github.io/AiLiteracyBiases/lesson3-content-creation.html)
+- **Lesson 4**: [Advanced Prompting](https://unnamedmistress.github.io/AiLiteracyBiases/lesson4-advanced-prompting.html)
+- **Lesson 5**: [AI Workflows](https://unnamedmistress.github.io/AiLiteracyBiases/lesson5-ai-workflows.html)
+- **Lesson 6**: [Capstone Project](https://unnamedmistress.github.io/AiLiteracyBiases/lesson6-capstone.html)
 
-- ğŸ§  **32 Machine Pathologies** - Understanding AI's personality disorders
-- â° **Knowledge Cutoff** - Why AI is frozen in time
-- ğŸª™ **Tokens & Context Windows** - AI's attention span currency
-- ğŸ›¡ï¸ **Critical Safety Tips** - Prompt injection, privacy, and bias
-- âœ… **F.A.C.T.S. Framework** - Your AI verification checklist
-- ğŸ’¥ **Real Disaster Stories** - Learning from actual AI failures
-- ğŸ¯ **Interactive Quiz** - Test your AI detective skills
+## âœ¨ Features
 
-## ğŸ® Play Now
+- í¾® **Gamified Learning**: XP system, levels, badges, and achievements
+- í³š **Dual Modes**: Interactive game mode + detailed presentation/learn mode
+- í¾¯ **Interactive Challenges**: Real-world AI scenarios and hands-on activities
+- í¿† **Progress Tracking**: Track your learning journey across 6 lessons
+- í¾“ **Capstone Project**: Comprehensive final challenge with certificate
+- í³– **32 AI Pathologies**: Complete coverage of AI failure modes
+- âœ… **F.A.C.T.S. Framework**: Practical AI verification methodology
 
-**ğŸŒŸ Start Here**: [https://unnamedmistress.github.io/AiLiteracyBiases/](https://unnamedmistress.github.io/AiLiteracyBiases/)
+## í³š Complete Course
 
-Choose your learning path:
-- **ğŸ® Gamified Experience** - Earn XP, unlock badges, compete on leaderboards
-- **ğŸ“š Presentation View** - Comprehensive slide-based learning
+### Lesson 2: AI Literacy & Bias Detection í´–
+- 32 AI pathologies categorized (Hallucination, Confidence, Value/Alignment, Memory)
+- Real disaster stories (legal cases, business failures)
+- F.A.C.T.S. framework training
+- Interactive scenarios and quiz
 
-Direct links:
-- [Landing Page](https://unnamedmistress.github.io/AiLiteracyBiases/) - Choose your path
-- [Game Mode](https://unnamedmistress.github.io/AiLiteracyBiases/game.html) - Interactive scenarios with XP
-- [Presentation](https://unnamedmistress.github.io/AiLiteracyBiases/presentation.html) - Educational slides
+### Lesson 3: AI Content Creation & Ethics í¾¨
+- AI tools showcase (DALL-E 3, Midjourney, Runway, Suno, ElevenLabs)
+- Ethics quiz and case studies
+- Prompt builder with quality scoring
+- Image, video, audio, and text generation
 
-## ğŸ® Gamified Features
+### Lesson 4: Advanced Prompting Techniques í´®
+- Chain-of-Thought (CoT) prompting
+- Few-Shot learning and examples
+- Role-based prompts and personas
+- System prompts vs user prompts
+- Prompt tournament competition
+- Templates library
 
-- **XP & Leveling System** - Earn experience points and level up from Rookie to AI Guru
-- **Badge Collection** - Unlock 6 achievement badges (Hallucination Hunter, Bias Buster, etc.)
-- **Streak Bonuses** - Get multiplier rewards for consecutive correct answers
-- **4 Game Modes**:
-  - ğŸ­ **Scenario Detective** - Read real AI outputs and identify pathologies
-  - âš¡ **Speed Quiz** - Test knowledge under time pressure
-  - âœ… **F.A.C.T.S. Training** - Learn the verification framework
-  - ğŸ’¥ **Real Disasters** - Study actual AI failures
-- **Daily Missions** - Complete challenges for bonus XP
-- **Leaderboard** - Compete with other AI detectives
-- **Progress Tracking** - Save your achievements locally
-- ğŸ“± Fully responsive design
-- ğŸ’… Beautiful gradient UI with smooth animations
+### Lesson 5: AI Workflows (Visual) í¼
+- Sequential pipelines and parallel processing
+- Conditional routing and feedback loops
+- Interactive workflow builder
+- Real-world automation examples
+- Popular tools (Zapier, Make, n8n, LangChain)
 
-## How to Play
+### Lesson 6: Capstone Project í¾“
+- **Deliverable 1**: AI Audit Report
+- **Deliverable 2**: Content Strategy Plan
+- **Deliverable 3**: Prompt Engineering Portfolio
+- **Deliverable 4**: AI Workflow Design
+- Certificate of completion (+500 XP)
 
-1. **Visit**: [https://unnamedmistress.github.io/AiLiteracyBiases/game.html](https://unnamedmistress.github.io/AiLiteracyBiases/game.html)
-2. **Choose a game mode** to start earning XP
-3. **Complete scenarios** and identify AI pathologies
-4. **Level up** and unlock badges
-5. **Master AI literacy** while having fun!
+## í» ï¸ Tech Stack
 
-Or download and open `game.html` locally - no installation required!
+- Pure HTML/CSS/JavaScript (no frameworks)
+- GitHub Pages for hosting
+- Responsive design with glassmorphism effects
+- LocalStorage for progress persistence
+- SVG for visual diagrams
 
-## Topics Covered
+## í¾¯ Learning Outcomes
 
-### The 32 Machine Pathologies
-- **Hallucination Pathologies**: Fabrication, Confabulation, Citation Invention
-- **Confidence Pathologies**: Overconfidence, False Authority, Blind Spots
-- **Value & Alignment**: Value Drift, Moral Confusion, Boundary Dissolution
-- **Memory & Behavior**: Context Amnesia, Looping, Verbosity
+By completing this course, you will:
+- âœ… Identify and mitigate 32+ AI pathologies
+- âœ… Create ethical AI-generated content
+- âœ… Master advanced prompting techniques
+- âœ… Design multi-AI workflow systems
+- âœ… Conduct comprehensive AI audits
+- âœ… Apply critical thinking to AI outputs
 
-### Real-World Case Studies
-- âš–ï¸ The $5,000 Legal Brief (fake citations in court, 2023)
-- ğŸ¤– Microsoft Tay's 24-Hour Meltdown (racist tweets, 2016)
-- ğŸ“§ Amazon Hiring AI Bias (gender discrimination, 2018)
+## í³Š Latest AI Models
 
-### Latest AI Models Referenced
 - **GPT-5** (Oct 2025 knowledge cutoff)
 - **Claude 3.7** (Nov 2025 knowledge cutoff)
-- Updated for 2025 AI landscape
+- **DALL-E 3**, **Midjourney v7**, **Runway Gen-3**
 
-### The F.A.C.T.S. Framework
-- **F**ind - Verify sources and citations
-- **A**sk - Challenge over-confident answers
-- **C**onsider - Look for missing perspectives
-- **T**ry - Encourage "I don't know" responses
-- **S**ave - Record and compare outputs
+## íº€ Deployment
 
-## Technologies Used
+This site is automatically deployed via GitHub Pages from the `main` branch.
 
-- Pure HTML, CSS, and JavaScript
-- Modern CSS variables and Grid/Flexbox layouts
-- Responsive design principles
-- No external dependencies or frameworks
+## í³ License
 
-## Contributing
-
-This is an educational resource. Feel free to:
-- Report issues or suggest improvements
-- Share with others who need AI literacy training
-- Adapt for educational purposes (with attribution)
-
-## License
-
-Educational use permitted with attribution.
-
-## Author
-
-Created to promote responsible AI usage and digital literacy.
-
----
-
-**Remember**: AI is powerful but NOT perfect. Stay curious, stay skeptical, stay safe! ğŸ•µï¸
+Educational content - feel free to use for learning purposes.
