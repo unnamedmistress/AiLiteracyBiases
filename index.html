@@ -277,86 +277,120 @@
             <p class="tagline">Learn to identify hallucinations, bias, and AI pathologies</p>
         </div>
 
-        <div class="choice-container">
-            <!-- Gamified Experience -->
-            <div class="choice-card" onclick="window.location.href='game.html'">
-                <div class="recommended">🔥 Recommended</div>
-                <div class="choice-icon">🎮</div>
-                <div class="choice-title">Gamified Experience</div>
-                <div class="choice-description">
-                    Earn XP, unlock badges, and level up while learning through interactive scenarios
+        <!-- Course Navigation Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px;">
+            <div class="choice-card" onclick="window.location.href='game.html'" style="padding: 30px;">
+                <div class="choice-icon" style="font-size: 60px;">🤖</div>
+                <div class="choice-title" style="font-size: 24px;">Lesson 2: AI Literacy</div>
+                <div class="choice-description" style="font-size: 14px;">
+                    32 pathologies, F.A.C.T.S. framework, real disasters
                 </div>
-                <ul class="features-list">
-                    <li>Points, Levels & XP System</li>
-                    <li>6 Unlockable Achievement Badges</li>
-                    <li>Interactive Scenario Detective Mode</li>
-                    <li>Streak Bonuses & Multipliers</li>
-                    <li>Daily Missions & Challenges</li>
-                    <li>Leaderboard Competition</li>
-                    <li>Progress Tracking</li>
-                </ul>
-                <div class="choice-badge">🎯 Best for Active Learners</div>
+                <div class="choice-badge" style="margin-top: 10px;">Start Here</div>
             </div>
 
-            <!-- Presentation View -->
-            <div class="choice-card" onclick="window.location.href='presentation.html'">
-                <div class="choice-icon">📚</div>
-                <div class="choice-title">Presentation View</div>
-                <div class="choice-description">
-                    Comprehensive slide-based presentation with all concepts, examples, and case studies
+            <div class="choice-card" onclick="window.location.href='lesson3-content-creation.html'" style="padding: 30px;">
+                <div class="choice-icon" style="font-size: 60px;">🎨</div>
+                <div class="choice-title" style="font-size: 24px;">Lesson 3: Content</div>
+                <div class="choice-description" style="font-size: 14px;">
+                    AI tools, ethics, DALL-E 3, Midjourney, Runway
                 </div>
-                <ul class="features-list">
-                    <li>Structured Learning Path</li>
-                    <li>32 Machine Pathologies Explained</li>
-                    <li>Real-World Disaster Stories</li>
-                    <li>F.A.C.T.S. Framework Guide</li>
-                    <li>Token & Cutoff Explanations</li>
-                    <li>Interactive Quiz Section</li>
-                    <li>Perfect for Teaching/Sharing</li>
-                </ul>
-                <div class="choice-badge">📖 Best for Deep Dive</div>
+                <div class="choice-badge" style="margin-top: 10px;">Create with AI</div>
+            </div>
+
+            <div class="choice-card" onclick="window.location.href='lesson4-advanced-prompting.html'" style="padding: 30px;">
+                <div class="choice-icon" style="font-size: 60px;">🔮</div>
+                <div class="choice-title" style="font-size: 24px;">Lesson 4: Prompting</div>
+                <div class="choice-description" style="font-size: 14px;">
+                    Chain-of-Thought, Few-Shot, Role-Based techniques
+                </div>
+                <div class="choice-badge" style="margin-top: 10px;">Master Prompts</div>
+            </div>
+
+            <div class="choice-card" onclick="window.location.href='lesson5-ai-workflows.html'" style="padding: 30px;">
+                <div class="choice-icon" style="font-size: 60px;">🌐</div>
+                <div class="choice-title" style="font-size: 24px;">Lesson 5: Workflows</div>
+                <div class="choice-description" style="font-size: 14px;">
+                    Build multi-AI systems, automation patterns
+                </div>
+                <div class="choice-badge" style="margin-top: 10px;">Build Systems</div>
+            </div>
+
+            <div class="choice-card" onclick="window.location.href='lesson6-capstone.html'" style="padding: 30px;">
+                <div class="choice-icon" style="font-size: 60px;">🎓</div>
+                <div class="choice-title" style="font-size: 24px;">Lesson 6: Capstone</div>
+                <div class="choice-description" style="font-size: 14px;">
+                    Final challenge & certificate of completion
+                </div>
+                <div class="choice-badge" style="margin-top: 10px;">Earn Certificate</div>
+            </div>
+
+            <div class="choice-card" onclick="window.location.href='presentation.html'" style="padding: 30px;">
+                <div class="choice-icon" style="font-size: 60px;">📚</div>
+                <div class="choice-title" style="font-size: 24px;">Presentation Mode</div>
+                <div class="choice-description" style="font-size: 14px;">
+                    Slide-based view for Lesson 2 concepts
+                </div>
+                <div class="choice-badge" style="margin-top: 10px;">Teaching Mode</div>
             </div>
         </div>
 
+        <!-- Learning Path Visualization -->
+        <div style="background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; margin-bottom: 30px; border: 2px solid rgba(255,255,255,0.2);">
+            <h3 style="text-align: center; font-size: 24px; margin-bottom: 20px;">📚 Your Learning Path</h3>
+            <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 15px; font-size: 18px;">
+                <span style="background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px;">🤖 Literacy</span>
+                <span style="opacity: 0.5;">→</span>
+                <span style="background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px;">🎨 Content</span>
+                <span style="opacity: 0.5;">→</span>
+                <span style="background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px;">🔮 Prompting</span>
+                <span style="opacity: 0.5;">→</span>
+                <span style="background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px;">🌐 Workflows</span>
+                <span style="opacity: 0.5;">→</span>
+                <span style="background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px;">🎓 Capstone</span>
+            </div>
+            <p style="text-align: center; margin-top: 20px; opacity: 0.8; font-size: 14px;">Complete all 6 lessons to earn 1500+ XP and your AI Literacy Master certificate!</p>
+        </div>
+
+        <!-- Course Features -->
         <div class="info-section">
-            <h2 style="text-align: center; margin-bottom: 10px;">📚 Complete 6-Lesson Course</h2>
-            <p style="text-align: center; opacity: 0.8; margin-bottom: 30px;">Master AI literacy from basics to advanced workflows</p>
+            <h2 style="text-align: center; margin-bottom: 10px;">✨ Course Features</h2>
+            <p style="text-align: center; opacity: 0.8; margin-bottom: 30px;">Everything you get in this comprehensive AI literacy program</p>
             
             <div class="info-grid">
-                <div class="info-item" style="cursor: pointer;" onclick="window.location.href='game.html'">
-                    <div class="info-icon">🤖</div>
-                    <div class="info-title">Lesson 2: AI Literacy</div>
-                    <div class="info-desc">32 pathologies, F.A.C.T.S. framework, real disasters</div>
+                <div class="info-item">
+                    <div class="info-icon">🎮</div>
+                    <div class="info-title">Gamified Learning</div>
+                    <div class="info-desc">XP system, levels, badges, and achievements</div>
                 </div>
                 
-                <div class="info-item" style="cursor: pointer;" onclick="window.location.href='lesson3-content-creation.html'">
-                    <div class="info-icon">🎨</div>
-                    <div class="info-title">Lesson 3: Content Creation</div>
-                    <div class="info-desc">AI tools, ethics, DALL-E 3, Midjourney, Runway</div>
+                <div class="info-item">
+                    <div class="info-icon">🔄</div>
+                    <div class="info-title">Dual Modes</div>
+                    <div class="info-desc">Interactive game mode + detailed learn mode</div>
                 </div>
                 
-                <div class="info-item" style="cursor: pointer;" onclick="window.location.href='lesson4-advanced-prompting.html'">
-                    <div class="info-icon">🔮</div>
-                    <div class="info-title">Lesson 4: Advanced Prompting</div>
-                    <div class="info-desc">Chain-of-Thought, Few-Shot, Role-Based techniques</div>
+                <div class="info-item">
+                    <div class="info-icon">🧠</div>
+                    <div class="info-title">32 Pathologies</div>
+                    <div class="info-desc">Complete coverage of AI failure modes</div>
                 </div>
                 
-                <div class="info-item" style="cursor: pointer;" onclick="window.location.href='lesson5-ai-workflows.html'">
-                    <div class="info-icon">🌐</div>
-                    <div class="info-title">Lesson 5: AI Workflows</div>
-                    <div class="info-desc">Build multi-AI systems, automation patterns</div>
+                <div class="info-item">
+                    <div class="info-icon">🛠️</div>
+                    <div class="info-title">Practical Tools</div>
+                    <div class="info-desc">Real-world techniques and frameworks</div>
                 </div>
                 
-                <div class="info-item" style="cursor: pointer;" onclick="window.location.href='lesson6-capstone.html'">
-                    <div class="info-icon">🎓</div>
-                    <div class="info-title">Lesson 6: Capstone Project</div>
-                    <div class="info-desc">Final challenge & certificate of completion</div>
+                <div class="info-item">
+                    <div class="info-icon">📊</div>
+                    <div class="info-title">Progress Tracking</div>
+                    <div class="info-desc">Track your journey through all lessons</div>
                 </div>
                 
                 <div class="info-item">
                     <div class="info-icon">🏆</div>
-                    <div class="info-title">Total: 1500+ XP</div>
-                    <div class="info-desc">Progress through all lessons to master AI literacy</div>
+                    <div class="info-title">Certificate</div>
+                    <div class="info-desc">Earn your AI Literacy Master credential</div>
                 </div>
             </div>
         </div>
