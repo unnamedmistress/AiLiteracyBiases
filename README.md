@@ -16,8 +16,16 @@ A fully gamified interactive app that teaches AI literacy through points, levels
 
 ## 🎮 Play Now
 
-- **Presentation Version**: [index.html](https://unnamedmistress.github.io/AiLiteracyBiases/)
-- **🆕 Gamified App**: [game.html](https://unnamedmistress.github.io/AiLiteracyBiases/game.html) ⭐ **Start Here!**
+**🌟 Start Here**: [https://unnamedmistress.github.io/AiLiteracyBiases/](https://unnamedmistress.github.io/AiLiteracyBiases/)
+
+Choose your learning path:
+- **🎮 Gamified Experience** - Earn XP, unlock badges, compete on leaderboards
+- **📚 Presentation View** - Comprehensive slide-based learning
+
+Direct links:
+- [Landing Page](https://unnamedmistress.github.io/AiLiteracyBiases/) - Choose your path
+- [Game Mode](https://unnamedmistress.github.io/AiLiteracyBiases/game.html) - Interactive scenarios with XP
+- [Presentation](https://unnamedmistress.github.io/AiLiteracyBiases/presentation.html) - Educational slides
 
 ## 🎮 Gamified Features
 
