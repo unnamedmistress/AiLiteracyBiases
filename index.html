@@ -229,6 +229,14 @@
 
         .info-item {
             text-align: center;
+            transition: all 0.3s;
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .info-item[style*="cursor: pointer"]:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
         }
 
         .info-icon {
@@ -311,50 +319,50 @@
         </div>
 
         <div class="info-section">
-            <h2 style="text-align: center; margin-bottom: 10px;">What You'll Learn</h2>
-            <p style="text-align: center; opacity: 0.8; margin-bottom: 30px;">Critical AI literacy skills everyone needs in 2025</p>
+            <h2 style="text-align: center; margin-bottom: 10px;">📚 Complete 6-Lesson Course</h2>
+            <p style="text-align: center; opacity: 0.8; margin-bottom: 30px;">Master AI literacy from basics to advanced workflows</p>
             
             <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-icon">🧠</div>
-                    <div class="info-title">32 Machine Pathologies</div>
-                    <div class="info-desc">Understand how AI breaks: hallucinations, bias, confidence issues</div>
+                <div class="info-item" style="cursor: pointer;" onclick="window.location.href='game.html'">
+                    <div class="info-icon">🤖</div>
+                    <div class="info-title">Lesson 2: AI Literacy</div>
+                    <div class="info-desc">32 pathologies, F.A.C.T.S. framework, real disasters</div>
+                </div>
+                
+                <div class="info-item" style="cursor: pointer;" onclick="window.location.href='lesson3-content-creation.html'">
+                    <div class="info-icon">🎨</div>
+                    <div class="info-title">Lesson 3: Content Creation</div>
+                    <div class="info-desc">AI tools, ethics, DALL-E 3, Midjourney, Runway</div>
+                </div>
+                
+                <div class="info-item" style="cursor: pointer;" onclick="window.location.href='lesson4-advanced-prompting.html'">
+                    <div class="info-icon">🔮</div>
+                    <div class="info-title">Lesson 4: Advanced Prompting</div>
+                    <div class="info-desc">Chain-of-Thought, Few-Shot, Role-Based techniques</div>
+                </div>
+                
+                <div class="info-item" style="cursor: pointer;" onclick="window.location.href='lesson5-ai-workflows.html'">
+                    <div class="info-icon">🌐</div>
+                    <div class="info-title">Lesson 5: AI Workflows</div>
+                    <div class="info-desc">Build multi-AI systems, automation patterns</div>
+                </div>
+                
+                <div class="info-item" style="cursor: pointer;" onclick="window.location.href='lesson6-capstone.html'">
+                    <div class="info-icon">🎓</div>
+                    <div class="info-title">Lesson 6: Capstone Project</div>
+                    <div class="info-desc">Final challenge & certificate of completion</div>
                 </div>
                 
                 <div class="info-item">
-                    <div class="info-icon">⏰</div>
-                    <div class="info-title">Knowledge Cutoffs</div>
-                    <div class="info-desc">GPT-5 (Oct 2025), Claude 3.7 (Nov 2025) - why AI doesn't know "yesterday"</div>
-                </div>
-                
-                <div class="info-item">
-                    <div class="info-icon">🪙</div>
-                    <div class="info-title">Tokens & Context</div>
-                    <div class="info-desc">How AI's "memory" works and why it forgets things</div>
-                </div>
-                
-                <div class="info-item">
-                    <div class="info-icon">✅</div>
-                    <div class="info-title">F.A.C.T.S. Framework</div>
-                    <div class="info-desc">Your 5-step checklist to verify AI outputs</div>
-                </div>
-                
-                <div class="info-item">
-                    <div class="info-icon">🛡️</div>
-                    <div class="info-title">Safety & Privacy</div>
-                    <div class="info-desc">Prompt injection, data privacy, and ethical use</div>
-                </div>
-                
-                <div class="info-item">
-                    <div class="info-icon">💥</div>
-                    <div class="info-title">Real Disasters</div>
-                    <div class="info-desc">Learn from actual AI failures (legal, hiring, chatbots)</div>
+                    <div class="info-icon">🏆</div>
+                    <div class="info-title">Total: 1500+ XP</div>
+                    <div class="info-desc">Progress through all lessons to master AI literacy</div>
                 </div>
             </div>
         </div>
 
         <div style="text-align: center; margin-top: 40px; opacity: 0.7; font-size: 14px;">
-            <p>🎓 Become an AI-literate human | 🕵️ Master digital detective skills | 🌟 Use AI responsibly</p>
+            <p>🎓 Complete course | 🎮 Gamified learning | 🏆 Earn certificate | 🌟 Master AI literacy</p>
         </div>
     </div>
 </body>
