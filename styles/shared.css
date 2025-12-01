@@ -328,6 +328,40 @@ a {
     min-height: 180px;
 }
 
+.key-takeaways {
+    margin-top: 32px;
+    padding: 28px;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.takeaway-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 18px;
+}
+
+.takeaway-card {
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.takeaway-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
 .ethics-warning {
     border-left: 4px solid var(--color-danger);
     padding: 24px;

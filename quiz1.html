@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 1 · Warm-Up Review</title>
+    <link rel="stylesheet" href="styles/shared.css">
+    <link rel="stylesheet" href="styles/quiz.css">
+    <script defer src="scripts/nav.js"></script>
+    <script defer src="scripts/progress.js"></script>
+    <script defer src="scripts/quiz1.js"></script>
+</head>
+<body class="quiz-page">
+    <main class="quiz-shell">
+        <section class="quiz-hero">
+            <h1>Quiz 1 · Hallucination Patrol</h1>
+            <p>Four rapid-fire scenarios test whether you can spot unsafe prompts, tone slips, and sneaky injections. Beat 75% to keep Lesson 2 unlocked.</p>
+            <div class="quiz-meta">
+                <span class="quiz-pill">🎯 4 live scenarios</span>
+                <span class="quiz-pill">⚡ Immediate feedback</span>
+                <span class="quiz-pill">🏅 XP + unlocks</span>
+            </div>
+        </section>
+
+        <section class="quiz-stage" id="quizStage">
+            <div class="stage-header">
+                <div>
+                    <p class="section-subtitle" id="stageProgressLabel">1/4 challenges</p>
+                    <h2 id="questionTitle">Calibration Check</h2>
+                </div>
+                <div class="stage-progress">
+                    <div class="stage-progress-fill" id="stageProgressFill"></div>
+                </div>
+            </div>
+
+            <article class="prompt-card">
+                <span class="prompt-tag">Scenario</span>
+                <p id="scenarioText"></p>
+                <span class="prompt-tag">Question</span>
+                <p id="questionPrompt"></p>
+            </article>
+
+            <div class="option-list" id="optionList"></div>
+
+            <div class="feedback-banner" id="feedbackBanner"></div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-primary" id="nextQuestion" disabled>Next challenge</button>
+            </div>
+        </section>
+
+        <section class="quiz-summary hidden" id="quizSummary">
+            <h2 id="summaryHeadline">Certified AI Warm-Up Detective!</h2>
+            <p id="summaryCopy"></p>
+            <div class="scoreboard" id="scoreboard"></div>
+            <p class="summary-xp" id="summaryXp">XP pending...</p>
+            <div class="summary-actions">
+                <button class="btn btn-primary" id="continueBtn">Continue to Lesson 2</button>
+                <button class="btn btn-secondary" id="retryBtn">Replay quiz</button>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

@@ -5,327 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Detective Academy - Choose Your Path</title>
     <link rel="stylesheet" href="styles/shared.css">
+    <link rel="stylesheet" href="styles/landing.css">
     <script defer src="scripts/nav.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            width: 100%;
-        }
-
-        .primary-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 30px;
-            margin-bottom: 30px;
-            border-radius: 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(12px);
-        }
-
-        .nav-logo {
-            font-size: 22px;
-            font-weight: 700;
-            text-decoration: none;
-            color: white;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 18px;
-            flex-wrap: wrap;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-        }
-
-        .progress-callout {
-            margin: 30px 0;
-            padding: 24px;
-            border-radius: 18px;
-            background: rgba(0, 0, 0, 0.35);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 60px;
-            animation: fadeInDown 0.8s;
-        }
-
-        .logo {
-            font-size: 64px;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, #FFD700, #FFF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .subtitle {
-            font-size: 24px;
-            opacity: 0.9;
-            margin-bottom: 10px;
-        }
-
-        .tagline {
-            font-size: 18px;
-            opacity: 0.7;
-        }
-
-        .choice-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 40px;
-            margin-top: 40px;
-        }
-
-        @media (max-width: 900px) {
-            .choice-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .choice-card {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            padding: 40px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 3px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-            overflow: hidden;
-            animation: fadeInUp 0.8s;
-        }
-
-        .choice-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
-            opacity: 0;
-            transition: opacity 0.4s;
-        }
-
-        .choice-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: rgba(255, 255, 255, 0.6);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-        }
-
-        .choice-card:hover::before {
-            opacity: 1;
-        }
-
-        .choice-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-            display: block;
-            text-align: center;
-        }
-
-        .choice-title {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .choice-description {
-            font-size: 16px;
-            line-height: 1.6;
-            opacity: 0.9;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .features-list {
-            list-style: none;
-            margin: 20px 0;
-        }
-
-        .features-list li {
-            padding: 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-        }
-
-        .features-list li::before {
-            content: '✓';
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            background: linear-gradient(135deg, #00D9FF, #9D4EDD);
-            border-radius: 50%;
-            text-align: center;
-            line-height: 24px;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .choice-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            color: #000;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-top: 15px;
-        }
-
-        .recommended {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #10B981, #059669);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        .info-section {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-top: 60px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            animation: fadeInUp 1s;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        .info-item {
-            text-align: center;
-        }
-
-        .info-icon {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-
-        .info-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .info-desc {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 32px;
-            }
-            .subtitle {
-                font-size: 18px;
-            }
-            .logo {
-                font-size: 48px;
-            }
-        }
-    </style>
+    <script defer src="scripts/progress.js"></script>
+    <script defer src="scripts/landing.js"></script>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">🕵️</div>
-            <h1>AI Detective Academy</h1>
-            <p class="subtitle">Master AI Literacy & Spot AI's Tricks</p>
-            <p class="tagline">Learn to identify hallucinations, bias, and AI pathologies</p>
-            <div style="margin-top: 30px;">
-                <button onclick="window.location.href='lesson1-ai-intro.html'" style="padding: 18px 42px; background: linear-gradient(135deg, #10B981, #059669); color: white; border: none; border-radius: 16px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); transition: all 0.3s;">
-                    Start Lesson 1 →
-                </button>
+<body class="landing-page">
+    <div class="landing-container">
+        <header class="landing-header">
+            <div class="landing-logo">🕵️</div>
+            <h1 class="landing-title">AI Detective Academy</h1>
+            <p class="landing-subtitle">Master AI Literacy & Spot AI's Tricks</p>
+            <p class="landing-tagline">Learn to identify hallucinations, bias, and AI pathologies</p>
+            <div class="landing-cta">
+                <button class="landing-btn" data-link="lesson1-ai-intro.html">Start Lesson 1 →</button>
             </div>
-        </div>
+        </header>
 
-        <div class="progress-callout">
+        <section class="landing-progress">
             <div id="landingProgressSummary">Begin your journey with Lesson 1.</div>
             <div id="landingProgressDetail">No XP recorded yet — jump in to start tracking your milestones.</div>
-        </div>
+        </section>
 
-        <div class="choice-container">
-            <div class="choice-card" onclick="window.location.href='lesson1-ai-intro.html'">
+        <section class="choice-container">
+            <article class="choice-card" data-link="lesson1-ai-intro.html">
                 <div class="choice-icon">⚡️</div>
                 <div class="choice-title">Lesson 1: Warm-Up</div>
                 <div class="choice-description">
@@ -338,9 +41,8 @@
                     <li>Earn your first XP</li>
                 </ul>
                 <div class="choice-badge">Start Here</div>
-            </div>
-            <!-- Gamified Experience -->
-            <div class="choice-card" onclick="window.location.href='game.html'">
+            </article>
+            <article class="choice-card" data-link="game.html">
                 <div class="recommended">🔥 Recommended</div>
                 <div class="choice-icon">🎮</div>
                 <div class="choice-title">Gamified Experience</div>
@@ -357,10 +59,8 @@
                     <li>Progress Tracking</li>
                 </ul>
                 <div class="choice-badge">🎯 Best for Active Learners</div>
-            </div>
-
-            <!-- Presentation View -->
-            <div class="choice-card" onclick="window.location.href='presentation.html'">
+            </article>
+            <article class="choice-card" data-link="presentation.html">
                 <div class="choice-icon">📚</div>
                 <div class="choice-title">Presentation View</div>
                 <div class="choice-description">
@@ -376,73 +76,49 @@
                     <li>Perfect for Teaching/Sharing</li>
                 </ul>
                 <div class="choice-badge">📖 Best for Deep Dive</div>
-            </div>
-        </div>
+            </article>
+        </section>
 
-        <div class="info-section">
-            <h2 style="text-align: center; margin-bottom: 10px;">What You'll Learn</h2>
-            <p style="text-align: center; opacity: 0.8; margin-bottom: 30px;">Critical AI literacy skills everyone needs in 2025</p>
-            
+        <section class="info-section">
+            <div class="info-intro">
+                <h2>What You'll Learn</h2>
+                <p>Critical AI literacy skills everyone needs in 2025</p>
+            </div>
             <div class="info-grid">
-                <div class="info-item">
+                <article class="info-item">
                     <div class="info-icon">🧠</div>
                     <div class="info-title">32 Machine Pathologies</div>
                     <div class="info-desc">Understand how AI breaks: hallucinations, bias, confidence issues</div>
-                </div>
-                
-                <div class="info-item">
+                </article>
+                <article class="info-item">
                     <div class="info-icon">⏰</div>
                     <div class="info-title">Knowledge Cutoffs</div>
-                    <div class="info-desc">GPT-5 (Oct 2025), Claude 3.7 (Nov 2025) - why AI doesn't know "yesterday"</div>
-                </div>
-                
-                <div class="info-item">
+                    <div class="info-desc">GPT-5 (Oct 2025), Claude 3.7 (Nov 2025) — why AI doesn't know "yesterday"</div>
+                </article>
+                <article class="info-item">
                     <div class="info-icon">🪙</div>
                     <div class="info-title">Tokens & Context</div>
                     <div class="info-desc">How AI's "memory" works and why it forgets things</div>
-                </div>
-                
-                <div class="info-item">
+                </article>
+                <article class="info-item">
                     <div class="info-icon">✅</div>
                     <div class="info-title">F.A.C.T.S. Framework</div>
                     <div class="info-desc">Your 5-step checklist to verify AI outputs</div>
-                </div>
-                
-                <div class="info-item">
+                </article>
+                <article class="info-item">
                     <div class="info-icon">🛡️</div>
                     <div class="info-title">Safety & Privacy</div>
                     <div class="info-desc">Prompt injection, data privacy, and ethical use</div>
-                </div>
-                
-                <div class="info-item">
+                </article>
+                <article class="info-item">
                     <div class="info-icon">💥</div>
                     <div class="info-title">Real Disasters</div>
                     <div class="info-desc">Learn from actual AI failures (legal, hiring, chatbots)</div>
-                </div>
+                </article>
             </div>
-        </div>
+        </section>
 
-        <div style="text-align: center; margin-top: 40px; opacity: 0.7; font-size: 14px;">
-            <p>🎓 Become an AI-literate human | 🕵️ Master digital detective skills | 🌟 Use AI responsibly</p>
-        </div>
+        <p class="landing-footer-note">🎓 Become an AI-literate human | 🕵️ Master digital detective skills | 🌟 Use AI responsibly</p>
     </div>
-    <script defer src="scripts/progress.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const tracker = window.ProgressTracker;
-            if (!tracker) return;
-            const summary = document.getElementById('landingProgressSummary');
-            const detail = document.getElementById('landingProgressDetail');
-            if (!summary || !detail) return;
-
-            const overview = tracker.getOverview();
-            const lessonsComplete = overview.completed;
-            const totalLessons = overview.total || 6;
-            summary.textContent = lessonsComplete
-                ? `You're ${lessonsComplete}/${totalLessons} lessons in.`
-                : 'Begin your journey with Lesson 1.';
-            detail.textContent = `Total XP: ${overview.xp}. ${lessonsComplete ? 'Keep going!' : 'No XP recorded yet — jump in to start tracking your milestones.'}`;
-        });
-    </script>
 </body>
 </html>

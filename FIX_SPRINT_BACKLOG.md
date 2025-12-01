@@ -1,0 +1,14 @@
+# Fix Sprint Backlog · December 1, 2025
+
+| # | Area | Severity | Description | Impacted Files / Notes |
+|---|------|----------|-------------|------------------------|
+| 1 | Quiz Flow | 🔴 Blocker | `nav.js`, `home.js`, and the dashboard reference `quiz1.html`, but the file does not exist. Users hit a 404 and the learning path stalls after Lesson 1. | Create `quiz1.html`, wire it into `ProgressTracker.setQuizScore`, and update shared navigation once built. |
+| 2 | Progress Persistence | 🔴 Blocker | Lessons 2–6 (plus `game.html`) never call `AppProgress`, so completion and XP data stop updating after Lesson 1. The dashboard locking mechanic cannot advance beyond Lesson 1. | Add `AppProgress.setLessonStatus/markLessonComplete/addXP` calls to each lesson/game checkpoint. |
+| 3 | Capstone → Certificate Handoff | 🟠 High | Completing the Lesson 6 checklist or viewing `certificate.html` does not mark Lesson 6 complete or award XP, leaving the dashboard unaware of graduation. | Extend capstone JS to set checkpoints + completion, and add a “Return to Dashboard” CTA on the certificate page. |
+| 4 | Inline Assets Debt | 🟠 High | Landing, glossary, updates, and every lesson keep large inline `<style>` and `<script>` blocks despite the new shared bundles. This blocks the “Move inline styles/scripts into external assets” OKR and complicates caching. | Create `styles/landing.css`, `scripts/glossary.js`, etc., and ensure all pages load local fallbacks instead of duplicating CSS. |
+| 5 | Accessibility / Keyboard Support | 🟠 High | Many interactive tiles (lesson cards, tool cards, canvas nodes) are `<div>` elements without focus states or keyboard handlers. Users relying on keyboards or assistive tech cannot complete flows reliably. | Add semantic buttons/links, visible focus outlines, `aria-labels`, and ensure Enter/Space triggers behaviors. Track via Lighthouse/WAVE. |
+| 6 | Responsive Layout Regressions | 🟡 Medium | New fixed padding for the injected nav plus wide card grids cause horizontal overflow on narrow screens (<768px). Breadcrumbs and XP meters wrap awkwardly. | Add responsive rules for `.global-nav`, `.lesson-card`, XP bars, and hero text; test via Chrome device emulation. |
+| 7 | Progress Reset/Migration | 🟡 Medium | `aiLiteracyProgress_v1` schema lacks migration logic or user-facing reset, so corrupted JSON breaks the dashboard until localStorage is manually cleared. | Add guard around `JSON.parse`, expose a “Reset Progress” button on the dashboard, and document schema upgrades. |
+| 8 | Analytics & Telemetry | 🟢 Low | No instrumentation exists to confirm which lessons or modes users finish, making it hard to prioritize content investments. | Optional: add lightweight telemetry hooks or log exports once privacy review is complete. |
+
+> Legend: 🔴 Blocker · 🟠 High · 🟡 Medium · 🟢 Low
