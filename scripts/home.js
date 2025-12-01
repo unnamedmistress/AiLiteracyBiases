@@ -164,21 +164,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function getNextAvailableItem() {
-        for (const item of DASHBOARD_ITEMS) {
-            const state = getItemState(item);
-            if (!state.locked && !state.completed) {
-                return item;
-            }
-        }
-        return DASHBOARD_ITEMS[0];
-    }
-
     function initHeroButtons() {
-        const nextItem = getNextAvailableItem();
+        const startPath = 'lesson1-ai-intro.html';
         els.startButtons.forEach((button) => {
             button.addEventListener('click', () => {
-                window.location.href = nextItem.path;
+                window.location.href = startPath;
             });
         });
         els.scrollButtons.forEach((button) => {

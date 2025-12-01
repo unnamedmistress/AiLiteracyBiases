@@ -98,6 +98,13 @@ body.with-global-nav {
     transition: var(--transition-base);
 }
 
+.nav-link.is-locked {
+    opacity: 0.4;
+    cursor: not-allowed;
+    border-color: rgba(255, 255, 255, 0.15);
+    pointer-events: none;
+}
+
 .nav-link:hover {
     color: var(--color-text);
     border-color: rgba(255, 255, 255, 0.25);

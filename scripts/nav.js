@@ -15,8 +15,8 @@
         { id: 'lesson2', label: 'Lesson 2', href: 'presentation.html' },
         { id: 'lesson3', label: 'Lesson 3', href: 'lesson3-content-creation.html' },
         { id: 'lesson4', label: 'Lesson 4', href: 'lesson4-advanced-prompting.html' },
-        { id: 'lesson5', label: 'Lesson 5', href: 'lesson5-ai-workflows.html' },
-        { id: 'lesson6', label: 'Lesson 6', href: 'lesson6-capstone.html' }
+        { id: 'lesson5', label: 'Lesson 5', href: 'lesson5-ai-workflows.html', locked: true },
+        { id: 'lesson6', label: 'Lesson 6', href: 'lesson6-capstone.html', locked: true }
     ];
 
     const PATH_TO_STATE = {
@@ -35,21 +35,30 @@
         'updates.html': { resource: 'updates' }
     };
 
-    function buildLink({ id, label, href }, activeId, group) {
+    function buildLink({ id, label, href, locked }, activeId, group) {
         const isActive = activeId === id;
-        const anchor = document.createElement('a');
-        anchor.href = href;
-        anchor.textContent = label;
-        anchor.className = `nav-link nav-link-${group}`;
-        anchor.dataset.navId = id;
-        if (isActive) {
-            anchor.classList.add('is-active');
-            if (group === 'lesson') {
-                anchor.classList.add('active-lesson');
-            }
-            anchor.setAttribute('aria-current', group === 'lesson' ? 'step' : 'page');
+        const element = document.createElement(locked ? 'span' : 'a');
+        element.textContent = locked ? `${label} 🔒` : label;
+        element.className = `nav-link nav-link-${group}`;
+        element.dataset.navId = id;
+
+        if (locked) {
+            element.classList.add('is-locked');
+            element.setAttribute('aria-disabled', 'true');
+            element.setAttribute('title', 'Coming soon');
+        } else {
+            element.href = href;
         }
-        return anchor;
+
+        if (isActive) {
+            element.classList.add('is-active');
+            if (group === 'lesson') {
+                element.classList.add('active-lesson');
+            }
+            element.setAttribute('aria-current', group === 'lesson' ? 'step' : 'page');
+        }
+
+        return element;
     }
 
     function renderNav() {
@@ -96,6 +105,18 @@
         nav.appendChild(mainLinksWrapper);
         nav.appendChild(resourcesWrapper);
         nav.appendChild(lessonsWrapper);
+
+        nav.addEventListener('click', (event) => {
+            if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+                return;
+            }
+            const anchor = event.target.closest('a');
+            if (!anchor || anchor.getAttribute('href') === '#') return;
+            const href = anchor.getAttribute('href');
+            if (!href) return;
+            event.preventDefault();
+            window.location.href = href;
+        });
 
         document.body.classList.add('with-global-nav');
         document.body.prepend(nav);

@@ -4,6 +4,22 @@ body.glossary-page {
     min-height: 100vh;
 }
 
+.global-nav,
+.global-nav .nav-group,
+.global-nav .lesson-links {
+    gap: 16px;
+}
+
+.global-nav .nav-link {
+    margin-right: 1rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.global-nav .nav-link:last-child {
+    margin-right: 0;
+}
+
 .glossary-shell {
     max-width: 960px;
     margin: 0 auto;

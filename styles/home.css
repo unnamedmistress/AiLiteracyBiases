@@ -49,6 +49,19 @@ body.home-page {
     text-transform: uppercase;
 }
 
+.hero-label-button {
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hero-label-button:focus-visible,
+.hero-label-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.4);
+}
+
 .home-hero h1 {
     font-size: 48px;
     font-weight: 700;
