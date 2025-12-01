@@ -41,10 +41,19 @@
         .word-option { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.18); padding: 12px; background: rgba(255, 255, 255, 0.04); color: inherit; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 6px; transition: transform var(--transition-base), border-color var(--transition-base); }
         .word-option:hover:not([disabled]) { transform: translateY(-2px); border-color: var(--color-accent); }
         .word-option[disabled] { opacity: 0.6; cursor: not-allowed; }
+        .word-option.correct { border-color: rgba(16, 185, 129, 0.8); background: rgba(16, 185, 129, 0.15); color: #bbf7d0; position: relative; }
+        .word-option.correct::after { content: '✔'; position: absolute; top: 12px; right: 12px; font-weight: 700; color: #22c55e; }
+        .word-option.incorrect { border-color: rgba(248, 113, 113, 0.9); animation: shake 0.25s ease; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
         .word-hint { font-size: 12px; color: var(--color-muted); }
         .feedback { border-radius: var(--radius-md); padding: 12px 16px; font-weight: 600; }
+        .feedback .feedback-icon { margin-right: 8px; font-size: 18px; }
         .feedback-success { border: 1px solid rgba(16, 185, 129, 0.6); background: rgba(16, 185, 129, 0.1); color: #34d399; }
         .feedback-error { border: 1px solid rgba(248, 113, 113, 0.6); background: rgba(248, 113, 113, 0.15); color: #f87171; }
+        .word-celebration { margin-top: 16px; padding: 14px 16px; border-radius: var(--radius-lg); background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); display: flex; align-items: center; gap: 12px; opacity: 0; transform: translateY(8px); transition: opacity 0.25s ease, transform 0.25s ease; }
+        .word-celebration.show { opacity: 1; transform: translateY(0); }
+        .celebration-icon { font-size: 26px; }
+        .xp-chip { padding: 6px 12px; border-radius: 999px; background: rgba(34, 197, 94, 0.2); border: 1px solid rgba(34, 197, 94, 0.5); color: #bbf7d0; font-weight: 600; }
         .tone-drop-zone { display: inline-flex; align-items: center; justify-content: center; padding: 10px 14px; min-width: 140px; border-radius: var(--radius-md); border: 2px dashed rgba(255, 255, 255, 0.25); text-transform: uppercase; font-weight: 600; cursor: pointer; transition: border-color var(--transition-base), background var(--transition-base); }
         .tone-drop-zone.active { border-style: solid; border-color: var(--color-accent); background: rgba(16, 185, 129, 0.15); }
         .tone-drop-zone.filled { border-style: solid; border-color: #facc15; background: rgba(250, 204, 21, 0.15); color: #fde047; }
@@ -98,7 +107,7 @@
             .step-pill { flex: 1 1 100%; }
         }
     </style>
-    <script defer src="https://cdn.jsdelivr.net/gh/unnamedmistress/AiLiteracyBiases/scripts/shared.js" onerror="this.onerror=null;this.src='scripts/shared.js';"></script>
+    <script defer src="scripts/shared.js"></script>
     <script defer src="scripts/progress.js"></script>
     <script defer src="scripts/nav.js"></script>
 </head>
@@ -165,6 +174,7 @@
                                 <p>AI predicts the next word by ranking what usually follows. Study the probabilities, then make your pick.</p>
                                 <div class="probability-visuals" id="probabilityVisualization"></div>
                                 <div class="word-options" id="wordOptions"></div>
+                                <div class="word-celebration hidden" id="wordCelebration" aria-live="polite"></div>
                                 <div class="feedback hidden" id="wordFeedback"></div>
                             </div>
                         </div>
@@ -452,6 +462,7 @@
                 probabilityVisualization: document.getElementById('probabilityVisualization'),
                 wordOptions: document.getElementById('wordOptions'),
                 wordFeedback: document.getElementById('wordFeedback'),
+                wordCelebration: document.getElementById('wordCelebration'),
                 toneDropZone: document.getElementById('toneDropZone'),
                 toneWordBank: document.getElementById('toneWordBank'),
                 toneOutput: document.getElementById('toneOutput'),
@@ -470,6 +481,7 @@
             };
 
             let notificationTimer;
+            let celebrationTimer;
             let selectedTone = null;
 
             function getCompletedActivitiesCount() {
@@ -606,25 +618,62 @@
             }
 
             function setWordFeedback(message, type) {
-                elements.wordFeedback.textContent = message;
+                if (!elements.wordFeedback) return;
+                const icon = type === 'success' ? '✅' : '⚠️';
+                elements.wordFeedback.innerHTML = `<span class="feedback-icon">${icon}</span><span>${message}</span>`;
                 elements.wordFeedback.className = `feedback ${type === 'success' ? 'feedback-success' : 'feedback-error'}`;
                 elements.wordFeedback.classList.remove('hidden');
             }
 
+            function showWordCelebration() {
+                if (!elements.wordCelebration) return;
+                elements.wordCelebration.innerHTML = `
+                    <span class="celebration-icon">✅</span>
+                    <div>
+                        <strong>Policy locked in!</strong>
+                        <p style="margin: 4px 0 0; font-size: 14px;">Prediction radar mastered—onward to tone flips.</p>
+                    </div>
+                    <span class="xp-chip">+40 XP</span>
+                `;
+                elements.wordCelebration.classList.remove('hidden');
+                elements.wordCelebration.classList.add('show');
+                clearTimeout(celebrationTimer);
+                celebrationTimer = setTimeout(() => {
+                    elements.wordCelebration.classList.remove('show');
+                }, 2400);
+            }
+
             function handleWordPick(word) {
                 if (state.wordComplete) return;
+                const optionButtons = elements.wordOptions ? elements.wordOptions.querySelectorAll('button') : [];
                 if (word === 'Policy') {
                     state.wordComplete = true;
                     setWordFeedback('Correct! You think like an AI on this one. Moving to tone experiments...', 'success');
+                    showWordCelebration();
                     grantXP(40, 'Prediction Mastery');
                     if (tracker) {
                         tracker.setCheckpoint(LESSON_ID, 'wordComplete', true);
                     }
                     handleLessonProgressChange();
-                    elements.wordOptions.querySelectorAll('button').forEach((btn) => (btn.disabled = true));
-                    document.getElementById('toneLab').scrollIntoView({ behavior: 'smooth' });
+                    optionButtons.forEach((btn) => {
+                        const isAnswer = btn.dataset.wordChoice === 'Policy';
+                        btn.disabled = true;
+                        btn.classList.toggle('correct', isAnswer);
+                        if (!isAnswer) {
+                            btn.classList.remove('incorrect');
+                        }
+                    });
+                    const toneSection = document.getElementById('toneLab');
+                    if (toneSection) {
+                        toneSection.scrollIntoView({ behavior: 'smooth' });
+                    }
                 } else {
                     setWordFeedback('You would not make a good robot—pick again.', 'error');
+                    const picked = Array.from(optionButtons).find((btn) => btn.dataset.wordChoice === word);
+                    if (picked) {
+                        picked.classList.add('incorrect');
+                        setTimeout(() => picked.classList.remove('incorrect'), 450);
+                    }
                 }
             }
 

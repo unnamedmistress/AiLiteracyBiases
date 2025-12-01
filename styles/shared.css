@@ -151,6 +151,29 @@ body.with-global-nav {
     z-index: 999;
 }
 
+.nav-close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--color-text);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.nav-close:hover,
+.nav-close:focus-visible {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    outline: none;
+}
+
 .global-nav.nav-open .nav-drawer {
     right: 0;
 }

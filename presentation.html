@@ -6,7 +6,7 @@
     <title>AI's Bad Habits: Learn to Spot Them Before They Trick You</title>
     <link rel="stylesheet" href="styles/shared.css">
     <script defer src="scripts/nav.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/gh/unnamedmistress/AiLiteracyBiases/scripts/shared.js" onerror="this.onerror=null;this.src='scripts/shared.js';"></script>
+    <script defer src="scripts/shared.js"></script>
     <style>
         :root {
   /* Primitive Color Tokens */
@@ -287,6 +287,15 @@ body {
   padding: var(--space-24);
   text-align: center;
   transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.agenda-item[data-scroll] {
+  cursor: pointer;
+  outline: none;
+}
+
+.agenda-item[data-scroll]:focus-visible {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.35);
 }
 
 .agenda-item:hover {
@@ -949,7 +958,7 @@ body {
         <section class="slide">
             <h2 class="slide-title">🗺️ Your Learning Journey</h2>
             <div class="agenda-grid">
-                <div class="agenda-item">
+                <div class="agenda-item" data-scroll="#pathologyDeck" role="button" tabindex="0" aria-label="Jump to the 32 Machine Pathologies section">
                     <div class="agenda-icon">🧠</div>
                     <div class="agenda-title">32 Machine Pathologies</div>
                 </div>
@@ -985,9 +994,9 @@ body {
         </section>
 
         <!-- Slide 3-6: 32 Machine Pathologies -->
-        <section class="slide">
+        <section class="slide" id="pathologyDeck">
             <h2 class="slide-title">🧠 The 32 Machine Pathologies</h2>
-            <p class="slide-subtitle">AI's personality disorders you need to know about</p>
+            <p class="slide-subtitle">AI's personality disorders you need to know about—tap any card to expand instantly.</p>
             
             <div class="pathology-section">
                 <!-- Category 1: Hallucination -->
@@ -1658,6 +1667,29 @@ body {
         document.querySelectorAll('.slide').forEach(slide => {
             fadeObserver.observe(slide);
         });
+
+        function initScrollShortcuts() {
+          const targets = document.querySelectorAll('[data-scroll]');
+          if (!targets.length) return;
+          const scrollToTarget = (selector) => {
+            if (!selector) return;
+            const el = document.querySelector(selector);
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          };
+          targets.forEach((node) => {
+            node.addEventListener('click', () => scrollToTarget(node.dataset.scroll));
+            node.addEventListener('keydown', (event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                scrollToTarget(node.dataset.scroll);
+              }
+            });
+          });
+        }
+
+        initScrollShortcuts();
     </script>
 </body>
 </html>

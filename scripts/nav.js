@@ -107,6 +107,13 @@
         drawer.className = 'nav-drawer';
         drawer.id = 'navDrawer';
 
+        const closeBtn = document.createElement('button');
+        closeBtn.type = 'button';
+        closeBtn.className = 'nav-close';
+        closeBtn.setAttribute('aria-label', 'Close menu');
+        closeBtn.innerHTML = '<span aria-hidden="true">×</span>';
+
+        drawer.appendChild(closeBtn);
         drawer.appendChild(buildSection('Main', MAIN_LINKS, activeState.main, 'main'));
         drawer.appendChild(buildSection('Resources', RESOURCE_LINKS, activeState.resource, 'resource'));
         drawer.appendChild(buildSection('Lessons', LESSON_LINKS, activeState.lesson, 'lesson'));
@@ -127,6 +134,7 @@
         });
 
         overlay.addEventListener('click', () => setDrawerState(false));
+        closeBtn.addEventListener('click', () => setDrawerState(false));
 
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape' && nav.classList.contains('nav-open')) {
