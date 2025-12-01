@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 1: Prompt Wizardry Warm-Up ⚡️</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/unnamedmistress/AiLiteracyBiases/styles/shared.css" onerror="this.onerror=null;this.href='styles/shared.css';">
+    <style>
+        .lesson-shell { display: flex; flex-direction: column; gap: 24px; }
+        .content-grid { display: flex; flex-direction: column; gap: 24px; }
+        .mode-selector { display: flex; gap: 12px; margin-bottom: 16px; }
+        .challenge-section { display: flex; flex-direction: column; gap: 24px; }
+        .challenge-title { font-size: 34px; }
+        .challenge-desc { color: var(--color-muted); line-height: 1.6; }
+        .activity-card { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+        .activity-meta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; font-size: 14px; color: var(--color-muted); }
+        .activity-meta span { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(255, 255, 255, 0.08); border-radius: 999px; }
+        .activity-body { display: grid; gap: 18px; }
+        .learning-grid { display: grid; gap: 18px; }
+        .learning-card { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.15); padding: 20px; background: rgba(0, 0, 0, 0.25); }
+        .learning-card h3 { margin-bottom: 10px; font-size: 20px; }
+        .learning-card ul { margin-left: 20px; line-height: 1.7; }
+        .voice-grid { display: grid; gap: 16px; }
+        .chat-window { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(0, 0, 0, 0.25); padding: 18px; min-height: 220px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+        .message-bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; line-height: 1.5; font-size: 15px; display: inline-flex; flex-direction: column; gap: 6px; }
+        .message-meta { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.7; }
+        .message-user { align-self: flex-end; background: linear-gradient(135deg, #10B981, #059669); color: #fff; border-bottom-right-radius: 4px; }
+        .message-ai { align-self: flex-start; background: rgba(255, 255, 255, 0.12); border-bottom-left-radius: 4px; }
+        .empty-state { color: var(--color-muted); text-align: center; font-size: 14px; padding: 24px 0; }
+        .chat-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+        .chat-controls select { flex: 1; min-width: 180px; padding: 10px 12px; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.25); background: rgba(0, 0, 0, 0.35); color: inherit; }
+        .probability-visuals { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.12); padding: 18px; background: rgba(0, 0, 0, 0.25); display: flex; flex-direction: column; gap: 12px; }
+        .probability-row { display: flex; align-items: center; gap: 12px; }
+        .probability-word { width: 90px; font-size: 14px; }
+        .probability-track { flex: 1; height: 20px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+        .probability-fill { height: 100%; border-radius: 10px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 12px; font-weight: 600; color: #fff; }
+        .prob-high { background: linear-gradient(135deg, #16a34a, #22c55e); }
+        .prob-low { background: linear-gradient(135deg, #ef4444, #f97316); }
+        .word-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+        .word-option { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.18); padding: 12px; background: rgba(255, 255, 255, 0.04); color: inherit; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 6px; transition: transform var(--transition-base), border-color var(--transition-base); }
+        .word-option:hover:not([disabled]) { transform: translateY(-2px); border-color: var(--color-accent); }
+        .word-option[disabled] { opacity: 0.6; cursor: not-allowed; }
+        .word-hint { font-size: 12px; color: var(--color-muted); }
+        .feedback { border-radius: var(--radius-md); padding: 12px 16px; font-weight: 600; }
+        .feedback-success { border: 1px solid rgba(16, 185, 129, 0.6); background: rgba(16, 185, 129, 0.1); color: #34d399; }
+        .feedback-error { border: 1px solid rgba(248, 113, 113, 0.6); background: rgba(248, 113, 113, 0.15); color: #f87171; }
+        .tone-drop-zone { display: inline-flex; align-items: center; justify-content: center; padding: 10px 14px; min-width: 140px; border-radius: var(--radius-md); border: 2px dashed rgba(255, 255, 255, 0.25); text-transform: uppercase; font-weight: 600; cursor: pointer; transition: border-color var(--transition-base), background var(--transition-base); }
+        .tone-drop-zone.active { border-style: solid; border-color: var(--color-accent); background: rgba(16, 185, 129, 0.15); }
+        .tone-drop-zone.filled { border-style: solid; border-color: #facc15; background: rgba(250, 204, 21, 0.15); color: #fde047; }
+        .tone-word-bank { display: flex; flex-wrap: wrap; gap: 10px; }
+        .tone-word { padding: 8px 14px; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.04); cursor: grab; text-transform: capitalize; font-weight: 600; transition: background var(--transition-base), border-color var(--transition-base); }
+        .tone-word:active { cursor: grabbing; }
+        .tone-word:hover { background: rgba(255, 255, 255, 0.12); }
+        .tone-word.selected { background: var(--color-accent); color: #0f172a; border-color: var(--color-accent); }
+        .tone-output { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.18); padding: 16px; background: rgba(0, 0, 0, 0.3); font-size: 16px; line-height: 1.6; }
+        .status-pill { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); }
+        .notification { position: fixed; bottom: 24px; right: 24px; background: rgba(4, 4, 4, 0.85); border-radius: var(--radius-md); padding: 14px 18px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35); display: none; }
+        .notification.show { display: block; }
+        .notification strong { color: #34d399; }
+        @media (max-width: 768px) {
+            .challenge-title { font-size: 26px; }
+            .chat-controls { flex-direction: column; align-items: stretch; }
+            .chat-controls select { width: 100%; }
+            .word-options { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+        }
+    </style>
+    <script defer src="https://cdn.jsdelivr.net/gh/unnamedmistress/AiLiteracyBiases/scripts/shared.js" onerror="this.onerror=null;this.src='scripts/shared.js';"></script>
+</head>
+<body>
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">⚡️ Lesson 1: Prompt Wizardry Warm-Up</div>
+            <div class="breadcrumb"></div>
+            <div class="stats">
+                <div>
+                    <div class="stat-label">XP</div>
+                    <div class="xp-bar">
+                        <div class="xp-fill" id="xpBar">
+                            <span id="xpText">0/150</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="main-panel">
+                <div class="mode-selector">
+                    <button class="mode-btn" id="gameBtn">🎮 Game Mode</button>
+                    <button class="mode-btn active" id="presentBtn">📚 Learn</button>
+                </div>
+
+                <div id="gameMode" class="hidden">
+                    <div class="challenge-section">
+                        <h1 class="challenge-title">Build AI instincts through three mini-games</h1>
+                        <p class="challenge-desc">These are the exact warm-ups from Prompt Wizardry: mimic a character, predict the next word, then flip the tone with a single adjective. Complete each section to earn XP and understand how tiny changes influence AI output.</p>
+
+                        <div class="activity-card" id="voiceMimic">
+                            <div class="activity-meta">
+                                <span>🎤 Activity 1</span>
+                                <span>Voice Mimic Chat</span>
+                                <span>Goal: try 3 characters</span>
+                            </div>
+                            <div class="activity-body voice-grid">
+                                <div class="status-pill">Prompt: "Honesty is the best policy."</div>
+                                <div class="chat-window" id="mimicMessages">
+                                    <div class="empty-state" id="mimicEmpty">Select a character voice and press Send to see how the AI response shifts.</div>
+                                </div>
+                                <div class="chat-controls">
+                                    <label for="characterSelect" style="font-size: 14px; opacity: 0.8;">Rewrite it in the voice of</label>
+                                    <select id="characterSelect" aria-label="Select a character voice"></select>
+                                    <button class="btn btn-primary" id="sendMimic">Send</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="activity-card" id="wordPrediction">
+                            <div class="activity-meta">
+                                <span>🎯 Activity 2</span>
+                                <span>Word Prediction Radar</span>
+                                <span>Goal: choose the most likely completion</span>
+                            </div>
+                            <div class="activity-body">
+                                <div class="status-pill">Sentence starter: Honesty is the best ___</div>
+                                <p>AI predicts the next word by ranking what usually follows. Study the probabilities, then make your pick.</p>
+                                <div class="probability-visuals" id="probabilityVisualization"></div>
+                                <div class="word-options" id="wordOptions"></div>
+                                <div class="feedback hidden" id="wordFeedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="activity-card" id="toneLab">
+                            <div class="activity-meta">
+                                <span>🎭 Activity 3</span>
+                                <span>Tone Changes Everything</span>
+                                <span>Goal: test multiple tones</span>
+                            </div>
+                            <div class="activity-body">
+                                <p>Write a <span id="toneDropZone" class="tone-drop-zone" role="button" tabindex="0">choose tone</span> message to my boss to call out sick today.</p>
+                                <div class="status-pill">Tip: click a tone word or drag it into the slot. Tap the slot to clear.</div>
+                                <div class="tone-word-bank" id="toneWordBank"></div>
+                                <div class="tone-output hidden" id="toneOutput"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="presentationMode">
+                    <div class="challenge-section">
+                        <h1 class="challenge-title">Lesson 1 · Understanding AI Personalities</h1>
+                        <p class="challenge-desc">Before building complex prompts we need to see how AI reacts to style, probability, and tone. Lesson 1 mirrors the Prompt Wizardry intro so you can slot it directly into your flow.</p>
+
+                        <div class="learning-grid">
+                            <div class="learning-card">
+                                <h3>1️⃣ Voice Mimicry</h3>
+                                <ul>
+                                    <li>Same prompt, wildly different output when you change the "speaker".</li>
+                                    <li>Useful for tailoring brand voice or character dialogue.</li>
+                                    <li>Watch for exaggerated tropes—great teachable-moment on bias.</li>
+                                </ul>
+                            </div>
+                            <div class="learning-card">
+                                <h3>2️⃣ Word Prediction</h3>
+                                <ul>
+                                    <li>LLMs guess the next token based on probability, not truth.</li>
+                                    <li>Common phrases like "policy" win because of training data frequency.</li>
+                                    <li>When prompts are vague, random words sneak in.</li>
+                                </ul>
+                            </div>
+                            <div class="learning-card">
+                                <h3>3️⃣ Tone Swaps</h3>
+                                <ul>
+                                    <li>A single adjective flips politeness, urgency, or attitude.</li>
+                                    <li>Students see that "tone" is just part of the prompt.</li>
+                                    <li>Encourage experimenting with opposing moods (formal vs. pathetic).</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="learning-card">
+                            <h3>How to teach it live</h3>
+                            <ol style="margin-left: 20px; line-height: 1.7;">
+                                <li>Demonstrate Activity 1 by sending two character voices back-to-back.</li>
+                                <li>Have the room vote on Activity 2 before revealing the AI probability bar.</li>
+                                <li>Let students drag tones for Activity 3 and read the result aloud.</li>
+                            </ol>
+                        </div>
+
+                        <div class="learning-card">
+                            <h3>Facilitator talking points</h3>
+                            <ul>
+                                <li><strong>Accuracy vs. Likelihood:</strong> AI predicts likely words, not necessarily correct ones.</li>
+                                <li><strong>Control the defaults:</strong> If you do not specify tone, the AI will pick one for you.</li>
+                                <li><strong>Bias spotting:</strong> Character stereotypes are a great segue into inclusive prompting.</li>
+                            </ul>
+                        </div>
+
+                        <div class="learning-card">
+                            <h3>Ready to ship</h3>
+                            <p>When you're ready, hit "Start Activities" to jump into the exact three games from Prompt Wizardry. All assets load locally so you can run it offline during workshops.</p>
+                            <button class="btn btn-primary" onclick="window.lessonMode && window.lessonMode.setMode('game')">Start Activities →</button>
+                        </div>
+
+                        <div class="footer-nav"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification hidden">
+        <div id="notificationContent"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const characters = [
+                { id: 'mickey', name: 'Mickey Mouse', response: 'Gosh! Being truthful is always the top policy!' },
+                { id: 'scrooge', name: 'Ebenezer Scrooge', response: 'Bah! Yet honesty remains the soundest policy for profit.' },
+                { id: 'cat', name: 'A Cat', response: 'Mew... honesty keeps the bowl full.' },
+                { id: 'dog', name: 'A Dog', response: 'Woof! Honesty is the best bone to chew on!' },
+                { id: 'santa', name: 'Santa Claus', response: 'Ho ho ho! Honesty is the merriest policy of all.' },
+                { id: 'dropbox', name: 'Dropbox', response: 'At Dropbox, integrity is our best policy.' },
+                { id: 'sherlock', name: 'Sherlock Holmes', response: 'Elementary, my dear Watson: honesty is the best policy.' },
+                { id: 'yoda', name: 'Yoda', response: 'Best policy, honesty is, hmmm.' },
+                { id: 'pirate', name: 'Pirate', response: "Arrr, speakin' true be the finest code o' conduct." },
+                { id: 'shakespeare', name: 'Shakespeare', response: 'Verily, honesty doth prove the noblest policy.' }
+            ];
+
+            const probabilityConfig = [
+                { word: 'Policy', probability: 94, type: 'high', hint: 'This is the most common phrase completion.' },
+                { word: 'Banana', probability: 2, type: 'low', hint: "This doesn't fit the pattern." },
+                { word: 'Spaceship', probability: 1, type: 'low', hint: 'AI rarely predicts random words.' },
+                { word: 'Revenge', probability: 3, type: 'low', hint: 'This contradicts the meaning.' }
+            ];
+
+            const toneWords = ['compelling', 'pathetic', 'mad', 'happy', 'distracted', 'short', 'formal', 'friendly', 'urgent', 'apologetic'];
+            const toneResponses = {
+                compelling: "Hey boss, I'm really under the weather and won't be able to give my best today. I'll make up for it when I'm back.",
+                pathetic: "Hey boss, I'm sooo sick... I can't even move. Please let me stay home.",
+                mad: "Boss, I'm sick. Don't expect me in.",
+                happy: "Morning! Feeling pretty ill today, so I'll rest up and be back with a smile tomorrow.",
+                distracted: "Hi - um, I'm sick today, can't come. Thanks.",
+                short: 'Sick today, staying home.',
+                formal: 'Dear Boss, I regret to inform you that illness prevents my attendance today.',
+                friendly: "Hey Boss! I'm feeling rough today, going to rest and catch you tomorrow.",
+                urgent: "Boss, I woke up really sick. Need to stay home and recover.",
+                apologetic: "I'm sorry, but I'm too sick to come in today. I'll keep you posted."
+            };
+
+            const state = {
+                xp: 0,
+                xpToNext: 150,
+                mimicComplete: false,
+                wordComplete: false,
+                toneComplete: false,
+                messages: []
+            };
+
+            const elements = {
+                mimicMessages: document.getElementById('mimicMessages'),
+                mimicEmpty: document.getElementById('mimicEmpty'),
+                characterSelect: document.getElementById('characterSelect'),
+                sendMimic: document.getElementById('sendMimic'),
+                probabilityVisualization: document.getElementById('probabilityVisualization'),
+                wordOptions: document.getElementById('wordOptions'),
+                wordFeedback: document.getElementById('wordFeedback'),
+                toneDropZone: document.getElementById('toneDropZone'),
+                toneWordBank: document.getElementById('toneWordBank'),
+                toneOutput: document.getElementById('toneOutput'),
+                notification: document.getElementById('notification'),
+                notificationContent: document.getElementById('notificationContent')
+            };
+
+            let notificationTimer;
+            let selectedTone = null;
+
+            function showNotification(message) {
+                if (!elements.notification || !elements.notificationContent) return;
+                elements.notificationContent.innerHTML = `<strong>XP Update:</strong> ${message}`;
+                elements.notification.classList.remove('hidden');
+                elements.notification.classList.add('show');
+                clearTimeout(notificationTimer);
+                notificationTimer = setTimeout(() => {
+                    elements.notification.classList.add('hidden');
+                    elements.notification.classList.remove('show');
+                }, 2200);
+            }
+
+            function updateXPBar() {
+                if (window.AILesson && typeof window.AILesson.updateXPBar === 'function') {
+                    window.AILesson.updateXPBar({ xp: state.xp, xpToNext: state.xpToNext, barId: 'xpBar', textId: 'xpText' });
+                } else {
+                    const bar = document.getElementById('xpBar');
+                    const text = document.getElementById('xpText');
+                    if (bar) bar.style.width = `${(state.xp / state.xpToNext) * 100}%`;
+                    if (text) text.textContent = `${state.xp}/${state.xpToNext}`;
+                }
+            }
+
+            function grantXP(amount, reason) {
+                state.xp = Math.min(state.xpToNext, state.xp + amount);
+                updateXPBar();
+                showNotification(`${reason} (+${amount} XP)`);
+            }
+
+            function renderMessages() {
+                if (!elements.mimicMessages) return;
+                elements.mimicMessages.innerHTML = '';
+                if (!state.messages.length) {
+                    elements.mimicEmpty.classList.remove('hidden');
+                    return;
+                }
+                elements.mimicEmpty.classList.add('hidden');
+                state.messages.forEach((msg) => {
+                    const bubble = document.createElement('div');
+                    bubble.className = `message-bubble ${msg.role === 'user' ? 'message-user' : 'message-ai'}`;
+                    const meta = document.createElement('div');
+                    meta.className = 'message-meta';
+                    meta.textContent = msg.role === 'user' ? 'You' : 'AI Assistant';
+                    const text = document.createElement('div');
+                    text.className = 'message-text';
+                    text.textContent = msg.text;
+                    bubble.appendChild(meta);
+                    bubble.appendChild(text);
+                    elements.mimicMessages.appendChild(bubble);
+                });
+                elements.mimicMessages.scrollTop = elements.mimicMessages.scrollHeight;
+            }
+
+            function handleSend() {
+                const selectedId = elements.characterSelect.value;
+                const character = characters.find((c) => c.id === selectedId);
+                if (!character) return;
+                state.messages.push({ role: 'user', text: `Honesty is the best policy. Rewrite this in the voice of ${character.name}.` });
+                state.messages.push({ role: 'assistant', text: character.response });
+                renderMessages();
+                if (!state.mimicComplete) {
+                    state.mimicComplete = true;
+                    grantXP(30, 'Unlocked Mimic Insight');
+                }
+            }
+
+            function buildProbabilityBars() {
+                if (!elements.probabilityVisualization) return;
+                probabilityConfig.forEach((opt) => {
+                    const row = document.createElement('div');
+                    row.className = 'probability-row';
+                    const label = document.createElement('span');
+                    label.className = 'probability-word';
+                    label.textContent = opt.word;
+                    const track = document.createElement('div');
+                    track.className = 'probability-track';
+                    const fill = document.createElement('div');
+                    fill.className = `probability-fill ${opt.type === 'high' ? 'prob-high' : 'prob-low'}`;
+                    fill.style.width = `${opt.probability}%`;
+                    fill.textContent = `${opt.probability}%`;
+                    track.appendChild(fill);
+                    row.appendChild(label);
+                    row.appendChild(track);
+                    elements.probabilityVisualization.appendChild(row);
+                });
+            }
+
+            function setWordFeedback(message, type) {
+                elements.wordFeedback.textContent = message;
+                elements.wordFeedback.className = `feedback ${type === 'success' ? 'feedback-success' : 'feedback-error'}`;
+                elements.wordFeedback.classList.remove('hidden');
+            }
+
+            function handleWordPick(word) {
+                if (state.wordComplete) return;
+                if (word === 'Policy') {
+                    state.wordComplete = true;
+                    setWordFeedback('Correct! You think like an AI on this one. Moving to tone experiments...', 'success');
+                    grantXP(40, 'Prediction Mastery');
+                    elements.wordOptions.querySelectorAll('button').forEach((btn) => (btn.disabled = true));
+                    document.getElementById('toneLab').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    setWordFeedback('You would not make a good robot—pick again.', 'error');
+                }
+            }
+
+            function buildWordOptions() {
+                if (!elements.wordOptions) return;
+                probabilityConfig.forEach((opt) => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'word-option';
+                    button.dataset.wordChoice = opt.word;
+                    button.innerHTML = `<span>${opt.word}</span><span class="word-hint">${opt.hint}</span>`;
+                    button.addEventListener('click', () => handleWordPick(opt.word));
+                    elements.wordOptions.appendChild(button);
+                });
+            }
+
+            function setSelectedTone(tone) {
+                selectedTone = tone;
+                elements.toneDropZone.textContent = tone || 'choose tone';
+                elements.toneDropZone.classList.toggle('filled', Boolean(tone));
+                Array.from(elements.toneWordBank.children).forEach((btn) => {
+                    btn.classList.toggle('selected', btn.dataset.tone === tone);
+                });
+                if (tone) {
+                    elements.toneOutput.textContent = toneResponses[tone];
+                    elements.toneOutput.classList.remove('hidden');
+                    if (!state.toneComplete) {
+                        state.toneComplete = true;
+                        grantXP(40, 'Tone Mastery Achieved');
+                    }
+                } else {
+                    elements.toneOutput.classList.add('hidden');
+                }
+            }
+
+            function buildToneWords() {
+                if (!elements.toneWordBank) return;
+                toneWords.forEach((word) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'tone-word';
+                    btn.textContent = word;
+                    btn.draggable = true;
+                    btn.dataset.tone = word;
+                    btn.addEventListener('dragstart', (event) => {
+                        event.dataTransfer.setData('text/plain', word);
+                    });
+                    btn.addEventListener('click', () => setSelectedTone(word));
+                    elements.toneWordBank.appendChild(btn);
+                });
+            }
+
+            function handleDragOver(event) {
+                event.preventDefault();
+                elements.toneDropZone.classList.add('active');
+            }
+
+            function handleDrop(event) {
+                event.preventDefault();
+                const tone = event.dataTransfer.getData('text/plain');
+                setSelectedTone(tone);
+                elements.toneDropZone.classList.remove('active');
+            }
+
+            function handleDragLeave(event) {
+                if (!elements.toneDropZone.contains(event.relatedTarget)) {
+                    elements.toneDropZone.classList.remove('active');
+                }
+            }
+
+            elements.characterSelect.innerHTML = characters.map((character) => `<option value="${character.id}">${character.name}</option>`).join('');
+            elements.sendMimic.addEventListener('click', handleSend);
+            elements.characterSelect.addEventListener('change', () => elements.characterSelect.blur());
+            elements.characterSelect.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    handleSend();
+                }
+            });
+
+            buildProbabilityBars();
+            buildWordOptions();
+            buildToneWords();
+
+            elements.toneDropZone.addEventListener('dragover', handleDragOver);
+            elements.toneDropZone.addEventListener('dragenter', handleDragOver);
+            elements.toneDropZone.addEventListener('dragleave', handleDragLeave);
+            elements.toneDropZone.addEventListener('drop', handleDrop);
+            elements.toneDropZone.addEventListener('click', () => setSelectedTone(null));
+            elements.toneDropZone.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    setSelectedTone(null);
+                }
+            });
+
+            renderMessages();
+            updateXPBar();
+
+            if (window.AILesson) {
+                window.lessonMode = window.AILesson.initModeToggle({
+                    defaultMode: 'presentation',
+                    gamePanelId: 'gameMode',
+                    presentationPanelId: 'presentationMode',
+                    gameButtonId: 'gameBtn',
+                    presentationButtonId: 'presentBtn'
+                });
+                window.AILesson.initLessonNavigation({
+                    lessonId: 'lesson1',
+                    breadcrumbSelector: '.breadcrumb',
+                    footerSelector: '.footer-nav'
+                });
+            }
+        });
+    </script>
+</body>
+</html>
