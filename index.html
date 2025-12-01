@@ -27,6 +27,109 @@
             width: 100%;
         }
 
+        .primary-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+        }
+
+        .nav-logo {
+            font-size: 22px;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+
+        .progress-overview {
+            margin: 30px 0;
+            padding: 25px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .progress-label {
+            font-size: 18px;
+            font-weight: 600;
+            opacity: 0.85;
+        }
+
+        .progress-summary {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .progress-meter {
+            width: 100%;
+            height: 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #34d399, #10b981);
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .module-progress {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin: 0 0 40px 0;
+            padding: 0;
+        }
+
+        .module-progress li {
+            padding: 14px 18px;
+            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .module-progress li span {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
         .header {
             text-align: center;
             margin-bottom: 60px;
@@ -270,6 +373,15 @@
 </head>
 <body>
     <div class="container">
+        <nav class="primary-nav">
+            <a class="nav-logo" href="index.html">AI Detective Academy</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="#modules">Modules</a>
+                <a href="glossary.html">Glossary</a>
+                <a href="updates.html">Updates</a>
+            </div>
+        </nav>
         <div class="header">
             <div class="logo">🕵️</div>
             <h1>AI Detective Academy</h1>
@@ -284,8 +396,23 @@
             </div>
         </div>
 
+        <section class="progress-overview">
+            <div class="progress-header">
+                <div>
+                    <div class="progress-label">Your Progress</div>
+                    <div class="progress-summary" id="progressSummary">No lessons completed yet.</div>
+                </div>
+                <div class="progress-summary" id="xpSummary">0 XP earned</div>
+            </div>
+            <div class="progress-meter">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </section>
+
+        <ul class="module-progress" id="moduleProgressList"></ul>
+
         <!-- Course Navigation Grid -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px;">
+        <div id="modules" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px;">
             <div class="choice-card" onclick="window.location.href='lesson1-ai-intro.html'" style="padding: 30px;">
                 <div class="choice-icon" style="font-size: 60px;">⚡️</div>
                 <div class="choice-title" style="font-size: 24px;">Lesson 1: Warm-Up</div>
@@ -407,5 +534,59 @@
             <p>🎓 Complete course | 🎮 Gamified learning | 🏆 Earn certificate | 🌟 Master AI literacy</p>
         </div>
     </div>
+    <script defer src="scripts/progress.js"></script>
+    <script>
+        const COURSE_MODULES = [
+            { id: 'lesson1', label: 'Lesson 1 · Warm-Up', path: 'lesson1-ai-intro.html' },
+            { id: 'lesson2-learn', label: 'Lesson 2 · AI Literacy (Learn)', path: 'presentation.html' },
+            { id: 'lesson2-game', label: 'Lesson 2 · Game Mode', path: 'game.html' },
+            { id: 'lesson3', label: 'Lesson 3 · Content Creation', path: 'lesson3-content-creation.html' },
+            { id: 'lesson4', label: 'Lesson 4 · Advanced Prompting', path: 'lesson4-advanced-prompting.html' },
+            { id: 'lesson5', label: 'Lesson 5 · AI Workflows', path: 'lesson5-ai-workflows.html' },
+            { id: 'lesson6', label: 'Lesson 6 · Capstone', path: 'lesson6-capstone.html' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const tracker = window.ProgressTracker;
+            const summaryEl = document.getElementById('progressSummary');
+            const xpEl = document.getElementById('xpSummary');
+            const fillEl = document.getElementById('progressFill');
+            const listEl = document.getElementById('moduleProgressList');
+
+            if (!listEl) return;
+
+            function renderModules(statusMap) {
+                listEl.innerHTML = COURSE_MODULES.map((module) => {
+                    const status = statusMap[module.id] || 'not-started';
+                    return `
+                        <li>
+                            <strong><a href="${module.path}" style="color: inherit; text-decoration: none;">${module.label}</a></strong>
+                            <span>Status: ${status.replace('-', ' ')}</span>
+                        </li>
+                    `;
+                }).join('');
+            }
+
+            if (!tracker) {
+                renderModules({});
+                return;
+            }
+
+            const statusMap = {};
+            COURSE_MODULES.forEach((module) => {
+                statusMap[module.id] = tracker.getLessonStatus(module.id);
+            });
+
+            const completed = Object.values(statusMap).filter((status) => status === 'completed').length;
+            const total = COURSE_MODULES.length;
+            const percentage = total ? Math.round((completed / total) * 100) : 0;
+
+            if (summaryEl) summaryEl.textContent = `${completed}/${total} lessons complete (${percentage}%)`;
+            if (xpEl) xpEl.textContent = `${tracker.getXP()} XP earned`;
+            if (fillEl) fillEl.style.width = `${percentage}%`;
+
+            renderModules(statusMap);
+        });
+    </script>
 </body>
 </html>
