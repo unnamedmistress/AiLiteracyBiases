@@ -1,6 +1,6 @@
 body.updates-page {
-    background: linear-gradient(135deg, #0f172a, #1d4ed8);
-    color: #fff;
+    background: var(--color-bg);
+    color: var(--color-text);
     min-height: 100vh;
 }
 
@@ -15,7 +15,7 @@ body.updates-page {
 }
 
 .updates-subtext {
-    opacity: 0.85;
+    color: var(--color-muted);
 }
 
 .updates-list {
@@ -26,10 +26,10 @@ body.updates-page {
 
 .update-card {
     border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(15, 23, 42, 0.12);
     padding: 20px;
-    background: rgba(15, 23, 42, 0.5);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 20px 40px rgba(148, 163, 184, 0.3);
 }
 
 .update-meta {
@@ -38,7 +38,7 @@ body.updates-page {
     align-items: center;
     margin-bottom: 8px;
     font-size: 14px;
-    opacity: 0.8;
+    color: var(--color-muted);
 }
 
 .tag {
@@ -50,9 +50,9 @@ body.updates-page {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(59, 130, 246, 0.15);
-    color: #bae6fd;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(59, 130, 246, 0.08);
+    color: #1d4ed8;
 }
 
 .tag.tag-new-feature {

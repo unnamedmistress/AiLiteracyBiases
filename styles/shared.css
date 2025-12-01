@@ -3,11 +3,13 @@
     --font-family-display: 'Poppins', 'Segoe UI', system-ui, sans-serif;
 
     --color-bg: linear-gradient(135deg, #cfd6ff 0%, #e9d5ff 100%);
-    --color-surface: rgba(255, 255, 255, 0.08);
-    --color-surface-strong: rgba(255, 255, 255, 0.12);
-    --color-border: rgba(255, 255, 255, 0.25);
-    --color-text: rgba(255, 255, 255, 0.95);
-    --color-muted: rgba(255, 255, 255, 0.75);
+    --color-surface: rgba(255, 255, 255, 0.9);
+    --color-surface-strong: #ffffff;
+    --color-border: rgba(15, 23, 42, 0.12);
+    --color-text: #0f172a;
+    --color-muted: rgba(15, 23, 42, 0.7);
+    --color-muted-strong: rgba(15, 23, 42, 0.85);
+    --color-overlay: rgba(15, 23, 42, 0.05);
     --color-accent: #10B981;
     --color-accent-dark: #059669;
     --color-gold: #FCD34D;
@@ -52,11 +54,12 @@ body.with-global-nav {
     align-items: center;
     justify-content: space-between;
     padding: 18px 32px;
-    background: rgba(9, 9, 20, 0.85);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 16px 45px rgba(148, 163, 184, 0.45);
     z-index: 999;
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(12px);
+    color: var(--color-text);
 }
 
 .nav-toggle {
@@ -66,8 +69,8 @@ body.with-global-nav {
     width: 44px;
     height: 44px;
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(15, 23, 42, 0.15);
+    background: rgba(255, 255, 255, 0.8);
     cursor: pointer;
     color: var(--color-text);
     transition: var(--transition-base);
@@ -77,7 +80,7 @@ body.with-global-nav {
 .nav-toggle:focus-visible {
     border-color: var(--color-accent);
     outline: none;
-    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.35);
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
 }
 
 .nav-toggle-bars {
@@ -126,7 +129,7 @@ body.with-global-nav {
 .nav-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.65);
+    background: rgba(15, 23, 42, 0.2);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s ease;
@@ -140,9 +143,9 @@ body.with-global-nav {
     width: min(340px, 80vw);
     height: 100vh;
     padding: 100px 28px 32px;
-    background: rgba(9, 9, 20, 0.92);
-    box-shadow: -12px 0 30px rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(18px);
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: -12px 0 45px rgba(15, 23, 42, 0.25);
+    backdrop-filter: blur(12px);
     display: flex;
     flex-direction: column;
     gap: 28px;
@@ -157,9 +160,9 @@ body.with-global-nav {
     right: 24px;
     width: 40px;
     height: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(15, 23, 42, 0.15);
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.8);
     color: var(--color-text);
     font-size: 22px;
     line-height: 1;
@@ -249,21 +252,23 @@ body.with-global-nav {
     padding: 10px 18px;
     font-size: 14px;
     font-weight: 600;
-    color: var(--color-muted);
-    border: 1px solid transparent;
+    color: var(--color-muted-strong);
+    border: 1px solid rgba(15, 23, 42, 0.15);
+    background: rgba(255, 255, 255, 0.8);
     transition: var(--transition-base);
 }
 
 .nav-link.is-locked {
-    opacity: 0.4;
+    opacity: 0.45;
     cursor: not-allowed;
-    border-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(15, 23, 42, 0.12);
     pointer-events: none;
 }
 
 .nav-link:hover {
     color: var(--color-text);
-    border-color: rgba(255, 255, 255, 0.25);
+    border-color: rgba(15, 23, 42, 0.25);
+    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
 }
 
 .nav-link.is-active,
@@ -303,8 +308,8 @@ a {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     padding: 28px;
-    box-shadow: var(--shadow-card);
-    backdrop-filter: blur(12px);
+    box-shadow: 0 25px 45px rgba(148, 163, 184, 0.35);
+    backdrop-filter: blur(8px);
 }
 
 .header {
@@ -313,10 +318,12 @@ a {
     justify-content: space-between;
     gap: 20px;
     align-items: center;
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(255, 255, 255, 0.85);
     border-radius: var(--radius-lg);
     padding: 24px 32px;
     margin-bottom: 32px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 20px 40px rgba(148, 163, 184, 0.35);
 }
 
 .logo {
@@ -355,9 +362,9 @@ a {
     width: 260px;
     height: 26px;
     border-radius: var(--radius-sm);
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(15, 23, 42, 0.08);
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(15, 23, 42, 0.12);
 }
 
 .xp-fill {
@@ -375,11 +382,12 @@ a {
 .mode-selector,
 .mode-toggle {
     display: inline-flex;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.85);
     border-radius: 14px;
     padding: 6px;
     gap: 6px;
     margin-bottom: 24px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .mode-btn {
@@ -394,9 +402,9 @@ a {
 }
 
 .mode-btn.active {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(15, 23, 42, 0.08);
     color: var(--color-text);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.12);
 }
 
 .btn,
@@ -428,11 +436,11 @@ a {
 .btn-secondary {
     background: transparent;
     color: var(--color-text);
-    border: 1px solid rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(15, 23, 42, 0.2);
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(15, 23, 42, 0.05);
 }
 
 .btn-link {
@@ -475,19 +483,20 @@ a {
 
 .tool-card,
 .info-card {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.85);
     border-radius: var(--radius-md);
     padding: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(15, 23, 42, 0.08);
     min-height: 180px;
+    box-shadow: 0 18px 35px rgba(148, 163, 184, 0.25);
 }
 
 .key-takeaways {
     margin-top: 32px;
     padding: 28px;
     border-radius: var(--radius-lg);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: rgba(255, 255, 255, 0.9);
 }
 
 .takeaway-grid {
@@ -499,9 +508,9 @@ a {
 
 .takeaway-card {
     border-radius: var(--radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(15, 23, 42, 0.08);
     padding: 18px;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.85);
 }
 
 .takeaway-label {
@@ -511,7 +520,7 @@ a {
     width: 34px;
     height: 34px;
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(15, 23, 42, 0.15);
     margin-bottom: 10px;
     font-weight: 600;
 }
@@ -519,8 +528,9 @@ a {
 .ethics-warning {
     border-left: 4px solid var(--color-danger);
     padding: 24px;
-    background: rgba(248, 113, 113, 0.15);
+    background: rgba(248, 113, 113, 0.12);
     border-radius: var(--radius-md);
+    color: var(--color-text);
 }
 
 .prompt-input,
@@ -528,27 +538,29 @@ textarea {
     width: 100%;
     min-height: 140px;
     border-radius: var(--radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(255, 255, 255, 0.95);
     color: var(--color-text);
     padding: 18px;
     font-size: 15px;
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08);
 }
 
 .tip-chip {
     display: inline-flex;
     align-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(15, 23, 42, 0.12);
     border-radius: 999px;
     padding: 8px 18px;
     margin: 6px 6px 0 0;
     font-size: 14px;
     cursor: pointer;
     transition: var(--transition-base);
+    background: rgba(255, 255, 255, 0.85);
 }
 
 .tip-chip:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(15, 23, 42, 0.05);
 }
 
 .hidden { display: none !important; }
