@@ -167,22 +167,14 @@
             </div>
             <div class="stats">
                 <div class="stat">
-                    <div style="font-size: 11px; opacity: 0.7;">Level</div>
-                    <div class="stat-value">5</div>
-                </div>
-                <div class="stat">
                     <div style="font-size: 11px; opacity: 0.7;">XP</div>
                     <div class="xp-bar"><div class="xp-fill" id="xpBar" style="width: 0%;"><span id="xpText">0/300</span></div></div>
-                </div>
-                <div class="stat">
-                    <div style="font-size: 11px; opacity: 0.7;">Points</div>
-                    <div class="stat-value"><span id="points">0</span> ���</div>
                 </div>
             </div>
         </div>
 
         <div class="content">
-            <div class="sidebar">
+            <div class="sidebar" style="display: none;">
                 <h3 style="margin-bottom: 15px; font-size: 16px;">��� Progress</h3>
                 <div class="progress-item completed">✅ L1: Intro</div>
                 <div class="progress-item completed">✅ L2: Literacy</div>
@@ -194,8 +186,8 @@
 
             <div class="panel">
                 <div class="mode-toggle">
-                    <button class="mode-btn active" onclick="switchMode('game')" id="gameBtn">��� Interactive</button>
-                    <button class="mode-btn" onclick="switchMode('present')" id="presentBtn">��� Learn</button>
+                    <button class="mode-btn" onclick="switchMode('game')" id="gameBtn">🎮 Game Mode</button>
+                    <button class="mode-btn active" onclick="switchMode('present')" id="presentBtn">📚 Learn</button>
                 </div>
 
                 <div id="gameMode" class="hidden">
@@ -293,7 +285,7 @@
                         </div>
                 </div>
 
-                <div id="presentMode" class="hidden">
+                <div id="presentMode">
                     <h1 style="font-size: 28px; margin-bottom: 15px; color: #00C9FF;">��� AI Workflow Patterns</h1>
 
                     <h2 style="font-size: 22px; margin: 25px 0 15px 0; color: #00C9FF;">��� Common Workflow Types</h2>
