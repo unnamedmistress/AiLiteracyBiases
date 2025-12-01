@@ -1,10 +1,10 @@
 (function () {
     const LESSON_SEQUENCE = [
         { id: 'lesson1', label: 'Lesson 1: Prompt Wizardry Warm-Up', path: 'lesson1-ai-intro.html' },
-        { id: 'quiz1', label: 'Quiz 1: Warm-Up Review', path: 'quiz1.html' },
         { id: 'lesson2-learn', label: 'Lesson 2: AI Literacy', path: 'presentation.html' },
         { id: 'lesson2-game', label: 'Lesson 2: Game Mode', path: 'game.html' },
         { id: 'lesson3', label: 'Lesson 3: Content Creation', path: 'lesson3-content-creation.html' },
+        { id: 'quiz1', label: 'Quiz 1: Warm-Up Review', path: 'quiz1.html' },
         { id: 'lesson4', label: 'Lesson 4: Advanced Prompting', path: 'lesson4-advanced-prompting.html' },
         { id: 'lesson5', label: 'Lesson 5: AI Workflows', path: 'lesson5-ai-workflows.html' },
         { id: 'lesson6', label: 'Lesson 6: Capstone', path: 'lesson6-capstone.html' },
@@ -13,12 +13,12 @@
 
     const CUSTOM_NEXT = {
         lesson1: {
-            href: 'quiz1.html',
-            label: 'Next: Quiz 1 →'
-        },
-        quiz1: {
             href: 'presentation.html',
             label: 'Next: Lesson 2 →'
+        },
+        quiz1: {
+            href: 'lesson4-advanced-prompting.html',
+            label: 'Next: Lesson 4 →'
         },
         'lesson2-learn': {
             href: 'game.html',

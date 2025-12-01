@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             if (tracker.markQuizScore) tracker.markQuizScore('quiz1', scorePercent);
             if (tracker.addXP) tracker.addXP(earnedXP);
-            if (tracker.markLessonComplete) tracker.markLessonComplete('lesson1');
+            if (tracker.markLessonComplete) tracker.markLessonComplete('lesson3');
         } catch (error) {
             console.warn('Failed to write quiz progress', error);
         }
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
         awardProgress(percent);
 
         els.summaryHeadline.textContent = percent >= 75 ? 'Certified AI Warm-Up Detective!' : 'Great reps—run it again?';
-        els.summaryCopy.textContent = `You answered ${correctCount}/${QUESTIONS.length} correctly (${percent}%). ${percent >= 75 ? 'Lesson 2 is unlocked.' : 'Score 75% to speedrun Lesson 2.'}`;
+        els.summaryCopy.textContent = `You answered ${correctCount}/${QUESTIONS.length} correctly (${percent}%). ${percent >= 75 ? 'Lesson 4 is unlocked.' : 'Score 75% to crack Lesson 4.'}`;
 
         els.scoreboard.innerHTML = state.responses.map((entry, index) => {
             const type = entry?.correct ? 'correct' : 'incorrect';
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     els.nextBtn.addEventListener('click', handleNext);
     els.continueBtn.addEventListener('click', () => {
-        window.location.href = 'presentation.html';
+        window.location.href = 'lesson4-advanced-prompting.html';
     });
     els.retryBtn.addEventListener('click', resetQuiz);
 

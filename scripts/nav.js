@@ -11,9 +11,9 @@
 
     const LESSON_LINKS = [
         { id: 'lesson1', label: 'Lesson 1', href: 'lesson1-ai-intro.html' },
-        { id: 'quiz1', label: 'Quiz 1', href: 'quiz1.html' },
         { id: 'lesson2', label: 'Lesson 2', href: 'presentation.html' },
         { id: 'lesson3', label: 'Lesson 3', href: 'lesson3-content-creation.html' },
+        { id: 'quiz1', label: 'Quiz 1', href: 'quiz1.html' },
         { id: 'lesson4', label: 'Lesson 4', href: 'lesson4-advanced-prompting.html' },
         { id: 'lesson5', label: 'Lesson 5', href: 'lesson5-ai-workflows.html', locked: true },
         { id: 'lesson6', label: 'Lesson 6', href: 'lesson6-capstone.html', locked: true }

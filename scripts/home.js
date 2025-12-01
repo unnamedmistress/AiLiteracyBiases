@@ -10,20 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
             path: 'lesson1-ai-intro.html'
         },
         {
-            id: 'quiz1',
-            type: 'quiz',
-            title: 'Quiz 1 · Warm-Up Review',
-            summary: 'Check your instincts before unlocking Lesson 2.',
-            path: 'quiz1.html',
-            requires: 'lesson1'
-        },
-        {
             id: 'lesson2',
             type: 'lesson',
             title: 'Lesson 2 · AI Literacy',
             summary: '32 machine pathologies, F.A.C.T.S. framework, and real disaster drills.',
             path: 'presentation.html',
-            requires: 'quiz1'
+            requires: 'lesson1'
         },
         {
             id: 'lesson3',
@@ -34,12 +26,20 @@ document.addEventListener('DOMContentLoaded', () => {
             requires: 'lesson2'
         },
         {
+            id: 'quiz1',
+            type: 'quiz',
+            title: 'Quiz 1 · Warm-Up Review',
+            summary: 'Check your instincts before unlocking Lesson 4.',
+            path: 'quiz1.html',
+            requires: 'lesson3'
+        },
+        {
             id: 'lesson4',
             type: 'lesson',
             title: 'Lesson 4 · Advanced Prompting',
             summary: 'Layered prompting blueprints for research, marketing, and ops.',
             path: 'lesson4-advanced-prompting.html',
-            requires: 'lesson3'
+            requires: 'quiz1'
         },
         {
             id: 'lesson5',
