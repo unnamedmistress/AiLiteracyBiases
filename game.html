@@ -6,6 +6,7 @@
     <title>AI Detective Academy 🕵️ - Master AI Literacy</title>
     <link rel="stylesheet" href="styles/shared.css">
     <script defer src="scripts/nav.js"></script>
+    <script defer src="scripts/progress.js"></script>
     <script defer src="scripts/shared.js"></script>
     <style>
         * {
@@ -724,6 +725,13 @@
     </div>
 
     <script>
+        const LESSON_ID = 'lesson2-game';
+        const COURSE_XP_CAP = 400;
+        let tracker = null;
+        let appProgress = null;
+        let courseXpAwarded = 0;
+        let scenariosComplete = false;
+
         // Game State
         const gameState = {
             level: 1,
@@ -855,6 +863,7 @@
         function addXP(amount) {
             gameState.xp += amount;
             gameState.points += amount;
+            awardCourseXP(amount);
             
             if (gameState.xp >= gameState.xpToNextLevel) {
                 levelUp();
@@ -912,6 +921,8 @@
             } else if (mode === 'realworld') {
                 loadRealWorld();
             }
+
+            syncLessonStatus();
         }
 
         let currentScenarioIndex = 0;
@@ -1077,13 +1088,82 @@
                     </div>
                 </div>
             `;
+
+            if (mode === 'scenarios' && !scenariosComplete) {
+                scenariosComplete = true;
+                if (tracker) tracker.setCheckpoint(LESSON_ID, 'scenariosComplete', true);
+                markLessonComplete();
+            }
+            syncLessonStatus();
         }
 
         function backToMenu() {
             document.getElementById('welcomeScreen').style.display = 'block';
             document.getElementById('gameArea').style.display = 'none';
             gameState.currentMode = null;
+            syncLessonStatus();
         }
+
+        function awardCourseXP(amount) {
+            const delta = Number(amount) || 0;
+            if (!delta) return;
+            const remaining = Math.max(0, COURSE_XP_CAP - courseXpAwarded);
+            if (remaining <= 0) return;
+            const credit = Math.min(delta, remaining);
+            courseXpAwarded += credit;
+            if (tracker) tracker.setCheckpoint(LESSON_ID, 'awardedXp', courseXpAwarded);
+
+            if (appProgress && typeof appProgress.addXP === 'function') {
+                appProgress.addXP(credit);
+            } else if (tracker && typeof tracker.addXP === 'function') {
+                tracker.addXP(credit);
+            }
+        }
+
+        function hydrateLessonProgress() {
+            const saved = tracker ? tracker.getCheckpoints(LESSON_ID) : {};
+            courseXpAwarded = Math.max(0, Number(saved && saved.awardedXp) || 0);
+            scenariosComplete = Boolean(saved && saved.scenariosComplete);
+            if (scenariosComplete) {
+                markLessonComplete();
+            }
+        }
+
+        function syncLessonStatus() {
+            if (scenariosComplete) {
+                markLessonComplete();
+                return;
+            }
+
+            if (courseXpAwarded > 0 || gameState.currentMode) {
+                setLessonStatus('in-progress');
+            } else {
+                setLessonStatus('not-started');
+            }
+        }
+
+        function markLessonComplete() {
+            if (appProgress && typeof appProgress.markLessonComplete === 'function') {
+                appProgress.markLessonComplete(LESSON_ID);
+            } else if (tracker && typeof tracker.markLessonComplete === 'function') {
+                tracker.markLessonComplete(LESSON_ID);
+            }
+        }
+
+        function setLessonStatus(status) {
+            if (appProgress && typeof appProgress.setLessonStatus === 'function') {
+                appProgress.setLessonStatus(LESSON_ID, status);
+            } else if (tracker && typeof tracker.setLessonStatus === 'function') {
+                tracker.setLessonStatus(LESSON_ID, status);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            tracker = window.ProgressTracker || null;
+            appProgress = window.AppProgress || null;
+            hydrateLessonProgress();
+            syncLessonStatus();
+        });
 
         // Initialize
         updateUI();

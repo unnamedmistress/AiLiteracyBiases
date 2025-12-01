@@ -143,6 +143,18 @@
         }
         .certificate-title { font-size: 42px; font-weight: bold; margin-bottom: 20px; }
         .certificate-text { font-size: 18px; margin-bottom: 15px; }
+        .certificate-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            border-radius: 999px;
+            background: #000;
+            color: #FFD700;
+            font-weight: bold;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+        .certificate-link:hover { opacity: 0.85; }
         .progress-item { padding: 8px 0; font-size: 13px; }
         .progress-item.completed { opacity: 0.5; text-decoration: line-through; }
         .progress-item.active { font-weight: bold; color: #FFD700; }
@@ -228,19 +240,19 @@
                         Choose a real AI tool (ChatGPT, Midjourney, Claude, etc.) and conduct a comprehensive audit identifying its pathologies, biases, and limitations using the F.A.C.T.S. framework.
                     </div>
                     <div class="checklist" data-deliverable="1">
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="audit-pathologies" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Identify 3+ pathologies (hallucination, bias, etc.)</span>
                         </div>
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="audit-failures" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Document 2 real failure examples</span>
                         </div>
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="audit-facts" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Apply F.A.C.T.S. verification to outputs</span>
                         </div>
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="audit-mitigation" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Recommend 3 mitigation strategies</span>
                         </div>
@@ -259,19 +271,19 @@
                         Design a complete AI-powered content creation strategy for a fictional brand. Include tools, ethical guidelines, and quality control measures.
                     </div>
                     <div class="checklist" data-deliverable="2">
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="content-tools" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Select 3+ AI tools with justification</span>
                         </div>
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="content-ethics" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Create ethical guidelines document</span>
                         </div>
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="content-quality" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Design quality control checklist</span>
                         </div>
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="content-oversight" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Plan human oversight procedures</span>
                         </div>
@@ -290,23 +302,23 @@
                         Create 5 advanced prompts demonstrating different techniques (Chain-of-Thought, Few-Shot, Role-Based, etc.) with documented results and iterations.
                     </div>
                     <div class="checklist" data-deliverable="3">
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="prompt-chain" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Chain-of-Thought prompt with reasoning</span>
                         </div>
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="prompt-fewshot" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Few-Shot prompt with 3+ examples</span>
                         </div>
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="prompt-role" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Role-Based prompt with persona</span>
                         </div>
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="prompt-multistep" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Complex multi-step prompt</span>
                         </div>
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="prompt-iterations" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Document before/after iterations</span>
                         </div>
@@ -325,23 +337,23 @@
                         Design a complete multi-AI workflow solving a real business problem. Include flowchart, tool selection, data flow, and error handling.
                     </div>
                     <div class="checklist" data-deliverable="4">
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="workflow-diagram" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Create visual workflow diagram</span>
                         </div>
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="workflow-tools" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Document each AI tool's role</span>
                         </div>
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="workflow-dataflow" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Map data flow between stages</span>
                         </div>
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="workflow-errors" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Define error handling & fallbacks</span>
                         </div>
-                        <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checklist-item" data-checkpoint="workflow-escalation" onclick="toggleCheck(this)">
                             <div class="checkbox"></div>
                             <span>Include human escalation points</span>
                         </div>
@@ -402,7 +414,8 @@
                     </div>
                     
                     <div class="footer-nav"></div>
-            </div>
+                    <a href="index.html" class="certificate-link">Return to Dashboard</a>
+                </div>
 
             <div class="panel">
                 <h3 style="margin-bottom: 15px; font-size: 16px;">��� Checklist</h3>
@@ -429,80 +442,230 @@
     <div id="notification" class="notification hidden"><div id="notificationContent"></div></div>
 
     <script>
-        const state = { xp: 0, xpToNext: 500, points: 0, completed: [0, 0, 0, 0], totals: [4, 4, 5, 5] };
+        const LESSON_ID = 'lesson6';
+        const SUBMISSION_XP = 500;
+        const state = {
+            xp: 0,
+            xpToNext: SUBMISSION_XP,
+            points: 0,
+            completed: [0, 0, 0, 0],
+            totals: [4, 4, 5, 5],
+            submitted: false
+        };
+        let tracker = null;
+        let appProgress = null;
+        let notificationTimer = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            tracker = window.ProgressTracker || null;
+            appProgress = window.AppProgress || null;
+
+            hydrateFromStorage();
+            updateProgress();
+            updateUI();
+
+            if (state.submitted) {
+                revealCertificate(false);
+            }
+        });
+
+        function hydrateFromStorage() {
+            if (!tracker) return;
+            const saved = tracker.getCheckpoints(LESSON_ID) || {};
+            state.submitted = Boolean(saved.capstoneSubmitted);
+            const savedXP = Number(saved.xpEarned);
+            if (!Number.isNaN(savedXP) && savedXP > 0) {
+                state.xp = savedXP;
+                state.points = savedXP;
+            }
+
+            document.querySelectorAll('.checklist-item').forEach((item) => {
+                const checkpointId = item.dataset.checkpoint;
+                if (checkpointId && saved[checkpointId]) {
+                    setChecklistVisualState(item, true);
+                }
+            });
+        }
+
+        function setChecklistVisualState(item, isCompleted) {
+            const checkbox = item.querySelector('.checkbox');
+            if (!checkbox) return;
+            checkbox.classList.toggle('checked', isCompleted);
+            checkbox.textContent = isCompleted ? '✓' : '';
+            item.classList.toggle('completed', isCompleted);
+        }
 
         function toggleCheck(item) {
+            if (!item || state.submitted) return;
             const checkbox = item.querySelector('.checkbox');
-            const isChecked = checkbox.classList.contains('checked');
-            
-            if (isChecked) {
-                checkbox.classList.remove('checked');
-                checkbox.textContent = '';
-                item.classList.remove('completed');
-            } else {
-                checkbox.classList.add('checked');
-                checkbox.textContent = '✓';
-                item.classList.add('completed');
+            const currentlyChecked = checkbox?.classList.contains('checked');
+            const newState = !currentlyChecked;
+            setChecklistVisualState(item, newState);
+
+            const checkpointId = item.dataset.checkpoint;
+            if (tracker && checkpointId) {
+                tracker.setCheckpoint(LESSON_ID, checkpointId, newState);
             }
-            
+
             updateProgress();
         }
 
         function updateProgress() {
-            // Count completed items per deliverable
-            for (let i = 1; i <= 4; i++) {
+            for (let i = 1; i <= state.totals.length; i++) {
                 const checklist = document.querySelector(`[data-deliverable="${i}"]`);
-                const items = checklist.querySelectorAll('.checklist-item');
-                const completed = checklist.querySelectorAll('.checklist-item.completed').length;
-                state.completed[i-1] = completed;
-                document.getElementById(`d${i}Progress`).textContent = `${completed}/${state.totals[i-1]}`;
+                const progressLabel = document.getElementById(`d${i}Progress`);
+                const completed = checklist ? checklist.querySelectorAll('.checklist-item.completed').length : 0;
+                state.completed[i - 1] = completed;
+                if (progressLabel) {
+                    progressLabel.textContent = `${completed}/${state.totals[i - 1]}`;
+                }
             }
-            
-            // Calculate overall progress
-            const totalCompleted = state.completed.reduce((a, b) => a + b, 0);
-            const totalTasks = state.totals.reduce((a, b) => a + b, 0);
-            const percentage = Math.round((totalCompleted / totalTasks) * 100);
-            
-            document.getElementById('overallProgress').style.width = percentage + '%';
-            document.getElementById('overallProgress').textContent = percentage + '%';
-            
-            // Enable submit button if all tasks completed
-            const allComplete = state.completed.every((count, i) => count === state.totals[i]);
-            document.getElementById('submitBtn').disabled = !allComplete;
+
+            const totalCompleted = state.completed.reduce((sum, value) => sum + value, 0);
+            const totalTasks = state.totals.reduce((sum, value) => sum + value, 0);
+            const percentage = totalTasks ? Math.round((totalCompleted / totalTasks) * 100) : 0;
+            const progressBar = document.getElementById('overallProgress');
+            if (progressBar) {
+                progressBar.style.width = `${percentage}%`;
+                progressBar.textContent = `${percentage}%`;
+            }
+
+            const readyToSubmit = isLessonReadyToSubmit();
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+                submitBtn.disabled = !readyToSubmit || state.submitted;
+            }
+
+            syncLessonStatus();
+        }
+
+        function isLessonReadyToSubmit() {
+            return state.completed.every((count, index) => count === state.totals[index]);
+        }
+
+        function hasStartedLesson() {
+            return state.completed.some((count) => count > 0);
         }
 
         function submitCapstone() {
-            addXP(500);
-            document.getElementById('certificate').classList.add('visible');
-            showNotification('��� CONGRATULATIONS! You are now an AI Literacy Master!');
-            
-            // Scroll to certificate
-            setTimeout(() => {
-                document.getElementById('certificate').scrollIntoView({ behavior: 'smooth' });
-            }, 500);
+            if (state.submitted) {
+                showNotification('Capstone already submitted. 🎖️');
+                return;
+            }
+
+            if (!isLessonReadyToSubmit()) {
+                showNotification('Complete every deliverable to unlock submission.');
+                return;
+            }
+
+            state.submitted = true;
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, 'capstoneSubmitted', true);
+            }
+
+            addXP(SUBMISSION_XP, 'Capstone submitted');
+            revealCertificate();
+            updateProgress();
         }
 
-        function addXP(amount) {
-            state.xp += amount;
-            state.points += amount;
+        function revealCertificate(shouldScroll = true) {
+            const certificate = document.getElementById('certificate');
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+            }
+            if (certificate) {
+                certificate.classList.add('visible');
+                if (shouldScroll) {
+                    setTimeout(() => {
+                        certificate.scrollIntoView({ behavior: 'smooth' });
+                    }, 500);
+                }
+            }
+        }
+
+        function addXP(amount, reason = null) {
+            const increment = Number(amount) || 0;
+            if (!increment) return;
+            state.xp += increment;
+            state.points += increment;
+
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, 'xpEarned', state.xp);
+            }
+
+            if (appProgress && typeof appProgress.addXP === 'function') {
+                appProgress.addXP(increment);
+            } else if (tracker && typeof tracker.addXP === 'function') {
+                tracker.addXP(increment);
+            }
+
             updateUI();
+            const message = reason ? `${reason}! (+${increment} XP)` : `+${increment} XP earned!`;
+            showNotification(message);
         }
 
         function updateUI() {
-            document.getElementById('points').textContent = state.points;
-            const pct = Math.min((state.xp / state.xpToNext) * 100, 100);
-            document.getElementById('xpBar').style.width = pct + '%';
-            document.getElementById('xpText').textContent = `${state.xp}/${state.xpToNext}`;
+            const pointsEl = document.getElementById('points');
+            if (pointsEl) {
+                pointsEl.textContent = state.points;
+            }
+
+            if (window.AILesson && typeof window.AILesson.updateXPBar === 'function') {
+                window.AILesson.updateXPBar({ xp: state.xp, xpToNext: state.xpToNext, barId: 'xpBar', textId: 'xpText' });
+            } else {
+                const xpBar = document.getElementById('xpBar');
+                const xpText = document.getElementById('xpText');
+                const pct = Math.min((state.xp / state.xpToNext) * 100, 100);
+                if (xpBar) xpBar.style.width = `${pct}%`;
+                if (xpText) xpText.textContent = `${state.xp}/${state.xpToNext}`;
+            }
         }
 
         function showNotification(msg) {
-            const n = document.getElementById('notification');
-            document.getElementById('notificationContent').innerHTML = `<div style="font-size: 16px; font-weight: bold;">${msg}</div>`;
-            n.className = 'notification';
-            setTimeout(() => n.classList.add('hidden'), 5000);
+            const wrapper = document.getElementById('notification');
+            const content = document.getElementById('notificationContent');
+            if (!wrapper || !content) return;
+            content.innerHTML = `<div style="font-size: 16px; font-weight: bold;">${msg}</div>`;
+            wrapper.classList.remove('hidden');
+            wrapper.classList.add('show');
+            clearTimeout(notificationTimer);
+            notificationTimer = setTimeout(() => {
+                wrapper.classList.add('hidden');
+                wrapper.classList.remove('show');
+            }, 4000);
         }
 
-        updateUI();
+        function syncLessonStatus() {
+            if (!tracker && !appProgress) return;
+
+            if (state.submitted) {
+                markLessonComplete();
+                return;
+            }
+
+            if (hasStartedLesson()) {
+                setLessonStatus('in-progress');
+            } else {
+                setLessonStatus('not-started');
+            }
+        }
+
+        function markLessonComplete() {
+            if (appProgress && typeof appProgress.markLessonComplete === 'function') {
+                appProgress.markLessonComplete(LESSON_ID);
+            } else if (tracker && typeof tracker.markLessonComplete === 'function') {
+                tracker.markLessonComplete(LESSON_ID);
+            }
+        }
+
+        function setLessonStatus(status) {
+            if (appProgress && typeof appProgress.setLessonStatus === 'function') {
+                appProgress.setLessonStatus(LESSON_ID, status);
+            } else if (tracker && typeof tracker.setLessonStatus === 'function') {
+                tracker.setLessonStatus(LESSON_ID, status);
+            }
+        }
     </script>
 </body>
 </html>

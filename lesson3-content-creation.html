@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="styles/shared.css">
     <script defer src="scripts/nav.js"></script>
+    <script defer src="scripts/progress.js"></script>
     <style>
         .lesson-shell { display: flex; flex-direction: column; gap: 24px; }
         .content-grid { display: flex; flex-direction: column; gap: 24px; }
@@ -324,13 +325,26 @@
     </div>
 
     <script>
-        const gameState = {
-            xp: 0,
-            xpToNext: 200,
-            mode: 'presentation',
-            imagesCreated: 0,
-            ethicsScore: 0
+        const LESSON_ID = 'lesson3';
+        const QUIZ_XP = 50;
+        const CHECKPOINTS = {
+            imageChallenge: { xp: 75, label: 'Image Creation Challenge' },
+            videoChallenge: { xp: 100, label: 'Video Creation Challenge' },
+            promptAnalyzer: { xp: 50, label: 'Prompt Analyzer' },
+            quiz0: { xp: QUIZ_XP, label: 'Ethics Quiz Question 1' },
+            quiz1: { xp: QUIZ_XP, label: 'Ethics Quiz Question 2' },
+            quiz2: { xp: QUIZ_XP, label: 'Ethics Quiz Question 3' }
         };
+
+        const state = {
+            xp: 0,
+            xpToNext: 375,
+            mode: 'presentation'
+        };
+        const completedCheckpoints = new Set();
+        let tracker = null;
+        let appProgress = null;
+        let notificationTimer = null;
 
         const ethicsQuestions = [
             {
@@ -368,34 +382,62 @@
             }
         ];
 
+        document.addEventListener('DOMContentLoaded', () => {
+            tracker = window.ProgressTracker || null;
+            appProgress = window.AppProgress || null;
+            hydrateProgress();
+            loadEthicsQuiz();
+            attachLessonChrome();
+            updateUI();
+        });
+
+        function hydrateProgress() {
+            const saved = tracker ? tracker.getCheckpoints(LESSON_ID) : {};
+            state.xp = 0;
+            completedCheckpoints.clear();
+            Object.entries(CHECKPOINTS).forEach(([id, meta]) => {
+                if (saved && saved[id]) {
+                    completedCheckpoints.add(id);
+                    state.xp += meta.xp;
+                }
+            });
+            if (saved && typeof saved.xpEarned === 'number') {
+                state.xp = Math.max(state.xp, Number(saved.xpEarned));
+            }
+            syncLessonStatus();
+        }
+
         function startActivity(type) {
             if (type === 'image') {
                 alert('🎨 Image Creation Challenge!\n\nGo to ChatGPT (with Plus) or another AI image tool and create 3 images:\n\n1. A realistic photo\n2. An artistic illustration\n3. An abstract concept\n\nWhen done, come back and click "Mark Complete" (feature coming soon!)');
-                addXP(75);
+                completeCheckpoint('imageChallenge');
             } else if (type === 'video') {
                 alert('🎬 Video Creation Challenge!\n\nGo to Runway (runway.ml) or similar tool and create a 5-second video.\n\nTry text-to-video or image-to-video!\n\nWhen done, come back and mark complete.');
-                addXP(100);
+                completeCheckpoint('videoChallenge');
             }
         }
 
-        function addXP(amount) {
-            gameState.xp += amount;
-            updateUI();
-            showNotification(`+${amount} XP! 🎉`);
-        }
-
         function updateUI() {
-            const xpPercent = (gameState.xp / gameState.xpToNext) * 100;
-            document.getElementById('xpBar').style.width = xpPercent + '%';
-            document.getElementById('xpText').textContent = `${gameState.xp}/${gameState.xpToNext}`;
+            if (window.AILesson && typeof window.AILesson.updateXPBar === 'function') {
+                window.AILesson.updateXPBar({ xp: state.xp, xpToNext: state.xpToNext, barId: 'xpBar', textId: 'xpText' });
+            } else {
+                const xpPercent = (state.xp / state.xpToNext) * 100;
+                const xpBar = document.getElementById('xpBar');
+                const xpText = document.getElementById('xpText');
+                if (xpBar) xpBar.style.width = `${xpPercent}%`;
+                if (xpText) xpText.textContent = `${state.xp}/${state.xpToNext}`;
+            }
         }
 
         function showNotification(message) {
             const notification = document.getElementById('notification');
             const content = document.getElementById('notificationContent');
+            if (!notification || !content) return;
             content.innerHTML = `<div style="font-size: 18px; font-weight: bold;">${message}</div>`;
-            notification.className = 'notification';
-            setTimeout(() => notification.classList.add('hidden'), 3000);
+            notification.classList.remove('hidden');
+            notification.classList.add('show');
+            clearTimeout(notificationTimer);
+            notificationTimer = setTimeout(() => notification.classList.add('hidden'), 3200);
         }
 
         function addToPrompt(text) {
@@ -434,8 +476,8 @@
             else feedback += '✅ Quality specs found\n';
 
             if (score >= 3) {
-                addXP(50);
-                feedback += '\n🎉 Great prompt! +50 XP';
+                const newlyCompleted = completeCheckpoint('promptAnalyzer');
+                feedback += newlyCompleted ? '\n🎉 Great prompt! +50 XP' : '\n✨ Prompt logged already—XP previously claimed.';
             }
 
             alert(feedback);
@@ -466,9 +508,11 @@
             
             if (answer === correct) {
                 options[answer].classList.add('correct');
-                addXP(50);
+                const checkpointId = `quiz${qIndex}`;
+                const freshlyCompleted = completeCheckpoint(checkpointId, { silentIfDuplicate: true });
+                const xpCopy = freshlyCompleted ? '+50 XP' : 'XP already claimed';
                 document.getElementById(`feedback${qIndex}`).innerHTML = `
-                    <div style="color: #10B981; font-weight: bold; margin-bottom: 10px;">✅ Correct! +50 XP</div>
+                    <div style="color: #10B981; font-weight: bold; margin-bottom: 10px;">✅ Correct! ${xpCopy}</div>
                     <div>${ethicsQuestions[qIndex].explanation}</div>
                 `;
             } else {
@@ -483,11 +527,74 @@
             document.getElementById(`feedback${qIndex}`).style.display = 'block';
         }
 
-        // Initialize
-        loadEthicsQuiz();
-        updateUI();
+        function completeCheckpoint(id, { silentIfDuplicate = false } = {}) {
+            const meta = CHECKPOINTS[id];
+            if (!meta) return false;
+            if (completedCheckpoints.has(id)) {
+                if (!silentIfDuplicate) {
+                    showNotification(`${meta.label} already completed.`);
+                }
+                return false;
+            }
 
-        document.addEventListener('DOMContentLoaded', () => {
+            completedCheckpoints.add(id);
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, id, true);
+            }
+
+            grantXP(meta.xp, meta.label);
+            return true;
+        }
+
+        function grantXP(amount, contextLabel) {
+            const delta = Number(amount) || 0;
+            if (!delta) return;
+            state.xp += delta;
+
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, 'xpEarned', state.xp);
+            }
+
+            if (appProgress && typeof appProgress.addXP === 'function') {
+                appProgress.addXP(delta);
+            } else if (tracker && typeof tracker.addXP === 'function') {
+                tracker.addXP(delta);
+            }
+
+            updateUI();
+            showNotification(`+${delta} XP · ${contextLabel}`);
+            syncLessonStatus();
+        }
+
+        function syncLessonStatus() {
+            const total = Object.keys(CHECKPOINTS).length;
+            const completed = completedCheckpoints.size;
+            if (completed >= total) {
+                markLessonComplete();
+            } else if (completed > 0) {
+                setLessonStatus('in-progress');
+            } else {
+                setLessonStatus('not-started');
+            }
+        }
+
+        function markLessonComplete() {
+            if (appProgress && typeof appProgress.markLessonComplete === 'function') {
+                appProgress.markLessonComplete(LESSON_ID);
+            } else if (tracker && typeof tracker.markLessonComplete === 'function') {
+                tracker.markLessonComplete(LESSON_ID);
+            }
+        }
+
+        function setLessonStatus(status) {
+            if (appProgress && typeof appProgress.setLessonStatus === 'function') {
+                appProgress.setLessonStatus(LESSON_ID, status);
+            } else if (tracker && typeof tracker.setLessonStatus === 'function') {
+                tracker.setLessonStatus(LESSON_ID, status);
+            }
+        }
+
+        function attachLessonChrome() {
             const lessonApi = window.AILesson;
             if (!lessonApi) return;
             window.lessonMode = lessonApi.initModeToggle({
@@ -497,8 +604,8 @@
                 gameButtonId: 'gameBtn',
                 presentationButtonId: 'presentBtn'
             });
-            lessonApi.updateXPBar({ xp: gameState.xp, xpToNext: gameState.xpToNext });
-        });
+            lessonApi.updateXPBar({ xp: state.xp, xpToNext: state.xpToNext });
+        }
     </script>
 </body>
 </html>

@@ -6,6 +6,7 @@
     <title>Lesson 5: AI Workflows ���</title>
     <link rel="stylesheet" href="styles/shared.css">
     <script defer src="scripts/nav.js"></script>
+    <script defer src="scripts/progress.js"></script>
     <script defer src="scripts/shared.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -163,6 +164,17 @@
             <div class="logo">🚀 Lesson 5: AI Workflows</div>
             <div class="stats">
                 <div class="stat">
+                    <div class="stat-label">XP</div>
+                    <div class="xp-bar">
+                        <div class="xp-fill" id="xpBar" style="width: 0%;">
+                            <span id="xpText">0/300</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Workflow Points</div>
+                    <div class="stat-value"><span id="points">0</span> XP</div>
+                </div>
 
         <div class="content">
             <div class="sidebar" style="display: none;">
@@ -199,7 +211,8 @@
                                 <div class="step-number">1️⃣</div>
                                 <div class="step-label">Research</div>
                             </div>
-                            <div class="step">
+                        </div>
+                    </div>
                                 <div class="step-number">2️⃣</div>
                                 <div class="step-label">Write</div>
                             </div>
@@ -427,7 +440,48 @@
     <div id="notification" class="notification hidden"><div id="notificationContent"></div></div>
 
     <script>
-        const state = { xp: 0, xpToNext: 300, points: 0, mode: 'game' };
+        const LESSON_ID = 'lesson5';
+        const CHECKPOINTS = {
+            workflowContent: { xp: 150, label: 'Content Pipeline Blueprint' },
+            workflowData: { xp: 120, label: 'Data Insights Workflow' },
+            workflowSupport: { xp: 130, label: 'Support Bot Workflow' }
+        };
+
+        const state = { xp: 0, xpToNext: 400, points: 0, mode: 'game' };
+        const completedCheckpoints = new Set();
+        let tracker = null;
+        let appProgress = null;
+        let notificationTimer = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            tracker = window.ProgressTracker || null;
+            appProgress = window.AppProgress || null;
+            hydrateProgress();
+            attachLessonChrome();
+            updateUI();
+            setTimeout(drawConnections, 120);
+        });
+
+        function hydrateProgress() {
+            const saved = tracker ? tracker.getCheckpoints(LESSON_ID) : {};
+            state.xp = 0;
+            state.points = 0;
+            completedCheckpoints.clear();
+
+            Object.entries(CHECKPOINTS).forEach(([id, meta]) => {
+                if (saved && saved[id]) {
+                    completedCheckpoints.add(id);
+                    state.xp += meta.xp;
+                }
+            });
+
+            if (saved && typeof saved.xpEarned === 'number') {
+                state.xp = Math.max(state.xp, Number(saved.xpEarned));
+            }
+
+            state.points = state.xp;
+            syncLessonStatus();
+        }
 
         function switchMode(mode) {
             state.mode = mode;
@@ -439,34 +493,108 @@
 
         function startWorkflow(type) {
             const workflows = {
-                content: { title: 'Content Creation Pipeline', instructions: 'Design a 4-step workflow:\n\n1. Research topic with GPT-5\n2. Generate first draft\n3. Create header image with DALL-E 3\n4. Optimize for SEO\n\nThink about what data flows between each step!', xp: 150 },
-                data: { title: 'Data Analysis Workflow', instructions: 'Build an automated analysis pipeline:\n\n1. Upload CSV data\n2. Claude analyzes trends\n3. GPT-5 creates visualizations\n4. Generate executive summary\n\nConsider error handling and data validation.', xp: 120 },
-                support: { title: 'Customer Support Bot', instructions: 'Create a multi-layer support system:\n\n1. Classify ticket urgency/type\n2. Route to appropriate AI specialist\n3. Generate response\n4. Sentiment analysis\n5. Escalate to human if needed\n\nThink about when humans should intervene!', xp: 130 }
+                content: { id: 'workflowContent', title: 'Content Creation Pipeline', instructions: 'Design a 4-step workflow:\n\n1. Research topic with GPT-5\n2. Generate first draft\n3. Create header image with DALL-E 3\n4. Optimize for SEO\n\nThink about what data flows between each step!' },
+                data: { id: 'workflowData', title: 'Data Analysis Workflow', instructions: 'Build an automated analysis pipeline:\n\n1. Upload CSV data\n2. Claude analyzes trends\n3. GPT-5 creates visualizations\n4. Generate executive summary\n\nConsider error handling and data validation.' },
+                support: { id: 'workflowSupport', title: 'Customer Support Bot', instructions: 'Create a multi-layer support system:\n\n1. Classify ticket urgency/type\n2. Route to appropriate AI specialist\n3. Generate response\n4. Sentiment analysis\n5. Escalate to human if needed\n\nThink about when humans should intervene!' }
             };
-            const w = workflows[type];
-            alert(`${w.title}\n\n${w.instructions}\n\nWhen designed, return for +${w.xp} XP!`);
-            addXP(w.xp);
+            const workflow = workflows[type];
+            if (!workflow) return;
+            alert(`${workflow.title}\n\n${workflow.instructions}\n\nWhen designed, return to log it!`);
+            completeCheckpoint(workflow.id);
         }
 
-        function addXP(amount) {
-            state.xp += amount;
-            state.points += amount;
+        function completeCheckpoint(id, { silentIfDuplicate = false } = {}) {
+            const meta = CHECKPOINTS[id];
+            if (!meta) return false;
+            if (completedCheckpoints.has(id)) {
+                if (!silentIfDuplicate) showNotification(`${meta.label} already completed.`);
+                return false;
+            }
+
+            completedCheckpoints.add(id);
+            if (tracker) tracker.setCheckpoint(LESSON_ID, id, true);
+            grantXP(meta.xp, meta.label);
+            return true;
+        }
+
+        function grantXP(amount, contextLabel) {
+            const delta = Number(amount) || 0;
+            if (!delta) return;
+            state.xp += delta;
+            state.points += delta;
+
+            if (tracker) tracker.setCheckpoint(LESSON_ID, 'xpEarned', state.xp);
+
+            if (appProgress && typeof appProgress.addXP === 'function') {
+                appProgress.addXP(delta);
+            } else if (tracker && typeof tracker.addXP === 'function') {
+                tracker.addXP(delta);
+            }
+
             updateUI();
-            showNotification(`+${amount} XP! ���`);
+            showNotification(`+${delta} XP · ${contextLabel}`);
+            syncLessonStatus();
         }
 
         function updateUI() {
+            if (window.AILesson && typeof window.AILesson.updateXPBar === 'function') {
+                window.AILesson.updateXPBar({ xp: state.xp, xpToNext: state.xpToNext, barId: 'xpBar', textId: 'xpText' });
+            } else {
+                const pct = Math.min((state.xp / state.xpToNext) * 100, 100);
+                document.getElementById('xpBar').style.width = pct + '%';
+                document.getElementById('xpText').textContent = `${state.xp}/${state.xpToNext}`;
+            }
             document.getElementById('points').textContent = state.points;
-            const pct = Math.min((state.xp / state.xpToNext) * 100, 100);
-            document.getElementById('xpBar').style.width = pct + '%';
-            document.getElementById('xpText').textContent = `${state.xp}/${state.xpToNext}`;
         }
 
         function showNotification(msg) {
-            const n = document.getElementById('notification');
-            document.getElementById('notificationContent').innerHTML = `<div style="font-size: 16px; font-weight: bold; color: #00C9FF;">${msg}</div>`;
-            n.className = 'notification';
-            setTimeout(() => n.classList.add('hidden'), 3000);
+            const wrapper = document.getElementById('notification');
+            const content = document.getElementById('notificationContent');
+            if (!wrapper || !content) return;
+            content.innerHTML = `<div style="font-size: 16px; font-weight: bold; color: #00C9FF;">${msg}</div>`;
+            wrapper.classList.remove('hidden');
+            clearTimeout(notificationTimer);
+            notificationTimer = setTimeout(() => wrapper.classList.add('hidden'), 3200);
+        }
+
+        function syncLessonStatus() {
+            const total = Object.keys(CHECKPOINTS).length;
+            const completed = completedCheckpoints.size;
+            if (completed >= total) {
+                markLessonComplete();
+            } else if (completed > 0) {
+                setLessonStatus('in-progress');
+            } else {
+                setLessonStatus('not-started');
+            }
+        }
+
+        function markLessonComplete() {
+            if (appProgress && typeof appProgress.markLessonComplete === 'function') {
+                appProgress.markLessonComplete(LESSON_ID);
+            } else if (tracker && typeof tracker.markLessonComplete === 'function') {
+                tracker.markLessonComplete(LESSON_ID);
+            }
+        }
+
+        function setLessonStatus(status) {
+            if (appProgress && typeof appProgress.setLessonStatus === 'function') {
+                appProgress.setLessonStatus(LESSON_ID, status);
+            } else if (tracker && typeof tracker.setLessonStatus === 'function') {
+                tracker.setLessonStatus(LESSON_ID, status);
+            }
+        }
+
+        function attachLessonChrome() {
+            if (!window.AILesson) return;
+            window.lessonMode = window.AILesson.initModeToggle({
+                defaultMode: 'present',
+                gamePanelId: 'gameMode',
+                presentationPanelId: 'presentMode',
+                gameButtonId: 'gameBtn',
+                presentationButtonId: 'presentBtn'
+            });
+            window.AILesson.updateXPBar({ xp: state.xp, xpToNext: state.xpToNext, barId: 'xpBar', textId: 'xpText' });
         }
 
         // Draw connection lines between workflow nodes
@@ -476,19 +604,21 @@
             const connections = [
                 [0, 1], [1, 2], [1, 3], [2, 3]
             ];
-            
+            if (!svg || !nodes.length) return;
+
             connections.forEach(([from, to]) => {
                 const fromNode = nodes[from];
                 const toNode = nodes[to];
+                if (!fromNode || !toNode) return;
                 const fromRect = fromNode.getBoundingClientRect();
                 const toRect = toNode.getBoundingClientRect();
                 const canvas = document.getElementById('canvas').getBoundingClientRect();
-                
+
                 const x1 = fromRect.left + fromRect.width - canvas.left;
                 const y1 = fromRect.top + fromRect.height / 2 - canvas.top;
                 const x2 = toRect.left - canvas.left;
                 const y2 = toRect.top + toRect.height / 2 - canvas.top;
-                
+
                 const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
                 line.setAttribute('x1', x1);
                 line.setAttribute('y1', y1);
@@ -500,9 +630,6 @@
                 svg.appendChild(line);
             });
         }
-
-        updateUI();
-        setTimeout(drawConnections, 100);
     </script>
 </body>
 </html>

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="styles/shared.css">
     <script defer src="scripts/nav.js"></script>
+    <script defer src="scripts/progress.js"></script>
     <script defer src="scripts/shared.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -405,7 +406,52 @@
     <div id="notification" class="notification hidden"><div id="notificationContent"></div></div>
 
     <script>
-        const state = { xp: 0, xpToNext: 250, points: 0, mode: 'presentation' };
+        const LESSON_ID = 'lesson4';
+        const FIXED_CHECKPOINTS = {
+            cot: { xp: 100, label: 'Chain-of-Thought Challenge' },
+            role: { xp: 75, label: 'Role-Playing Challenge' },
+            fewshot: { xp: 80, label: 'Few-Shot Challenge' }
+        };
+        const PROMPT_MAX_XP = 150;
+
+        const state = { xp: 0, xpToNext: 405, mode: 'presentation', tournamentXp: 0 };
+        const completedCheckpoints = new Set();
+        let tracker = null;
+        let appProgress = null;
+        let notificationTimer = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            tracker = window.ProgressTracker || null;
+            appProgress = window.AppProgress || null;
+            hydrateProgress();
+            attachLessonChrome();
+            updateUI();
+        });
+
+        function hydrateProgress() {
+            const saved = tracker ? tracker.getCheckpoints(LESSON_ID) : {};
+            state.xp = 0;
+            state.tournamentXp = 0;
+            completedCheckpoints.clear();
+
+            Object.entries(FIXED_CHECKPOINTS).forEach(([id, meta]) => {
+                if (saved && saved[id]) {
+                    completedCheckpoints.add(id);
+                    state.xp += meta.xp;
+                }
+            });
+
+            if (saved && typeof saved.promptTournamentXp === 'number') {
+                state.tournamentXp = Math.min(PROMPT_MAX_XP, Math.max(0, saved.promptTournamentXp));
+                state.xp += state.tournamentXp;
+            }
+
+            if (saved && typeof saved.xpEarned === 'number') {
+                state.xp = Math.max(state.xp, Number(saved.xpEarned));
+            }
+
+            syncLessonStatus();
+        }
 
         function switchMode(mode) {
             state.mode = mode;
@@ -419,82 +465,169 @@
             const challenges = {
                 cot: {
                     title: '🧠 Chain-of-Thought Challenge',
-                    instructions: `Go to ChatGPT or Claude and solve this problem using CoT:\n\n"A store gives 20% off, then adds 8% tax. Is this the same as adding 8% tax then giving 20% off? Show your reasoning step by step."\n\nUse: "Let's solve this step by step: 1. First... 2. Then... 3. Finally..."`,
-                    xp: 100
+                    instructions: `Go to ChatGPT or Claude and solve this problem using CoT:\n\n"A store gives 20% off, then adds 8% tax. Is this the same as adding 8% tax then giving 20% off? Show your reasoning step by step."\n\nUse: "Let's solve this step by step: 1. First... 2. Then... 3. Finally..."`
                 },
                 role: {
                     title: '🎭 Role-Playing Challenge',
-                    instructions: 'Create 3 different AI personas:\n\n1. A kindergarten teacher explaining planets\n2. A tech CEO pitching to investors\n3. A sports commentator describing cooking\n\nUse: "You are a [role] with [traits]. Your task is..."',
-                    xp: 75
+                    instructions: 'Create 3 different AI personas:\n\n1. A kindergarten teacher explaining planets\n2. A tech CEO pitching to investors\n3. A sports commentator describing cooking\n\nUse: "You are a [role] with [traits]. Your task is..."'
                 },
                 fewshot: {
                     title: '📐 Few-Shot Challenge',
-                    instructions: 'Teach AI a custom format by example:\n\nGive 2-3 examples of the format you want, then ask it to continue.\n\nExample:\n"Transform these:\nHappy → 😀\nSad → 😢\nNow you: Excited →"',
-                    xp: 80
+                    instructions: 'Teach AI a custom format by example:\n\nGive 2-3 examples of the format you want, then ask it to continue.\n\nExample:\n"Transform these:\nHappy → 😀\nSad → 😢\nNow you: Excited →"'
                 }
             };
-            const c = challenges[type];
-            alert(`${c.title}\n\n${c.instructions}\n\nWhen done, return for +${c.xp} XP!`);
-            addXP(c.xp);
+            const challenge = challenges[type];
+            if (!challenge) return;
+            alert(`${challenge.title}\n\n${challenge.instructions}\n\nWhen done, return to log your progress!`);
+            completeCheckpoint(type);
         }
 
         function evaluatePrompt() {
             const prompt = document.getElementById('tournamentPrompt').value.trim();
-            if (!prompt) { alert('Please write a prompt first!'); return; }
-            
+            if (!prompt) {
+                alert('Please write a prompt first!');
+                return;
+            }
+
             let score = 0;
             const feedback = [];
-            
+
             if (prompt.toLowerCase().includes('remote worker') || prompt.toLowerCase().includes('work from home')) {
                 score += 25; feedback.push('✅ Targets audience');
             } else feedback.push('❌ Missing target audience');
-            
+
             if (prompt.length > 100) {
                 score += 25; feedback.push('✅ Detailed prompt');
             } else feedback.push('❌ Too brief');
-            
+
             if (/benefit|feature|advantage/i.test(prompt)) {
                 score += 25; feedback.push('✅ Mentions benefits');
             } else feedback.push('❌ No benefits mentioned');
-            
+
             if (/tone|style|format|word/i.test(prompt)) {
                 score += 25; feedback.push('✅ Specifies format');
             } else feedback.push('❌ No format specified');
-            
-            const xpEarned = Math.floor(score * 1.5);
+
+            const xpEarned = Math.min(PROMPT_MAX_XP, Math.floor(score * 1.5));
+            const previousBest = state.tournamentXp;
+            let xpCopy = 'No XP awarded yet.';
+
+            if (xpEarned > previousBest) {
+                const delta = xpEarned - previousBest;
+                state.tournamentXp = xpEarned;
+                if (tracker) {
+                    tracker.setCheckpoint(LESSON_ID, 'promptTournamentXp', state.tournamentXp);
+                }
+                grantXP(delta, 'Prompt Tournament');
+                xpCopy = `New high score! +${delta} XP`;
+            } else if (xpEarned > 0) {
+                xpCopy = 'Score matched or below your best. XP already claimed.';
+            }
+
             document.getElementById('promptScore').innerHTML = `
                 <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px;">
                     <div style="font-size: 32px; font-weight: bold; color: #FFD700; margin-bottom: 10px;">${score}/100</div>
                     <div style="font-size: 14px; line-height: 1.8;">${feedback.join('<br>')}</div>
-                    <div style="margin-top: 15px; font-weight: bold; color: #10B981;">+${xpEarned} XP Earned!</div>
+                    <div style="margin-top: 15px; font-weight: bold; color: #10B981;">${xpCopy}</div>
                 </div>
             `;
             document.getElementById('promptScore').style.display = 'block';
-            addXP(xpEarned);
+            syncLessonStatus();
         }
 
-        function addXP(amount) {
-            state.xp += amount;
-            state.points += amount;
+        function completeCheckpoint(id, { silentIfDuplicate = false } = {}) {
+            const meta = FIXED_CHECKPOINTS[id];
+            if (!meta) return false;
+            if (completedCheckpoints.has(id)) {
+                if (!silentIfDuplicate) showNotification(`${meta.label} already logged.`);
+                return false;
+            }
+
+            completedCheckpoints.add(id);
+            if (tracker) tracker.setCheckpoint(LESSON_ID, id, true);
+            grantXP(meta.xp, meta.label);
+            return true;
+        }
+
+        function grantXP(amount, contextLabel) {
+            const delta = Number(amount) || 0;
+            if (!delta) return;
+            state.xp += delta;
+
+            if (tracker) tracker.setCheckpoint(LESSON_ID, 'xpEarned', state.xp);
+
+            if (appProgress && typeof appProgress.addXP === 'function') {
+                appProgress.addXP(delta);
+            } else if (tracker && typeof tracker.addXP === 'function') {
+                tracker.addXP(delta);
+            }
+
             updateUI();
-            showNotification(`+${amount} XP! ✨`);
+            showNotification(`+${delta} XP · ${contextLabel}`);
+            syncLessonStatus();
         }
 
         function updateUI() {
-            document.getElementById('points').textContent = state.points;
-            const pct = (state.xp / state.xpToNext) * 100;
-            document.getElementById('xpBar').style.width = pct + '%';
-            document.getElementById('xpText').textContent = `${state.xp}/${state.xpToNext}`;
+            if (window.AILesson && typeof window.AILesson.updateXPBar === 'function') {
+                window.AILesson.updateXPBar({ xp: state.xp, xpToNext: state.xpToNext, barId: 'xpBar', textId: 'xpText' });
+            } else {
+                const pct = (state.xp / state.xpToNext) * 100;
+                document.getElementById('xpBar').style.width = pct + '%';
+                document.getElementById('xpText').textContent = `${state.xp}/${state.xpToNext}`;
+            }
+            const pointsEl = document.getElementById('points');
+            if (pointsEl) pointsEl.textContent = state.xp;
         }
 
         function showNotification(msg) {
-            const n = document.getElementById('notification');
-            document.getElementById('notificationContent').innerHTML = `<div style="font-size: 16px; font-weight: bold;">${msg}</div>`;
-            n.className = 'notification';
-            setTimeout(() => n.classList.add('hidden'), 3000);
+            const wrapper = document.getElementById('notification');
+            const content = document.getElementById('notificationContent');
+            if (!wrapper || !content) return;
+            content.innerHTML = `<div style="font-size: 16px; font-weight: bold;">${msg}</div>`;
+            wrapper.classList.remove('hidden');
+            clearTimeout(notificationTimer);
+            notificationTimer = setTimeout(() => wrapper.classList.add('hidden'), 3200);
         }
 
-        updateUI();
+        function syncLessonStatus() {
+            const totalObjectives = Object.keys(FIXED_CHECKPOINTS).length + 1;
+            const completed = completedCheckpoints.size + (state.tournamentXp > 0 ? 1 : 0);
+            if (completed >= totalObjectives) {
+                markLessonComplete();
+            } else if (completed > 0) {
+                setLessonStatus('in-progress');
+            } else {
+                setLessonStatus('not-started');
+            }
+        }
+
+        function markLessonComplete() {
+            if (appProgress && typeof appProgress.markLessonComplete === 'function') {
+                appProgress.markLessonComplete(LESSON_ID);
+            } else if (tracker && typeof tracker.markLessonComplete === 'function') {
+                tracker.markLessonComplete(LESSON_ID);
+            }
+        }
+
+        function setLessonStatus(status) {
+            if (appProgress && typeof appProgress.setLessonStatus === 'function') {
+                appProgress.setLessonStatus(LESSON_ID, status);
+            } else if (tracker && typeof tracker.setLessonStatus === 'function') {
+                tracker.setLessonStatus(LESSON_ID, status);
+            }
+        }
+
+        function attachLessonChrome() {
+            if (!window.AILesson) return;
+            window.lessonMode = window.AILesson.initModeToggle({
+                defaultMode: 'presentation',
+                gamePanelId: 'gameMode',
+                presentationPanelId: 'presentMode',
+                gameButtonId: 'gameBtn',
+                presentationButtonId: 'presentBtn'
+            });
+            window.AILesson.updateXPBar({ xp: state.xp, xpToNext: state.xpToNext, barId: 'xpBar', textId: 'xpText' });
+        }
     </script>
 </body>
 </html>
