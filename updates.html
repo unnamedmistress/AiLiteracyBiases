@@ -5,65 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Updates · AI Detective Academy</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/unnamedmistress/AiLiteracyBiases/styles/shared.css" onerror="this.onerror=null;this.href='styles/shared.css';">
+    <link rel="stylesheet" href="styles/updates.css">
     <script defer src="scripts/nav.js"></script>
-    <style>
-        body { background: linear-gradient(135deg, #0f172a, #1d4ed8); }
-        .updates-shell { max-width: 880px; margin: 0 auto; padding: 32px 20px 80px; }
-        .primary-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .primary-nav a { color: white; text-decoration: none; font-weight: 600; margin-left: 16px; }
-        .updates-list { display: flex; flex-direction: column; gap: 16px; }
-        .update-card { border-radius: var(--radius-lg); border: 1px solid rgba(255,255,255,0.15); padding: 18px 20px; background: rgba(15,23,42,0.5); }
-        .tag { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 12px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
-    </style>
 </head>
-<body>
+<body class="updates-page">
     <div class="updates-shell">
-        <header style="margin-bottom: 24px;">
-            <h1 style="margin-bottom: 8px;">Course Updates & Patch Notes</h1>
-            <p style="opacity: 0.85;">Follow the release log to track new content drops, lesson fixes, and live-fire simulator tweaks.</p>
+        <header class="updates-header">
+            <h1>Course Updates & Patch Notes</h1>
+            <p class="updates-subtext">Follow the release log to track new content drops, lesson fixes, and live-fire simulator tweaks.</p>
         </header>
 
         <section class="updates-list" id="updatesList"></section>
     </div>
-
-    <script>
-        const UPDATES = [
-            {
-                date: '2024-06-09',
-                title: 'Progress Tracker + Nav Refresh',
-                tag: 'New Feature',
-                summary: 'Introduced local XP tracking, checkpoint persistence, and consistent nav across the hub, lesson one, and landing page.'
-            },
-            {
-                date: '2024-05-28',
-                title: 'Lesson 1 Gamification',
-                tag: 'Lesson Update',
-                summary: 'Added checkpoint pills, replayable quiz rounds, and improved bias case studies. XP now awards per challenge.'
-            },
-            {
-                date: '2024-05-15',
-                title: 'AI Detective Academy Launch',
-                tag: 'Release',
-                summary: 'Published the beta curriculum for AI literacy plus initial investigative challenges and facilitator notes.'
-            }
-        ];
-
-        const updatesList = document.getElementById('updatesList');
-
-        function renderUpdates(list) {
-            updatesList.innerHTML = list.map(({ date, title, tag, summary }) => `
-                <article class="update-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <p style="font-size:14px; opacity:0.75;">${new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
-                        <span class="tag" style="background: rgba(14,165,233,0.2); color: #38bdf8;">${tag}</span>
-                    </div>
-                    <h3 style="margin-bottom:6px;">${title}</h3>
-                    <p style="opacity:0.85; line-height:1.5;">${summary}</p>
-                </article>
-            `).join('');
-        }
-
-        renderUpdates(UPDATES);
-    </script>
+    <script defer src="scripts/updates.js"></script>
 </body>
 </html>

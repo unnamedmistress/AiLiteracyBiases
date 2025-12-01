@@ -7,10 +7,11 @@
     <link rel="stylesheet" href="styles/shared.css">
     <link rel="stylesheet" href="styles/quiz.css">
     <script defer src="scripts/nav.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/gh/unnamedmistress/AiLiteracyBiases/scripts/shared.js" onerror="this.onerror=null;this.src='scripts/shared.js';"></script>
     <script defer src="scripts/progress.js"></script>
     <script defer src="scripts/quiz1.js"></script>
 </head>
-<body class="quiz-page">
+<body class="quiz-page" data-lesson-id="quiz1">
     <main class="quiz-shell">
         <section class="quiz-hero">
             <h1>Quiz 1 · Hallucination Patrol</h1>
@@ -59,6 +60,8 @@
                 <button class="btn btn-secondary" id="retryBtn">Replay quiz</button>
             </div>
         </section>
+
+        <div class="footer-nav"></div>
     </main>
 </body>
 </html>

@@ -19,6 +19,18 @@
         quiz1: {
             href: 'presentation.html',
             label: 'Next: Lesson 2 →'
+        },
+        'lesson2-learn': {
+            href: 'game.html',
+            label: 'Next: Game Mode →'
+        },
+        'lesson2-game': {
+            href: 'lesson3-content-creation.html',
+            label: 'Next: Lesson 3 →'
+        },
+        lesson6: {
+            href: 'certificate.html',
+            label: 'View Certificate →'
         }
     };
 
@@ -150,4 +162,12 @@
         updateXPBar,
         findLessonIndex
     };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const lessonId = document.body?.dataset?.lessonId;
+        if (!lessonId || !window.AILesson) return;
+        const breadcrumbSelector = document.body.dataset.breadcrumbSelector || '.breadcrumb';
+        const footerSelector = document.body.dataset.footerSelector || '.footer-nav';
+        window.AILesson.initLessonNavigation({ lessonId, breadcrumbSelector, footerSelector });
+    });
 })();

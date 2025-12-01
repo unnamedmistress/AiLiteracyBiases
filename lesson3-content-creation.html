@@ -34,7 +34,7 @@
     <script defer src="https://cdn.jsdelivr.net/gh/unnamedmistress/AiLiteracyBiases/scripts/shared.js" onerror="this.onerror=null;this.src='scripts/shared.js';"></script>
 
 </head>
-<body>
+<body data-lesson-id="lesson3">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">
@@ -488,16 +488,16 @@
         updateUI();
 
         document.addEventListener('DOMContentLoaded', () => {
-            if (!window.AILesson) return;
-            window.lessonMode = AILesson.initModeToggle({
+            const lessonApi = window.AILesson;
+            if (!lessonApi) return;
+            window.lessonMode = lessonApi.initModeToggle({
                 defaultMode: 'presentation',
                 gamePanelId: 'gameMode',
                 presentationPanelId: 'presentationMode',
                 gameButtonId: 'gameBtn',
                 presentationButtonId: 'presentBtn'
             });
-            AILesson.initLessonNavigation({ lessonId: 'lesson3', breadcrumbSelector: '.breadcrumb', footerSelector: '.footer-nav' });
-            AILesson.updateXPBar({ xp: gameState.xp, xpToNext: gameState.xpToNext });
+            lessonApi.updateXPBar({ xp: gameState.xp, xpToNext: gameState.xpToNext });
         });
     </script>
 </body>
