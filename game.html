@@ -458,6 +458,44 @@
             font-size: 12px;
             margin: 5px;
         }
+
+        .next-lesson-cta {
+            margin: 40px 0;
+            padding: 28px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .next-lesson-copy {
+            flex: 1;
+        }
+
+        .next-lesson-label {
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .next-lesson-cta h2 {
+            margin: 8px 0;
+            font-size: 28px;
+        }
+
+        @media (max-width: 640px) {
+            .next-lesson-cta {
+                flex-direction: column;
+                text-align: center;
+            }
+            .next-lesson-cta .btn-primary {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body data-lesson-id="lesson2-game">
@@ -668,6 +706,15 @@
                 </div>
             </div>
         </div>
+
+        <section class="next-lesson-cta">
+            <div class="next-lesson-copy">
+                <p class="next-lesson-label">Next Mission</p>
+                <h2>Lesson 3 · Content Creation</h2>
+                <p>Switch back into Learn Mode to storyboard ethical content systems before your next quiz.</p>
+            </div>
+            <button class="btn-primary" type="button" data-next-lesson="auto" data-next-label="Go to Lesson 3 · Learn Mode">Go to Lesson 3 · Learn Mode</button>
+        </section>
         <div class="footer-nav"></div>
     </div>
 

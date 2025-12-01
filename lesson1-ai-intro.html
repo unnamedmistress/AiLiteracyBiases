@@ -190,7 +190,7 @@
                             </div>
                             <div class="activity-body">
                                 <p>Feeling confident after the warm-up reps? Jump straight into Lesson 2's learn mode to dig into AI literacy drills and the full F.A.C.T.S. framework.</p>
-                                <button class="btn btn-primary" type="button" data-next-lesson="lesson2-learn">Go to Lesson 2 · Learn Mode</button>
+                                <button class="btn btn-primary" type="button" data-next-lesson="auto" data-next-label="Go to Lesson 2 · Learn Mode">Go to Lesson 2 · Learn Mode</button>
                             </div>
                         </div>
                     </div>
@@ -763,13 +763,6 @@
                 });
             }
 
-            function initNextLessonButton() {
-                const btn = document.querySelector('[data-next-lesson="lesson2-learn"]');
-                if (!btn) return;
-                btn.addEventListener('click', () => {
-                    window.location.href = 'presentation.html';
-                });
-            }
 
             function handleDragOver(event) {
                 event.preventDefault();
@@ -834,7 +827,6 @@
             }
 
             initGameJumpers();
-            initNextLessonButton();
         });
     </script>
 </body>

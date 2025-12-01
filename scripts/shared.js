@@ -34,8 +34,76 @@
         }
     };
 
+    function getLessonById(lessonId) {
+        return LESSON_SEQUENCE.find((lesson) => lesson.id === lessonId);
+    }
+
     function findLessonIndex(lessonId) {
         return LESSON_SEQUENCE.findIndex((lesson) => lesson.id === lessonId);
+    }
+
+    function getAutoNextDestination(lessonId) {
+        if (!lessonId) return null;
+        const override = CUSTOM_NEXT[lessonId];
+        if (override) {
+            return {
+                id: null,
+                label: override.label || 'Next →',
+                href: override.href
+            };
+        }
+
+        const index = findLessonIndex(lessonId);
+        if (index === -1) return null;
+        const nextLesson = LESSON_SEQUENCE[index + 1];
+        if (!nextLesson || nextLesson.id === 'lesson7-placeholder') return null;
+        return {
+            id: nextLesson.id,
+            label: `Next: ${nextLesson.label} →`,
+            href: nextLesson.path
+        };
+    }
+
+    function resolveLessonDestination(targetId) {
+        if (!targetId) return null;
+        const lesson = getLessonById(targetId);
+        if (!lesson || lesson.id === 'lesson7-placeholder') return null;
+        return {
+            id: lesson.id,
+            label: `Go to ${lesson.label}`,
+            href: lesson.path
+        };
+    }
+
+    function initNextLessonButtons(currentLessonId) {
+        const buttons = document.querySelectorAll('[data-next-lesson]');
+        if (!buttons.length) return;
+
+        buttons.forEach((button) => {
+            const directive = button.dataset.nextLesson;
+            let destination = null;
+
+            if (!directive || directive === 'auto') {
+                destination = getAutoNextDestination(currentLessonId);
+            } else {
+                destination = resolveLessonDestination(directive);
+            }
+
+            if (!destination || !destination.href) {
+                button.disabled = true;
+                button.classList.add('is-disabled');
+                return;
+            }
+
+            const label = button.dataset.nextLabel || destination.label;
+            if (label) {
+                button.textContent = label;
+            }
+
+            button.addEventListener('click', () => {
+                window.location.href = destination.href;
+            });
+        });
     }
 
     function setNavigationButtons(lessonId, containerSelector = '.footer-nav') {
@@ -158,6 +226,8 @@
             setBreadcrumb(lessonId, breadcrumbSelector);
             setNavigationButtons(lessonId, footerSelector);
         },
+        getLessonById,
+        getNextLessonDestination: getAutoNextDestination,
         initModeToggle,
         updateXPBar,
         findLessonIndex
@@ -169,5 +239,6 @@
         const breadcrumbSelector = document.body.dataset.breadcrumbSelector || '.breadcrumb';
         const footerSelector = document.body.dataset.footerSelector || '.footer-nav';
         window.AILesson.initLessonNavigation({ lessonId, breadcrumbSelector, footerSelector });
+        initNextLessonButtons(lessonId);
     });
 })();
