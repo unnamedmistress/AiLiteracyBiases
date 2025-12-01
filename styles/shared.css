@@ -2,7 +2,7 @@
     --font-family-base: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     --font-family-display: 'Poppins', 'Segoe UI', system-ui, sans-serif;
 
-    --color-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --color-bg: linear-gradient(135deg, #cfd6ff 0%, #e9d5ff 100%);
     --color-surface: rgba(255, 255, 255, 0.08);
     --color-surface-strong: rgba(255, 255, 255, 0.12);
     --color-border: rgba(255, 255, 255, 0.25);
