@@ -10,6 +10,13 @@
         { id: 'lesson7-placeholder', label: 'Lesson 7 (Coming Soon)', path: '#' }
     ];
 
+    const CUSTOM_NEXT = {
+        lesson1: {
+            href: 'game.html',
+            label: 'Next: Game Mode →'
+        }
+    };
+
     function findLessonIndex(lessonId) {
         return LESSON_SEQUENCE.findIndex((lesson) => lesson.id === lessonId);
     }
@@ -32,6 +39,13 @@
         }
 
         container.appendChild(mainBtn);
+
+        const override = CUSTOM_NEXT[lessonId];
+        if (override) {
+            const overrideBtn = createNavButton(override.label || 'Next →', override.href, 'btn-primary');
+            container.appendChild(overrideBtn);
+            return;
+        }
 
         if (index < LESSON_SEQUENCE.length - 2) {
             const nextLesson = LESSON_SEQUENCE[index + 1];

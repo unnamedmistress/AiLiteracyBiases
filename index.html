@@ -4,589 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Detective Academy - Choose Your Path</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            width: 100%;
-        }
-
-        .primary-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 30px;
-            margin-bottom: 30px;
-            border-radius: 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(12px);
-        }
-
-        .nav-logo {
-            font-size: 22px;
-            font-weight: 700;
-            text-decoration: none;
-            color: white;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 18px;
-            flex-wrap: wrap;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-        }
-
-        .progress-overview {
-            margin: 30px 0;
-            padding: 25px;
-            border-radius: 20px;
-            background: rgba(0, 0, 0, 0.35);
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .progress-label {
-            font-size: 18px;
-            font-weight: 600;
-            opacity: 0.85;
-        }
-
-        .progress-summary {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-
-        .progress-meter {
-            width: 100%;
-            height: 14px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            border-radius: 999px;
-            background: linear-gradient(135deg, #34d399, #10b981);
-            width: 0;
-            transition: width 0.3s ease;
-        }
-
-        .module-progress {
-            list-style: none;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 12px;
-            margin: 0 0 40px 0;
-            padding: 0;
-        }
-
-        .module-progress li {
-            padding: 14px 18px;
-            border-radius: 16px;
-            background: rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            font-size: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .module-progress li span {
-            font-size: 12px;
-            opacity: 0.7;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 60px;
-            animation: fadeInDown 0.8s;
-        }
-
-        .logo {
-            font-size: 64px;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, #FFD700, #FFF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .subtitle {
-            font-size: 24px;
-            opacity: 0.9;
-            margin-bottom: 10px;
-        }
-
-        .tagline {
-            font-size: 18px;
-            opacity: 0.7;
-        }
-
-        .choice-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 40px;
-            margin-top: 40px;
-        }
-
-        @media (max-width: 900px) {
-            .choice-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .choice-card {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            padding: 40px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 3px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-            overflow: hidden;
-            animation: fadeInUp 0.8s;
-        }
-
-        .choice-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
-            opacity: 0;
-            transition: opacity 0.4s;
-        }
-
-        .choice-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: rgba(255, 255, 255, 0.6);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-        }
-
-        .choice-card:hover::before {
-            opacity: 1;
-        }
-
-        .choice-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-            display: block;
-            text-align: center;
-        }
-
-        .choice-title {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .choice-description {
-            font-size: 16px;
-            line-height: 1.6;
-            opacity: 0.9;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .features-list {
-            list-style: none;
-            margin: 20px 0;
-        }
-
-        .features-list li {
-            padding: 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-        }
-
-        .features-list li::before {
-            content: '✓';
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            background: linear-gradient(135deg, #00D9FF, #9D4EDD);
-            border-radius: 50%;
-            text-align: center;
-            line-height: 24px;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .choice-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            color: #000;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-top: 15px;
-        }
-
-        .recommended {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #10B981, #059669);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        .info-section {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-top: 60px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            animation: fadeInUp 1s;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        .info-item {
-            text-align: center;
-            transition: all 0.3s;
-            padding: 15px;
-            border-radius: 15px;
-        }
-
-        .info-item[style*="cursor: pointer"]:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-5px);
-        }
-
-        .info-icon {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-
-        .info-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .info-desc {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 32px;
-            }
-            .subtitle {
-                font-size: 18px;
-            }
-            .logo {
-                font-size: 48px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles/shared.css">
+    <script defer src="scripts/nav.js"></script>
+    <link rel="stylesheet" href="styles/home.css">
 </head>
-<body>
-    <div class="container">
-        <nav class="primary-nav">
-            <a class="nav-logo" href="index.html">AI Detective Academy</a>
-            <div class="nav-links">
-                <a href="index.html">Home</a>
-                <a href="#modules">Modules</a>
-                <a href="glossary.html">Glossary</a>
-                <a href="updates.html">Updates</a>
-            </div>
-        </nav>
-        <div class="header">
-            <div class="logo">🕵️</div>
+<body class="home-page">
+    <main class="home-shell">
+        <section class="home-card home-hero">
+            <span class="hero-label">Guided Journey</span>
             <h1>AI Detective Academy</h1>
-            <p class="subtitle">Master AI Literacy & Spot AI's Tricks</p>
-            <p class="tagline">Learn to identify hallucinations, bias, and AI pathologies</p>
-            
-            <!-- Clear CTA Button -->
-            <div style="margin-top: 30px;">
-                <button onclick="window.location.href='lesson1-ai-intro.html'" style="padding: 20px 48px; background: linear-gradient(135deg, #10B981, #059669); color: white; border: none; border-radius: 16px; font-size: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); transition: all 0.3s; display: inline-block;">
-                    Start Course →
-                </button>
-            </div>
-        </div>
-
-        <section class="progress-overview">
-            <div class="progress-header">
-                <div>
-                    <div class="progress-label">Your Progress</div>
-                    <div class="progress-summary" id="progressSummary">No lessons completed yet.</div>
-                </div>
-                <div class="progress-summary" id="xpSummary">0 XP earned</div>
-            </div>
-            <div class="progress-meter">
-                <div class="progress-fill" id="progressFill"></div>
+            <p>Master AI literacy, spot hallucinations in the wild, and earn XP as you progress through six premium lessons plus live-fire warm-up quizzes.</p>
+            <div class="hero-actions">
+                <button class="home-btn-primary" data-start-course>Start Course →</button>
+                <button class="home-btn-secondary" data-scroll-target="#lessonSection">View Modules</button>
             </div>
         </section>
 
-        <ul class="module-progress" id="moduleProgressList"></ul>
-
-        <!-- Course Navigation Grid -->
-        <div id="modules" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px;">
-            <div class="choice-card" onclick="window.location.href='lesson1-ai-intro.html'" style="padding: 30px;">
-                <div class="choice-icon" style="font-size: 60px;">⚡️</div>
-                <div class="choice-title" style="font-size: 24px;">Lesson 1: Warm-Up</div>
-                <div class="choice-description" style="font-size: 14px;">
-                    What is AI, tone basics, and three Prompt Wizardry mini-games
+        <section class="home-card progress-panel">
+            <div class="progress-top">
+                <div>
+                    <div class="progress-label">Completion</div>
+                    <div class="progress-meter">
+                        <div class="progress-fill" id="homeProgressFill"></div>
+                    </div>
                 </div>
-                <div class="choice-badge" style="margin-top: 10px;">Start Here</div>
+                <p class="progress-summary" id="homeProgressCopy">No lessons completed yet.</p>
             </div>
-            <div class="choice-card" onclick="window.location.href='presentation.html'" style="padding: 30px;">
-                <div class="choice-icon" style="font-size: 60px;">🤖</div>
-                <div class="choice-title" style="font-size: 24px;">Lesson 2: AI Literacy</div>
-                <div class="choice-description" style="font-size: 14px;">
-                    32 pathologies, F.A.C.T.S. framework, real disasters
-                </div>
-                <div class="choice-badge" style="margin-top: 10px;">Core Foundation</div>
+            <div class="quick-stats">
+                <article class="quick-stat">
+                    <span>Lessons</span>
+                    <strong id="homeLessonCount">0/6</strong>
+                </article>
+                <article class="quick-stat">
+                    <span>Total XP</span>
+                    <strong id="homeXpTotal">0 XP</strong>
+                </article>
+                <article class="quick-stat">
+                    <span>Latest Quiz</span>
+                    <strong id="homeQuizScore">--</strong>
+                </article>
             </div>
+        </section>
 
-            <div class="choice-card" onclick="window.location.href='lesson3-content-creation.html'" style="padding: 30px;">
-                <div class="choice-icon" style="font-size: 60px;">🎨</div>
-                <div class="choice-title" style="font-size: 24px;">Lesson 3: Content</div>
-                <div class="choice-description" style="font-size: 14px;">
-                    Create with AI tools & ethics
-                </div>
-                <div class="choice-badge" style="margin-top: 10px;">Create with AI</div>
+        <section class="lesson-section" id="lessonSection">
+            <div>
+                <h2>Your Missions</h2>
+                <p class="section-subtitle">Unlock lessons sequentially, track your status, and resume exactly where you left off.</p>
             </div>
+            <div class="lesson-grid" id="lessonGrid"></div>
+        </section>
 
-            <div class="choice-card" onclick="window.location.href='lesson4-advanced-prompting.html'" style="padding: 30px;">
-                <div class="choice-icon" style="font-size: 60px;">🔮</div>
-                <div class="choice-title" style="font-size: 24px;">Lesson 4: Prompting</div>
-                <div class="choice-description" style="font-size: 14px;">
-                    Advanced techniques & strategies
-                </div>
-                <div class="choice-badge" style="margin-top: 10px;">Master Prompts</div>
+        <section class="home-card learning-path">
+            <h3>📚 Learning Path</h3>
+            <div class="path-steps">
+                <span class="path-step">⚡️ Warm-Up</span>
+                <span class="path-step">🤖 Literacy</span>
+                <span class="path-step">🎮 Quiz 1</span>
+                <span class="path-step">🎨 Content</span>
+                <span class="path-step">🔮 Prompting</span>
+                <span class="path-step">🌐 Workflows</span>
+                <span class="path-step">🎓 Capstone</span>
             </div>
+            <p class="section-subtitle">Complete all milestones to unlock your AI Literacy badge and paywall-ready premium tier.</p>
+        </section>
 
-            <div class="choice-card" onclick="window.location.href='lesson5-ai-workflows.html'" style="padding: 30px;">
-                <div class="choice-icon" style="font-size: 60px;">🌐</div>
-                <div class="choice-title" style="font-size: 24px;">Lesson 5: Workflows</div>
-                <div class="choice-description" style="font-size: 14px;">
-                    Build multi-AI systems
-                </div>
-                <div class="choice-badge" style="margin-top: 10px;">Build Systems</div>
-            </div>
-
-            <div class="choice-card" onclick="window.location.href='lesson6-capstone.html'" style="padding: 30px;">
-                <div class="choice-icon" style="font-size: 60px;">🎓</div>
-                <div class="choice-title" style="font-size: 24px;">Lesson 6: Capstone</div>
-                <div class="choice-description" style="font-size: 14px;">
-                    Final project & certificate
-                </div>
-                <div class="choice-badge" style="margin-top: 10px;">Earn Certificate</div>
-            </div>
-        </div>
-
-        <!-- Learning Path Visualization -->
-        <div style="background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; margin-bottom: 30px; border: 2px solid rgba(255,255,255,0.2);">
-            <h3 style="text-align: center; font-size: 24px; margin-bottom: 20px;">📚 Your Learning Path</h3>
-            <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 15px; font-size: 18px;">
-                <span style="background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px;">⚡️ Warm-Up</span>
-                <span style="opacity: 0.5;">→</span>
-                <span style="background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px;">🤖 Literacy</span>
-                <span style="opacity: 0.5;">→</span>
-                <span style="background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px;">🎨 Content</span>
-                <span style="opacity: 0.5;">→</span>
-                <span style="background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px;">🔮 Prompting</span>
-                <span style="opacity: 0.5;">→</span>
-                <span style="background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px;">🌐 Workflows</span>
-                <span style="opacity: 0.5;">→</span>
-                <span style="background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px;">🎓 Capstone</span>
-            </div>
-            <p style="text-align: center; margin-top: 20px; opacity: 0.8; font-size: 14px;">Complete all 6 lessons to earn 1500+ XP and your AI Literacy Master certificate!</p>
-        </div>
-
-        <!-- Course Features -->
-        <div class="info-section">
-            <h2 style="text-align: center; margin-bottom: 10px;">✨ Course Features</h2>
-            <p style="text-align: center; opacity: 0.8; margin-bottom: 30px;">Everything you get in this comprehensive AI literacy program</p>
-            
+        <section class="home-card info-section">
+            <h3>✨ Course Features</h3>
             <div class="info-grid">
-                <div class="info-item">
+                <article class="info-item">
                     <div class="info-icon">🎮</div>
-                    <div class="info-title">Gamified Learning</div>
-                    <div class="info-desc">XP system, levels, badges, and achievements</div>
-                </div>
-                
-                <div class="info-item">
+                    <h4>Gamified Learning</h4>
+                    <p>Earn XP, collect badges, and replay mini-games.</p>
+                </article>
+                <article class="info-item">
                     <div class="info-icon">🔄</div>
-                    <div class="info-title">Dual Modes</div>
-                    <div class="info-desc">Interactive game mode + detailed learn mode</div>
-                </div>
-                
-                <div class="info-item">
+                    <h4>Dual Modes</h4>
+                    <p>Switch between Learn and Game mode instantly.</p>
+                </article>
+                <article class="info-item">
                     <div class="info-icon">🧠</div>
-                    <div class="info-title">32 Pathologies</div>
-                    <div class="info-desc">Complete coverage of AI failure modes</div>
-                </div>
-                
-                <div class="info-item">
-                    <div class="info-icon">🛠️</div>
-                    <div class="info-title">Practical Tools</div>
-                    <div class="info-desc">Real-world techniques and frameworks</div>
-                </div>
-                
-                <div class="info-item">
-                    <div class="info-icon">📊</div>
-                    <div class="info-title">Progress Tracking</div>
-                    <div class="info-desc">Track your journey through all lessons</div>
-                </div>
-                
-                <div class="info-item">
-                    <div class="info-icon">🏆</div>
-                    <div class="info-title">Certificate</div>
-                    <div class="info-desc">Earn your AI Literacy Master credential</div>
-                </div>
+                    <h4>32 Pathologies</h4>
+                    <p>Spot every AI failure pattern before it harms you.</p>
+                </article>
+                <article class="info-item">
+                    <div class="info-icon">🛡️</div>
+                    <h4>Safety Frameworks</h4>
+                    <p>Deploy the F.A.C.T.S. checklist on any AI output.</p>
+                </article>
             </div>
-        </div>
-
-        <div style="text-align: center; margin-top: 40px; opacity: 0.7; font-size: 14px;">
-            <p>🎓 Complete course | 🎮 Gamified learning | 🏆 Earn certificate | 🌟 Master AI literacy</p>
-        </div>
-    </div>
+        </section>
+    </main>
     <script defer src="scripts/progress.js"></script>
-    <script>
-        const COURSE_MODULES = [
-            { id: 'lesson1', label: 'Lesson 1 · Warm-Up', path: 'lesson1-ai-intro.html' },
-            { id: 'lesson2-learn', label: 'Lesson 2 · AI Literacy (Learn)', path: 'presentation.html' },
-            { id: 'lesson2-game', label: 'Lesson 2 · Game Mode', path: 'game.html' },
-            { id: 'lesson3', label: 'Lesson 3 · Content Creation', path: 'lesson3-content-creation.html' },
-            { id: 'lesson4', label: 'Lesson 4 · Advanced Prompting', path: 'lesson4-advanced-prompting.html' },
-            { id: 'lesson5', label: 'Lesson 5 · AI Workflows', path: 'lesson5-ai-workflows.html' },
-            { id: 'lesson6', label: 'Lesson 6 · Capstone', path: 'lesson6-capstone.html' }
-        ];
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const tracker = window.ProgressTracker;
-            const summaryEl = document.getElementById('progressSummary');
-            const xpEl = document.getElementById('xpSummary');
-            const fillEl = document.getElementById('progressFill');
-            const listEl = document.getElementById('moduleProgressList');
-
-            if (!listEl) return;
-
-            function renderModules(statusMap) {
-                listEl.innerHTML = COURSE_MODULES.map((module) => {
-                    const status = statusMap[module.id] || 'not-started';
-                    return `
-                        <li>
-                            <strong><a href="${module.path}" style="color: inherit; text-decoration: none;">${module.label}</a></strong>
-                            <span>Status: ${status.replace('-', ' ')}</span>
-                        </li>
-                    `;
-                }).join('');
-            }
-
-            if (!tracker) {
-                renderModules({});
-                return;
-            }
-
-            const statusMap = {};
-            COURSE_MODULES.forEach((module) => {
-                statusMap[module.id] = tracker.getLessonStatus(module.id);
-            });
-
-            const completed = Object.values(statusMap).filter((status) => status === 'completed').length;
-            const total = COURSE_MODULES.length;
-            const percentage = total ? Math.round((completed / total) * 100) : 0;
-
-            if (summaryEl) summaryEl.textContent = `${completed}/${total} lessons complete (${percentage}%)`;
-            if (xpEl) xpEl.textContent = `${tracker.getXP()} XP earned`;
-            if (fillEl) fillEl.style.width = `${percentage}%`;
-
-            renderModules(statusMap);
-        });
-    </script>
+    <script defer src="scripts/home.js"></script>
 </body>
 </html>

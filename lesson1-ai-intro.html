@@ -60,15 +60,47 @@
         .notification strong { color: #34d399; }
         .progress-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
         .progress-pill { padding: 6px 14px; border-radius: 999px; font-size: 13px; letter-spacing: 0.04em; background: rgba(255, 255, 255, 0.12); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .learning-showcase { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 24px; }
+        .story-card { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.04); padding: 20px; display: flex; flex-direction: column; gap: 16px; min-height: 240px; }
+        .story-card.story-hero { background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(79, 70, 229, 0.55)); border-color: rgba(255, 255, 255, 0.25); color: #fff; }
+        .story-meta { display: flex; gap: 10px; flex-wrap: wrap; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.9; }
+        .story-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+        .story-header h3 { margin-bottom: 4px; font-size: 20px; }
+        .story-header p { margin: 0; color: var(--color-muted); }
+        .step-selector { display: flex; flex-wrap: wrap; gap: 8px; }
+        .step-pill { flex: 1 1 45%; border-radius: 999px; padding: 10px 16px; border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(0, 0, 0, 0.25); color: inherit; cursor: pointer; font-weight: 600; transition: background var(--transition-base), border-color var(--transition-base); }
+        .step-pill.active { background: var(--color-accent); color: #0f172a; border-color: var(--color-accent); }
+        .step-detail { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.15); padding: 16px; background: rgba(255, 255, 255, 0.03); min-height: 180px; }
+        .step-detail ul { margin-left: 20px; line-height: 1.6; }
+        .tone-palette { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tone-btn { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.05); color: inherit; padding: 8px 14px; cursor: pointer; font-weight: 600; transition: background var(--transition-base), border-color var(--transition-base); }
+        .tone-btn.active { background: linear-gradient(135deg, #22d3ee, #0ea5e9); color: #0f172a; border-color: rgba(14, 165, 233, 0.6); }
+        .tone-transcript { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.15); padding: 14px; min-height: 110px; line-height: 1.6; background: rgba(15, 23, 42, 0.35); }
+        .tone-tip { font-size: 13px; color: var(--color-muted); }
+        .drop-stack { display: flex; flex-direction: column; gap: 10px; }
+        .drop-toggle { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(0, 0, 0, 0.35); color: inherit; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-weight: 600; }
+        .drop-toggle.open { border-color: var(--color-accent); background: rgba(16, 185, 129, 0.15); }
+        .drop-panel { border-radius: var(--radius-md); border-left: 3px solid var(--color-accent); background: rgba(255, 255, 255, 0.05); padding: 12px 16px; display: none; }
+        .drop-panel.open { display: block; }
+        .drop-panel ul { margin-left: 18px; line-height: 1.6; }
+        .mission-checklist { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+        .mission-checklist li { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px 14px; background: rgba(255, 255, 255, 0.04); display: flex; flex-direction: column; gap: 6px; }
+        .check-btn { align-self: flex-start; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.35); background: transparent; color: inherit; padding: 6px 16px; text-transform: uppercase; font-size: 12px; letter-spacing: 0.08em; cursor: pointer; transition: background var(--transition-base), border-color var(--transition-base); }
+        .check-btn.completed { background: linear-gradient(135deg, #10b981, #22c55e); color: #041316; border-color: transparent; }
+        .callout-card { margin-top: 24px; }
+        .callout-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
         @media (max-width: 768px) {
             .challenge-title { font-size: 26px; }
             .chat-controls { flex-direction: column; align-items: stretch; }
             .chat-controls select { width: 100%; }
             .word-options { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+            .story-card { min-height: auto; }
+            .step-pill { flex: 1 1 100%; }
         }
     </style>
     <script defer src="https://cdn.jsdelivr.net/gh/unnamedmistress/AiLiteracyBiases/scripts/shared.js" onerror="this.onerror=null;this.src='scripts/shared.js';"></script>
     <script defer src="scripts/progress.js"></script>
+    <script defer src="scripts/nav.js"></script>
 </head>
 <body>
     <div class="container lesson-shell">
@@ -158,50 +190,120 @@
                         <h1 class="challenge-title">Lesson 1 · Understanding AI Personalities</h1>
                         <p class="challenge-desc">This is your fun, witty crash course in what AI actually is, why tone is the secret sauce, and how prediction math runs the whole show. Think science fair meets improv club.</p>
 
-        <div class="learning-grid">
-                            <div class="learning-card">
-                                <h3>🤖 What even <em>is</em> AI?</h3>
-                                <ul>
-                                    <li>It is basically autocomplete dialed up to 11: give it context, it guesses what fits next.</li>
-                                    <li>Large Language Models (LLMs) are trained on oceans of text so they can mimic styles, voices, and facts.</li>
-                                    <li>They do not "understand" like humans—they remix patterns we have already written.</li>
-                                </ul>
-                            </div>
-                            <div class="learning-card">
-                                <h3>🧠 AI = Prediction Machine</h3>
-                                <ul>
-                                    <li>Every response is a string of predictions called tokens—tiny slices of words.</li>
-                                    <li>The model ranks millions of possible next tokens and picks the most likely one, over and over.</li>
-                                    <li>Change the prompt, temperature, or tone word and you instantly bend those probabilities.</li>
-                                </ul>
-                            </div>
-                            <div class="learning-card">
-                                <h3>🎨 Tone 101</h3>
-                                <ul>
-                                    <li>Tone is the emotional filter: formal, sassy, dramatic, apologetic, you name it.</li>
-                                    <li>Adjectives, emojis, punctuation, and speaker references all steer tone.</li>
-                                    <li>Want the AI to sound like a pirate? Say so. Otherwise it defaults to "helpful corporate coworker."</li>
-                                </ul>
-                            </div>
-                            <div class="learning-card">
-                                <h3>⚡️ Why Tone Matters</h3>
-                                <ul>
-                                    <li>Tone changes how the same facts are received—comforting, urgent, or hilariously chaotic.</li>
-                                    <li>It is your quickest way to keep branding, classroom vibes, or character voices consistent.</li>
-                                    <li>Practicing tone swaps helps you spot stereotypes and rewrite them with intent.</li>
-                                </ul>
-                            </div>
-                        </div>
+                        <section class="learning-showcase">
+                            <article class="story-card story-hero">
+                                <h3>Kickoff mission</h3>
+                                <p>Preview the narrative, then jump into the exact mini-games you will practice in the warm-up. This lane keeps you focused on the "why" before the "try."</p>
+                                <div class="story-meta">
+                                    <span>3 warm-ups</span>
+                                    <span>~10 XP bursts</span>
+                                </div>
+                                <div class="story-actions">
+                                    <button class="btn btn-primary" data-jump-game="true">Start mini-games</button>
+                                    <a class="btn btn-secondary" href="#gameMode">Review the activities</a>
+                                </div>
+                            </article>
 
-                        <div class="learning-card">
+                            <article class="story-card">
+                                <div class="story-header">
+                                    <h3>Pick a beat to expand</h3>
+                                    <p>Tap each pill and get a guided breakdown of what to watch for.</p>
+                                </div>
+                                <div class="step-selector" role="tablist" aria-label="Lesson 1 learning beats">
+                                    <button class="step-pill active" data-learning-step="pattern">Pattern engine</button>
+                                    <button class="step-pill" data-learning-step="probability">Probability radar</button>
+                                    <button class="step-pill" data-learning-step="tone">Tone switches</button>
+                                    <button class="step-pill" data-learning-step="bias">Bias spotter</button>
+                                </div>
+                                <div class="step-detail" aria-live="polite">
+                                    <h4 id="learningStepTitle">AI = Predictive Pattern Engine</h4>
+                                    <p id="learningStepBody">LLMs read billions of sentences and keep score of what tends to follow what. They remix what already exists—they never invent true understanding.</p>
+                                    <ul id="learningStepList">
+                                        <li>It chains predictions token-by-token like improv for words.</li>
+                                        <li>More context and constraints tighten the probability spread.</li>
+                                        <li>Vague prompts default to "helpful corporate coworker" voice.</li>
+                                    </ul>
+                                </div>
+                            </article>
+
+                            <article class="story-card">
+                                <div class="story-header">
+                                    <h3>Tone dial sandbox</h3>
+                                    <p>Click a tone to preview how a single adjective alters the vibe.</p>
+                                </div>
+                                <div class="tone-palette">
+                                    <button class="tone-btn active" data-tone-explain="friendly">Friendly</button>
+                                    <button class="tone-btn" data-tone-explain="urgent">Urgent</button>
+                                    <button class="tone-btn" data-tone-explain="dramatic">Dramatic</button>
+                                    <button class="tone-btn" data-tone-explain="skeptical">Skeptical</button>
+                                </div>
+                                <div class="tone-transcript" id="toneExplainOutput">Hey team! I'm testing prompts today and want a cheerful "camp counselor" vibe. Keep it upbeat, sprinkle emojis, and stay concise.</div>
+                                <p class="tone-tip">Hint: stack tone word + audience + intent. Ex: "Give me a confident note for anxious parents."</p>
+                            </article>
+
+                            <article class="story-card">
+                                <div class="story-header">
+                                    <h3>Bias watchlist dropdowns</h3>
+                                    <p>Open a panel whenever the response feels "off" and follow the fix.</p>
+                                </div>
+                                <div class="drop-stack">
+                                    <button class="drop-toggle" data-drop="pattern" aria-expanded="false">Pattern glitches</button>
+                                    <div class="drop-panel" data-panel="pattern" hidden>
+                                        <p>When the AI keeps repeating the same corporate phrasing, it's leaning on its most common data.</p>
+                                        <ul>
+                                            <li>Inject role-playing: "You are a Black radio host..."</li>
+                                            <li>Add contrasting adjectives to push it away from bland defaults.</li>
+                                        </ul>
+                                    </div>
+                                    <button class="drop-toggle" data-drop="scale" aria-expanded="false">Scale fails</button>
+                                    <div class="drop-panel" data-panel="scale" hidden>
+                                        <p>LLMs forget earlier instructions once the convo hits the token limit.</p>
+                                        <ul>
+                                            <li>Summarize checkpoints: "Here is what we decided so far..."</li>
+                                            <li>Chunk long tasks into smaller prompts so memory stays crisp.</li>
+                                        </ul>
+                                    </div>
+                                    <button class="drop-toggle" data-drop="safety" aria-expanded="false">Safety vibes</button>
+                                    <div class="drop-panel" data-panel="safety" hidden>
+                                        <p>Watch for tone slipping into stereotypes or over-confident claims.</p>
+                                        <ul>
+                                            <li>Ask for calibrated certainty levels or cite-all-sources.</li>
+                                            <li>Swap "make it edgy" with specific guardrails like "no insults."</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <article class="story-card">
+                                <div class="story-header">
+                                    <h3>Mini mission checklist</h3>
+                                    <p>Tap to track progress as you knock out each warm-up.</p>
+                                </div>
+                                <ul class="mission-checklist">
+                                    <li>
+                                        <button class="check-btn" data-mission="voice" aria-pressed="false">Voice-match the AI</button>
+                                        <p>Remix "Honesty is the best policy" in three wildly different voices.</p>
+                                    </li>
+                                    <li>
+                                        <button class="check-btn" data-mission="prob" aria-pressed="false">Call the next token</button>
+                                        <p>Study the probability bars and log why "policy" ranks highest.</p>
+                                    </li>
+                                    <li>
+                                        <button class="check-btn" data-mission="tone" aria-pressed="false">Tone remix</button>
+                                        <p>Drag/drop adjectives until your sick note sounds correct for your boss.</p>
+                                    </li>
+                                </ul>
+                            </article>
+                        </section>
+
+                        <div class="learning-card callout-card">
                             <h3>First-lesson energy</h3>
                             <p>Play with the characters, laugh at the wrong answers, and remind yourself that AI is a math-powered improv partner. The more specific you are about tone and audience, the more the model sounds like it belongs on your team.</p>
-                            <p style="margin-top: 12px;">When you feel warmed up, smash the button below and jump straight into the three Prompt Wizardry warm-ups.</p>
-                        </div>
-
-                        <div class="learning-card">
-                            <h3>Ready to ship</h3>
-                            <p>When you're ready, flip the mode toggle up top to hop into the three Prompt Wizardry warm-ups, or use the navigation buttons below to roll into the next lesson.</p>
+                            <p style="margin-top: 12px;">Ready for hands-on practice? Switch to Game Mode with any button labeled "Start mini-games."</p>
+                            <div class="callout-actions">
+                                <button class="btn btn-primary" data-jump-game="true">Go to game warm-ups</button>
+                                <a class="btn btn-secondary" href="index.html#modules">Review the curriculum map</a>
+                            </div>
                         </div>
 
                         <div class="footer-nav"></div>
@@ -253,6 +355,52 @@
                 apologetic: "I'm sorry, but I'm too sick to come in today. I'll keep you posted."
             };
 
+            const learningStepsContent = {
+                pattern: {
+                    title: 'AI = Predictive Pattern Engine',
+                    body: 'LLMs read billions of sentences and keep score of what tends to follow. They remix probability, not original thought.',
+                    bullets: [
+                        'It chains predictions token-by-token like improv for words.',
+                        'Extra context narrows the possibilities and keeps replies on-brand.',
+                        'If you stay vague, it defaults to a polite corporate coworker vibe.'
+                    ]
+                },
+                probability: {
+                    title: 'Probability Radar Brain',
+                    body: 'Every option gets ranked. The model boosts words that statistically fit the prompt and tones you set.',
+                    bullets: [
+                        'Temperature sliders decide how adventurous those picks get.',
+                        'Ask “show me the top three alternates” to compare reasoning.',
+                        'Pair odds with intuition: if the % feels wrong, rewrite the cue.'
+                    ]
+                },
+                tone: {
+                    title: 'Tone Switchboard',
+                    body: 'Tone cues treat the AI like a voice actor. Specific adjectives, audiences, and intents reframe the same facts.',
+                    bullets: [
+                        'Anchor the voice (“You are a sarcastic teen journalist...”).',
+                        'Layer emotion + pacing (“urgent + three short sentences”).',
+                        'Audit for stereotypes before you hit send; you are the director.'
+                    ]
+                },
+                bias: {
+                    title: 'Bias + Safety Spotter',
+                    body: 'Your job is to pause when the model sounds overconfident, exclusionary, or forgetful.',
+                    bullets: [
+                        'Challenge big claims: “What sources back that up?”',
+                        'Swap one perspective for many (“give me the student + parent POV”).',
+                        'Document weird replies so you can retrain or escalate later.'
+                    ]
+                }
+            };
+
+            const toneExplainSamples = {
+                friendly: "Hey team! I'm testing prompts today and want a cheerful 'camp counselor' vibe. Keep it upbeat, sprinkle emojis, and stay concise.",
+                urgent: "Heads up! I need a straight-to-the-point status update in the next 5 minutes—no fluff, just actionable bullets.",
+                dramatic: "Picture this like a movie trailer. Build suspense, add sensory words, and end with a bold call to action.",
+                skeptical: "I appreciate the enthusiasm, but walk me through the evidence calmly. Cite the source or flag if you're unsure."
+            };
+
             const savedCheckpoints = tracker ? tracker.getCheckpoints(LESSON_ID) : {};
             const state = {
                 xpToNext: 150,
@@ -278,7 +426,15 @@
                 notification: document.getElementById('notification'),
                 notificationContent: document.getElementById('notificationContent'),
                 lessonProgressPill: document.getElementById('lessonProgressPill'),
-                globalProgressPill: document.getElementById('globalProgressPill')
+                globalProgressPill: document.getElementById('globalProgressPill'),
+                learningStepButtons: document.querySelectorAll('[data-learning-step]'),
+                learningStepTitle: document.getElementById('learningStepTitle'),
+                learningStepBody: document.getElementById('learningStepBody'),
+                learningStepList: document.getElementById('learningStepList'),
+                toneExplainButtons: document.querySelectorAll('[data-tone-explain]'),
+                toneExplainOutput: document.getElementById('toneExplainOutput'),
+                dropToggles: document.querySelectorAll('[data-drop]'),
+                missionButtons: document.querySelectorAll('.check-btn')
             };
 
             let notificationTimer;
@@ -493,6 +649,88 @@
                 });
             }
 
+            function setActiveLearningStep(stepId) {
+                if (!elements.learningStepButtons || !elements.learningStepButtons.length) return;
+                const step = learningStepsContent[stepId];
+                if (!step || !elements.learningStepTitle || !elements.learningStepBody || !elements.learningStepList) return;
+                elements.learningStepButtons.forEach((btn) => {
+                    btn.classList.toggle('active', btn.dataset.learningStep === stepId);
+                });
+                elements.learningStepTitle.textContent = step.title;
+                elements.learningStepBody.textContent = step.body;
+                elements.learningStepList.innerHTML = step.bullets.map((bullet) => `<li>${bullet}</li>`).join('');
+            }
+
+            function initLearningStepTabs() {
+                if (!elements.learningStepButtons || !elements.learningStepButtons.length) return;
+                elements.learningStepButtons.forEach((btn) => {
+                    btn.addEventListener('click', () => setActiveLearningStep(btn.dataset.learningStep));
+                });
+                const defaultStep = elements.learningStepButtons[0].dataset.learningStep;
+                setActiveLearningStep(defaultStep);
+            }
+
+            function setToneExplainSample(tone) {
+                if (!elements.toneExplainButtons || !elements.toneExplainOutput) return;
+                if (!toneExplainSamples[tone]) return;
+                elements.toneExplainButtons.forEach((btn) => {
+                    btn.classList.toggle('active', btn.dataset.toneExplain === tone);
+                });
+                elements.toneExplainOutput.textContent = toneExplainSamples[tone];
+            }
+
+            function initToneExplainSection() {
+                if (!elements.toneExplainButtons || !elements.toneExplainButtons.length) return;
+                elements.toneExplainButtons.forEach((btn) => {
+                    btn.addEventListener('click', () => setToneExplainSample(btn.dataset.toneExplain));
+                });
+                const defaultTone = elements.toneExplainButtons[0].dataset.toneExplain;
+                setToneExplainSample(defaultTone);
+            }
+
+            function initDropPanels() {
+                if (!elements.dropToggles || !elements.dropToggles.length) return;
+                elements.dropToggles.forEach((toggle) => {
+                    const panel = document.querySelector(`.drop-panel[data-panel="${toggle.dataset.drop}"]`);
+                    if (!panel) return;
+                    toggle.addEventListener('click', () => {
+                        const isOpen = toggle.classList.toggle('open');
+                        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                        panel.classList.toggle('open', isOpen);
+                        panel.hidden = !isOpen;
+                    });
+                });
+            }
+
+            function initMissionChecklist() {
+                if (!elements.missionButtons || !elements.missionButtons.length) return;
+                elements.missionButtons.forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const isComplete = btn.classList.toggle('completed');
+                        btn.setAttribute('aria-pressed', isComplete ? 'true' : 'false');
+                    });
+                });
+            }
+
+            function initGameJumpers() {
+                const jumpers = document.querySelectorAll('[data-jump-game="true"]');
+                if (!jumpers.length) return;
+                jumpers.forEach((btn) => {
+                    btn.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        if (window.lessonMode && typeof window.lessonMode.setMode === 'function') {
+                            window.lessonMode.setMode('game');
+                        }
+                        const gamePanel = document.getElementById('gameMode');
+                        if (gamePanel) {
+                            gamePanel.scrollIntoView({ behavior: 'smooth' });
+                        } else {
+                            window.location.hash = '#gameMode';
+                        }
+                    });
+                });
+            }
+
             function handleDragOver(event) {
                 event.preventDefault();
                 elements.toneDropZone.classList.add('active');
@@ -524,6 +762,10 @@
             buildProbabilityBars();
             buildWordOptions();
             buildToneWords();
+            initLearningStepTabs();
+            initToneExplainSection();
+            initDropPanels();
+            initMissionChecklist();
 
             elements.toneDropZone.addEventListener('dragover', handleDragOver);
             elements.toneDropZone.addEventListener('dragenter', handleDragOver);
@@ -555,6 +797,8 @@
                     footerSelector: '.footer-nav'
                 });
             }
+
+            initGameJumpers();
         });
     </script>
 </body>
