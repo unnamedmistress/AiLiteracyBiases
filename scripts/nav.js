@@ -61,6 +61,23 @@
         return element;
     }
 
+    function buildSection(title, links, activeId, group) {
+        const section = document.createElement('section');
+        section.className = 'nav-drawer-section';
+
+        const heading = document.createElement('p');
+        heading.className = 'nav-section-title';
+        heading.textContent = title;
+        section.appendChild(heading);
+
+        const list = document.createElement('div');
+        list.className = 'nav-drawer-links';
+        links.forEach((link) => list.appendChild(buildLink(link, activeId, group)));
+        section.appendChild(list);
+
+        return section;
+    }
+
     function renderNav() {
         const currentFile = window.location.pathname.split('/').pop();
         const activeState = PATH_TO_STATE[currentFile] || { main: 'home' };
@@ -76,35 +93,46 @@
         brandLink.textContent = 'AI Detective Academy';
         brand.appendChild(brandLink);
 
-        const mainLinksWrapper = document.createElement('div');
-        mainLinksWrapper.className = 'nav-group nav-group-main';
-        MAIN_LINKS.forEach((link) => {
-            mainLinksWrapper.appendChild(buildLink(link, activeState.main, 'main'));
-        });
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'nav-toggle';
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-controls', 'navDrawer');
+        toggle.innerHTML = '<span class="sr-only">Toggle navigation</span><span class="nav-toggle-bars" aria-hidden="true"></span>';
 
-        const resourcesWrapper = document.createElement('div');
-        resourcesWrapper.className = 'nav-group nav-group-resources';
-        RESOURCE_LINKS.forEach((link) => {
-            resourcesWrapper.appendChild(buildLink(link, activeState.resource, 'resource'));
-        });
+        const overlay = document.createElement('div');
+        overlay.className = 'nav-overlay';
 
-        const lessonsWrapper = document.createElement('div');
-        lessonsWrapper.className = 'nav-group nav-group-lessons';
-        const lessonsLabel = document.createElement('span');
-        lessonsLabel.className = 'nav-section-label';
-        lessonsLabel.textContent = 'Lessons';
-        lessonsWrapper.appendChild(lessonsLabel);
-        const lessonsList = document.createElement('div');
-        lessonsList.className = 'lesson-links';
-        LESSON_LINKS.forEach((link) => {
-            lessonsList.appendChild(buildLink(link, activeState.lesson, 'lesson'));
-        });
-        lessonsWrapper.appendChild(lessonsList);
+        const drawer = document.createElement('div');
+        drawer.className = 'nav-drawer';
+        drawer.id = 'navDrawer';
+
+        drawer.appendChild(buildSection('Main', MAIN_LINKS, activeState.main, 'main'));
+        drawer.appendChild(buildSection('Resources', RESOURCE_LINKS, activeState.resource, 'resource'));
+        drawer.appendChild(buildSection('Lessons', LESSON_LINKS, activeState.lesson, 'lesson'));
 
         nav.appendChild(brand);
-        nav.appendChild(mainLinksWrapper);
-        nav.appendChild(resourcesWrapper);
-        nav.appendChild(lessonsWrapper);
+        nav.appendChild(toggle);
+        nav.appendChild(overlay);
+        nav.appendChild(drawer);
+
+        function setDrawerState(open) {
+            nav.classList.toggle('nav-open', open);
+            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+
+        toggle.addEventListener('click', () => {
+            const nextState = !nav.classList.contains('nav-open');
+            setDrawerState(nextState);
+        });
+
+        overlay.addEventListener('click', () => setDrawerState(false));
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && nav.classList.contains('nav-open')) {
+                setDrawerState(false);
+            }
+        });
 
         nav.addEventListener('click', (event) => {
             if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
@@ -115,6 +143,7 @@
             const href = anchor.getAttribute('href');
             if (!href) return;
             event.preventDefault();
+            setDrawerState(false);
             window.location.href = href;
         });
 
