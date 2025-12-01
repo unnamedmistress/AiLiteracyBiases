@@ -495,10 +495,6 @@
             </div>
             <div class="stats-bar">
                 <div class="stat">
-                    <div class="stat-label">Level</div>
-                    <div class="stat-value" id="level">3</div>
-                </div>
-                <div class="stat">
                     <div class="stat-label">XP</div>
                     <div class="xp-bar">
                         <div class="xp-fill" id="xpBar" style="width: 0%;">
@@ -506,18 +502,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="stat">
-                    <div class="stat-label">Points</div>
-                    <div class="stat-value">
-                        <span id="points">0</span> 🏆
-                    </div>
-                </div>
             </div>
         </div>
 
         <div class="game-content">
             <!-- Left Sidebar -->
-            <div class="sidebar">
+            <div class="sidebar" style="display: none;">
                 <h3>📚 Lesson Progress</h3>
                 <div class="lesson-progress">
                     <div class="progress-item completed">✅ Lesson 1: Intro</div>
@@ -546,16 +536,16 @@
             <!-- Main Panel -->
             <div class="main-panel">
                 <div class="mode-selector">
-                    <button class="mode-btn active" onclick="switchMode('game')" id="gameBtn">
+                    <button class="mode-btn" onclick="switchMode('game')" id="gameBtn">
                         🎮 Game Mode
                     </button>
-                    <button class="mode-btn" onclick="switchMode('presentation')" id="presentBtn">
-                        📚 Presentation Mode
+                    <button class="mode-btn active" onclick="switchMode('presentation')" id="presentBtn">
+                        📚 Learn
                     </button>
                 </div>
 
                 <!-- Game Mode Content -->
-                <div id="gameMode">
+                <div id="gameMode" class="hidden">
                     <div class="challenge-section">
                         <h1 class="challenge-title">🎨 Master AI Content Creation</h1>
                         <p class="challenge-desc">
@@ -658,7 +648,7 @@
                 </div>
 
                 <!-- Presentation Mode Content -->
-                <div id="presentationMode" class="hidden">
+                <div id="presentationMode">
                     <div class="challenge-section">
                         <h1 class="challenge-title">🎨 AI Content Creation & Ethics</h1>
                         
@@ -790,7 +780,7 @@
             </div>
 
             <!-- Right Panel -->
-            <div class="achievements-panel">
+            <div class="achievements-panel" style="display: none;">
                 <h3 style="margin-bottom: 15px;">🏅 Badges</h3>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px;">
                     <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px; text-align: center; font-size: 32px;" title="AI Artist">🎨</div>
@@ -830,7 +820,7 @@
             xp: 0,
             xpToNext: 200,
             points: 0,
-            mode: 'game',
+            mode: 'presentation',
             imagesCreated: 0,
             ethicsScore: 0
         };

@@ -191,7 +191,7 @@
                     <button class="mode-btn" onclick="switchMode('present')" id="presentBtn">��� Learn</button>
                 </div>
 
-                <div id="gameMode">
+                <div id="gameMode" class="hidden">
                     <div class="challenge">
                         <h1 class="challenge-title">��� Master Advanced Prompting</h1>
                         <p style="opacity: 0.9; margin-bottom: 20px;">
@@ -391,7 +391,7 @@
     <div id="notification" class="notification hidden"><div id="notificationContent"></div></div>
 
     <script>
-        const state = { xp: 0, xpToNext: 250, points: 0, mode: 'game' };
+        const state = { xp: 0, xpToNext: 250, points: 0, mode: 'presentation' };
 
         function switchMode(mode) {
             state.mode = mode;
