@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
     <title>AI Detective Academy 🕵️ - Master AI Literacy</title>
     <link rel="stylesheet" href="styles/shared.css">
     <script defer src="scripts/nav.js"></script>
@@ -106,14 +106,26 @@
         }
 
         .xp-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
             height: 100%;
             background: linear-gradient(90deg, var(--gold), var(--warning));
             transition: width 0.5s ease;
+        }
+
+        .xp-label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 14px;
             font-weight: bold;
+            color: #0f172a;
         }
 
         .xp-popup {
@@ -641,11 +653,18 @@
 
         .pathology-tag {
             display: inline-block;
-            background: var(--danger);
+            background: rgba(148, 163, 184, 0.25);
+            color: rgba(15, 23, 42, 0.8);
             padding: 5px 15px;
             border-radius: 20px;
             font-size: 12px;
             margin: 5px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .pathology-tag.revealed {
+            background: var(--danger);
+            color: #fff;
         }
 
         .next-lesson-cta {
@@ -708,9 +727,8 @@
                 <div class="stat">
                     <div class="stat-label">XP</div>
                     <div class="xp-bar">
-                        <div class="xp-fill" id="xpBar" style="width: 0%;">
-                            <span id="xpText">0/100</span>
-                        </div>
+                        <div class="xp-fill" id="xpBar" style="width: 0%;"></div>
+                        <span class="xp-label" id="xpText">0/100</span>
                     </div>
                 </div>
                 <div class="stat">
@@ -1194,9 +1212,10 @@
         }
 
         function resetScenarioSession() {
-            for (let i = 0; i < scenarioResults.length; i++) {
+            for (let i = 0; i < scenarios.length; i++) {
                 scenarioResults[i] = { status: null, selected: null };
             }
+            scenarioResults.length = scenarios.length;
             scenarioSession.startTime = Date.now();
             scenarioSession.totalMs = 0;
             scenarioSession.answered = 0;
@@ -1213,7 +1232,10 @@
             
             if (mode === 'scenarios') {
                 if (options.resume) {
-                    loadScenario(normalizeScenarioIndex(options.resumeIndex));
+                    const requestedIndex = Number.isFinite(options.resumeIndex)
+                        ? Math.trunc(options.resumeIndex)
+                        : firstIncompleteScenarioIndex();
+                    loadScenario(requestedIndex);
                 } else {
                     resetScenarioSession();
                     loadScenario(0);
@@ -1232,17 +1254,14 @@
         let currentScenarioIndex = 0;
 
         function firstIncompleteScenarioIndex() {
-            return scenarioResults.findIndex((result) => !result || !result.status);
-        }
-
-        function normalizeScenarioIndex(requestedIndex = 0) {
-            const numericIndex = Number.isFinite(requestedIndex) ? Math.trunc(requestedIndex) : 0;
-            if (numericIndex < 0) return 0;
-            if (numericIndex < scenarios.length) {
-                return numericIndex;
+            if (!Array.isArray(scenarioResults) || !scenarioResults.length) {
+                return 0;
             }
-            const firstIncomplete = firstIncompleteScenarioIndex();
-            return firstIncomplete === -1 ? scenarios.length : Math.max(0, firstIncomplete);
+            const idx = scenarioResults.findIndex((result) => !result || !result.status);
+            if (idx === -1 && scenarioResults.length < scenarios.length) {
+                return scenarioResults.length;
+            }
+            return idx;
         }
 
         function loadStoredScenarioProgress() {
@@ -1337,7 +1356,9 @@
                 startMode('scenarios');
                 return;
             }
-            const resumeIndex = normalizeScenarioIndex(saved.currentIndex || 0);
+            const resumeIndex = Number.isFinite(saved.currentIndex)
+                ? Math.trunc(saved.currentIndex)
+                : firstIncompleteScenarioIndex();
             startMode('scenarios', { resume: true, resumeIndex });
         }
 
@@ -1358,11 +1379,23 @@
                 .join('');
         }
 
+            function revealPathologyTag(scenario) {
+                const pathologyTag = document.getElementById('scenarioPathology');
+                if (!pathologyTag || !scenario) return;
+                pathologyTag.textContent = scenario.pathology;
+                pathologyTag.classList.add('revealed');
+            }
+
         function loadScenario(requestedIndex = 0) {
-            let index = normalizeScenarioIndex(requestedIndex);
+            let index = Number.isFinite(requestedIndex) ? Math.trunc(requestedIndex) : 0;
+            if (index < 0) index = 0;
             if (index >= scenarios.length) {
-                showCompletion('scenarios');
-                return;
+                const pendingIndex = firstIncompleteScenarioIndex();
+                if (pendingIndex === -1) {
+                    showCompletion('scenarios');
+                    return;
+                }
+                index = pendingIndex;
             }
 
             currentScenarioIndex = index;
@@ -1380,7 +1413,7 @@
                             <h2>🎭 Scenario ${index + 1}/${scenarios.length}</h2>
                             <p class="scenario-progress-count">Identify the pattern and pick the safest move.</p>
                         </div>
-                        <div class="pathology-tag">${scenario.pathology}</div>
+                        <div class="pathology-tag" id="scenarioPathology" aria-live="polite">❓ Hidden Pattern</div>
                     </div>
                     <div class="scenario-progress">
                         ${progressDots}
@@ -1487,6 +1520,7 @@
                     <p>${scenario.tip}</p>
                 `;
             }
+            revealPathologyTag(scenario);
 
             const nextBtn = document.querySelector('[data-next-scenario]');
             if (nextBtn) {
@@ -1531,6 +1565,7 @@
                     <p>${scenario.tip}</p>
                 `;
             }
+            revealPathologyTag(scenario);
 
             const nextBtn = document.querySelector('[data-next-scenario]');
             if (nextBtn) {
