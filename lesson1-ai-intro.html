@@ -214,7 +214,7 @@
                             <div class="activity-body">
                                 <p>Feeling confident after the warm-up reps? Jump straight into Lesson 2's learn mode to dig into AI literacy drills and the full F.A.C.T.S. framework.</p>
                                 <button class="btn btn-primary" id="lesson1NextBtn" type="button" data-next-lesson="auto" data-next-label="Go to Lesson 2 · Learn Mode">Go to Lesson 2 · Learn Mode</button>
-                                <p class="next-lesson-hint" id="lesson1NextHint">Complete all three warm-ups to unlock Lesson 2.</p>
+                                <p class="next-lesson-hint">Keep practicing the warm-ups, or hop into Lesson 2 whenever you're ready.</p>
                             </div>
                         </div>
                     </div>
@@ -524,8 +524,6 @@
                 notificationContent: document.getElementById('notificationContent'),
                 lessonProgressPill: document.getElementById('lessonProgressPill'),
                 globalProgressPill: document.getElementById('globalProgressPill'),
-                nextLessonButton: document.getElementById('lesson1NextBtn'),
-                nextLessonHint: document.getElementById('lesson1NextHint'),
                 learningStepButtons: document.querySelectorAll('[data-learning-step]'),
                 learningStepTitle: document.getElementById('learningStepTitle'),
                 learningStepBody: document.getElementById('learningStepBody'),
@@ -560,20 +558,6 @@
                 elements.voiceProgressChip.classList.toggle('goal-met', voicesTried >= REQUIRED_MIMIC_VARIETY);
             }
 
-            function updateNextLessonGate() {
-                if (!elements.nextLessonButton) return;
-                const unlocked = isLessonFullyComplete();
-                elements.nextLessonButton.dataset.locked = unlocked ? 'false' : 'true';
-                elements.nextLessonButton.classList.toggle('cta-locked', !unlocked);
-                elements.nextLessonButton.title = unlocked ? '' : 'Complete all three warm-ups to stay on track before Lesson 2.';
-                if (elements.nextLessonHint) {
-                    elements.nextLessonHint.textContent = unlocked
-                        ? 'Lesson 2 unlocked — jump into Learn Mode.'
-                        : 'Complete all three warm-ups to stay on track before Lesson 2.';
-                    elements.nextLessonHint.classList.toggle('unlocked', unlocked);
-                }
-            }
-
             function updateProgressPills() {
                 if (elements.lessonProgressPill) {
                     const completedCount = getCompletedActivitiesCount();
@@ -606,7 +590,6 @@
             function handleLessonProgressChange() {
                 syncLessonStatus();
                 updateProgressPills();
-                updateNextLessonGate();
             }
 
             function showNotification(message) {

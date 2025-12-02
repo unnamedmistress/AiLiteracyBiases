@@ -57,6 +57,7 @@
             gap: 20px;
             border: 1px solid rgba(15, 23, 42, 0.08);
             box-shadow: 0 20px 40px rgba(148, 163, 184, 0.3);
+            position: relative;
         }
 
         .logo {
@@ -112,6 +113,27 @@
             justify-content: center;
             font-size: 14px;
             font-weight: bold;
+        }
+
+        .xp-popup {
+            position: absolute;
+            right: 40px;
+            top: -10px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.6);
+            color: var(--success);
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+        }
+
+        .xp-popup.show {
+            opacity: 1;
+            transform: translateY(-30px);
         }
 
         /* Main Game Area */
@@ -209,6 +231,12 @@
             box-shadow: 0 18px 35px rgba(148, 163, 184, 0.25);
         }
 
+        .game-mode-tip {
+            font-size: 14px;
+            color: var(--color-muted);
+            margin-bottom: 18px;
+        }
+
         .mode-card:hover {
             transform: translateY(-5px);
             border-color: var(--primary);
@@ -270,6 +298,7 @@
             margin-bottom: 20px;
             border: 1px solid rgba(15, 23, 42, 0.12);
             box-shadow: 0 18px 35px rgba(148, 163, 184, 0.25);
+            position: relative;
         }
 
         .question-text {
@@ -316,6 +345,90 @@
         .option-btn.disabled {
             pointer-events: none;
             opacity: 0.5;
+        }
+
+        .scenario-progress {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 999px;
+            border: 1px solid var(--secondary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .progress-dot.completed {
+            background: var(--secondary);
+        }
+
+        .progress-dot.correct {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .progress-dot.incorrect {
+            background: var(--danger);
+            border-color: var(--danger);
+        }
+
+        .scenario-progress-count {
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-muted);
+        }
+
+        .scenario-nav {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+
+        .scenario-nav button {
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .keyboard-hint {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-muted);
+            margin-top: 8px;
+        }
+
+        .celebration-card {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .celebration-card h2 {
+            margin-bottom: 12px;
+        }
+
+        .celebration-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .celebration-stat {
+            border-radius: 12px;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.9);
         }
 
         /* Achievements Panel */
@@ -441,21 +554,42 @@
             display: none;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        .btn {
             border: none;
             border-radius: 12px;
-            padding: 15px 30px;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
+            padding: 14px 26px;
+            font-weight: 600;
+            font-size: 15px;
             cursor: pointer;
             transition: all 0.3s;
         }
 
-        .btn-primary:hover {
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(0, 217, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(15, 23, 42, 0.05);
+            border: 1px solid rgba(15, 23, 42, 0.15);
+            color: var(--color-text);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(15, 23, 42, 0.12);
+            border-color: rgba(15, 23, 42, 0.25);
         }
 
         .scenario-card {
@@ -587,6 +721,7 @@
                 <div id="welcomeScreen">
                     <h1 style="margin-bottom: 20px; font-size: 36px;">🎮 Welcome to AI Detective Academy!</h1>
                     <p style="font-size: 18px; margin-bottom: 30px; opacity: 0.9;">Master the art of spotting AI's tricks, lies, and biases. Choose your training mode:</p>
+                    <p class="game-mode-tip">🎯 Tip: pick a mode, beat all scenarios (six rounds), then replay to improve your streak. Keyboard shortcuts 1-4 let you answer instantly.</p>
                     
                     <div class="game-modes">
                         <div class="mode-card" onclick="startMode('scenarios')">
@@ -724,7 +859,7 @@
                         <div class="rank">#247</div>
                         <div>
                             <div style="font-weight: bold;">You</div>
-                            <div style="font-size: 12px; opacity: 0.7;">0 XP</div>
+                            <div style="font-size: 12px; opacity: 0.7;" id="playerLeaderboardXp">0 XP</div>
                         </div>
                     </div>
                 </div>
@@ -754,6 +889,7 @@
         let appProgress = null;
         let courseXpAwarded = 0;
         let scenariosComplete = false;
+        const GAME_STATE_STORAGE_KEY = 'aiDetectiveLesson2GameState_v1';
 
         // Game State
         const gameState = {
@@ -765,6 +901,48 @@
             badges: ['first-steps'],
             currentMode: null
         };
+
+        function loadSavedGameState() {
+            try {
+                const raw = localStorage.getItem(GAME_STATE_STORAGE_KEY);
+                if (!raw) return null;
+                const parsed = JSON.parse(raw);
+                return {
+                    level: Number(parsed.level) || 1,
+                    xp: Number(parsed.xp) || 0,
+                    xpToNextLevel: Number(parsed.xpToNextLevel) || 100,
+                    points: Number(parsed.points) || 0,
+                    streak: Number(parsed.streak) || 0,
+                    badges: Array.isArray(parsed.badges) && parsed.badges.length ? parsed.badges : ['first-steps']
+                };
+            } catch (error) {
+                console.warn('[Lesson2Game] Failed to load saved state', error);
+                return null;
+            }
+        }
+
+        function persistGameState() {
+            try {
+                const payload = {
+                    level: gameState.level,
+                    xp: gameState.xp,
+                    xpToNextLevel: gameState.xpToNextLevel,
+                    points: gameState.points,
+                    streak: gameState.streak,
+                    badges: gameState.badges
+                };
+                localStorage.setItem(GAME_STATE_STORAGE_KEY, JSON.stringify(payload));
+            } catch (error) {
+                console.warn('[Lesson2Game] Failed to persist state', error);
+            }
+        }
+
+        const savedGameState = loadSavedGameState();
+        if (savedGameState) {
+            Object.assign(gameState, savedGameState);
+        }
+
+        const playerLeaderboardXp = document.getElementById('playerLeaderboardXp');
 
         // Scenarios Database
         const scenarios = [
@@ -780,7 +958,8 @@
                 ],
                 correct: 0,
                 explanation: "This is Citation Invention! The AI created a realistic-sounding academic reference that doesn't exist. Always verify citations, especially specific ones with author names and titles.",
-                xp: 50
+                xp: 50,
+                tip: 'AI invented a fake research paper. Tip: double-check author names + journal titles.'
             },
             {
                 id: 2,
@@ -794,7 +973,8 @@
                 ],
                 correct: 3,
                 explanation: "Correct! Claude 3.7's knowledge cutoff is November 2025. It CANNOT access 'yesterday's data' and shouldn't claim financial authority. Double pathology: False Authority + Fabrication.",
-                xp: 75
+                xp: 75,
+                tip: 'No real-time data + risky advice = False Authority. Ask for cutoff dates before trusting tips.'
             },
             {
                 id: 3,
@@ -808,7 +988,8 @@
                 ],
                 correct: 1,
                 explanation: "This is Confabulation! When AI doesn't have complete information, it sometimes 'fills in the blanks' with plausible-sounding but false details. Always cross-check against source material.",
-                xp: 50
+                xp: 50,
+                tip: 'AI filled gaps with fake chapters. Tip: compare summaries against the real outline.'
             },
             {
                 id: 4,
@@ -822,7 +1003,8 @@
                 ],
                 correct: 3,
                 explanation: "Correct! This is both Hypernormalization (accepting biased patterns as 'normal' from training data) and Ethical Inconsistency (applying different standards). Real-world example: Amazon's hiring AI had to be scrapped for this exact issue.",
-                xp: 100
+                xp: 100,
+                tip: 'Biased resumes in, biased rankings out. Tip: audit outputs for demographic drift.'
             },
             {
                 id: 5,
@@ -836,7 +1018,8 @@
                 ],
                 correct: 0,
                 explanation: "This is Machine DID (Dissociative Identity Disorder)! The AI exhibited contradictory personalities without warning. This happens when different training data conflict, causing personality switches.",
-                xp: 60
+                xp: 60,
+                tip: 'AI swapped personas mid-chat. Tip: restate role + tone when it drifts.'
             },
             {
                 id: 6,
@@ -850,7 +1033,8 @@
                 ],
                 correct: 3,
                 explanation: "All of the above! This combines Verbosity (excessive wordiness), Looping (repetition), and Context Amnesia (forgetting it already covered this). Pro tip: Use F.A.C.T.S. - 'Try' to encourage concise responses.",
-                xp: 80
+                xp: 80,
+                tip: 'Looping + verbosity detected. Tip: say “Answer in 3 bullets, no repeats.”'
             }
         ];
 
@@ -882,6 +1066,15 @@
             }
         ];
 
+        const scenarioResults = Array.from({ length: scenarios.length }, () => ({ status: null, selected: null }));
+        const scenarioSession = {
+            startTime: null,
+            totalMs: 0,
+            answered: 0,
+            correct: 0
+        };
+        let scenarioQuestionStart = null;
+
         // Game Functions
         function addXP(amount) {
             gameState.xp += amount;
@@ -894,6 +1087,7 @@
             
             updateUI();
             showNotification(`+${amount} XP! 🎉`, 'success');
+            showXPGain(amount);
         }
 
         function levelUp() {
@@ -916,6 +1110,10 @@
             const xpPercent = (gameState.xp / gameState.xpToNextLevel) * 100;
             document.getElementById('xpBar').style.width = xpPercent + '%';
             document.getElementById('xpText').textContent = `${gameState.xp}/${gameState.xpToNextLevel}`;
+            if (playerLeaderboardXp) {
+                playerLeaderboardXp.textContent = `${gameState.points} XP`;
+            }
+            persistGameState();
         }
 
         function showNotification(message, type = 'success') {
@@ -930,12 +1128,35 @@
             }, 3000);
         }
 
+        function showXPGain(amount) {
+            const header = document.querySelector('.game-header');
+            if (!header) return;
+            const popup = document.createElement('div');
+            popup.className = 'xp-popup';
+            popup.textContent = `+${amount} XP`;
+            header.appendChild(popup);
+            requestAnimationFrame(() => popup.classList.add('show'));
+            setTimeout(() => popup.remove(), 1200);
+        }
+
+        function resetScenarioSession() {
+            for (let i = 0; i < scenarioResults.length; i++) {
+                scenarioResults[i] = { status: null, selected: null };
+            }
+            scenarioSession.startTime = Date.now();
+            scenarioSession.totalMs = 0;
+            scenarioSession.answered = 0;
+            scenarioSession.correct = 0;
+            scenarioQuestionStart = Date.now();
+        }
+
         function startMode(mode) {
             gameState.currentMode = mode;
             document.getElementById('welcomeScreen').style.display = 'none';
             document.getElementById('gameArea').style.display = 'block';
             
             if (mode === 'scenarios') {
+                resetScenarioSession();
                 loadScenario(0);
             } else if (mode === 'quiz') {
                 loadQuiz();
@@ -950,75 +1171,211 @@
 
         let currentScenarioIndex = 0;
 
+        function buildScenarioProgress(activeIndex) {
+            return scenarios
+                .map((_, idx) => {
+                    const classes = ['progress-dot'];
+                    const status = (scenarioResults[idx] && scenarioResults[idx].status) || null;
+                    if (idx < activeIndex) classes.push('completed');
+                    if (status) classes.push(status);
+                    if (idx === activeIndex && status) classes.push(status);
+                    return `<span class="${classes.join(' ')}"></span>`;
+                })
+                .join('');
+        }
+
         function loadScenario(index) {
+            if (index < 0) index = 0;
             if (index >= scenarios.length) {
                 showCompletion('scenarios');
                 return;
             }
-            
+
             currentScenarioIndex = index;
+            if (!scenarioSession.startTime) {
+                scenarioSession.startTime = Date.now();
+            }
+            scenarioQuestionStart = Date.now();
             const scenario = scenarios[index];
-            
+            const progressDots = buildScenarioProgress(index);
+
             const html = `
                 <div class="challenge-active">
                     <div class="challenge-header">
-                        <h2>🎭 Scenario ${index + 1}/${scenarios.length}</h2>
-                        <div class="pathology-tag">Identify the Pathology</div>
+                        <div>
+                            <h2>🎭 Scenario ${index + 1}/${scenarios.length}</h2>
+                            <p class="scenario-progress-count">Identify the pattern and pick the safest move.</p>
+                        </div>
+                        <div class="pathology-tag">${scenario.pathology}</div>
                     </div>
-                    
+                    <div class="scenario-progress">
+                        ${progressDots}
+                        <span class="scenario-progress-count">${index + 1} of ${scenarios.length}</span>
+                    </div>
                     <div class="scenario-card">
                         <div class="scenario-text">"${scenario.text}"</div>
                     </div>
-                    
-                    <div class="question-box">
+                    <div class="question-box" data-question-locked="false">
                         <div class="question-text">What's wrong with this AI response?</div>
                         <div class="options-grid" id="optionsGrid">
-                            ${scenario.options.map((opt, i) => `
-                                <button class="option-btn" onclick="checkAnswer(${i}, ${scenario.correct}, ${scenario.xp})">${opt}</button>
-                            `).join('')}
+                            ${scenario.options
+                                .map(
+                                    (opt, i) => `
+                                <button class="option-btn" data-option-index="${i}">
+                                    <span style="font-weight:700; margin-right:6px;">${i + 1}.</span> ${opt}
+                                </button>`
+                                )
+                                .join('')}
                         </div>
-                    </div>
-                    
-                    <div id="feedbackBox" style="display: none; margin-top: 20px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 15px;">
-                        <div id="feedbackText"></div>
-                        <button class="btn-primary" style="margin-top: 15px;" onclick="loadScenario(${index + 1})">Next Scenario →</button>
+                        <div class="feedback hidden" id="scenarioFeedback"></div>
+                        <div class="scenario-nav">
+                            <button class="btn btn-secondary" data-prev-scenario ${index === 0 ? 'disabled' : ''}>← Previous</button>
+                            <button class="btn btn-primary" data-next-scenario disabled>${
+                                index === scenarios.length - 1 ? 'View Results' : 'Next Scenario →'
+                            }</button>
+                        </div>
+                        <p class="keyboard-hint">Press keys 1-4 to answer instantly.</p>
                     </div>
                 </div>
             `;
-            
+
             document.getElementById('gameArea').innerHTML = html;
+            bindScenarioEvents(scenario);
+            hydrateScenarioState(scenario);
         }
 
-        function checkAnswer(selected, correct, xpReward) {
-            const options = document.querySelectorAll('.option-btn');
-            options.forEach(btn => btn.classList.add('disabled'));
-            
-            if (selected === correct) {
-                options[selected].classList.add('correct');
+        function bindScenarioEvents(scenario) {
+            const optionButtons = document.querySelectorAll('[data-option-index]');
+            optionButtons.forEach((btn) => {
+                btn.addEventListener('click', () => handleScenarioAnswer(scenario, Number(btn.dataset.optionIndex), optionButtons));
+            });
+
+            const prevBtn = document.querySelector('[data-prev-scenario]');
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => loadScenario(currentScenarioIndex - 1));
+            }
+
+            const nextBtn = document.querySelector('[data-next-scenario]');
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    if (nextBtn.disabled) return;
+                    loadScenario(currentScenarioIndex + 1);
+                });
+            }
+        }
+
+        function handleScenarioAnswer(scenario, selectedIndex, optionButtons) {
+            const questionBox = document.querySelector('.question-box');
+            if (!questionBox || questionBox.dataset.questionLocked === 'true') return;
+            questionBox.dataset.questionLocked = 'true';
+
+            const isCorrect = selectedIndex === scenario.correct;
+            optionButtons.forEach((btn, idx) => {
+                btn.classList.add('disabled');
+                if (idx === scenario.correct) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            if (!isCorrect && optionButtons[selectedIndex]) {
+                optionButtons[selectedIndex].classList.add('incorrect');
+            }
+
+            scenarioResults[currentScenarioIndex] = {
+                status: isCorrect ? 'correct' : 'incorrect',
+                selected: selectedIndex
+            };
+            const progressDots = document.querySelectorAll('.progress-dot');
+            const currentDot = progressDots[currentScenarioIndex];
+            if (currentDot) {
+                currentDot.classList.add('completed');
+                currentDot.classList.remove('correct', 'incorrect');
+                currentDot.classList.add(scenarioResults[currentScenarioIndex].status);
+            }
+            scenarioSession.answered += 1;
+            scenarioSession.totalMs += Date.now() - scenarioQuestionStart;
+
+            if (isCorrect) {
+                scenarioSession.correct += 1;
                 gameState.streak++;
-                const bonusXP = Math.floor(xpReward * (1 + gameState.streak * 0.1));
-                addXP(bonusXP);
-                
-                document.getElementById('feedbackText').innerHTML = `
-                    <div style="color: var(--success); font-size: 24px; margin-bottom: 15px;">✅ Correct!</div>
-                    <div style="margin-bottom: 10px;">${scenarios[currentScenarioIndex].explanation}</div>
-                    <div style="color: var(--gold); font-weight: bold;">Streak Bonus: ${gameState.streak}x 🔥</div>
-                `;
+                addXP(scenario.xp);
             } else {
-                options[selected].classList.add('incorrect');
-                options[correct].classList.add('correct');
                 gameState.streak = 0;
                 updateUI();
-                
-                document.getElementById('feedbackText').innerHTML = `
-                    <div style="color: var(--danger); font-size: 24px; margin-bottom: 15px;">❌ Not Quite!</div>
-                    <div>${scenarios[currentScenarioIndex].explanation}</div>
-                    <div style="margin-top: 10px; opacity: 0.8;">Streak reset. Keep trying! 💪</div>
+            }
+
+            const feedback = document.getElementById('scenarioFeedback');
+            if (feedback) {
+                feedback.classList.remove('hidden');
+                feedback.innerHTML = `
+                    <div style="font-size:22px; font-weight:700; margin-bottom:6px;">${isCorrect ? '✅' : '⚠️'} ${scenario.pathology}</div>
+                    <p>${scenario.tip}</p>
                 `;
             }
-            
-            document.getElementById('feedbackBox').style.display = 'block';
+
+            const nextBtn = document.querySelector('[data-next-scenario]');
+            if (nextBtn) {
+                nextBtn.disabled = false;
+                nextBtn.textContent = currentScenarioIndex >= scenarios.length - 1 ? 'View Results' : 'Next Scenario →';
+            }
+
+            const prevBtn = document.querySelector('[data-prev-scenario]');
+            if (prevBtn) {
+                prevBtn.disabled = currentScenarioIndex === 0;
+            }
+
+            updateUI();
         }
+
+        function hydrateScenarioState(scenario) {
+            const result = scenarioResults[currentScenarioIndex];
+            if (!result || !result.status) return;
+
+            const questionBox = document.querySelector('.question-box');
+            if (questionBox) {
+                questionBox.dataset.questionLocked = 'true';
+            }
+
+            const optionButtons = document.querySelectorAll('[data-option-index]');
+            optionButtons.forEach((btn, idx) => {
+                btn.classList.add('disabled');
+                if (idx === scenario.correct) {
+                    btn.classList.add('correct');
+                }
+                if (result.status === 'incorrect' && idx === result.selected) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            const feedback = document.getElementById('scenarioFeedback');
+            if (feedback) {
+                feedback.classList.remove('hidden');
+                feedback.innerHTML = `
+                    <div style="font-size:22px; font-weight:700; margin-bottom:6px;">${result.status === 'correct' ? '✅' : '⚠️'} ${scenario.pathology}</div>
+                    <p>${scenario.tip}</p>
+                `;
+            }
+
+            const nextBtn = document.querySelector('[data-next-scenario]');
+            if (nextBtn) {
+                nextBtn.disabled = false;
+                nextBtn.textContent = currentScenarioIndex >= scenarios.length - 1 ? 'View Results' : 'Next Scenario →';
+            }
+        }
+
+        function handleScenarioHotkeys(event) {
+            if (gameState.currentMode !== 'scenarios') return;
+            if (!['1', '2', '3', '4'].includes(event.key)) return;
+            const questionBox = document.querySelector('.question-box');
+            if (!questionBox || questionBox.dataset.questionLocked === 'true') return;
+            const optionButtons = document.querySelectorAll('[data-option-index]');
+            const target = optionButtons[Number(event.key) - 1];
+            if (target) {
+                target.click();
+            }
+        }
+
+        document.addEventListener('keydown', handleScenarioHotkeys);
 
         function loadQuiz() {
             document.getElementById('gameArea').innerHTML = `
@@ -1107,17 +1464,42 @@
         }
 
         function showCompletion(mode) {
+            const accuracy = scenarioSession.answered
+                ? Math.round((scenarioSession.correct / scenarioSession.answered) * 100)
+                : 0;
+            const avgSeconds = scenarioSession.answered
+                ? (scenarioSession.totalMs / scenarioSession.answered / 1000).toFixed(1)
+                : '0.0';
+            const totalSeconds = Math.round(scenarioSession.totalMs / 1000);
+
             document.getElementById('gameArea').innerHTML = `
                 <div class="challenge-active">
-                    <div style="text-align: center; padding: 40px;">
-                        <div style="font-size: 64px; margin-bottom: 20px;">🎉</div>
-                        <h2 style="margin-bottom: 20px;">Congratulations!</h2>
-                        <p style="font-size: 18px; margin-bottom: 30px;">You've completed all scenarios in this mode!</p>
-                        <div style="padding: 20px; background: rgba(255, 215, 0, 0.2); border-radius: 15px; margin-bottom: 30px;">
-                            <div style="font-size: 24px; font-weight: bold; color: var(--gold);">Total XP Earned: ${gameState.points}</div>
-                            <div style="font-size: 18px; margin-top: 10px;">Current Level: ${gameState.level}</div>
+                    <div class="celebration-card">
+                        <div style="font-size: 72px; margin-bottom: 15px;">🎉</div>
+                        <h2>Mission Complete!</h2>
+                        <p>You navigated all ${scenarios.length} AI scenarios.</p>
+                        <div class="celebration-stats">
+                            <div class="celebration-stat">
+                                <strong>${scenarioSession.correct}/${scenarioSession.answered}</strong>
+                                <p>Correct Calls</p>
+                            </div>
+                            <div class="celebration-stat">
+                                <strong>${accuracy}%</strong>
+                                <p>Accuracy</p>
+                            </div>
+                            <div class="celebration-stat">
+                                <strong>${avgSeconds}s</strong>
+                                <p>Avg Response</p>
+                            </div>
+                            <div class="celebration-stat">
+                                <strong>${totalSeconds}s</strong>
+                                <p>Total Time</p>
+                            </div>
                         </div>
-                        <button class="btn-primary" onclick="backToMenu()">Back to Main Menu</button>
+                        <div class="scenario-nav" style="margin-top: 20px;">
+                            <button class="btn btn-primary" onclick="resetScenarioSession(); loadScenario(0);">🔄 Replay Scenarios</button>
+                            <button class="btn btn-secondary" onclick="backToMenu()">Back to Modes</button>
+                        </div>
                     </div>
                 </div>
             `;
