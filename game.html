@@ -484,75 +484,119 @@
         /* Achievements Panel */
         .achievements-panel {
             background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(6px);
-            border-radius: 20px;
-            padding: 20px;
+            backdrop-filter: blur(4px);
+            border-radius: 16px;
+            padding: 14px;
             border: 1px solid rgba(15, 23, 42, 0.08);
-            box-shadow: 0 18px 35px rgba(148, 163, 184, 0.25);
+            box-shadow: 0 10px 20px rgba(148, 163, 184, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .panel-header h3 {
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .panel-pill {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 2px 10px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.06);
+            color: rgba(15, 23, 42, 0.8);
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        @media (max-width: 1200px) {
+            .achievements-grid,
+            .leaderboard-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .achievement-item {
             background: rgba(255, 255, 255, 0.95);
-            border-left: 4px solid var(--primary);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
+            border-radius: 12px;
+            padding: 10px 12px;
             border: 1px solid rgba(15, 23, 42, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-height: 84px;
         }
 
         .achievement-item.completed {
-            border-left-color: var(--gold);
-            background: linear-gradient(90deg, rgba(255, 215, 0, 0.2), transparent);
+            border-color: rgba(255, 215, 0, 0.5);
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 255, 255, 0.9));
         }
 
         .achievement-title {
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 13px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .achievement-progress {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--color-muted);
         }
 
         .progress-bar-mini {
-            height: 6px;
+            height: 4px;
             background: rgba(15, 23, 42, 0.12);
-            border-radius: 3px;
-            margin-top: 8px;
+            border-radius: 999px;
             overflow: hidden;
         }
 
         .progress-fill-mini {
             height: 100%;
             background: var(--primary);
-            transition: width 0.5s;
+            transition: width 0.4s;
         }
 
         /* Leaderboard */
         .leaderboard {
-            margin-top: 20px;
+            margin-top: 4px;
+        }
+
+        .leaderboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
         }
 
         .leaderboard-item {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 12px;
+            gap: 10px;
+            padding: 10px;
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            margin-bottom: 10px;
+            border-radius: 12px;
             border: 1px solid rgba(15, 23, 42, 0.08);
-            box-shadow: 0 12px 24px rgba(148, 163, 184, 0.2);
         }
 
         .rank {
-            font-size: 20px;
-            font-weight: bold;
-            width: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 26px;
         }
 
         .rank.gold { color: var(--gold); }
@@ -858,73 +902,71 @@
 
             <!-- Right Panel -->
             <div class="achievements-panel">
-                <h3 style="margin-bottom: 15px;">🎯 Daily Missions</h3>
-                
-                <div class="achievement-item completed">
-                    <div class="achievement-title">
-                        ✅ First Login
-                    </div>
-                    <div class="achievement-progress">Complete</div>
+                <div class="panel-header">
+                    <h3>🎯 Daily Missions</h3>
+                    <span class="panel-pill">4 quests</span>
                 </div>
-                
-                <div class="achievement-item">
-                    <div class="achievement-title">
-                        Spot 5 Hallucinations
+                <div class="achievements-grid">
+                    <div class="achievement-item completed">
+                        <div class="achievement-title">✅ First Login</div>
+                        <div class="achievement-progress">Complete</div>
                     </div>
-                    <div class="achievement-progress">2/5 completed</div>
-                    <div class="progress-bar-mini">
-                        <div class="progress-fill-mini" style="width: 40%;"></div>
+                    <div class="achievement-item">
+                        <div class="achievement-title">Spot 5 Hallucinations</div>
+                        <div class="achievement-progress">2/5 completed</div>
+                        <div class="progress-bar-mini">
+                            <div class="progress-fill-mini" style="width: 40%;"></div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="achievement-item">
-                    <div class="achievement-title">
-                        Complete Speed Quiz
+                    <div class="achievement-item">
+                        <div class="achievement-title">Complete Speed Quiz</div>
+                        <div class="achievement-progress">0/1 completed</div>
+                        <div class="progress-bar-mini">
+                            <div class="progress-fill-mini" style="width: 0%;"></div>
+                        </div>
                     </div>
-                    <div class="achievement-progress">0/1 completed</div>
-                    <div class="progress-bar-mini">
-                        <div class="progress-fill-mini" style="width: 0%;"></div>
-                    </div>
-                </div>
-                
-                <div class="achievement-item">
-                    <div class="achievement-title">
-                        Learn F.A.C.T.S. Framework
-                    </div>
-                    <div class="achievement-progress">0/1 completed</div>
-                    <div class="progress-bar-mini">
-                        <div class="progress-fill-mini" style="width: 0%;"></div>
+                    <div class="achievement-item">
+                        <div class="achievement-title">Learn F.A.C.T.S. Framework</div>
+                        <div class="achievement-progress">0/1 completed</div>
+                        <div class="progress-bar-mini">
+                            <div class="progress-fill-mini" style="width: 0%;"></div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="leaderboard">
-                    <h3 style="margin-bottom: 15px;">🏆 Top Detectives</h3>
-                    <div class="leaderboard-item">
-                        <div class="rank gold">#1</div>
-                        <div>
-                            <div style="font-weight: bold;">AIHunter2025</div>
-                            <div style="font-size: 12px; opacity: 0.7;">3,450 XP</div>
-                        </div>
+                    <div class="panel-header">
+                        <h3>🏆 Top Detectives</h3>
+                        <span class="panel-pill">Live</span>
                     </div>
-                    <div class="leaderboard-item">
-                        <div class="rank silver">#2</div>
-                        <div>
-                            <div style="font-weight: bold;">BiasSlayer</div>
-                            <div style="font-size: 12px; opacity: 0.7;">2,890 XP</div>
+                    <div class="leaderboard-grid">
+                        <div class="leaderboard-item">
+                            <div class="rank gold">#1</div>
+                            <div>
+                                <div style="font-weight: bold;">AIHunter2025</div>
+                                <div style="font-size: 12px; opacity: 0.7;">3,450 XP</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="leaderboard-item">
-                        <div class="rank bronze">#3</div>
-                        <div>
-                            <div style="font-weight: bold;">FactChecker</div>
-                            <div style="font-size: 12px; opacity: 0.7;">2,105 XP</div>
+                        <div class="leaderboard-item">
+                            <div class="rank silver">#2</div>
+                            <div>
+                                <div style="font-weight: bold;">BiasSlayer</div>
+                                <div style="font-size: 12px; opacity: 0.7;">2,890 XP</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="leaderboard-item">
-                        <div class="rank">#247</div>
-                        <div>
-                            <div style="font-weight: bold;">You</div>
-                            <div style="font-size: 12px; opacity: 0.7;" id="playerLeaderboardXp">0 XP</div>
+                        <div class="leaderboard-item">
+                            <div class="rank bronze">#3</div>
+                            <div>
+                                <div style="font-weight: bold;">FactChecker</div>
+                                <div style="font-size: 12px; opacity: 0.7;">2,105 XP</div>
+                            </div>
+                        </div>
+                        <div class="leaderboard-item">
+                            <div class="rank">#247</div>
+                            <div>
+                                <div style="font-weight: bold;">You</div>
+                                <div style="font-size: 12px; opacity: 0.7;" id="playerLeaderboardXp">0 XP</div>
+                            </div>
                         </div>
                     </div>
                 </div>
