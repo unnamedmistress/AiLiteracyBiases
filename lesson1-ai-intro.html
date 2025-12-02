@@ -133,7 +133,7 @@
                     <div class="stat-label">XP</div>
                     <div class="xp-bar">
                         <div class="xp-fill" id="xpBar">
-                            <span id="xpText">0/150</span>
+                            <span id="xpText">0/110</span>
                         </div>
                     </div>
                 </div>
@@ -487,8 +487,9 @@
             const savedVoiceAttempts = Array.isArray(savedCheckpoints.voiceAttempts)
                 ? savedCheckpoints.voiceAttempts.filter(Boolean)
                 : [];
+            const TOTAL_LESSON_XP = 110;
             const state = {
-                xpToNext: 150,
+                xpToNext: TOTAL_LESSON_XP,
                 xp: 0,
                 voiceAttempts: new Set(savedVoiceAttempts),
                 mimicComplete: Boolean(savedCheckpoints.mimicComplete),
@@ -522,6 +523,8 @@
                 toneOutput: document.getElementById('toneOutput'),
                 notification: document.getElementById('notification'),
                 notificationContent: document.getElementById('notificationContent'),
+                nextLessonButton: document.getElementById('lesson1NextBtn'),
+                nextLessonHint: document.querySelector('.next-lesson-hint'),
                 lessonProgressPill: document.getElementById('lessonProgressPill'),
                 globalProgressPill: document.getElementById('globalProgressPill'),
                 learningStepButtons: document.querySelectorAll('[data-learning-step]'),
@@ -590,6 +593,23 @@
             function handleLessonProgressChange() {
                 syncLessonStatus();
                 updateProgressPills();
+                updateNextLessonGate();
+            }
+
+            function updateNextLessonGate() {
+                if (!elements.nextLessonButton || !elements.nextLessonHint) return;
+                const remaining = 3 - getCompletedActivitiesCount();
+                if (remaining <= 0) {
+                    elements.nextLessonButton.disabled = false;
+                    elements.nextLessonHint.textContent = 'Warm-ups cleared! Lesson 2 is unlocked.';
+                    elements.nextLessonHint.classList.add('unlocked');
+                    return;
+                }
+
+                elements.nextLessonButton.disabled = true;
+                elements.nextLessonHint.classList.remove('unlocked');
+                const activityLabel = remaining === 1 ? 'activity' : 'activities';
+                elements.nextLessonHint.textContent = `Finish ${remaining} more ${activityLabel} to unlock Lesson 2.`;
             }
 
             function showNotification(message) {

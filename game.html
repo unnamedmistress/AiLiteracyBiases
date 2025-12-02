@@ -236,6 +236,37 @@
             color: var(--color-muted);
             margin-bottom: 18px;
         }
+        .resume-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(15, 23, 42, 0.15);
+            background: rgba(14, 165, 233, 0.08);
+        }
+        .resume-panel.hidden {
+            display: none;
+        }
+        .resume-details {
+            flex: 1 1 220px;
+        }
+        .resume-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .resume-progress {
+            font-size: 14px;
+            color: rgba(15, 23, 42, 0.75);
+        }
+        .resume-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
         .mode-card:hover {
             transform: translateY(-5px);
@@ -722,6 +753,16 @@
                     <h1 style="margin-bottom: 20px; font-size: 36px;">🎮 Welcome to AI Detective Academy!</h1>
                     <p style="font-size: 18px; margin-bottom: 30px; opacity: 0.9;">Master the art of spotting AI's tricks, lies, and biases. Choose your training mode:</p>
                     <p class="game-mode-tip">🎯 Tip: pick a mode, beat all scenarios (six rounds), then replay to improve your streak. Keyboard shortcuts 1-4 let you answer instantly.</p>
+                    <div class="resume-panel hidden" id="resumePanel">
+                        <div class="resume-details">
+                            <div class="resume-title">Resume Scenario Run</div>
+                            <div class="resume-progress" id="resumeProgressLabel">0/6 scenarios completed</div>
+                        </div>
+                        <div class="resume-actions">
+                            <button class="btn-primary" type="button" id="resumeScenarioBtn">Resume</button>
+                            <button class="btn-secondary" type="button" id="restartScenarioBtn">Start Over</button>
+                        </div>
+                    </div>
                     
                     <div class="game-modes">
                         <div class="mode-card" onclick="startMode('scenarios')">
@@ -890,6 +931,7 @@
         let courseXpAwarded = 0;
         let scenariosComplete = false;
         const GAME_STATE_STORAGE_KEY = 'aiDetectiveLesson2GameState_v1';
+        const SCENARIO_PROGRESS_STORAGE_KEY = 'aiDetectiveLesson2ScenarioProgress_v1';
 
         // Game State
         const gameState = {
@@ -943,6 +985,17 @@
         }
 
         const playerLeaderboardXp = document.getElementById('playerLeaderboardXp');
+        const resumePanel = document.getElementById('resumePanel');
+        const resumeProgressLabel = document.getElementById('resumeProgressLabel');
+        const resumeScenarioBtn = document.getElementById('resumeScenarioBtn');
+        const restartScenarioBtn = document.getElementById('restartScenarioBtn');
+
+        if (resumeScenarioBtn) {
+            resumeScenarioBtn.addEventListener('click', resumeScenarioRun);
+        }
+        if (restartScenarioBtn) {
+            restartScenarioBtn.addEventListener('click', restartScenarioRun);
+        }
 
         // Scenarios Database
         const scenarios = [
@@ -1148,16 +1201,23 @@
             scenarioSession.answered = 0;
             scenarioSession.correct = 0;
             scenarioQuestionStart = Date.now();
+            clearScenarioProgress();
+            updateResumePanel();
         }
 
-        function startMode(mode) {
+        function startMode(mode, options = {}) {
             gameState.currentMode = mode;
             document.getElementById('welcomeScreen').style.display = 'none';
             document.getElementById('gameArea').style.display = 'block';
             
             if (mode === 'scenarios') {
-                resetScenarioSession();
-                loadScenario(0);
+                if (options.resume) {
+                    const resumeIndex = Math.min(Math.max(options.resumeIndex || 0, 0), scenarios.length - 1);
+                    loadScenario(resumeIndex);
+                } else {
+                    resetScenarioSession();
+                    loadScenario(0);
+                }
             } else if (mode === 'quiz') {
                 loadQuiz();
             } else if (mode === 'facts') {
@@ -1170,6 +1230,105 @@
         }
 
         let currentScenarioIndex = 0;
+
+        function loadStoredScenarioProgress() {
+            try {
+                const raw = localStorage.getItem(SCENARIO_PROGRESS_STORAGE_KEY);
+                if (!raw) return null;
+                const parsed = JSON.parse(raw);
+                if (!parsed || !Array.isArray(parsed.results)) return null;
+                return parsed;
+            } catch (error) {
+                console.warn('[Lesson2Game] Failed to load scenario progress', error);
+                return null;
+            }
+        }
+
+        function clearScenarioProgress() {
+            try {
+                localStorage.removeItem(SCENARIO_PROGRESS_STORAGE_KEY);
+            } catch (error) {
+                console.warn('[Lesson2Game] Failed to clear scenario progress', error);
+            }
+        }
+
+        function persistScenarioProgress() {
+            try {
+                const answeredCount = scenarioResults.filter((result) => result && result.status).length;
+                if (!answeredCount) {
+                    clearScenarioProgress();
+                    updateResumePanel();
+                    return;
+                }
+
+                const payload = {
+                    currentIndex: currentScenarioIndex,
+                    results: scenarioResults.map((result) => ({
+                        status: result ? result.status : null,
+                        selected: typeof (result && result.selected) === 'number' ? result.selected : null
+                    })),
+                    session: {
+                        totalMs: scenarioSession.totalMs,
+                        answered: scenarioSession.answered,
+                        correct: scenarioSession.correct
+                    },
+                    timestamp: Date.now()
+                };
+                localStorage.setItem(SCENARIO_PROGRESS_STORAGE_KEY, JSON.stringify(payload));
+                updateResumePanel();
+            } catch (error) {
+                console.warn('[Lesson2Game] Failed to persist scenario progress', error);
+            }
+        }
+
+        function hydrateScenarioProgress(progress) {
+            if (!progress || !Array.isArray(progress.results)) return false;
+            for (let i = 0; i < scenarioResults.length; i++) {
+                const savedResult = progress.results[i] || {};
+                scenarioResults[i] = {
+                    status: savedResult.status || null,
+                    selected: typeof savedResult.selected === 'number' ? savedResult.selected : null
+                };
+            }
+
+            scenarioSession.startTime = Date.now();
+            scenarioSession.totalMs = Number(progress.session && progress.session.totalMs) || 0;
+            scenarioSession.answered = Number(progress.session && progress.session.answered) || scenarioResults.filter((result) => result && result.status).length;
+            scenarioSession.correct = Number(progress.session && progress.session.correct) || scenarioResults.filter((result) => result && result.status === 'correct').length;
+            scenarioQuestionStart = Date.now();
+            return true;
+        }
+
+        function updateResumePanel() {
+            if (!resumePanel || !resumeProgressLabel) return;
+            const saved = loadStoredScenarioProgress();
+            if (!saved || !Array.isArray(saved.results)) {
+                resumePanel.classList.add('hidden');
+                return;
+            }
+
+            const answeredCount = saved.results.filter((result) => result && result.status).length;
+            if (!answeredCount) {
+                resumePanel.classList.add('hidden');
+                return;
+            }
+
+            resumePanel.classList.remove('hidden');
+            resumeProgressLabel.textContent = `${answeredCount}/${scenarios.length} scenarios completed`;
+        }
+
+        function resumeScenarioRun() {
+            const saved = loadStoredScenarioProgress();
+            if (!saved || !hydrateScenarioProgress(saved)) {
+                startMode('scenarios');
+                return;
+            }
+            startMode('scenarios', { resume: true, resumeIndex: saved.currentIndex || 0 });
+        }
+
+        function restartScenarioRun() {
+            startMode('scenarios');
+        }
 
         function buildScenarioProgress(activeIndex) {
             return scenarios
@@ -1242,6 +1401,7 @@
             document.getElementById('gameArea').innerHTML = html;
             bindScenarioEvents(scenario);
             hydrateScenarioState(scenario);
+            persistScenarioProgress();
         }
 
         function bindScenarioEvents(scenario) {
@@ -1325,6 +1485,7 @@
             }
 
             updateUI();
+            persistScenarioProgress();
         }
 
         function hydrateScenarioState(scenario) {
@@ -1504,6 +1665,9 @@
                 </div>
             `;
 
+            clearScenarioProgress();
+            updateResumePanel();
+
             if (mode === 'scenarios' && !scenariosComplete) {
                 scenariosComplete = true;
                 if (tracker) tracker.setCheckpoint(LESSON_ID, 'scenariosComplete', true);
@@ -1517,6 +1681,7 @@
             document.getElementById('gameArea').style.display = 'none';
             gameState.currentMode = null;
             syncLessonStatus();
+            updateResumePanel();
         }
 
         function awardCourseXP(amount) {
@@ -1582,6 +1747,7 @@
 
         // Initialize
         updateUI();
+        updateResumePanel();
     </script>
 </body>
 </html>
