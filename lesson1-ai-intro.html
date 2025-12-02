@@ -54,6 +54,8 @@
         .word-celebration.show { opacity: 1; transform: translateY(0); }
         .celebration-icon { font-size: 26px; }
         .xp-chip { padding: 6px 12px; border-radius: 999px; background: rgba(34, 197, 94, 0.2); border: 1px solid rgba(34, 197, 94, 0.5); color: #bbf7d0; font-weight: 600; }
+        .voice-progress-chip { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+        .voice-progress-chip.goal-met { background: rgba(34, 197, 94, 0.25); border-color: rgba(34, 197, 94, 0.8); color: #ecfccb; }
         .tone-drop-zone { display: inline-flex; align-items: center; justify-content: center; padding: 10px 14px; min-width: 140px; border-radius: var(--radius-md); border: 2px dashed rgba(255, 255, 255, 0.25); text-transform: uppercase; font-weight: 600; cursor: pointer; transition: border-color var(--transition-base), background var(--transition-base); }
         .tone-drop-zone.active { border-style: solid; border-color: var(--color-accent); background: rgba(16, 185, 129, 0.15); }
         .tone-drop-zone.filled { border-style: solid; border-color: #facc15; background: rgba(250, 204, 21, 0.15); color: #fde047; }
@@ -76,6 +78,14 @@
         .story-actions { display: flex; flex-wrap: wrap; gap: 12px; }
         .story-header h3 { margin-bottom: 4px; font-size: 20px; }
         .story-header p { margin: 0; color: var(--color-muted); }
+        .prompt-compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; }
+        .prompt-block { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.18); padding: 16px; background: rgba(255, 255, 255, 0.06); }
+        .prompt-label { font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 8px; }
+        .prompt-text { font-family: 'Courier New', Courier, monospace; font-size: 14px; background: rgba(0, 0, 0, 0.25); padding: 10px; border-radius: var(--radius-sm); margin-bottom: 10px; }
+        .prompt-output { font-size: 15px; line-height: 1.5; }
+        .prompt-weight { font-size: 12px; margin-top: 10px; color: var(--color-muted); }
+        .cost-callout { margin-top: 18px; padding: 16px; border-radius: var(--radius-md); border: 1px dashed rgba(250, 204, 21, 0.7); background: rgba(250, 204, 21, 0.1); }
+        .cost-callout strong { color: #facc15; }
         .step-selector { display: flex; flex-wrap: wrap; gap: 8px; }
         .step-pill { flex: 1 1 45%; border-radius: 999px; padding: 10px 16px; border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(0, 0, 0, 0.25); color: inherit; cursor: pointer; font-weight: 600; transition: background var(--transition-base), border-color var(--transition-base); }
         .step-pill.active { background: var(--color-accent); color: #0f172a; border-color: var(--color-accent); }
@@ -98,6 +108,8 @@
         .check-btn.completed { background: linear-gradient(135deg, #10b981, #22c55e); color: #041316; border-color: transparent; }
         .callout-card { margin-top: 24px; }
         .callout-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+        .next-lesson-hint { margin-top: 10px; font-size: 14px; color: var(--color-muted); }
+        .next-lesson-hint.unlocked { color: #34d399; }
         @media (max-width: 768px) {
             .challenge-title { font-size: 26px; }
             .chat-controls { flex-direction: column; align-items: stretch; }
@@ -144,11 +156,28 @@
                         <h1 class="challenge-title">Build AI instincts through three mini-games</h1>
                         <p class="challenge-desc">These are the exact warm-ups from Prompt Wizardry: mimic a character, predict the next word, then flip the tone with a single adjective. Complete each section to earn XP and understand how tiny changes influence AI output.</p>
 
+                        <div class="activity-card" id="wordPrediction">
+                            <div class="activity-meta">
+                                <span>🎯 Activity 1</span>
+                                <span>Word Prediction Radar</span>
+                                <span>Goal: choose the most likely completion</span>
+                            </div>
+                            <div class="activity-body">
+                                <div class="status-pill">Sentence starter: Honesty is the best ___</div>
+                                <p>AI predicts the next word by ranking what usually follows. Study the probabilities, then make your pick.</p>
+                                <div class="probability-visuals" id="probabilityVisualization"></div>
+                                <div class="word-options" id="wordOptions"></div>
+                                <div class="word-celebration hidden" id="wordCelebration" aria-live="polite"></div>
+                                <div class="feedback hidden" id="wordFeedback"></div>
+                            </div>
+                        </div>
+
                         <div class="activity-card" id="voiceMimic">
                             <div class="activity-meta">
-                                <span>🎤 Activity 1</span>
+                                <span>🎤 Activity 2</span>
                                 <span>Voice Mimic Chat</span>
                                 <span>Goal: try 3 characters</span>
+                                <span class="xp-chip voice-progress-chip" id="voiceProgressChip">Voices tried: 0/3</span>
                             </div>
                             <div class="activity-body voice-grid">
                                 <div class="status-pill">Prompt: "Honesty is the best policy."</div>
@@ -160,22 +189,6 @@
                                     <select id="characterSelect" aria-label="Select a character voice"></select>
                                     <button class="btn btn-primary" id="sendMimic">Send</button>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="activity-card" id="wordPrediction">
-                            <div class="activity-meta">
-                                <span>🎯 Activity 2</span>
-                                <span>Word Prediction Radar</span>
-                                <span>Goal: choose the most likely completion</span>
-                            </div>
-                            <div class="activity-body">
-                                <div class="status-pill">Sentence starter: Honesty is the best ___</div>
-                                <p>AI predicts the next word by ranking what usually follows. Study the probabilities, then make your pick.</p>
-                                <div class="probability-visuals" id="probabilityVisualization"></div>
-                                <div class="word-options" id="wordOptions"></div>
-                                <div class="word-celebration hidden" id="wordCelebration" aria-live="polite"></div>
-                                <div class="feedback hidden" id="wordFeedback"></div>
                             </div>
                         </div>
 
@@ -200,7 +213,8 @@
                             </div>
                             <div class="activity-body">
                                 <p>Feeling confident after the warm-up reps? Jump straight into Lesson 2's learn mode to dig into AI literacy drills and the full F.A.C.T.S. framework.</p>
-                                <button class="btn btn-primary" type="button" data-next-lesson="auto" data-next-label="Go to Lesson 2 · Learn Mode">Go to Lesson 2 · Learn Mode</button>
+                                <button class="btn btn-primary" id="lesson1NextBtn" type="button" data-next-lesson="auto" data-next-label="Go to Lesson 2 · Learn Mode" disabled aria-disabled="true">Go to Lesson 2 · Learn Mode</button>
+                                <p class="next-lesson-hint" id="lesson1NextHint">Complete all three warm-ups to unlock Lesson 2.</p>
                             </div>
                         </div>
                     </div>
@@ -212,6 +226,32 @@
                         <p class="challenge-desc">This is your fun, witty crash course in what AI actually is, why tone is the secret sauce, and how prediction math runs the whole show. Think science fair meets improv club.</p>
 
                         <section class="learning-showcase">
+                            <article class="story-card">
+                                <div class="story-header">
+                                    <h3>Do you have to be polite to the AI?</h3>
+                                    <p>Toggle one word and track how probability weights, tone, and even cloud costs shift.</p>
+                                </div>
+                                <p>Try this sentence pair and observe how "please" nudges the model toward softer verbs and higher confidence in caretaking language.</p>
+                                <div class="prompt-compare" aria-label="Prompt comparison">
+                                    <div class="prompt-block">
+                                        <div class="prompt-label">Prompt A</div>
+                                        <div class="prompt-text">Write a loving message to my spouse that I'll be late tonight.</div>
+                                        <p class="prompt-output"><strong>Model reply:</strong> "Hey love, running late tonight but I can't wait to catch up when I'm home."</p>
+                                        <p class="prompt-weight">Top token confidence: "running" 62%, "late" 21%, "love" 8%</p>
+                                    </div>
+                                    <div class="prompt-block">
+                                        <div class="prompt-label">Prompt B</div>
+                                        <div class="prompt-text">Write a loving message to my spouse that I'll be late tonight please.</div>
+                                        <p class="prompt-output"><strong>Model reply:</strong> "Hey love, I'm so sorry but I'll be late tonight—please save me a hug when I get in."</p>
+                                        <p class="prompt-weight">Top token confidence: "sorry" 74%, "please" 18%, "hug" 6%</p>
+                                    </div>
+                                </div>
+                                <p class="prompt-weight">Adding "please" raises the probability of apologetic verbs and inserts persuasion tokens like "sorry" or "hug" because the model sees politeness as a strong cue for empathy.</p>
+                                <div class="cost-callout">
+                                    <p><strong>Token cost reality:</strong> Assuming OpenAI's GPT-4o mini input pricing of about $0.000005 per token, the single word "please" (~1 token) costs ~$0.000005 every time. A conversation that uses "please" and "thank you" 20 times adds roughly $0.0002 in compute per user. At a million users per day, those niceties translate to about $200 in extra daily compute spend.</p>
+                                </div>
+                            </article>
+
                             <article class="story-card story-hero">
                                 <h3>Kickoff mission</h3>
                                 <p>Preview the narrative, then jump into the exact mini-games you will practice in the warm-up. This lane keeps you focused on the "why" before the "try."</p>
@@ -369,7 +409,6 @@
                 { id: 'cat', name: 'A Cat', response: 'Mew... honesty keeps the bowl full.' },
                 { id: 'dog', name: 'A Dog', response: 'Woof! Honesty is the best bone to chew on!' },
                 { id: 'santa', name: 'Santa Claus', response: 'Ho ho ho! Honesty is the merriest policy of all.' },
-                { id: 'dropbox', name: 'Dropbox', response: 'At Dropbox, integrity is our best policy.' },
                 { id: 'sherlock', name: 'Sherlock Holmes', response: 'Elementary, my dear Watson: honesty is the best policy.' },
                 { id: 'yoda', name: 'Yoda', response: 'Best policy, honesty is, hmmm.' },
                 { id: 'pirate', name: 'Pirate', response: "Arrr, speakin' true be the finest code o' conduct." },
@@ -396,6 +435,7 @@
                 urgent: "Boss, I woke up really sick. Need to stay home and recover.",
                 apologetic: "I'm sorry, but I'm too sick to come in today. I'll keep you posted."
             };
+            const REQUIRED_MIMIC_VARIETY = 3;
 
             const learningStepsContent = {
                 pattern: {
@@ -444,21 +484,35 @@
             };
 
             const savedCheckpoints = tracker ? tracker.getCheckpoints(LESSON_ID) : {};
+            const savedVoiceAttempts = Array.isArray(savedCheckpoints.voiceAttempts)
+                ? savedCheckpoints.voiceAttempts.filter(Boolean)
+                : [];
             const state = {
                 xpToNext: 150,
                 xp: 0,
+                voiceAttempts: new Set(savedVoiceAttempts),
                 mimicComplete: Boolean(savedCheckpoints.mimicComplete),
                 wordComplete: Boolean(savedCheckpoints.wordComplete),
                 toneComplete: Boolean(savedCheckpoints.toneComplete),
                 messages: []
             };
             state.xp = (state.mimicComplete ? 30 : 0) + (state.wordComplete ? 40 : 0) + (state.toneComplete ? 40 : 0);
+            const needsLegacyVoiceGrant = state.mimicComplete && state.voiceAttempts.size < REQUIRED_MIMIC_VARIETY;
+            if (needsLegacyVoiceGrant) {
+                while (state.voiceAttempts.size < REQUIRED_MIMIC_VARIETY) {
+                    state.voiceAttempts.add(`legacy-${state.voiceAttempts.size + 1}`);
+                }
+                if (tracker) {
+                    tracker.setCheckpoint(LESSON_ID, 'voiceAttempts', Array.from(state.voiceAttempts));
+                }
+            }
 
             const elements = {
                 mimicMessages: document.getElementById('mimicMessages'),
                 mimicEmpty: document.getElementById('mimicEmpty'),
                 characterSelect: document.getElementById('characterSelect'),
                 sendMimic: document.getElementById('sendMimic'),
+                voiceProgressChip: document.getElementById('voiceProgressChip'),
                 probabilityVisualization: document.getElementById('probabilityVisualization'),
                 wordOptions: document.getElementById('wordOptions'),
                 wordFeedback: document.getElementById('wordFeedback'),
@@ -470,6 +524,8 @@
                 notificationContent: document.getElementById('notificationContent'),
                 lessonProgressPill: document.getElementById('lessonProgressPill'),
                 globalProgressPill: document.getElementById('globalProgressPill'),
+                nextLessonButton: document.getElementById('lesson1NextBtn'),
+                nextLessonHint: document.getElementById('lesson1NextHint'),
                 learningStepButtons: document.querySelectorAll('[data-learning-step]'),
                 learningStepTitle: document.getElementById('learningStepTitle'),
                 learningStepBody: document.getElementById('learningStepBody'),
@@ -486,6 +542,36 @@
 
             function getCompletedActivitiesCount() {
                 return ['mimicComplete', 'wordComplete', 'toneComplete'].reduce((count, key) => count + (state[key] ? 1 : 0), 0);
+            }
+
+            function isLessonFullyComplete() {
+                return getCompletedActivitiesCount() === 3;
+            }
+
+            function persistVoiceAttempts() {
+                if (!tracker) return;
+                tracker.setCheckpoint(LESSON_ID, 'voiceAttempts', Array.from(state.voiceAttempts));
+            }
+
+            function updateVoiceProgress() {
+                if (!elements.voiceProgressChip) return;
+                const voicesTried = Math.min(state.voiceAttempts.size, REQUIRED_MIMIC_VARIETY);
+                elements.voiceProgressChip.textContent = `Voices tried: ${voicesTried}/${REQUIRED_MIMIC_VARIETY}`;
+                elements.voiceProgressChip.classList.toggle('goal-met', voicesTried >= REQUIRED_MIMIC_VARIETY);
+            }
+
+            function updateNextLessonGate() {
+                if (!elements.nextLessonButton) return;
+                const unlocked = isLessonFullyComplete();
+                elements.nextLessonButton.disabled = !unlocked;
+                elements.nextLessonButton.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
+                elements.nextLessonButton.title = unlocked ? '' : 'Complete all three warm-ups to unlock Lesson 2.';
+                if (elements.nextLessonHint) {
+                    elements.nextLessonHint.textContent = unlocked
+                        ? 'Lesson 2 unlocked — jump into Learn Mode.'
+                        : 'Complete all three warm-ups to unlock Lesson 2.';
+                    elements.nextLessonHint.classList.toggle('unlocked', unlocked);
+                }
             }
 
             function updateProgressPills() {
@@ -520,6 +606,7 @@
             function handleLessonProgressChange() {
                 syncLessonStatus();
                 updateProgressPills();
+                updateNextLessonGate();
             }
 
             function showNotification(message) {
@@ -585,14 +672,19 @@
                 if (!character) return;
                 state.messages.push({ role: 'user', text: `Honesty is the best policy. Rewrite this in the voice of ${character.name}.` });
                 state.messages.push({ role: 'assistant', text: character.response });
+                state.voiceAttempts.add(character.id);
+                persistVoiceAttempts();
                 renderMessages();
-                if (!state.mimicComplete) {
+                updateVoiceProgress();
+                if (!state.mimicComplete && state.voiceAttempts.size >= REQUIRED_MIMIC_VARIETY) {
                     state.mimicComplete = true;
                     grantXP(30, 'Unlocked Mimic Insight');
                     if (tracker) {
                         tracker.setCheckpoint(LESSON_ID, 'mimicComplete', true);
                     }
                     handleLessonProgressChange();
+                } else if (!state.mimicComplete) {
+                    updateNextLessonGate();
                 }
             }
 
@@ -862,6 +954,7 @@
             });
 
             renderMessages();
+            updateVoiceProgress();
             updateXPBar();
             handleLessonProgressChange();
 

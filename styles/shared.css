@@ -433,6 +433,16 @@ a {
     box-shadow: 0 15px 30px rgba(16, 185, 129, 0.45);
 }
 
+.btn:disabled,
+.btn-primary:disabled,
+.btn-secondary:disabled,
+.btn-link:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
 .btn-secondary {
     background: transparent;
     color: var(--color-text);

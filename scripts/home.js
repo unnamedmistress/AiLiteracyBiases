@@ -114,6 +114,25 @@ document.addEventListener('DOMContentLoaded', () => {
         return { locked, completed, modifier, statusLabel, ctaLabel };
     }
 
+    function getNextStartDestination() {
+        for (const item of DASHBOARD_ITEMS) {
+            const state = getItemState(item);
+            if (!state.locked && !state.completed) {
+                return item;
+            }
+        }
+        return DASHBOARD_ITEMS[DASHBOARD_ITEMS.length - 1];
+    }
+
+    function getStartButtonLabel(destination) {
+        if (!destination) return 'Start Course →';
+        const firstItem = DASHBOARD_ITEMS[0];
+        const firstState = getItemState(firstItem);
+        const startingFresh = destination.id === firstItem.id && !firstState.completed;
+        if (startingFresh) return 'Start Course →';
+        return `Resume ${destination.title} →`;
+    }
+
     function renderLessons() {
         if (!els.lessonGrid) return;
         const cards = DASHBOARD_ITEMS.map((item) => {
@@ -165,8 +184,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function initHeroButtons() {
-        const startPath = 'lesson1-ai-intro.html';
+        const destination = getNextStartDestination();
+        const startPath = destination?.path || 'lesson1-ai-intro.html';
+        const ctaLabel = getStartButtonLabel(destination);
         els.startButtons.forEach((button) => {
+            button.textContent = ctaLabel;
+            button.setAttribute('aria-label', ctaLabel);
             button.addEventListener('click', () => {
                 window.location.href = startPath;
             });

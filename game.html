@@ -938,7 +938,7 @@
             if (mode === 'scenarios') {
                 loadScenario(0);
             } else if (mode === 'quiz') {
-                loadQuiz(0);
+                loadQuiz();
             } else if (mode === 'facts') {
                 loadFACTS();
             } else if (mode === 'realworld') {
@@ -1020,13 +1020,23 @@
             document.getElementById('feedbackBox').style.display = 'block';
         }
 
-        function loadQuiz(index) {
+        function loadQuiz() {
             document.getElementById('gameArea').innerHTML = `
                 <div class="challenge-active">
                     <h2>⚡ Speed Quiz Mode</h2>
-                    <p style="margin: 20px 0;">Quick-fire questions to test your AI literacy. Answer fast for bonus XP!</p>
-                    <button class="btn-primary" onclick="alert('Quiz mode coming in next update!')">Start Quiz</button>
-                    <button class="btn-primary" style="margin-left: 10px; background: gray;" onclick="backToMenu()">Back to Menu</button>
+                    <p style="margin: 20px 0;">Speed Quiz now lives inside our dedicated Quiz 1 experience so you can earn XP, unlock Lesson 4, and review answer breakdowns without losing your place.</p>
+                    <div style="padding: 20px; border-radius: 16px; background: rgba(15,23,42,0.08); border: 1px dashed rgba(15,23,42,0.2); margin-bottom: 16px;">
+                        <p style="margin-bottom: 6px; font-weight: 600;">What to expect:</p>
+                        <ul style="margin-left: 20px; line-height: 1.5;">
+                            <li>4 live scenarios + instant feedback</li>
+                            <li>Score 75% to unlock Lesson 4</li>
+                            <li>XP syncs with your dashboard automatically</li>
+                        </ul>
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                        <button class="btn btn-primary" type="button" onclick="window.location.href='quiz1.html'">Launch Quiz 1</button>
+                        <button class="btn btn-secondary" type="button" onclick="backToMenu()">Back to Menu</button>
+                    </div>
                 </div>
             `;
         }
