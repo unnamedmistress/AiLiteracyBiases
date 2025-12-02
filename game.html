@@ -181,15 +181,19 @@
             gap: 10px;
         }
 
-        .level-badge {
-            background: linear-gradient(135deg, var(--gold), var(--warning));
-            padding: 10px 14px;
-            border-radius: 18px;
-            text-align: center;
-            margin-bottom: 14px;
-            font-size: 16px;
+        .rank-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 10px;
+            border-radius: 999px;
+            background: rgba(253, 224, 71, 0.25);
+            font-size: 12px;
             font-weight: 600;
-            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.25);
+            color: #92400e;
+            border: 1px solid rgba(146, 64, 14, 0.15);
+            margin-left: 6px;
+            white-space: nowrap;
         }
 
         .badge-collection {
@@ -743,6 +747,9 @@
                     <div class="stat-label">Streak</div>
                     <div class="stat-value">
                         <span id="streak">0</span> 🔥
+                        <span class="rank-chip" title="Detective Rank" aria-label="Detective Rank">
+                            🎖️ <span id="rankTitle">Rookie</span>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -752,10 +759,6 @@
         <div class="game-content">
             <!-- Left Sidebar -->
             <div class="sidebar">
-                <div class="level-badge">
-                    <div style="font-size: 14px; opacity: 0.8;">Detective Rank</div>
-                    <div id="rankTitle">Rookie</div>
-                </div>
                 
                 <h3>🏅 Badges</h3>
                 <div class="badge-collection">
@@ -953,6 +956,7 @@
         let scenariosComplete = false;
         const GAME_STATE_STORAGE_KEY = 'aiDetectiveLesson2GameState_v1';
         const SCENARIO_PROGRESS_STORAGE_KEY = 'aiDetectiveLesson2ScenarioProgress_v1';
+        const DETECTIVE_RANKS = ['Rookie', 'Detective', 'Senior Detective', 'Master Detective', 'AI Guru'];
 
         // Game State
         const gameState = {
@@ -1169,11 +1173,15 @@
             gameState.xp = gameState.xp - gameState.xpToNextLevel;
             gameState.xpToNextLevel = Math.floor(gameState.xpToNextLevel * 1.5);
             
-            const ranks = ['Rookie', 'Detective', 'Senior Detective', 'Master Detective', 'AI Guru'];
-            const rankIndex = Math.min(gameState.level - 1, ranks.length - 1);
-            document.getElementById('rankTitle').textContent = ranks[rankIndex];
-            
+            updateRankChip();
             showNotification(`🎊 Level Up! You're now Level ${gameState.level}!`, 'levelup');
+        }
+
+        function updateRankChip() {
+            const rankNode = document.getElementById('rankTitle');
+            if (!rankNode) return;
+            const rankIndex = Math.min(gameState.level - 1, DETECTIVE_RANKS.length - 1);
+            rankNode.textContent = DETECTIVE_RANKS[rankIndex];
         }
 
         function updateUI() {
@@ -1187,6 +1195,7 @@
             if (playerLeaderboardXp) {
                 playerLeaderboardXp.textContent = `${gameState.points} XP`;
             }
+            updateRankChip();
             persistGameState();
         }
 
