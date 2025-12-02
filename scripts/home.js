@@ -50,7 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Lesson 5 · AI Workflows',
             summary: 'Chain multiple models, automate reviews, and add human escalation.',
             path: 'lesson5-ai-workflows.html',
-            requires: 'lesson4'
+            requires: 'lesson4',
+            comingSoon: true
         },
         {
             id: 'lesson6',
@@ -58,7 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Lesson 6 · Capstone',
             summary: 'Ship your AI policy, lesson plan, or automation brief for certification.',
             path: 'lesson6-capstone.html',
-            requires: 'lesson5'
+            requires: 'lesson5',
+            comingSoon: true
         }
     ];
 
@@ -100,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getItemState(item) {
+        const comingSoon = Boolean(item.comingSoon);
         let lessonStatus;
         if (item.type === 'quiz') {
             const score = getQuizScore(item.id);
@@ -115,13 +118,13 @@ document.addEventListener('DOMContentLoaded', () => {
             lessonStatus = getLessonStatus(item.id);
         }
         const completed = lessonStatus === 'completed';
-        const locked = !requirementMet(item.requires);
+        const locked = comingSoon || !requirementMet(item.requires);
         let modifier = '';
         let statusLabel = 'Not Started';
 
         if (locked) {
-            modifier = 'locked';
-            statusLabel = 'Locked';
+            modifier = comingSoon ? 'coming-soon' : 'locked';
+            statusLabel = comingSoon ? 'Coming Soon' : 'Locked';
         } else if (completed) {
             modifier = 'completed';
             statusLabel = 'Completed';
@@ -130,8 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
             statusLabel = 'In Progress';
         }
 
-        const ctaLabel = locked ? 'Locked' : completed ? 'Review' : 'Start';
-        return { locked, completed, modifier, statusLabel, ctaLabel };
+        const ctaLabel = locked ? (comingSoon ? 'Coming Soon' : 'Locked') : completed ? 'Review' : 'Start';
+        return { locked, completed, modifier, statusLabel, ctaLabel, comingSoon };
     }
 
     function getNextStartDestination() {
@@ -158,10 +161,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const cards = DASHBOARD_ITEMS.map((item) => {
             const state = getItemState(item);
             return `
-                <article class="lesson-card ${state.locked ? 'locked' : ''}">
+                <article class="lesson-card ${state.locked ? 'locked' : ''}"${state.comingSoon ? ' data-coming-soon="true"' : ''}>
                     <div class="status-pill${state.modifier ? ` ${state.modifier}` : ''}">${state.statusLabel}</div>
                     <h3>${item.title}</h3>
                     <p>${item.summary}</p>
+                    ${state.comingSoon ? '<p class="coming-soon-note">🚧 Launching soon · stay tuned</p>' : ''}
                     <button type="button" data-path="${item.path}" data-locked="${state.locked}">${state.ctaLabel}</button>
                 </article>
             `;

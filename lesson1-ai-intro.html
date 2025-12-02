@@ -70,8 +70,16 @@
         .notification { position: fixed; bottom: 24px; right: 24px; background: rgba(4, 4, 4, 0.85); border-radius: var(--radius-md); padding: 14px 18px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35); display: none; }
         .notification.show { display: block; }
         .notification strong { color: #34d399; }
+        .xp-cluster { display: flex; align-items: center; gap: 12px; }
+        .restart-lesson-btn { border: 1px solid rgba(255, 255, 255, 0.4); background: rgba(0, 0, 0, 0.35); color: #fff; border-radius: 999px; width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; transition: background var(--transition-base), transform var(--transition-base); }
+        .restart-lesson-btn:hover, .restart-lesson-btn:focus-visible { background: rgba(255, 255, 255, 0.15); transform: translateY(-1px); outline: none; }
         .progress-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
         .progress-pill { padding: 6px 14px; border-radius: 999px; font-size: 13px; letter-spacing: 0.04em; background: rgba(255, 255, 255, 0.12); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .activity-progress { font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); }
+        .activity-progress.complete { color: #34d399; }
+        .voice-selection-note { font-size: 13px; color: rgba(255, 255, 255, 0.7); margin: 0; }
+        .xp-fill.xp-pulse { animation: xpPulse 0.65s ease; }
+        @keyframes xpPulse { 0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.6); } 100% { box-shadow: 0 0 0 14px rgba(250, 204, 21, 0); } }
         .learning-showcase { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 24px; }
         .story-card { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.04); padding: 20px; display: flex; flex-direction: column; gap: 16px; min-height: 240px; }
         .story-card.story-hero { background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(79, 70, 229, 0.55)); border-color: rgba(255, 255, 255, 0.25); color: #fff; }
@@ -132,10 +140,13 @@
             <div class="stats">
                 <div>
                     <div class="stat-label">XP</div>
-                    <div class="xp-bar">
-                        <div class="xp-fill" id="xpBar">
-                            <span id="xpText">0/110</span>
+                    <div class="xp-cluster">
+                        <div class="xp-bar">
+                            <div class="xp-fill" id="xpBar">
+                                <span id="xpText">0/110</span>
+                            </div>
                         </div>
+                        <button class="restart-lesson-btn" type="button" id="restartLessonBtn" title="Restart Lesson 1 warm-ups" aria-label="Restart Lesson 1 warm-ups">↺</button>
                     </div>
                 </div>
             </div>
@@ -168,6 +179,7 @@
                                 <p>AI predicts the next word by ranking what usually follows. Study the probabilities, then make your pick.</p>
                                 <div class="probability-visuals" id="probabilityVisualization"></div>
                                 <div class="word-options" id="wordOptions"></div>
+                                <div class="activity-progress" id="wordProgress" aria-live="polite">Word radar progress: Choose the best completion.</div>
                                 <div class="word-celebration hidden" id="wordCelebration" aria-live="polite"></div>
                                 <div class="feedback hidden" id="wordFeedback"></div>
                             </div>
@@ -190,6 +202,7 @@
                                     <select id="characterSelect" aria-label="Select a character voice"></select>
                                     <button class="btn btn-primary" id="sendMimic">Send</button>
                                 </div>
+                                <p class="voice-selection-note" id="voiceSelectionNote">Selected voice: Mickey Mouse</p>
                             </div>
                         </div>
 
@@ -535,7 +548,12 @@
                 toneExplainButtons: document.querySelectorAll('[data-tone-explain]'),
                 toneExplainOutput: document.getElementById('toneExplainOutput'),
                 dropToggles: document.querySelectorAll('[data-drop]'),
-                missionButtons: document.querySelectorAll('.check-btn')
+                missionButtons: document.querySelectorAll('.check-btn'),
+                wordProgress: document.getElementById('wordProgress'),
+                voiceSelectionNote: document.getElementById('voiceSelectionNote'),
+                restartButton: document.getElementById('restartLessonBtn'),
+                xpBarFill: document.getElementById('xpBar'),
+                xpBarText: document.getElementById('xpText')
             };
 
             let notificationTimer;
@@ -560,6 +578,17 @@
                 const voicesTried = Math.min(state.voiceAttempts.size, REQUIRED_MIMIC_VARIETY);
                 elements.voiceProgressChip.textContent = `Voices tried: ${voicesTried}/${REQUIRED_MIMIC_VARIETY}`;
                 elements.voiceProgressChip.classList.toggle('goal-met', voicesTried >= REQUIRED_MIMIC_VARIETY);
+            }
+
+            function updateVoiceSelectionNote() {
+                if (!elements.voiceSelectionNote || !elements.characterSelect) return;
+                const selectedId = elements.characterSelect.value;
+                const character = characters.find((entry) => entry.id === selectedId);
+                if (character) {
+                    elements.voiceSelectionNote.textContent = `Selected voice: ${character.name}`;
+                } else {
+                    elements.voiceSelectionNote.textContent = 'Select a voice to get started.';
+                }
             }
 
             function updateProgressPills() {
@@ -604,6 +633,7 @@
                     elements.nextLessonButton.disabled = false;
                     elements.nextLessonHint.textContent = 'Warm-ups cleared! Lesson 2 is unlocked.';
                     elements.nextLessonHint.classList.add('unlocked');
+                    elements.nextLessonButton.setAttribute('title', 'Launch Lesson 2 learn mode');
                     return;
                 }
 
@@ -611,6 +641,7 @@
                 elements.nextLessonHint.classList.remove('unlocked');
                 const activityLabel = remaining === 1 ? 'activity' : 'activities';
                 elements.nextLessonHint.textContent = `Finish ${remaining} more ${activityLabel} to unlock Lesson 2.`;
+                elements.nextLessonButton.setAttribute('title', 'Complete every warm-up to unlock Lesson 2');
             }
 
             function showNotification(message) {
@@ -625,15 +656,23 @@
                 }, 2200);
             }
 
+            function pulseXPBar() {
+                if (!elements.xpBarFill) return;
+                elements.xpBarFill.classList.remove('xp-pulse');
+                void elements.xpBarFill.offsetWidth;
+                elements.xpBarFill.classList.add('xp-pulse');
+            }
+
             function updateXPBar() {
                 if (window.AILesson && typeof window.AILesson.updateXPBar === 'function') {
                     window.AILesson.updateXPBar({ xp: state.xp, xpToNext: state.xpToNext, barId: 'xpBar', textId: 'xpText' });
                 } else {
-                    const bar = document.getElementById('xpBar');
-                    const text = document.getElementById('xpText');
+                    const bar = elements.xpBarFill;
+                    const text = elements.xpBarText;
                     if (bar) bar.style.width = `${(state.xp / state.xpToNext) * 100}%`;
                     if (text) text.textContent = `${state.xp}/${state.xpToNext}`;
                 }
+                pulseXPBar();
             }
 
             function grantXP(amount, reason) {
@@ -721,6 +760,12 @@
                 elements.wordFeedback.classList.remove('hidden');
             }
 
+            function setWordProgress(message, isComplete = false) {
+                if (!elements.wordProgress) return;
+                elements.wordProgress.textContent = message;
+                elements.wordProgress.classList.toggle('complete', Boolean(isComplete));
+            }
+
             function showWordCelebration() {
                 if (!elements.wordCelebration) return;
                 elements.wordCelebration.innerHTML = `
@@ -740,11 +785,15 @@
             }
 
             function handleWordPick(word) {
-                if (state.wordComplete) return;
+                if (state.wordComplete) {
+                    setWordProgress('Word radar progress: Complete! Use the restart icon to replay.', true);
+                    return;
+                }
                 const optionButtons = elements.wordOptions ? elements.wordOptions.querySelectorAll('button') : [];
                 if (word === 'Policy') {
                     state.wordComplete = true;
                     setWordFeedback('Correct! You think like an AI on this one. Moving to tone experiments...', 'success');
+                    setWordProgress('Word radar progress: Complete! 🎉', true);
                     showWordCelebration();
                     grantXP(40, 'Prediction Mastery');
                     if (tracker) {
@@ -765,6 +814,7 @@
                     }
                 } else {
                     setWordFeedback('You would not make a good robot—pick again.', 'error');
+                    setWordProgress('Word radar progress: Try again—study the probability bars.', false);
                     const picked = Array.from(optionButtons).find((btn) => btn.dataset.wordChoice === word);
                     if (picked) {
                         picked.classList.add('incorrect');
@@ -784,6 +834,26 @@
                     button.addEventListener('click', () => handleWordPick(opt.word));
                     elements.wordOptions.appendChild(button);
                 });
+                if (state.wordComplete) {
+                    hydrateWordActivity();
+                } else {
+                    setWordProgress('Word radar progress: Choose the best completion.', false);
+                }
+            }
+
+            function hydrateWordActivity() {
+                if (!state.wordComplete || !elements.wordOptions) return;
+                const optionButtons = elements.wordOptions.querySelectorAll('button');
+                optionButtons.forEach((btn) => {
+                    const isAnswer = btn.dataset.wordChoice === 'Policy';
+                    btn.disabled = true;
+                    btn.classList.toggle('correct', isAnswer);
+                    if (!isAnswer) {
+                        btn.classList.remove('incorrect');
+                    }
+                });
+                setWordFeedback('Prediction radar already cleared—use restart to replay.', 'success');
+                setWordProgress('Word radar progress: Complete! 🎉', true);
             }
 
             function setSelectedTone(tone) {
@@ -908,6 +978,19 @@
                 });
             }
 
+            function handleLessonRestart() {
+                const confirmed = window.confirm('Reset Lesson 1 progress so you can replay the warm-ups from scratch? This removes the XP you earned here.');
+                if (!confirmed) return;
+                const xpToRemove = Number(state.xp) || 0;
+                if (xpToRemove > 0 && tracker && typeof tracker.adjustXP === 'function') {
+                    tracker.adjustXP(-xpToRemove);
+                }
+                if (tracker && typeof tracker.resetLesson === 'function') {
+                    tracker.resetLesson(LESSON_ID);
+                }
+                window.location.reload();
+            }
+
 
             function handleDragOver(event) {
                 event.preventDefault();
@@ -929,13 +1012,17 @@
 
             elements.characterSelect.innerHTML = characters.map((character) => `<option value="${character.id}">${character.name}</option>`).join('');
             elements.sendMimic.addEventListener('click', handleSend);
-            elements.characterSelect.addEventListener('change', () => elements.characterSelect.blur());
+            elements.characterSelect.addEventListener('change', () => {
+                updateVoiceSelectionNote();
+                elements.characterSelect.blur();
+            });
             elements.characterSelect.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter') {
                     event.preventDefault();
                     handleSend();
                 }
             });
+            updateVoiceSelectionNote();
 
             buildProbabilityBars();
             buildWordOptions();
@@ -972,7 +1059,17 @@
                 });
             }
 
+            if (elements.nextLessonButton) {
+                elements.nextLessonButton.addEventListener('click', () => {
+                    if (elements.nextLessonButton.disabled) return;
+                    window.location.href = 'presentation.html';
+                });
+            }
+
             initGameJumpers();
+            if (elements.restartButton) {
+                elements.restartButton.addEventListener('click', handleLessonRestart);
+            }
         });
     </script>
 </body>

@@ -66,6 +66,13 @@
             persist();
             return state.xp;
         },
+        adjustXP(amount = 0) {
+            const delta = Number(amount);
+            if (!Number.isFinite(delta) || delta === 0) return state.xp;
+            state.xp = Math.max(0, state.xp + Math.round(delta));
+            persist();
+            return state.xp;
+        },
         getLessonStatus(lessonId) {
             return state.lessons[lessonId] || 'not-started';
         },
@@ -73,6 +80,13 @@
             if (!lessonId) return;
             ensureLessonStructures(lessonId);
             state.lessons[lessonId] = status;
+            persist();
+        },
+        resetLesson(lessonId) {
+            if (!lessonId) return;
+            ensureLessonStructures(lessonId);
+            state.lessons[lessonId] = 'not-started';
+            state.checkpoints[lessonId] = {};
             persist();
         },
         markLessonComplete(lessonId) {
@@ -141,11 +155,13 @@
         getLessonStatus: (lessonId) => ProgressTracker.getLessonStatus(lessonId),
         getLessonStatuses: () => ProgressTracker.getLessonMap(),
         addXP: (amount) => ProgressTracker.addXP(amount),
+        adjustXP: (amount) => ProgressTracker.adjustXP(amount),
         getXP: () => ProgressTracker.getXP(),
         markQuizScore: (quizId, score) => ProgressTracker.setQuizScore(quizId, score),
         getQuizScore: (quizId) => ProgressTracker.getQuizScore(quizId),
         getQuizScores: () => ProgressTracker.getQuizScores(),
         getOverview: () => ProgressTracker.getOverview(),
+        resetLesson: (lessonId) => ProgressTracker.resetLesson(lessonId),
         reset: () => ProgressTracker.reset()
     };
 })();

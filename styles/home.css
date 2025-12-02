@@ -227,6 +227,19 @@ body.home-page {
     border-style: dashed;
 }
 
+.status-pill.coming-soon {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.45);
+    color: #1d4ed8;
+}
+
+.coming-soon-note {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d4ed8;
+    margin: -4px 0 4px;
+}
+
 .lesson-card button {
     align-self: flex-start;
     margin-top: auto;

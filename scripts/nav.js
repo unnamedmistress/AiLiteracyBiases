@@ -15,8 +15,8 @@
         { id: 'lesson3', label: 'Lesson 3', href: 'lesson3-content-creation.html' },
         { id: 'quiz1', label: 'Quiz 1', href: 'quiz1.html' },
         { id: 'lesson4', label: 'Lesson 4', href: 'lesson4-advanced-prompting.html' },
-        { id: 'lesson5', label: 'Lesson 5', href: 'lesson5-ai-workflows.html', locked: true },
-        { id: 'lesson6', label: 'Lesson 6', href: 'lesson6-capstone.html', locked: true }
+        { id: 'lesson5', label: 'Lesson 5', href: 'lesson5-ai-workflows.html', locked: true, comingSoon: true },
+        { id: 'lesson6', label: 'Lesson 6', href: 'lesson6-capstone.html', locked: true, comingSoon: true }
     ];
 
     const PATH_TO_STATE = {
@@ -35,17 +35,28 @@
         'updates.html': { resource: 'updates' }
     };
 
-    function buildLink({ id, label, href, locked }, activeId, group) {
+    function buildLink({ id, label, href, locked, comingSoon }, activeId, group) {
         const isActive = activeId === id;
         const element = document.createElement(locked ? 'span' : 'a');
-        element.textContent = locked ? `${label} 🔒` : label;
         element.className = `nav-link nav-link-${group}`;
         element.dataset.navId = id;
+
+        const labelSpan = document.createElement('span');
+        labelSpan.className = 'nav-link-label';
+        labelSpan.textContent = label;
+        element.appendChild(labelSpan);
 
         if (locked) {
             element.classList.add('is-locked');
             element.setAttribute('aria-disabled', 'true');
-            element.setAttribute('title', 'Coming soon');
+            element.setAttribute('title', comingSoon ? 'Coming soon' : 'Locked');
+            element.setAttribute('aria-label', `${label} (${comingSoon ? 'Coming Soon' : 'Locked'})`);
+            if (comingSoon) {
+                const badge = document.createElement('span');
+                badge.className = 'nav-coming-soon';
+                badge.textContent = 'Coming Soon';
+                element.appendChild(badge);
+            }
         } else {
             element.href = href;
         }
