@@ -512,6 +512,10 @@
                 messages: []
             };
             state.xp = (state.mimicComplete ? 30 : 0) + (state.wordComplete ? 40 : 0) + (state.toneComplete ? 40 : 0);
+            const initialCompleted = (state.mimicComplete ? 1 : 0) + (state.wordComplete ? 1 : 0) + (state.toneComplete ? 1 : 0);
+            if (initialCompleted === 0 && state.xp > 0) {
+                state.xp = 0;
+            }
             const needsLegacyVoiceGrant = state.mimicComplete && state.voiceAttempts.size < REQUIRED_MIMIC_VARIETY;
             if (needsLegacyVoiceGrant) {
                 while (state.voiceAttempts.size < REQUIRED_MIMIC_VARIETY) {
@@ -978,6 +982,62 @@
                 });
             }
 
+            function resetLessonState() {
+                state.voiceAttempts = new Set();
+                state.messages = [];
+                state.mimicComplete = false;
+                state.wordComplete = false;
+                state.toneComplete = false;
+                state.xp = 0;
+                selectedTone = null;
+
+                if (tracker) {
+                    if (typeof tracker.resetLesson === 'function') {
+                        tracker.resetLesson(LESSON_ID);
+                    } else {
+                        tracker.setCheckpoint(LESSON_ID, 'voiceAttempts', []);
+                        tracker.setCheckpoint(LESSON_ID, 'mimicComplete', false);
+                        tracker.setCheckpoint(LESSON_ID, 'wordComplete', false);
+                        tracker.setCheckpoint(LESSON_ID, 'toneComplete', false);
+                        tracker.setLessonStatus(LESSON_ID, 'not-started');
+                    }
+                }
+
+                if (elements.mimicEmpty) {
+                    elements.mimicEmpty.classList.remove('hidden');
+                }
+                renderMessages();
+                updateVoiceProgress();
+                updateVoiceSelectionNote();
+                persistVoiceAttempts();
+
+                if (elements.missionButtons && elements.missionButtons.length) {
+                    elements.missionButtons.forEach((btn) => {
+                        btn.classList.remove('completed');
+                        btn.setAttribute('aria-pressed', 'false');
+                    });
+                }
+
+                if (elements.wordOptions) {
+                    elements.wordOptions.innerHTML = '';
+                    buildWordOptions();
+                }
+                if (elements.wordFeedback) {
+                    elements.wordFeedback.classList.add('hidden');
+                }
+                if (elements.wordCelebration) {
+                    elements.wordCelebration.classList.remove('show');
+                    elements.wordCelebration.classList.add('hidden');
+                }
+                setWordProgress('Word radar progress: Choose the best completion.', false);
+
+                state.toneComplete = false;
+                setSelectedTone(null);
+
+                updateXPBar();
+                handleLessonProgressChange();
+            }
+
             function handleLessonRestart() {
                 const confirmed = window.confirm('Reset Lesson 1 progress so you can replay the warm-ups from scratch? This removes the XP you earned here.');
                 if (!confirmed) return;
@@ -985,10 +1045,8 @@
                 if (xpToRemove > 0 && tracker && typeof tracker.adjustXP === 'function') {
                     tracker.adjustXP(-xpToRemove);
                 }
-                if (tracker && typeof tracker.resetLesson === 'function') {
-                    tracker.resetLesson(LESSON_ID);
-                }
-                window.location.reload();
+                resetLessonState();
+                showNotification('Lesson reset. Earn each XP burst again.');
             }
 
 
