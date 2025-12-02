@@ -6,6 +6,7 @@
     <title>AI's Bad Habits: Learn to Spot Them Before They Trick You</title>
     <link rel="stylesheet" href="styles/shared.css">
     <script defer src="scripts/nav.js"></script>
+    <script defer src="scripts/progress.js"></script>
     <script defer src="scripts/shared.js"></script>
     <style>
         :root {
@@ -1530,6 +1531,7 @@ body {
                         <div>Spot ONE hallucination in the wild - catch AI making stuff up</div>
                     </div>
                 </div>
+                  <p id="challengeProgressMessage" aria-live="polite" style="margin-top: var(--space-16); font-weight: var(--font-weight-semibold); display: none;"></p>
 
                 <section class="key-takeaways" aria-label="Lesson 2 key takeaways">
                   <h2 class="section-title">Key Takeaways</h2>
@@ -1570,7 +1572,19 @@ body {
     </div>
 
     <script>
-        // Toggle pathology card expansion
+      const LESSON_ID = 'lesson2';
+      const CHECKPOINTS = {
+        quiz: { xp: 80, label: 'Lesson 2 Hallucination quiz' },
+        challenges: { xp: 40, label: 'Challenge checklist' }
+      };
+      const completedCheckpoints = new Set();
+      let tracker = null;
+      let appProgress = null;
+      let hasStarted = false;
+      let xpEarned = 0;
+      let quizAnswered = false;
+
+      // Toggle pathology card expansion
         function togglePathology(card) {
             const isExpanded = card.classList.contains('expanded');
             
@@ -1587,50 +1601,199 @@ body {
         }
 
         // Quiz functionality
-        let quizAnswered = false;
 
         function answerQuiz(option, isCorrect) {
-            if (quizAnswered) return;
+          if (quizAnswered) return;
             
-            quizAnswered = true;
-            const feedback = document.getElementById('quiz-feedback');
-            const allOptions = document.querySelectorAll('.quiz-option');
+          flagLessonStarted();
+          quizAnswered = true;
+          const feedback = document.getElementById('quiz-feedback');
+          const allOptions = document.querySelectorAll('.quiz-option');
             
-            // Disable all options
-            allOptions.forEach(opt => {
-                opt.style.cursor = 'not-allowed';
-                opt.style.opacity = '0.6';
-            });
+          // Disable all options
+          allOptions.forEach(opt => {
+            opt.style.cursor = 'not-allowed';
+            opt.style.pointerEvents = 'none';
+            opt.style.opacity = '0.6';
+          });
             
-            if (isCorrect) {
-                option.classList.add('correct');
-                option.style.opacity = '1';
-                feedback.innerHTML = `
-                    <div style="color: var(--color-success); font-weight: var(--font-weight-bold); font-size: var(--font-size-xl); margin-bottom: var(--space-16);">🎉 Correct! You're an AI Detective!</div>
-                    <p style="margin-bottom: var(--space-16);"><strong>Explanation:</strong> Claude (and most AI chatbots) can't actually browse the internet or "search yesterday." If an AI claims to have done something it's incapable of, that's classic fabrication/hallucination!</p>
-                    <div class="badge pulse">
-                        🕵️ AI DETECTIVE BADGE UNLOCKED!
-                    </div>
-                `;
-            } else {
-                option.classList.add('incorrect');
-                option.style.opacity = '1';
-                // Highlight correct answer
-                allOptions[1].classList.add('correct');
-                allOptions[1].style.opacity = '1';
-                feedback.innerHTML = `
-                    <div style="color: var(--color-error); font-weight: var(--font-weight-bold); font-size: var(--font-size-xl); margin-bottom: var(--space-16);">❌ Not quite! Let's review:</div>
-                    <p style="margin-bottom: var(--space-16);">The correct answer is <strong>B</strong>. Claude can't actually search the internet or "search yesterday." When AI claims to have capabilities it doesn't have, that's hallucination (Fabrication pathology)!</p>
-                    <p style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">💡 Tip: Use F.A.C.T.S. - if AI claims a source or action, verify it!</p>
-                `;
-            }
+          if (isCorrect) {
+            const newlyCompleted = completeCheckpoint('quiz');
+            const xpCopy = newlyCompleted
+              ? '<p style="margin-bottom: var(--space-16); font-weight: var(--font-weight-semibold); color: var(--color-success);">+80 XP deposited in your tracker.</p>'
+              : '<p style="margin-bottom: var(--space-16); color: var(--color-text-secondary);">XP already recorded earlier.</p>';
+            option.classList.add('correct');
+            option.style.opacity = '1';
+            feedback.innerHTML = `
+              <div style="color: var(--color-success); font-weight: var(--font-weight-bold); font-size: var(--font-size-xl); margin-bottom: var(--space-16);">🎉 Correct! You're an AI Detective!</div>
+              <p style="margin-bottom: var(--space-16);"><strong>Explanation:</strong> Claude (and most AI chatbots) can't actually browse the internet or "search yesterday." If an AI claims to have done something it's incapable of, that's classic fabrication/hallucination!</p>
+              ${xpCopy}
+              <div class="badge pulse">
+                🕵️ AI DETECTIVE BADGE UNLOCKED!
+              </div>
+            `;
+          } else {
+            option.classList.add('incorrect');
+            option.style.opacity = '1';
+            // Highlight correct answer
+            allOptions[1].classList.add('correct');
+            allOptions[1].style.opacity = '1';
+            feedback.innerHTML = `
+              <div style="color: var(--color-error); font-weight: var(--font-weight-bold); font-size: var(--font-size-xl); margin-bottom: var(--space-16);">❌ Not quite! Let's review:</div>
+              <p style="margin-bottom: var(--space-16);">The correct answer is <strong>B</strong>. Claude can't actually search the internet or "search yesterday." When AI claims to have capabilities it doesn't have, that's hallucination (Fabrication pathology)!</p>
+              <p style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">💡 Tip: Use F.A.C.T.S. - if AI claims a source or action, verify it!</p>
+            `;
+          }
             
-            feedback.classList.add('show');
+          feedback.classList.add('show');
         }
 
         // Challenge checkbox toggle
         function toggleChallenge(checkbox) {
-            checkbox.classList.toggle('checked');
+          if (completedCheckpoints.has('challenges')) return;
+          checkbox.classList.toggle('checked');
+          flagLessonStarted();
+          evaluateChallengeProgress();
+        }
+
+        function evaluateChallengeProgress() {
+          const checkboxes = Array.from(document.querySelectorAll('.challenge-checkbox'));
+          if (!checkboxes.length) return;
+          const allChecked = checkboxes.every(cb => cb.classList.contains('checked'));
+          const anyChecked = checkboxes.some(cb => cb.classList.contains('checked'));
+          if (allChecked) {
+            const newlyCompleted = completeCheckpoint('challenges');
+            showChallengeMessage(
+              newlyCompleted
+                ? 'Challenge checklist complete! +40 XP deposited.'
+                : 'Challenge checklist already logged—XP was saved earlier.',
+              true
+            );
+          } else if (anyChecked) {
+            showChallengeMessage('Keep going—finish every checkbox to claim XP.', false);
+          } else {
+            const msg = document.getElementById('challengeProgressMessage');
+            if (msg) msg.style.display = 'none';
+          }
+        }
+
+        function showChallengeMessage(text, isSuccess = true) {
+          const msg = document.getElementById('challengeProgressMessage');
+          if (!msg) return;
+          msg.style.display = 'block';
+          msg.style.color = isSuccess ? 'var(--color-success)' : 'var(--color-text-secondary)';
+          msg.textContent = text;
+        }
+
+        function flagLessonStarted() {
+          if (hasStarted) return;
+          hasStarted = true;
+          if (tracker && typeof tracker.setCheckpoint === 'function') {
+            tracker.setCheckpoint(LESSON_ID, 'started', true);
+          }
+          setLessonStatus('in-progress');
+        }
+
+        function hydrateLessonProgress() {
+          const saved = tracker && typeof tracker.getCheckpoints === 'function' ? tracker.getCheckpoints(LESSON_ID) : {};
+          xpEarned = Number(saved && saved.xpEarned) || 0;
+          hasStarted = Boolean(saved && saved.started);
+          Object.keys(CHECKPOINTS).forEach((id) => {
+            if (saved && saved[id]) {
+              completedCheckpoints.add(id);
+            }
+          });
+          quizAnswered = completedCheckpoints.has('quiz');
+          if (completedCheckpoints.has('quiz')) {
+            markLessonComplete();
+          } else if (hasStarted) {
+            setLessonStatus('in-progress');
+          }
+        }
+
+        function completeCheckpoint(id) {
+          const checkpoint = CHECKPOINTS[id];
+          if (!checkpoint) return false;
+          if (completedCheckpoints.has(id)) return false;
+          completedCheckpoints.add(id);
+          if (tracker && typeof tracker.setCheckpoint === 'function') {
+            tracker.setCheckpoint(LESSON_ID, id, true);
+          }
+          if (checkpoint.xp) {
+            grantXP(checkpoint.xp, checkpoint.label);
+          }
+          syncLessonStatus();
+          return true;
+        }
+
+        function grantXP(amount, contextLabel) {
+          const delta = Number(amount) || 0;
+          if (!delta) return;
+          xpEarned += delta;
+          if (tracker && typeof tracker.setCheckpoint === 'function') {
+            tracker.setCheckpoint(LESSON_ID, 'xpEarned', xpEarned);
+          }
+          if (appProgress && typeof appProgress.addXP === 'function') {
+            appProgress.addXP(delta);
+          } else if (tracker && typeof tracker.addXP === 'function') {
+            tracker.addXP(delta);
+          }
+        }
+
+        function syncLessonStatus() {
+          if (completedCheckpoints.has('quiz')) {
+            markLessonComplete();
+          } else if (hasStarted || completedCheckpoints.size) {
+            setLessonStatus('in-progress');
+          } else {
+            setLessonStatus('not-started');
+          }
+        }
+
+        function markLessonComplete() {
+          if (appProgress && typeof appProgress.markLessonComplete === 'function') {
+            appProgress.markLessonComplete(LESSON_ID);
+          } else if (tracker && typeof tracker.markLessonComplete === 'function') {
+            tracker.markLessonComplete(LESSON_ID);
+          }
+        }
+
+        function setLessonStatus(status) {
+          if (appProgress && typeof appProgress.setLessonStatus === 'function') {
+            appProgress.setLessonStatus(LESSON_ID, status);
+          } else if (tracker && typeof tracker.setLessonStatus === 'function') {
+            tracker.setLessonStatus(LESSON_ID, status);
+          }
+        }
+
+        function hydrateChallengeState() {
+          if (!completedCheckpoints.has('challenges')) return;
+          document.querySelectorAll('.challenge-checkbox').forEach((checkbox) => {
+            checkbox.classList.add('checked');
+          });
+          showChallengeMessage('Challenge checklist complete! XP already deposited.', true);
+        }
+
+        function hydrateQuizState() {
+          if (!completedCheckpoints.has('quiz')) return;
+          quizAnswered = true;
+          const allOptions = document.querySelectorAll('.quiz-option');
+          allOptions.forEach((opt, index) => {
+            opt.style.cursor = 'not-allowed';
+            opt.style.pointerEvents = 'none';
+            opt.style.opacity = index === 1 ? '1' : '0.6';
+            if (index === 1) {
+              opt.classList.add('correct');
+            }
+          });
+          const feedback = document.getElementById('quiz-feedback');
+          if (feedback) {
+            feedback.classList.add('show');
+            feedback.innerHTML = `
+              <div style="color: var(--color-success); font-weight: var(--font-weight-bold); font-size: var(--font-size-xl); margin-bottom: var(--space-16);">🎉 Lesson already cleared.</div>
+              <p style="margin-bottom: var(--space-16);">XP from this quiz is already saved—feel free to review the scenarios anytime.</p>
+            `;
+          }
         }
 
         // Animate token meters on scroll
@@ -1689,7 +1852,17 @@ body {
           });
         }
 
-        initScrollShortcuts();
+        function initLessonProgress() {
+            tracker = window.ProgressTracker || null;
+            appProgress = window.AppProgress || null;
+            hydrateLessonProgress();
+            hydrateQuizState();
+            hydrateChallengeState();
+            evaluateChallengeProgress();
+            initScrollShortcuts();
+        }
+
+        initLessonProgress();
     </script>
 </body>
 </html>

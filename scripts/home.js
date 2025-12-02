@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const progressApi = window.AppProgress || window.ProgressTracker || null;
+    const QUIZ_MIN_SCORES = {
+        quiz1: 75
+    };
 
     const DASHBOARD_ITEMS = [
         {
@@ -86,14 +89,31 @@ document.addEventListener('DOMContentLoaded', () => {
         return Number(progressApi.getQuizScore(id)) || 0;
     }
 
+    function getQuizRequirement(quizId) {
+        return QUIZ_MIN_SCORES[quizId] ?? 1;
+    }
+
     function requirementMet(requirementId) {
         if (!requirementId) return true;
-        if (requirementId.startsWith('quiz')) return getQuizScore(requirementId) > 0;
+        if (requirementId.startsWith('quiz')) return getQuizScore(requirementId) >= getQuizRequirement(requirementId);
         return isLessonComplete(requirementId);
     }
 
     function getItemState(item) {
-        const lessonStatus = item.type === 'quiz' ? (getQuizScore(item.id) > 0 ? 'completed' : 'not-started') : getLessonStatus(item.id);
+        let lessonStatus;
+        if (item.type === 'quiz') {
+            const score = getQuizScore(item.id);
+            const minScore = getQuizRequirement(item.id);
+            if (score >= minScore) {
+                lessonStatus = 'completed';
+            } else if (score > 0) {
+                lessonStatus = 'in-progress';
+            } else {
+                lessonStatus = 'not-started';
+            }
+        } else {
+            lessonStatus = getLessonStatus(item.id);
+        }
         const completed = lessonStatus === 'completed';
         const locked = !requirementMet(item.requires);
         let modifier = '';

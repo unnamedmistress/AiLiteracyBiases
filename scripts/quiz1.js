@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const tracker = window.AppProgress || window.ProgressTracker || null;
+    const QUIZ_ID = 'quiz1';
+    const PASS_THRESHOLD = 75;
 
     const QUESTIONS = [
         {
@@ -60,7 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
         currentIndex: 0,
         answered: false,
         responses: [],
-        progressLogged: false
+        progressLogged: false,
+        started: false
     };
 
     const els = {
@@ -81,6 +84,22 @@ document.addEventListener('DOMContentLoaded', () => {
         continueBtn: document.getElementById('continueBtn'),
         retryBtn: document.getElementById('retryBtn')
     };
+
+    function ensureQuizStarted() {
+        if (state.started) return;
+        state.started = true;
+        setQuizStatus('in-progress');
+    }
+
+    function setQuizStatus(status) {
+        if (!tracker || typeof tracker.setLessonStatus !== 'function') return;
+        tracker.setLessonStatus(QUIZ_ID, status);
+    }
+
+    function markQuizComplete() {
+        if (!tracker || typeof tracker.markLessonComplete !== 'function') return;
+        tracker.markLessonComplete(QUIZ_ID);
+    }
 
     function updateProgress() {
         const progress = (state.currentIndex / QUESTIONS.length) * 100;
@@ -117,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleAnswer(choice) {
         if (state.answered) return;
         state.answered = true;
+        ensureQuizStarted();
         const question = QUESTIONS[state.currentIndex];
         const isCorrect = choice === question.answer;
         const optionButtons = Array.from(els.optionsWrapper.querySelectorAll('button'));
@@ -142,16 +162,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function awardProgress(scorePercent) {
         if (!tracker || state.progressLogged) return;
-        const earnedXP = scorePercent >= 75 ? 60 : scorePercent >= 50 ? 40 : 20;
+        const earnedXP = scorePercent >= PASS_THRESHOLD ? 60 : scorePercent >= 50 ? 40 : 20;
         try {
-            if (tracker.markQuizScore) tracker.markQuizScore('quiz1', scorePercent);
+            if (tracker.markQuizScore) tracker.markQuizScore(QUIZ_ID, scorePercent);
             if (tracker.addXP) tracker.addXP(earnedXP);
-            if (tracker.markLessonComplete) tracker.markLessonComplete('lesson3');
+            if (scorePercent >= PASS_THRESHOLD) {
+                markQuizComplete();
+                setQuizStatus('completed');
+            }
         } catch (error) {
             console.warn('Failed to write quiz progress', error);
         }
         state.progressLogged = true;
-        els.summaryXp.textContent = `${earnedXP} XP deposited`;
+        const xpMessage = scorePercent >= PASS_THRESHOLD
+            ? `${earnedXP} XP deposited · Lesson 4 unlocked`
+            : `${earnedXP} XP earned · keep practicing to hit ${PASS_THRESHOLD}%`;
+        els.summaryXp.textContent = xpMessage;
     }
 
     function renderSummary() {
@@ -162,8 +188,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const percent = Math.round((correctCount / QUESTIONS.length) * 100);
         awardProgress(percent);
 
-        els.summaryHeadline.textContent = percent >= 75 ? 'Certified AI Warm-Up Detective!' : 'Great reps—run it again?';
-        els.summaryCopy.textContent = `You answered ${correctCount}/${QUESTIONS.length} correctly (${percent}%). ${percent >= 75 ? 'Lesson 4 is unlocked.' : 'Score 75% to crack Lesson 4.'}`;
+        els.summaryHeadline.textContent = percent >= PASS_THRESHOLD ? 'Certified AI Warm-Up Detective!' : 'Great reps—run it again?';
+        els.summaryCopy.textContent = `You answered ${correctCount}/${QUESTIONS.length} correctly (${percent}%). ${percent >= PASS_THRESHOLD ? 'Lesson 4 is unlocked.' : `Score ${PASS_THRESHOLD}% to crack Lesson 4.`}`;
 
         els.scoreboard.innerHTML = state.responses.map((entry, index) => {
             const type = entry?.correct ? 'correct' : 'incorrect';
