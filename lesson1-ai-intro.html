@@ -213,7 +213,7 @@
                             </div>
                             <div class="activity-body">
                                 <p>Feeling confident after the warm-up reps? Jump straight into Lesson 2's learn mode to dig into AI literacy drills and the full F.A.C.T.S. framework.</p>
-                                <button class="btn btn-primary" id="lesson1NextBtn" type="button" data-next-lesson="auto" data-next-label="Go to Lesson 2 · Learn Mode" disabled aria-disabled="true">Go to Lesson 2 · Learn Mode</button>
+                                <button class="btn btn-primary" id="lesson1NextBtn" type="button" data-next-lesson="auto" data-next-label="Go to Lesson 2 · Learn Mode">Go to Lesson 2 · Learn Mode</button>
                                 <p class="next-lesson-hint" id="lesson1NextHint">Complete all three warm-ups to unlock Lesson 2.</p>
                             </div>
                         </div>
@@ -563,13 +563,13 @@
             function updateNextLessonGate() {
                 if (!elements.nextLessonButton) return;
                 const unlocked = isLessonFullyComplete();
-                elements.nextLessonButton.disabled = !unlocked;
-                elements.nextLessonButton.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
-                elements.nextLessonButton.title = unlocked ? '' : 'Complete all three warm-ups to unlock Lesson 2.';
+                elements.nextLessonButton.dataset.locked = unlocked ? 'false' : 'true';
+                elements.nextLessonButton.classList.toggle('cta-locked', !unlocked);
+                elements.nextLessonButton.title = unlocked ? '' : 'Complete all three warm-ups to stay on track before Lesson 2.';
                 if (elements.nextLessonHint) {
                     elements.nextLessonHint.textContent = unlocked
                         ? 'Lesson 2 unlocked — jump into Learn Mode.'
-                        : 'Complete all three warm-ups to unlock Lesson 2.';
+                        : 'Complete all three warm-ups to stay on track before Lesson 2.';
                     elements.nextLessonHint.classList.toggle('unlocked', unlocked);
                 }
             }

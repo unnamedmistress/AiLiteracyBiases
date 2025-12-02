@@ -459,6 +459,11 @@ a {
     padding: 0;
 }
 
+.cta-locked {
+    box-shadow: none;
+    opacity: 0.85;
+}
+
 .footer-nav {
     display: flex;
     gap: 16px;
