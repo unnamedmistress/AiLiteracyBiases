@@ -1254,14 +1254,16 @@
         let currentScenarioIndex = 0;
 
         function firstIncompleteScenarioIndex() {
-            if (!Array.isArray(scenarioResults) || !scenarioResults.length) {
-                return 0;
+            for (let i = 0; i < scenarios.length; i++) {
+                if (!scenarioResults[i] || !scenarioResults[i].status) {
+                    return i;
+                }
             }
-            const idx = scenarioResults.findIndex((result) => !result || !result.status);
-            if (idx === -1 && scenarioResults.length < scenarios.length) {
-                return scenarioResults.length;
-            }
-            return idx;
+            return -1;
+        }
+
+        function allScenariosAnswered() {
+            return firstIncompleteScenarioIndex() === -1;
         }
 
         function loadStoredScenarioProgress() {
@@ -1387,15 +1389,19 @@
             }
 
         function loadScenario(requestedIndex = 0) {
-            let index = Number.isFinite(requestedIndex) ? Math.trunc(requestedIndex) : 0;
+            if (allScenariosAnswered()) {
+                showCompletion('scenarios');
+                return;
+            }
+
+            let index = Number.isFinite(requestedIndex) ? Math.trunc(requestedIndex) : firstIncompleteScenarioIndex();
             if (index < 0) index = 0;
-            if (index >= scenarios.length) {
-                const pendingIndex = firstIncompleteScenarioIndex();
-                if (pendingIndex === -1) {
-                    showCompletion('scenarios');
-                    return;
-                }
-                index = pendingIndex;
+            if (index >= scenarios.length || (scenarioResults[index] && scenarioResults[index].status)) {
+                index = firstIncompleteScenarioIndex();
+            }
+            if (index === -1) {
+                showCompletion('scenarios');
+                return;
             }
 
             currentScenarioIndex = index;
