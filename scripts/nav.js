@@ -41,6 +41,10 @@
         element.className = `nav-link nav-link-${group}`;
         element.dataset.navId = id;
 
+        if (window.ProgressTracker && window.ProgressTracker.getLessonStatus(id) === 'completed') {
+            element.classList.add('is-completed');
+        }
+
         const labelSpan = document.createElement('span');
         labelSpan.className = 'nav-link-label';
         labelSpan.textContent = label;

@@ -503,13 +503,42 @@
             completeCheckpoint(type);
         }
 
-        function evaluatePrompt() {
+        async function evaluatePrompt() {
             const prompt = document.getElementById('tournamentPrompt').value.trim();
             if (!prompt) {
                 alert('Please write a prompt first!');
                 return;
             }
 
+            const submitBtn = document.querySelector('.prompt-arena .btn-primary');
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.textContent = 'Analyzing...';
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/evaluate-prompt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                displayScore(data.score, data.feedback, data.improvement_tip);
+
+            } catch (error) {
+                console.warn('API evaluation failed, falling back to local regex:', error);
+                evaluatePromptLocal(prompt);
+            } finally {
+                submitBtn.textContent = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        function evaluatePromptLocal(prompt) {
             let score = 0;
             const feedback = [];
 
@@ -529,6 +558,10 @@
                 score += 25; feedback.push('✅ Specifies format');
             } else feedback.push('❌ No format specified');
 
+            displayScore(score, feedback, "Tip: Be more specific about the output format.");
+        }
+
+        function displayScore(score, feedback, tip) {
             const xpEarned = Math.min(PROMPT_MAX_XP, Math.floor(score * 1.5));
             const previousBest = state.tournamentXp;
             let xpCopy = 'No XP awarded yet.';
@@ -545,10 +578,13 @@
                 xpCopy = 'Score matched or below your best. XP already claimed.';
             }
 
+            const feedbackHtml = Array.isArray(feedback) ? feedback.join('<br>') : feedback;
+
             document.getElementById('promptScore').innerHTML = `
                 <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px;">
                     <div style="font-size: 32px; font-weight: bold; color: #FFD700; margin-bottom: 10px;">${score}/100</div>
-                    <div style="font-size: 14px; line-height: 1.8;">${feedback.join('<br>')}</div>
+                    <div style="font-size: 14px; line-height: 1.8; margin-bottom: 10px;">${feedbackHtml}</div>
+                    ${tip ? `<div style="font-size: 13px; color: #93c5fd; font-style: italic; margin-bottom: 10px;">💡 ${tip}</div>` : ''}
                     <div style="margin-top: 15px; font-weight: bold; color: #10B981;">${xpCopy}</div>
                 </div>
             `;

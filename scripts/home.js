@@ -21,20 +21,20 @@ document.addEventListener('DOMContentLoaded', () => {
             requires: 'lesson1'
         },
         {
+            id: 'quiz1',
+            type: 'quiz',
+            title: 'Quiz 1 · Warm-Up Review',
+            summary: 'Check your instincts before unlocking Lesson 3.',
+            path: 'quiz1.html',
+            requires: 'lesson2'
+        },
+        {
             id: 'lesson3',
             type: 'lesson',
             title: 'Lesson 3 · Content Creation',
             summary: 'Ethical content systems, AI collaborator roles, and guardrails.',
             path: 'lesson3-content-creation.html',
-            requires: 'lesson2'
-        },
-        {
-            id: 'quiz1',
-            type: 'quiz',
-            title: 'Quiz 1 · Warm-Up Review',
-            summary: 'Check your instincts before unlocking Lesson 4.',
-            path: 'quiz1.html',
-            requires: 'lesson3'
+            requires: 'quiz1'
         },
         {
             id: 'lesson4',
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Lesson 4 · Advanced Prompting',
             summary: 'Layered prompting blueprints for research, marketing, and ops.',
             path: 'lesson4-advanced-prompting.html',
-            requires: 'quiz1'
+            requires: 'lesson3'
         },
         {
             id: 'lesson5',

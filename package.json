@@ -1,0 +1,19 @@
+{
+  "name": "ai-literacy-bias",
+  "version": "1.0.0",
+  "description": "AI Detective Academy - AI Literacy Game",
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve .",
+    "vercel:dev": "vercel dev",
+    "deploy": "vercel deploy --prod",
+    "serve:static": "npx serve ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vercel": "^32.0.0",
+    "serve": "^14.0.0"
+  }
+}
