@@ -15,6 +15,28 @@
         .challenge-section { margin-bottom: 24px; }
         .challenge-title { font-size: 34px; margin-bottom: 10px; }
         .challenge-desc { color: var(--color-muted); margin-bottom: 20px; }
+        .mission-board { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 24px; }
+        .mission-board-header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; align-items: flex-start; }
+        .mission-board-header h3 { margin: 0; font-size: 20px; }
+        .mission-board-hint { font-size: 14px; color: rgba(255, 255, 255, 0.7); margin-top: 4px; }
+        .mission-board-progress { font-size: 14px; font-weight: 600; color: var(--color-gold); }
+        .mission-chip-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 16px; }
+        .mission-chip { border: 1px solid rgba(255, 255, 255, 0.2); border-radius: var(--radius-md); padding: 14px; display: flex; align-items: center; gap: 12px; background: rgba(0, 0, 0, 0.25); color: inherit; cursor: pointer; transition: transform var(--transition-base), border-color var(--transition-base); width: 100%; text-align: left; }
+        .mission-chip:hover { transform: translateY(-3px); }
+        .mission-chip.completed { border-color: rgba(16, 185, 129, 0.8); background: rgba(16, 185, 129, 0.18); }
+        .mission-chip.in-progress { border-color: rgba(59, 130, 246, 0.8); }
+        .mission-chip.not-started { opacity: 0.8; }
+        .mission-index { width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); display: grid; place-items: center; font-weight: bold; }
+        .mission-chip.completed .mission-index { background: rgba(16, 185, 129, 0.2); }
+        .mission-chip.in-progress .mission-index { background: rgba(59, 130, 246, 0.2); }
+        .mission-body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+        .mission-title { font-size: 15px; font-weight: 600; }
+        .mission-progress { font-size: 12px; color: rgba(255, 255, 255, 0.8); }
+        .mission-status-icon { font-size: 16px; }
+        .mission-return { margin-top: 12px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: inherit; padding: 10px 14px; border-radius: 999px; font-size: 12px; cursor: pointer; }
+        .mission-return:hover { background: rgba(255, 255, 255, 0.15); }
+        .next-lock-hint { font-size: 13px; margin-top: 8px; color: rgba(255, 255, 255, 0.7); text-align: center; }
+        .next-lock-hint.unlocked { color: #10B981; font-weight: 600; }
         .tool-showcase { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
         .tool-card { min-height: 160px; }
         .activity-card { display: flex; gap: 18px; padding: 22px; border-radius: var(--radius-lg); background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); transition: transform var(--transition-base); }
@@ -74,6 +96,18 @@
                             Welcome to the creative side of AI! In this lesson, you'll learn to create stunning images, videos, and text with AI tools while understanding the ethical implications. Let's turn you into an AI artist! 🚀
                         </p>
 
+                        <div id="missionHubTop"></div>
+                        <div class="mission-board">
+                            <div class="mission-board-header">
+                                <div>
+                                    <h3>Mission Tracker</h3>
+                                    <p class="mission-board-hint">Tap a badge to jump to each mini-game.</p>
+                                </div>
+                                <div class="mission-board-progress" id="missionBoardSummary">0/4 missions complete</div>
+                            </div>
+                            <div class="mission-chip-list" id="missionTracker"></div>
+                        </div>
+
                         <div class="ethics-warning">
                             <div class="ethics-title">⚠️ Ethics First!</div>
                             <p>Before we create, remember: With great AI power comes great responsibility. Always consider copyright, consent, deepfakes, and misinformation.</p>
@@ -113,7 +147,7 @@
                             </div>
                         </div>
 
-                        <h3 style="margin: 40px 0 20px 0;">🎯 Challenge 1: Image Creation Mastery</h3>
+                        <h3 style="margin: 40px 0 20px 0;" id="missionImage">🎯 Challenge 1: Image Creation Mastery</h3>
                         <div class="activity-card" onclick="startActivity('image')">
                             <div class="activity-icon">🖼️</div>
                             <div class="activity-title">Create 3 Different AI Images</div>
@@ -127,8 +161,9 @@
                             </div>
                             <div class="activity-reward">+75 XP | Unlock "AI Artist" badge</div>
                         </div>
+                        <button class="mission-return" type="button" data-scroll-top="missions">↑ Back to mission tracker</button>
 
-                        <h3 style="margin: 30px 0 20px 0;">🎬 Challenge 2: Video Generation</h3>
+                        <h3 style="margin: 30px 0 20px 0;" id="missionVideo">🎬 Challenge 2: Video Generation</h3>
                         <div class="activity-card" onclick="startActivity('video')">
                             <div class="activity-icon">🎬</div>
                             <div class="activity-title">Create a 5-Second AI Video</div>
@@ -137,14 +172,16 @@
                             </div>
                             <div class="activity-reward">+100 XP | Unlock "Motion Master" badge</div>
                         </div>
+                        <button class="mission-return" type="button" data-scroll-top="missions">↑ Back to mission tracker</button>
 
-                        <h3 style="margin: 30px 0 20px 0;">⚖️ Challenge 3: Ethics Quiz</h3>
+                        <h3 style="margin: 30px 0 20px 0;" id="missionQuiz">⚖️ Challenge 3: Ethics Quiz</h3>
                         <div id="ethicsQuiz" class="challenge-section" style="background: rgba(255, 68, 68, 0.1);">
                             <p style="margin-bottom: 20px;">Test your understanding of AI content creation ethics:</p>
                             <div id="quizContainer"></div>
                         </div>
+                        <button class="mission-return" type="button" data-scroll-top="missions">↑ Back to mission tracker</button>
 
-                        <h3 style="margin: 30px 0 20px 0;">🎓 Challenge 4: Prompt Engineering</h3>
+                        <h3 style="margin: 30px 0 20px 0;" id="missionPrompt">🎓 Challenge 4: Prompt Engineering</h3>
                         <div class="prompt-builder">
                             <p style="margin-bottom: 15px; font-weight: bold;">Build the perfect image prompt:</p>
                             <textarea class="prompt-input" id="promptInput" placeholder="Example: A serene mountain landscape at sunset, with snow-capped peaks reflected in a crystal-clear lake, painted in the style of Bob Ross, warm colors, peaceful atmosphere, 8K quality"></textarea>
@@ -160,12 +197,14 @@
                             
                             <button class="btn-primary" style="margin-top: 15px;" onclick="analyzePrompt()">Analyze My Prompt</button>
                         </div>
+                        <button class="mission-return" type="button" data-scroll-top="missions">↑ Back to mission tracker</button>
                         
                         <div style="margin-top: 40px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
                             <button onclick="window.location.href='presentation.html'" style="padding: 16px 32px; background: rgba(0,0,0,0.3); color: white; border: 2px solid rgba(255,255,255,0.3); border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s;">← Previous</button>
                             <button onclick="window.location.href='index.html'" style="padding: 16px 32px; background: rgba(0,0,0,0.3); color: white; border: 2px solid rgba(255,255,255,0.3); border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s;">Main Menu</button>
-                            <button onclick="window.location.href='lesson4-advanced-prompting.html'" style="padding: 16px 32px; background: linear-gradient(135deg, #10B981, #059669); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s;">Next →</button>
+                            <button id="lesson3NextBtn" class="btn btn-primary is-disabled" type="button" data-next-lesson="lesson4" data-next-label="Next →" disabled>Next →</button>
                         </div>
+                        <p class="next-lock-hint" id="lesson3NextHint">Complete any mission to unlock Lesson 4.</p>
                     </div>
                 </div>
 
@@ -336,6 +375,14 @@
             quiz1: { xp: QUIZ_XP, label: 'Ethics Quiz Question 2' },
             quiz2: { xp: QUIZ_XP, label: 'Ethics Quiz Question 3' }
         };
+        const MISSION_STEPS = [
+            { id: 'imageChallenge', label: 'Image Remix Lab', anchor: '#missionImage', checkpoints: ['imageChallenge'] },
+            { id: 'videoChallenge', label: 'Video Sprint', anchor: '#missionVideo', checkpoints: ['videoChallenge'] },
+            { id: 'ethicsQuiz', label: 'Ethics Gauntlet', anchor: '#missionQuiz', checkpoints: ['quiz0', 'quiz1', 'quiz2'] },
+            { id: 'promptAnalyzer', label: 'Prompt Builder', anchor: '#missionPrompt', checkpoints: ['promptAnalyzer'] }
+        ];
+        const GAME_COMPLETION_IDS = ['imageChallenge', 'videoChallenge', 'promptAnalyzer', 'quiz0', 'quiz1', 'quiz2'];
+        const LESSON4_UNLOCK_KEY = 'lesson4Unlocked';
 
         const state = {
             xp: 0,
@@ -343,9 +390,11 @@
             mode: 'presentation'
         };
         const completedCheckpoints = new Set();
+        const missionCompletionState = new Set();
         let tracker = null;
         let appProgress = null;
         let notificationTimer = null;
+        let lesson4Unlocked = false;
 
         const ethicsQuestions = [
             {
@@ -390,6 +439,9 @@
             loadEthicsQuiz();
             attachLessonChrome();
             updateUI();
+            renderMissionTracker();
+            updateLesson4ButtonState();
+            setupMissionNavigation();
         });
 
         function hydrateProgress() {
@@ -405,7 +457,16 @@
             if (saved && typeof saved.xpEarned === 'number') {
                 state.xp = Math.max(state.xp, Number(saved.xpEarned));
             }
+            lesson4Unlocked = Boolean(saved && saved[LESSON4_UNLOCK_KEY]);
+            missionCompletionState.clear();
+            MISSION_STEPS.forEach((mission) => {
+                if (mission.checkpoints.every((cp) => completedCheckpoints.has(cp))) {
+                    missionCompletionState.add(mission.id);
+                }
+            });
             syncLessonStatus();
+            renderMissionTracker();
+            updateLesson4ButtonState();
         }
 
         function startActivity(type) {
@@ -542,9 +603,110 @@
             if (tracker) {
                 tracker.setCheckpoint(LESSON_ID, id, true);
             }
-
+            maybeUnlockLesson4(id);
+            handleMissionCompletionForCheckpoint(id);
+            renderMissionTracker();
+            updateLesson4ButtonState();
             grantXP(meta.xp, meta.label);
             return true;
+        }
+
+        function handleMissionCompletionForCheckpoint(checkpointId) {
+            const mission = MISSION_STEPS.find((step) => step.checkpoints.includes(checkpointId));
+            if (!mission || missionCompletionState.has(mission.id)) return;
+            const isComplete = mission.checkpoints.every((cp) => completedCheckpoints.has(cp));
+            if (isComplete) {
+                missionCompletionState.add(mission.id);
+                scrollToMissionHub();
+            }
+        }
+
+        function renderMissionTracker() {
+            const container = document.getElementById('missionTracker');
+            const summary = document.getElementById('missionBoardSummary');
+            if (!container) return;
+            container.innerHTML = '';
+            let completedMissions = 0;
+            MISSION_STEPS.forEach((mission, index) => {
+                const completedCount = mission.checkpoints.filter((cp) => completedCheckpoints.has(cp)).length;
+                const total = mission.checkpoints.length;
+                const status = completedCount >= total ? 'completed' : (completedCount > 0 ? 'in-progress' : 'not-started');
+                if (status === 'completed') completedMissions++;
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = `mission-chip ${status}`;
+                button.dataset.missionAnchor = mission.anchor;
+                button.innerHTML = `
+                    <span class="mission-index">${index + 1}</span>
+                    <div class="mission-body">
+                        <span class="mission-title">${mission.label}</span>
+                        <span class="mission-progress">${completedCount}/${total} complete</span>
+                    </div>
+                    <span class="mission-status-icon">${status === 'completed' ? '✅' : status === 'in-progress' ? '⏳' : '•'}</span>
+                `;
+                container.appendChild(button);
+            });
+            if (summary) {
+                summary.textContent = `${completedMissions}/${MISSION_STEPS.length} missions complete`;
+            }
+        }
+
+        function setupMissionNavigation() {
+            const trackerEl = document.getElementById('missionTracker');
+            if (trackerEl) {
+                trackerEl.addEventListener('click', (event) => {
+                    const chip = event.target.closest('.mission-chip');
+                    if (!chip || !chip.dataset.missionAnchor) return;
+                    const target = document.querySelector(chip.dataset.missionAnchor);
+                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            }
+
+            document.querySelectorAll('[data-scroll-top="missions"]').forEach((btn) => {
+                btn.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    scrollToMissionHub();
+                });
+            });
+        }
+
+        function scrollToMissionHub() {
+            const hub = document.getElementById('missionHubTop');
+            if (hub) {
+                hub.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function maybeUnlockLesson4(checkpointId) {
+            if (lesson4Unlocked) return;
+            if (!GAME_COMPLETION_IDS.includes(checkpointId)) return;
+            lesson4Unlocked = true;
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, LESSON4_UNLOCK_KEY, true);
+            }
+            updateLesson4ButtonState();
+            showNotification('Lesson 4 unlocked! Keep creating.');
+        }
+
+        function updateLesson4ButtonState() {
+            const nextBtn = document.getElementById('lesson3NextBtn');
+            const hint = document.getElementById('lesson3NextHint');
+            if (!nextBtn) return;
+            if (lesson4Unlocked) {
+                nextBtn.disabled = false;
+                nextBtn.classList.remove('is-disabled');
+                if (hint) {
+                    hint.textContent = 'Lesson 4 unlocked! Continue whenever you are ready.';
+                    hint.classList.add('unlocked');
+                }
+            } else {
+                nextBtn.disabled = true;
+                nextBtn.classList.add('is-disabled');
+                if (hint) {
+                    hint.textContent = 'Complete any mission to unlock Lesson 4.';
+                    hint.classList.remove('unlocked');
+                }
+            }
         }
 
         function grantXP(amount, contextLabel) {
