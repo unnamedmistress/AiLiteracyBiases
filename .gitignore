@@ -1,5 +1,9 @@
 # Zip files
 *.zip
+*.env
+.env.local
+.env.*.local
+.env
 
 # OS files
 .DS_Store

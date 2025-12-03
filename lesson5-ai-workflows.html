@@ -119,13 +119,22 @@
         .progress-item.active { font-weight: bold; color: #00C9FF; }
         .score-panel h3 { font-size: 18px; margin-bottom: 10px; color: #00C9FF; }
         .submission-box { width: 100%; min-height: 140px; padding: 12px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.1); resize: vertical; font-family: inherit; font-size: 14px; }
-        .score-output { margin-top: 12px; background: rgba(0,201,255,0.08); border: 1px solid rgba(0,201,255,0.25); border-radius: 14px; padding: 12px; font-size: 14px; min-height: 60px; }
+        .score-output { margin-top: 12px; background: rgba(0,201,255,0.08); border: 1px solid rgba(0,201,255,0.25); border-radius: 14px; padding: 12px; font-size: 14px; min-height: 60px; display: none; }
+        .score-output.visible { display: block; }
+        .score-output.error { border-color: #ef4444; background: rgba(248,113,113,0.15); }
         .score-hint { margin: 12px 0 0 16px; font-size: 13px; color: rgba(0,0,0,0.7); }
         .workflow-mini-card { background: rgba(0,201,255,0.08); border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 1px solid rgba(0,201,255,0.2); }
         .score-panel .btn-primary { width: 100%; margin-top: 10px; }
         .workflow-status { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #475569; }
         .workflow-status.completed { color: #047857; }
         .workflow-status.in-progress { color: #b45309; }
+        .workflow-reflection { margin-top: 20px; background: #f8fafc; border-radius: 14px; border: 1px solid rgba(0,201,255,0.25); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .workflow-reflection h3 { margin: 0; }
+        .workflow-reflection-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .workflow-feedback-list { display: grid; gap: 10px; margin-top: 12px; }
+        .workflow-feedback-item { border-radius: 10px; border: 1px solid rgba(0,201,255,0.3); padding: 10px; background: rgba(255,255,255,0.95); font-size: 13px; }
+        .workflow-feedback-item.met { border-color: #10B981; }
+        .workflow-feedback-item.missing { border-color: #ef4444; }
         .notification {
             position: fixed;
             top: 20px;
@@ -383,6 +392,19 @@
                             <button onclick="resetBuilder()" style="padding: 8px 16px; background: #cbd5e1; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: #475569;">Reset</button>
                             <button onclick="validateWorkflow()" style="padding: 8px 20px; background: #00C9FF; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white;">Validate Workflow</button>
                         </div>
+                    </div>
+
+                    <div class="workflow-reflection">
+                        <div>
+                            <h3>🧠 Workflow Blueprint Write-Up</h3>
+                            <p style="margin: 4px 0 0; font-size: 14px; color: #475569;">Summarize how your current build solves the client brief. Our AI coach will highlight missing steps.</p>
+                        </div>
+                        <textarea id="workflowBlueprint" class="submission-box" placeholder="Example: Start with Topic Intake to capture ideas, send that into GPT for research notes, then..." aria-label="Describe your workflow"></textarea>
+                        <div class="workflow-reflection-actions">
+                            <button class="btn-primary" style="padding: 10px 20px;" id="workflowEvaluateBtn" onclick="evaluateBlueprint()">Get AI Feedback</button>
+                            <span class="score-hint" id="workflowHint">Tip: Mention every major module once (input, AI steps, human review, output).</span>
+                        </div>
+                        <div id="workflowFeedback" class="score-output" aria-live="polite"></div>
                     </div>
 
 
@@ -694,6 +716,11 @@
             });
         }
 
+        function getToolLabel(stepId) {
+            const match = TOOLBOX_ITEMS.find((item) => item.id === stepId);
+            return match ? match.label : stepId;
+        }
+
         function renderWorkspace() {
             const container = document.getElementById('dropZone');
             if (!container) return;
@@ -839,6 +866,120 @@
                     statusEl.className = 'workflow-status';
                 }
             });
+        }
+
+        async function evaluateBlueprint() {
+            const input = document.getElementById('workflowBlueprint');
+            const feedback = document.getElementById('workflowFeedback');
+            const button = document.getElementById('workflowEvaluateBtn');
+            if (!input || !feedback) return;
+
+            const blueprint = input.value.trim();
+            if (!blueprint) {
+                feedback.textContent = 'Describe your workflow first, then request feedback.';
+                feedback.classList.add('visible', 'error');
+                return;
+            }
+
+            if (button) {
+                button.disabled = true;
+                button.textContent = 'Requesting feedback...';
+            }
+
+            try {
+                const response = await fetch('/api/evaluate-workflow', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ blueprint, mission: state.currentMission })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                const result = await response.json();
+                renderWorkflowFeedback({ ...result, origin: 'api' });
+            } catch (error) {
+                console.warn('Workflow blueprint evaluation failed, using local heuristic.', error);
+                const fallback = evaluateBlueprintLocally(blueprint, state.currentMission);
+                renderWorkflowFeedback({ ...fallback, origin: 'local' });
+            } finally {
+                if (button) {
+                    button.disabled = false;
+                    button.textContent = 'Get AI Feedback';
+                }
+            }
+        }
+
+        function evaluateBlueprintLocally(blueprint, missionKey) {
+            const mission = MISSIONS[missionKey];
+            if (!mission) {
+                return {
+                    score: 0,
+                    coverage: [],
+                    strengths: [],
+                    improvements: ['Unknown mission type.'],
+                    tip: ''
+                };
+            }
+
+            const normalized = blueprint.toLowerCase();
+            const coverage = mission.sequence.map((stepId) => {
+                const label = getToolLabel(stepId);
+                const keywords = label.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+                const met = keywords.some((keyword) => normalized.includes(keyword));
+                return {
+                    requirement: label,
+                    met,
+                    comment: met ? `Mentioned ${label}.` : `Clarify where ${label.toLowerCase()} happens.`
+                };
+            });
+
+            const metCount = coverage.filter((entry) => entry.met).length;
+            const score = Math.round((metCount / coverage.length) * 100);
+
+            return {
+                score,
+                coverage,
+                strengths: metCount ? ['Nice foundation—keep elaborating each handoff.'] : [],
+                improvements: coverage.filter((entry) => !entry.met).map((entry) => entry.comment),
+                tip: metCount === coverage.length ? 'Consider adding SLAs or guardrails for each stage.' : 'Describe each module in one sentence so stakeholders can follow the flow.'
+            };
+        }
+
+        function renderWorkflowFeedback(result) {
+            const feedback = document.getElementById('workflowFeedback');
+            if (!feedback) return;
+
+            const coverage = Array.isArray(result.coverage) ? result.coverage : [];
+            const coverageMarkup = coverage.length
+                ? `<div class="workflow-feedback-list">${coverage.map((item) => `
+                        <div class="workflow-feedback-item ${item.met ? 'met' : 'missing'}">
+                            <strong>${item.requirement}</strong><br>
+                            <span>${item.comment || (item.met ? 'Looks solid.' : 'Add this stage to your write-up.')}</span>
+                        </div>
+                    `).join('')}</div>`
+                : '';
+
+            const highlightBlocks = [];
+            if (Array.isArray(result.strengths) && result.strengths.length) {
+                highlightBlocks.push(`<div style="margin-top:10px;"><strong>Strengths</strong><br>${result.strengths.map((entry) => `• ${entry}`).join('<br>')}</div>`);
+            }
+            if (Array.isArray(result.improvements) && result.improvements.length) {
+                highlightBlocks.push(`<div style="margin-top:10px;"><strong>Upgrades</strong><br>${result.improvements.map((entry) => `• ${entry}`).join('<br>')}</div>`);
+            }
+            if (result.tip) {
+                highlightBlocks.push(`<div style="margin-top:10px;">💡 ${result.tip}</div>`);
+            }
+
+            feedback.innerHTML = `
+                <div style="font-weight:700; font-size:16px;">Score: ${result.score ?? 0}/100</div>
+                ${coverageMarkup}
+                ${highlightBlocks.join('')}
+                ${result.origin === 'local' ? '<div style="margin-top:10px;font-size:12px;color:#64748b;">Using offline rubric while the AI coach reconnects.</div>' : ''}
+            `;
+            feedback.classList.add('visible');
+            feedback.classList.toggle('error', (result.score ?? 0) < 60);
         }
 
         function grantXP(amount, contextLabel) {

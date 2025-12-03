@@ -212,7 +212,7 @@
                                 <div class="tip-chip" onclick="addToPrompt('[Quality: 8K, detailed, professional]')">Quality specs</div>
                             </div>
                             
-                            <button class="btn-primary" style="margin-top: 15px;" onclick="analyzePrompt()">Analyze My Prompt</button>
+                            <button class="btn-primary" style="margin-top: 15px;" id="promptAnalyzeBtn" onclick="analyzePrompt()">Analyze My Prompt</button>
                             <div id="promptFeedback" class="prompt-feedback" role="status" aria-live="polite"></div>
                         </div>
                         <button class="mission-return" type="button" data-scroll-top="missions">↑ Back to mission tracker</button>
@@ -401,6 +401,39 @@
         ];
         const GAME_COMPLETION_IDS = ['imageChallenge', 'videoChallenge', 'promptAnalyzer', 'quiz0', 'quiz1', 'quiz2'];
         const LESSON4_UNLOCK_KEY = 'lesson4Unlocked';
+        const PROMPT_COMPONENTS = [
+            {
+                id: 'subject',
+                label: 'Subject & action',
+                hint: 'Tell the AI who/what is in the frame (astronaut, lion, neon city, etc.).',
+                test: /(portrait|photo|close-up|scene|landscape|character|robot|city|mountain|forest|ocean|animal|person|creature|logo|poster|illustration|painting)/i
+            },
+            {
+                id: 'style',
+                label: 'Style / medium',
+                hint: 'Name an art style or medium (watercolor, cinematic, 3D render, pixel art).',
+                test: /(style|watercolor|oil painting|digital painting|illustration|cinematic|3d render|low poly|pixel art|photorealistic|film noir|anime|concept art)/i
+            },
+            {
+                id: 'mood',
+                label: 'Mood / atmosphere',
+                hint: 'Include language like dramatic, serene, chaotic, cozy, tense.',
+                test: /(mood|atmosphere|dramatic|serene|peaceful|energetic|gloomy|whimsical|moody|intense|playful|calm|epic)/i
+            },
+            {
+                id: 'lighting',
+                label: 'Lighting / camera',
+                hint: 'Mention lighting or camera terms (golden hour, neon glow, macro shot).',
+                test: /(lighting|lit|golden hour|sunset|sunrise|studio light|backlit|rim light|neon|volumetric|soft light|spotlight|dslr|macro|wide-angle|fisheye|depth of field)/i
+            },
+            {
+                id: 'quality',
+                label: 'Quality specs',
+                hint: 'Add fidelity specs like 8K, ultra detailed, HDR, Unreal Engine.',
+                test: /(8k|4k|ultra|high res|high-resolution|hdr|octane|unreal engine|ray tracing|hyperrealistic|dslr|high quality|sharp focus)/i
+            }
+        ];
+        const MIN_COMPONENTS_FOR_XP = 3;
 
         const state = {
             xp: 0,
@@ -530,15 +563,15 @@
             input.focus();
         }
 
-        function analyzePrompt() {
+        async function analyzePrompt() {
             const input = document.getElementById('promptInput');
             const feedbackBox = document.getElementById('promptFeedback');
+            const actionBtn = document.getElementById('promptAnalyzeBtn');
             if (!input || !feedbackBox) return;
 
             const rawPrompt = input.value.trim();
             if (!rawPrompt) {
-                renderPromptFeedback({
-                    box: feedbackBox,
+                renderPromptEvaluation({
                     heading: 'No prompt detected',
                     status: 'error',
                     body: 'Describe what you want the AI to create first, then run the analyzer again.'
@@ -547,72 +580,94 @@
                 return;
             }
 
-            const normalized = rawPrompt.toLowerCase();
-            const componentChecks = [
-                {
-                    id: 'subject',
-                    label: 'Subject & action',
-                    hint: 'Tell the AI who/what is in the frame (e.g., astronaut, lion, neon city).',
-                    test: /(portrait|photo|close-up|scene|landscape|character|robot|city|mountain|forest|ocean|animal|person|creature|logo|poster|illustration|painting)/i
-                },
-                {
-                    id: 'style',
-                    label: 'Style / medium',
-                    hint: 'Name an art style or medium (watercolor, cinematic, 3D render, pixel art).',
-                    test: /(style|watercolor|oil painting|digital painting|illustration|cinematic|3d render|low poly|pixel art|photorealistic|film noir|anime|concept art)/i
-                },
-                {
-                    id: 'mood',
-                    label: 'Mood / atmosphere',
-                    hint: 'Include language like dramatic, serene, chaotic, cozy, tense.',
-                    test: /(mood|atmosphere|dramatic|serene|peaceful|energetic|gloomy|whimsical|moody|intense|playful|calm|epic)/i
-                },
-                {
-                    id: 'lighting',
-                    label: 'Lighting / camera',
-                    hint: 'Mention lighting or camera terms (golden hour, neon glow, macro shot).',
-                    test: /(lighting|lit|golden hour|sunset|sunrise|studio light|backlit|rim light|neon|volumetric|soft light|spotlight|dslr|macro|wide-angle|fisheye|depth of field)/i
-                },
-                {
-                    id: 'quality',
-                    label: 'Quality specs',
-                    hint: 'Add fidelity specs like 8K, ultra detailed, HDR, Unreal Engine.',
-                    test: /(8k|4k|ultra|high res|high-resolution|hdr|octane|unreal engine|ray tracing|hyperrealistic|dslr|high quality|sharp focus)/i
+            if (actionBtn) {
+                actionBtn.disabled = true;
+                actionBtn.textContent = 'Analyzing...';
+            }
+
+            try {
+                const response = await fetch('/api/evaluate-creative', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: rawPrompt })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
                 }
-            ];
 
-            const analysis = componentChecks.map((check) => ({
-                ...check,
-                met: check.test.test(normalized)
-            }));
-            const detectedCount = analysis.filter((item) => item.met).length;
-            const MIN_COMPONENTS_FOR_XP = 3;
+                const result = await response.json();
+                renderPromptEvaluation({ ...result, origin: 'api' });
+            } catch (error) {
+                console.warn('Prompt analyzer API failed, using local heuristic.', error);
+                const fallback = evaluatePromptLocally(rawPrompt);
+                renderPromptEvaluation({ ...fallback, origin: 'local' });
+            } finally {
+                if (actionBtn) {
+                    actionBtn.disabled = false;
+                    actionBtn.textContent = 'Analyze My Prompt';
+                }
+            }
+        }
 
+        function evaluatePromptLocally(promptText) {
+            const normalized = promptText.toLowerCase();
+            const components = PROMPT_COMPONENTS.map((component) => {
+                const met = component.test.test(normalized);
+                return {
+                    id: component.id,
+                    label: component.label,
+                    met,
+                    feedback: met ? 'Looks great—keep stacking detail.' : component.hint
+                };
+            });
+            const metCount = components.filter((component) => component.met).length;
+            const score = Math.round((metCount / PROMPT_COMPONENTS.length) * 100);
+            return {
+                score,
+                components,
+                strengths: metCount ? ['Nice coverage of the basics—keep going!'] : [],
+                improvements: components.filter((component) => !component.met).map((component) => `Add ${component.label.toLowerCase()} (${component.hint})`),
+                tip: metCount >= MIN_COMPONENTS_FOR_XP ? 'Consider layering camera cues or lighting for extra control.' : 'Start by naming the subject, style, and mood to anchor the model.'
+            };
+        }
+
+        function renderPromptEvaluation(result) {
+            const feedbackBox = document.getElementById('promptFeedback');
+            if (!feedbackBox) return;
+
+            const components = Array.isArray(result.components) && result.components.length
+                ? result.components
+                : evaluatePromptLocally('').components;
+            const metCount = components.filter((component) => component.met).length;
+            const xpEarned = metCount >= MIN_COMPONENTS_FOR_XP;
             let xpMessage = 'Add at least three components to earn XP for this mission.';
-            if (detectedCount >= MIN_COMPONENTS_FOR_XP) {
+            if (xpEarned) {
                 const newlyCompleted = completeCheckpoint('promptAnalyzer', { silentIfDuplicate: true });
                 xpMessage = newlyCompleted ? '🎉 Mission complete! +50 XP added to your total.' : '✨ Prompt already logged—XP previously awarded.';
             }
 
-            const componentList = analysis.map((item) => {
-                const statusIcon = item.met ? '✅' : '❌';
-                const detail = item.met ? 'Looks great!' : item.hint;
-                return `<li><span class="status">${statusIcon}</span><div><strong>${item.label}</strong><br><span style="opacity:0.8;">${detail}</span></div></li>`;
+            const componentList = components.map((component) => {
+                const statusIcon = component.met ? '✅' : '❌';
+                const detail = component.feedback || PROMPT_COMPONENTS.find((entry) => entry.id === component.id)?.hint || '';
+                return `<li><span class="status">${statusIcon}</span><div><strong>${component.label}</strong><br><span style="opacity:0.8;">${detail}</span></div></li>`;
             }).join('');
 
-            renderPromptFeedback({
-                box: feedbackBox,
-                heading: `${detectedCount}/${componentChecks.length} prompt ingredients detected`,
-                status: detectedCount >= MIN_COMPONENTS_FOR_XP ? 'success' : 'error',
-                body: `<ul class="prompt-component-list">${componentList}</ul><div style="margin-top:12px;font-weight:600;">${xpMessage}</div>`
-            });
-        }
+            const summaryBits = [];
+            if (result.tip) summaryBits.push(`<div style="margin-top:10px;">💡 ${result.tip}</div>`);
+            if (Array.isArray(result.strengths) && result.strengths.length) {
+                summaryBits.push(`<div style="margin-top:10px;"><strong>Strengths</strong><br>${result.strengths.map((item) => `• ${item}`).join('<br>')}</div>`);
+            }
+            if (Array.isArray(result.improvements) && result.improvements.length) {
+                summaryBits.push(`<div style="margin-top:10px;"><strong>Upgrades</strong><br>${result.improvements.map((item) => `• ${item}`).join('<br>')}</div>`);
+            }
 
-        function renderPromptFeedback({ box, heading, body, status }) {
-            if (!box) return;
-            box.innerHTML = `<div style="font-size:18px;font-weight:700;margin-bottom:8px;">${heading}</div>${body}`;
-            box.classList.add('visible');
-            box.classList.toggle('error', status === 'error');
+            const heading = `${metCount}/${PROMPT_COMPONENTS.length} prompt ingredients detected${typeof result.score === 'number' ? ` · Score ${result.score}/100` : ''}`;
+            const body = `<ul class="prompt-component-list">${componentList}</ul><div style="margin-top:12px;font-weight:600;">${xpMessage}</div>${summaryBits.join('')}`;
+
+            feedbackBox.innerHTML = `<div style="font-size:18px;font-weight:700;margin-bottom:8px;">${heading}</div>${body}`;
+            feedbackBox.classList.add('visible');
+            feedbackBox.classList.toggle('error', !xpEarned);
         }
 
         // Load ethics quiz
