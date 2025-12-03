@@ -72,8 +72,22 @@ document.addEventListener('DOMContentLoaded', () => {
         xpTotal: document.getElementById('homeXpTotal'),
         quizScore: document.getElementById('homeQuizScore'),
         startButtons: document.querySelectorAll('[data-start-course]'),
-        scrollButtons: document.querySelectorAll('[data-scroll-target]')
+        scrollButtons: document.querySelectorAll('[data-scroll-target]'),
+        resetBtn: document.getElementById('resetProgressBtn')
     };
+
+    if (els.resetBtn) {
+        els.resetBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                if (progressApi && progressApi.resetProgress) {
+                    progressApi.resetProgress();
+                } else {
+                    localStorage.removeItem('aiLiteracyProgress_v1');
+                }
+                window.location.reload();
+            }
+        });
+    }
 
     function getLessonStatus(id) {
         if (!progressApi) return 'not-started';
