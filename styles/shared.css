@@ -635,3 +635,19 @@ textarea {
         align-items: stretch;
     }
 }
+
+@media (max-width: 480px) {
+    .container {
+        padding: 24px 16px 48px;
+    }
+
+    h1 {
+        font-size: 28px !important;
+    }
+
+    .btn, .btn-primary, .btn-secondary {
+        padding: 14px 20px;
+        font-size: 15px;
+        white-space: normal;
+    }
+}

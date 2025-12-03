@@ -61,6 +61,12 @@
         .notification { position: fixed; bottom: 24px; right: 24px; background: rgba(0, 0, 0, 0.85); padding: 16px 22px; border-radius: var(--radius-md); display: none; }
         .notification.show { display: block; }
         @media (max-width: 768px) { .challenge-title { font-size: 26px; } }
+        @media (max-width: 480px) {
+            .mission-chip-list { grid-template-columns: 1fr; }
+            .activity-card { flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px; }
+            .activity-icon { width: 48px; height: 48px; font-size: 24px; }
+            .tool-showcase { grid-template-columns: 1fr; }
+        }
     </style>
     <script defer src="scripts/shared.js"></script>
 

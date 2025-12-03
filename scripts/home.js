@@ -152,7 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
             lessonStatus = getLessonStatus(item.id);
         }
         const completed = lessonStatus === 'completed';
-        const locked = comingSoon || !requirementMet(item.requires);
+        // const locked = comingSoon || !requirementMet(item.requires);
+        const locked = false; // User requested to unlock all content
         let modifier = '';
         let statusLabel = 'Not Started';
 

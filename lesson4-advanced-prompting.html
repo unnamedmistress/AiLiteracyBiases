@@ -152,6 +152,16 @@
         .badge.unlocked { background: linear-gradient(135deg, #FFD700, #FFA500); animation: pulse 2s infinite; }
         .badge.locked { opacity: 0.3; filter: grayscale(100%); }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        
+        @media (max-width: 480px) {
+            .technique-grid { grid-template-columns: 1fr; }
+            .header { padding: 16px; }
+            .logo { font-size: 22px; }
+            .stats { gap: 10px; }
+            .xp-bar { width: 120px; }
+            .mode-toggle { flex-direction: column; }
+            .mode-btn { width: 100%; }
+        }
     </style>
 </head>
 <body data-lesson-id="lesson4">

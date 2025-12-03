@@ -398,3 +398,13 @@ body.home-page {
         padding: 14px;
     }
 }
+
+@media (max-width: 360px) {
+    .lesson-card, .home-card {
+        padding: 16px;
+    }
+    
+    .home-hero h1 {
+        font-size: 28px;
+    }
+}
