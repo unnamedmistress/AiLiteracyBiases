@@ -353,6 +353,178 @@
             position: relative;
         }
 
+        /* FACTS Drag + Drop */
+        .facts-game {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .facts-intro {
+            text-align: center;
+        }
+
+        .facts-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 20px;
+        }
+
+        .fact-card-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .fact-card {
+            min-width: 110px;
+            border: 2px dashed rgba(15, 23, 42, 0.25);
+            border-radius: 18px;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 15px 25px rgba(148, 163, 184, 0.25);
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            cursor: grab;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-start;
+        }
+
+        .fact-card:focus-visible {
+            outline: 3px solid var(--primary);
+        }
+
+        .fact-card.dragging {
+            opacity: 0.6;
+        }
+
+        .fact-card.selected {
+            border-color: var(--primary);
+            box-shadow: 0 20px 30px rgba(14, 165, 233, 0.35);
+        }
+
+        .fact-card-locked {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .fact-card-label {
+            font-size: 13px;
+            color: rgba(15, 23, 42, 0.65);
+            letter-spacing: normal;
+        }
+
+        .fact-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .fact-slot {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 16px;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            padding: 16px;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 12px 24px rgba(148, 163, 184, 0.2);
+        }
+
+        .fact-slot-title {
+            font-size: 13px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(15, 23, 42, 0.55);
+        }
+
+        .fact-slot-text {
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .fact-slot-dropzone {
+            border: 2px dashed rgba(15, 23, 42, 0.2);
+            border-radius: 14px;
+            padding: 12px;
+            min-height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: rgba(15, 23, 42, 0.6);
+            transition: all 0.2s ease;
+        }
+
+        .fact-slot-dropzone.dragover {
+            border-color: var(--primary);
+            background: rgba(14, 165, 233, 0.08);
+            color: rgba(15, 23, 42, 0.8);
+        }
+
+        .fact-slot-dropzone.error {
+            border-color: var(--danger);
+            animation: shake 0.4s;
+        }
+
+        .fact-slot-dropzone.matched {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.12);
+            color: rgba(15, 23, 42, 0.9);
+            justify-content: flex-start;
+            gap: 10px;
+        }
+
+        .fact-slot-letter {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(16, 185, 129, 0.2);
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .facts-progress {
+            font-size: 15px;
+            text-align: center;
+        }
+
+        .facts-progress[data-state="error"] {
+            color: var(--danger);
+        }
+
+        .facts-progress[data-state="success"] {
+            color: var(--success);
+        }
+
+        .facts-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .facts-complete {
+            border: 1px solid rgba(16, 185, 129, 0.5);
+            background: rgba(16, 185, 129, 0.12);
+            border-radius: 16px;
+            padding: 18px;
+            text-align: center;
+            display: none;
+        }
+
+        .facts-complete.visible {
+            display: block;
+        }
+
         .question-text {
             font-size: 18px;
             margin-bottom: 16px;
@@ -1185,6 +1357,43 @@
             }
         ];
 
+        const FACTS_FRAMEWORK = [
+            {
+                letter: 'F',
+                title: 'Find Sources',
+                mantra: 'Trust but verify every link or cite.',
+                application: 'Double-check every citation actually exists before you quote it back to stakeholders.'
+            },
+            {
+                letter: 'A',
+                title: 'Ask Questions',
+                mantra: 'Interrogate overconfident claims.',
+                application: 'Push the model with "how do you know?" follow-ups until you hear real uncertainty.'
+            },
+            {
+                letter: 'C',
+                title: 'Consider Gaps',
+                mantra: 'Hunt for blind spots.',
+                application: 'Scan for missing viewpoints or data so hallucinations don’t sneak past your review.'
+            },
+            {
+                letter: 'T',
+                title: 'Try Uncertainty',
+                mantra: 'Invite "I do not know."',
+                application: 'Coach your AI to flag low-confidence answers instead of bluffing with confident prose.'
+            },
+            {
+                letter: 'S',
+                title: 'Save & Compare',
+                mantra: 'Track drift over time.',
+                application: 'Capture outputs and compare runs so you can spot bias or tone shifts immediately.'
+            }
+        ];
+
+        const FACTS_XP_REWARD = 75;
+        let factsGameState = { matched: 0, completed: false };
+        let factsSelectedCard = null;
+
         const scenarioResults = Array.from({ length: scenarios.length }, () => ({ status: null, selected: null }));
         const scenarioSession = {
             startTime: null,
@@ -1668,34 +1877,60 @@
         }
 
         function loadFACTS() {
-            document.getElementById('gameArea').innerHTML = `
-                <div class="challenge-active">
-                    <h2>✅ F.A.C.T.S. Framework Training</h2>
-                    <div style="margin: 30px 0;">
-                        <div style="padding: 25px; background: rgba(0,0,0,0.3); border-radius: 15px; margin-bottom: 20px; border-left: 4px solid var(--primary);">
-                            <h3 style="margin-bottom: 15px;">📍 F - Find Sources</h3>
-                            <p>Verify sources and check citations. Do they actually exist? Can you access them?</p>
-                        </div>
-                        <div style="padding: 25px; background: rgba(0,0,0,0.3); border-radius: 15px; margin-bottom: 20px; border-left: 4px solid var(--warning);">
-                            <h3 style="margin-bottom: 15px;">❓ A - Ask Questions</h3>
-                            <p>Challenge over-confident answers. Make AI explain its reasoning and show uncertainty.</p>
-                        </div>
-                        <div style="padding: 25px; background: rgba(0,0,0,0.3); border-radius: 15px; margin-bottom: 20px; border-left: 4px solid var(--success);">
-                            <h3 style="margin-bottom: 15px;">🤔 C - Consider Gaps</h3>
-                            <p>Look for missing details, gaps, or one-sided perspectives. What isn't being said?</p>
-                        </div>
-                        <div style="padding: 25px; background: rgba(0,0,0,0.3); border-radius: 15px; margin-bottom: 20px; border-left: 4px solid var(--secondary);">
-                            <h3 style="margin-bottom: 15px;">💬 T - Try Uncertainty</h3>
-                            <p>Encourage AI to say "I don't know" when appropriate instead of guessing.</p>
-                        </div>
-                        <div style="padding: 25px; background: rgba(0,0,0,0.3); border-radius: 15px; margin-bottom: 20px; border-left: 4px solid var(--danger);">
-                            <h3 style="margin-bottom: 15px;">💾 S - Save & Compare</h3>
-                            <p>Record outputs and compare over time to spot inconsistencies or bias drift.</p>
-                        </div>
+            const shuffledCards = shuffleFactsCards();
+            const poolHtml = shuffledCards
+                .map(
+                    (fact) => `
+                    <button class="fact-card" type="button" draggable="true" data-fact-card="${fact.letter}" aria-label="${fact.letter} stands for ${fact.title}" tabindex="0">
+                        <span style="font-size: 28px;">${fact.letter}</span>
+                        <span class="fact-card-label">${fact.title}</span>
+                    </button>
+                `
+                )
+                .join('');
+
+            const slotsHtml = FACTS_FRAMEWORK.map(
+                (fact) => `
+                <div class="fact-slot" data-fact-slot="${fact.letter}">
+                    <div class="fact-slot-title">${fact.title}</div>
+                    <p class="fact-slot-text">${fact.application}</p>
+                    <div class="fact-slot-dropzone" data-fact-drop="${fact.letter}" role="button" tabindex="0" aria-label="Drop the letter that unlocks ${fact.title}">
+                        Drop the matching letter
                     </div>
-                    <button class="btn-primary" onclick="addXP(75); backToMenu();">Complete Training (+75 XP)</button>
+                </div>
+            `
+            ).join('');
+
+            document.getElementById('gameArea').innerHTML = `
+                <div class="challenge-active facts-game">
+                    <div class="facts-intro">
+                        <h2>🎯 F.A.C.T.S. Drag Lab</h2>
+                        <p>Snap each letter badge onto the real-world habit it unlocks. Nail all five to score +${FACTS_XP_REWARD} XP and unlock Lesson 4 momentum.</p>
+                    </div>
+                    <div class="facts-layout">
+                        <section>
+                            <h3 style="margin-bottom: 12px;">Badge Deck</h3>
+                            <div class="fact-card-pool" id="factCardPool">${poolHtml}</div>
+                        </section>
+                        <section>
+                            <h3 style="margin-bottom: 12px;">Mission Boards</h3>
+                            <div class="fact-slots" id="factSlots">${slotsHtml}</div>
+                        </section>
+                    </div>
+                    <p class="facts-progress" id="factsStatus" aria-live="polite">Match 0/${FACTS_FRAMEWORK.length} letters.</p>
+                    <div class="facts-actions">
+                        <button class="btn-secondary" type="button" id="factsResetBtn">Shuffle & Replay</button>
+                        <button class="btn-secondary" type="button" onclick="backToMenu()">Back to Mode Select</button>
+                    </div>
+                    <div class="facts-complete" id="factsCompletion" tabindex="-1">
+                        <h3 style="margin-bottom: 8px;">🔥 FACTS Mastered!</h3>
+                        <p style="margin-bottom: 16px;">You locked every habit. +${FACTS_XP_REWARD} XP added to your tracker.</p>
+                        <button class="btn-primary" type="button" onclick="backToMenu()">Return to Game Hub</button>
+                    </div>
                 </div>
             `;
+
+            setupFactsGame();
         }
 
         function loadRealWorld() {
@@ -1730,6 +1965,176 @@
                     <button class="btn-primary" onclick="addXP(150); backToMenu();">Complete Case Studies (+150 XP)</button>
                 </div>
             `;
+        }
+
+        function shuffleFactsCards() {
+            const clone = [...FACTS_FRAMEWORK];
+            for (let i = clone.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [clone[i], clone[j]] = [clone[j], clone[i]];
+            }
+            return clone;
+        }
+
+        function setupFactsGame() {
+            factsGameState.matched = 0;
+            factsGameState.completed = false;
+            resetFactSelection();
+            const cards = document.querySelectorAll('[data-fact-card]');
+            cards.forEach((card) => {
+                card.addEventListener('dragstart', handleFactDragStart);
+                card.addEventListener('dragend', handleFactDragEnd);
+                card.addEventListener('click', handleFactCardClick);
+                card.addEventListener('keydown', handleFactCardKey);
+            });
+
+            const dropzones = document.querySelectorAll('[data-fact-drop]');
+            dropzones.forEach((zone) => {
+                zone.addEventListener('dragover', handleFactDragOver);
+                zone.addEventListener('dragleave', handleFactDragLeave);
+                zone.addEventListener('drop', handleFactDrop);
+                zone.addEventListener('click', handleFactZoneClick);
+                zone.addEventListener('keydown', handleFactZoneKey);
+            });
+
+            const resetBtn = document.getElementById('factsResetBtn');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', loadFACTS);
+            }
+
+            const completionPanel = document.getElementById('factsCompletion');
+            if (completionPanel) {
+                completionPanel.classList.remove('visible');
+            }
+
+            updateFactsProgress();
+        }
+
+        function handleFactDragStart(event) {
+            const card = event.currentTarget;
+            if (card.classList.contains('fact-card-locked')) {
+                event.preventDefault();
+                return;
+            }
+            event.dataTransfer.setData('text/plain', card.dataset.factCard);
+            card.classList.add('dragging');
+            resetFactSelection();
+            card.classList.add('selected');
+            factsSelectedCard = card;
+        }
+
+        function handleFactDragEnd(event) {
+            event.currentTarget.classList.remove('dragging');
+        }
+
+        function handleFactCardClick(event) {
+            const card = event.currentTarget;
+            if (card.classList.contains('fact-card-locked')) return;
+            if (factsSelectedCard === card) {
+                card.classList.remove('selected');
+                factsSelectedCard = null;
+                return;
+            }
+            resetFactSelection();
+            card.classList.add('selected');
+            factsSelectedCard = card;
+        }
+
+        function handleFactCardKey(event) {
+            if (event.key !== 'Enter' && event.key !== ' ') return;
+            event.preventDefault();
+            handleFactCardClick(event);
+        }
+
+        function handleFactDragOver(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('dragover');
+        }
+
+        function handleFactDragLeave(event) {
+            event.currentTarget.classList.remove('dragover');
+        }
+
+        function handleFactDrop(event) {
+            event.preventDefault();
+            const dropZone = event.currentTarget;
+            dropZone.classList.remove('dragover');
+            const letter = event.dataTransfer.getData('text/plain');
+            attemptFactMatch(letter, dropZone.dataset.factDrop, dropZone);
+        }
+
+        function handleFactZoneClick(event) {
+            const zone = event.currentTarget;
+            if (!factsSelectedCard) return;
+            attemptFactMatch(factsSelectedCard.dataset.factCard, zone.dataset.factDrop, zone);
+        }
+
+        function handleFactZoneKey(event) {
+            if (event.key !== 'Enter' && event.key !== ' ') return;
+            event.preventDefault();
+            handleFactZoneClick(event);
+        }
+
+        function resetFactSelection() {
+            if (factsSelectedCard) {
+                factsSelectedCard.classList.remove('selected');
+            }
+            factsSelectedCard = null;
+        }
+
+        function attemptFactMatch(letter, targetLetter, dropZone) {
+            if (!letter || !targetLetter || !dropZone || dropZone.dataset.matched === 'true' || factsGameState.completed) return;
+            const card = document.querySelector(`[data-fact-card="${letter}"]`);
+            if (card && card.classList.contains('fact-card-locked')) return;
+
+            if (letter === targetLetter) {
+                const fact = FACTS_FRAMEWORK.find((item) => item.letter === letter);
+                dropZone.dataset.matched = 'true';
+                dropZone.classList.add('matched');
+                dropZone.innerHTML = `
+                    <span class="fact-slot-letter">${letter}</span>
+                    <div>
+                        <div style="font-weight: 700;">${fact.title}</div>
+                        <p style="margin: 0; font-size: 13px; opacity: 0.7;">${fact.mantra}</p>
+                    </div>
+                `;
+                if (card) {
+                    card.classList.add('fact-card-locked');
+                    card.classList.remove('selected');
+                    card.setAttribute('draggable', 'false');
+                    card.setAttribute('tabindex', '-1');
+                }
+                factsGameState.matched += 1;
+                resetFactSelection();
+                updateFactsProgress();
+                if (factsGameState.matched === FACTS_FRAMEWORK.length) {
+                    finishFactsGame();
+                }
+            } else {
+                dropZone.classList.add('error');
+                setTimeout(() => dropZone.classList.remove('error'), 500);
+                updateFactsProgress('Not quite - try another letter.', 'error');
+            }
+        }
+
+        function updateFactsProgress(message = null, state = 'info') {
+            const status = document.getElementById('factsStatus');
+            if (!status) return;
+            status.textContent =
+                message || `Match ${factsGameState.matched}/${FACTS_FRAMEWORK.length} letters.`;
+            status.dataset.state = state;
+        }
+
+        function finishFactsGame() {
+            if (factsGameState.completed) return;
+            factsGameState.completed = true;
+            updateFactsProgress(`Every letter locked! +${FACTS_XP_REWARD} XP secured.`, 'success');
+            addXP(FACTS_XP_REWARD);
+            const completionPanel = document.getElementById('factsCompletion');
+            if (completionPanel) {
+                completionPanel.classList.add('visible');
+                completionPanel.focus();
+            }
         }
 
         function showCompletion(mode) {
