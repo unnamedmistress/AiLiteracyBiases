@@ -219,6 +219,24 @@
         if (text) text.textContent = `${xp}/${xpToNext}`;
     }
 
+    function scrollGameExperiencesToTop() {
+        const lessonId = document.body?.dataset?.lessonId || '';
+        const looksLikeGamePage =
+            lessonId.includes('game') ||
+            document.querySelector('.game-container') ||
+            document.getElementById('gameMode');
+
+        if (!looksLikeGamePage) return;
+
+        if ('scrollRestoration' in window.history) {
+            window.history.scrollRestoration = 'manual';
+        }
+
+        requestAnimationFrame(() => {
+            window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+        });
+    }
+
     window.AILesson = {
         LESSON_SEQUENCE,
         initLessonNavigation: function (options = {}) {
@@ -240,5 +258,6 @@
         const footerSelector = document.body.dataset.footerSelector || '.footer-nav';
         window.AILesson.initLessonNavigation({ lessonId, breadcrumbSelector, footerSelector });
         initNextLessonButtons(lessonId);
+        scrollGameExperiencesToTop();
     });
 })();
