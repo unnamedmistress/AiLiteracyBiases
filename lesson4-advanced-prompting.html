@@ -43,7 +43,7 @@
         .stat-value { font-size: 20px; font-weight: bold; }
         .xp-bar { width: 180px; height: 18px; background: rgba(15,23,42,0.12); border-radius: 10px; overflow: hidden; border: 1px solid rgba(15,23,42,0.12); }
         .xp-fill { height: 100%; background: linear-gradient(90deg, #FFD700, #FFA500); transition: width 0.5s; font-size: 11px; display: flex; align-items: center; justify-content: center; }
-        .content { display: grid; grid-template-columns: 200px 1fr 280px; gap: 20px; }
+        .content { display: grid; grid-template-columns: 220px 1fr 340px; gap: 20px; }
         @media (max-width: 1200px) { .content { grid-template-columns: 1fr; } }
         .sidebar, .panel { background: rgba(255,255,255,0.95); backdrop-filter: blur(6px); border-radius: 20px; padding: 20px; border: 1px solid rgba(15,23,42,0.08); box-shadow: 0 20px 40px rgba(148,163,184,0.3); }
         .mode-toggle { display: flex; gap: 15px; justify-content: center; margin-bottom: 25px; }
@@ -152,6 +152,72 @@
         .badge.unlocked { background: linear-gradient(135deg, #FFD700, #FFA500); animation: pulse 2s infinite; }
         .badge.locked { opacity: 0.3; filter: grayscale(100%); }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        .lab-panel { display: flex; flex-direction: column; gap: 18px; }
+        .lab-panel h3 { font-size: 18px; }
+        .lab-description { font-size: 13px; color: var(--color-muted); line-height: 1.5; }
+        .lab-scenarios { display: flex; flex-wrap: wrap; gap: 8px; }
+        .lab-scenario-btn {
+            flex: 1 1 100px;
+            border: 1px solid rgba(15,23,42,0.12);
+            border-radius: 999px;
+            padding: 8px 14px;
+            background: rgba(15,23,42,0.03);
+            color: var(--color-muted);
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .lab-scenario-btn.active {
+            background: rgba(16,185,129,0.12);
+            border-color: rgba(16,185,129,0.6);
+            color: #0f172a;
+            font-weight: 600;
+        }
+        .lab-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); }
+        .lab-input {
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid rgba(15,23,42,0.12);
+            padding: 12px;
+            font-family: inherit;
+            background: rgba(255,255,255,0.9);
+            min-height: 70px;
+            resize: vertical;
+            font-size: 13px;
+        }
+        .lab-input:focus { outline: 2px solid rgba(16,185,129,0.35); }
+        .lab-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .lab-secondary {
+            border: 1px solid rgba(15,23,42,0.15);
+            background: transparent;
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .lab-result {
+            border-radius: 16px;
+            border: 1px solid rgba(15,23,42,0.08);
+            background: rgba(15,23,42,0.85);
+            color: #f8fafc;
+            padding: 18px;
+            display: none;
+        }
+        .lab-result.visible { display: block; }
+        .lab-score { font-size: 32px; font-weight: bold; color: #fbbf24; }
+        .lab-pill { background: rgba(255,255,255,0.1); border-radius: 999px; padding: 4px 10px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; }
+        .lab-model-reply {
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 12px;
+            margin: 12px 0;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .lab-lists { display: grid; gap: 10px; }
+        .lab-lists ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.6; }
+        .lab-divider { border-top: 1px dashed rgba(15,23,42,0.12); margin: 5px 0; }
         
         @media (max-width: 480px) {
             .technique-grid { grid-template-columns: 1fr; }
@@ -406,19 +472,52 @@
                 </div>
             </div>
 
-            <div class="panel">
-                <h3 style="margin-bottom: 15px; font-size: 16px;">⚔️ Challenges</h3>
-                <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 13px;">
-                    <div style="font-weight: bold;">Chain-of-Thought</div>
-                    <div style="font-size: 11px; opacity: 0.8; margin-top: 3px;">Not started</div>
+            <div class="panel lab-panel">
+                <div>
+                    <h3>🧪 Prompt Lab Mini GPT</h3>
+                    <p class="lab-description">Prototype your prompt, see how GPT responds, then get an instant score plus two coach suggestions.</p>
                 </div>
-                <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 13px;">
-                    <div style="font-weight: bold;">Role-Playing</div>
-                    <div style="font-size: 11px; opacity: 0.8; margin-top: 3px;">Not started</div>
+
+                <div class="lab-scenarios">
+                    <button class="lab-scenario-btn" data-scenario="cot">Chain-of-Thought</button>
+                    <button class="lab-scenario-btn" data-scenario="role">Role Play</button>
+                    <button class="lab-scenario-btn" data-scenario="fewshot">Few-Shot</button>
+                    <button class="lab-scenario-btn" data-scenario="custom">Custom Build</button>
                 </div>
-                <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 13px;">
-                    <div style="font-weight: bold;">Few-Shot Learning</div>
-                    <div style="font-size: 11px; opacity: 0.8; margin-top: 3px;">Not started</div>
+
+                <div>
+                    <div class="lab-label">Task context</div>
+                    <textarea id="labTask" class="lab-input" placeholder="Describe the assignment, audience, or outcome you're targeting."></textarea>
+                </div>
+
+                <div>
+                    <div class="lab-label">Your prompt to test</div>
+                    <textarea id="labPrompt" class="lab-input" placeholder="Write the exact instructions you want to send to GPT."></textarea>
+                </div>
+
+                <div class="lab-actions">
+                    <button class="btn-primary" id="labRunBtn" type="button" onclick="runPromptLab()">Run &amp; Grade</button>
+                    <button class="lab-secondary" type="button" onclick="resetPromptLab()">Clear</button>
+                </div>
+
+                <div id="labResult" class="lab-result" aria-live="polite"></div>
+
+                <div class="lab-divider"></div>
+
+                <div>
+                    <h3 style="margin-bottom: 8px; font-size: 16px;">⚔️ Challenge Tracker</h3>
+                    <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 13px;">
+                        <div style="font-weight: bold;">Chain-of-Thought</div>
+                        <div style="font-size: 11px; opacity: 0.8; margin-top: 3px;">Not started</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 13px;">
+                        <div style="font-weight: bold;">Role-Playing</div>
+                        <div style="font-size: 11px; opacity: 0.8; margin-top: 3px;">Not started</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 13px;">
+                        <div style="font-weight: bold;">Few-Shot Learning</div>
+                        <div style="font-size: 11px; opacity: 0.8; margin-top: 3px;">Not started</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -434,12 +533,35 @@
             fewshot: { xp: 80, label: 'Few-Shot Challenge' }
         };
         const PROMPT_MAX_XP = 150;
+        const LAB_SCENARIOS = {
+            cot: {
+                label: 'Chain-of-Thought',
+                task: 'Guide the model through a multi-step reasoning puzzle about budget trade-offs for a product launch.',
+                prompt: 'You are a strategic analyst. Walk through the reasoning step by step before giving a recommendation on how to split a $50k GTM budget across ads, events, and community.'
+            },
+            role: {
+                label: 'Role Play',
+                task: 'Adopt a specific persona and deliver advice in that tone.',
+                prompt: 'You are a veteran UX writing coach with a playful tone. Explain how to improve an error message for first-time banking customers.'
+            },
+            fewshot: {
+                label: 'Few-Shot',
+                task: 'Teach the model a format by giving two examples, then ask it to continue.',
+                prompt: 'Convert product ideas into a table row with “Hook | Audience | Success Metric”. Example 1: ... Example 2: ... Now continue with “Mindful email assistant”.'
+            },
+            custom: {
+                label: 'Custom Build',
+                task: '',
+                prompt: ''
+            }
+        };
 
         const state = { xp: 0, xpToNext: 405, mode: 'presentation', tournamentXp: 0 };
         const completedCheckpoints = new Set();
         let tracker = null;
         let appProgress = null;
         let notificationTimer = null;
+        let activeLabScenario = 'cot';
 
         document.addEventListener('DOMContentLoaded', () => {
             tracker = window.ProgressTracker || null;
@@ -447,6 +569,7 @@
             hydrateProgress();
             attachLessonChrome();
             updateUI();
+            initPromptLab();
         });
 
         function hydrateProgress() {
@@ -688,6 +811,173 @@
                 presentationButtonId: 'presentBtn'
             });
             window.AILesson.updateXPBar({ xp: state.xp, xpToNext: state.xpToNext, barId: 'xpBar', textId: 'xpText' });
+        }
+
+        function initPromptLab() {
+            const taskField = document.getElementById('labTask');
+            const promptField = document.getElementById('labPrompt');
+            if (taskField) {
+                taskField.dataset.autofill = 'true';
+                taskField.addEventListener('input', () => (taskField.dataset.autofill = 'false'));
+            }
+            if (promptField) {
+                promptField.dataset.autofill = 'true';
+                promptField.addEventListener('input', () => (promptField.dataset.autofill = 'false'));
+            }
+
+            document.querySelectorAll('.lab-scenario-btn').forEach((btn) => {
+                btn.addEventListener('click', () => selectLabScenario(btn.dataset.scenario));
+            });
+
+            selectLabScenario('cot');
+        }
+
+        function selectLabScenario(id) {
+            const scenario = LAB_SCENARIOS[id] || LAB_SCENARIOS.custom;
+            activeLabScenario = id || 'custom';
+
+            document.querySelectorAll('.lab-scenario-btn').forEach((btn) => {
+                btn.classList.toggle('active', btn.dataset.scenario === activeLabScenario);
+            });
+
+            const taskField = document.getElementById('labTask');
+            const promptField = document.getElementById('labPrompt');
+
+            if (taskField && (taskField.dataset.autofill === 'true' || !taskField.value.trim())) {
+                taskField.value = scenario.task || '';
+            }
+            if (promptField && (promptField.dataset.autofill === 'true' || !promptField.value.trim())) {
+                promptField.value = scenario.prompt || '';
+            }
+        }
+
+        async function runPromptLab() {
+            const taskField = document.getElementById('labTask');
+            const promptField = document.getElementById('labPrompt');
+            const resultBox = document.getElementById('labResult');
+            const runBtn = document.getElementById('labRunBtn');
+            if (!promptField || !taskField || !runBtn) return;
+
+            const task = taskField.value.trim();
+            const prompt = promptField.value.trim();
+            if (!prompt) {
+                if (resultBox) {
+                    resultBox.innerHTML = 'Write a prompt to test and I\'ll score it instantly.';
+                    resultBox.classList.add('visible');
+                }
+                return;
+            }
+
+            runBtn.disabled = true;
+            runBtn.textContent = 'Grading...';
+
+            try {
+                const response = await fetch('/api/lesson4-lab', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ task, prompt, scenario: activeLabScenario })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                renderLabResult({ ...data, origin: 'api' });
+            } catch (error) {
+                console.warn('Mini GPT lab fell back to local scoring.', error);
+                const fallback = evaluateLabPromptLocal({ task, prompt });
+                renderLabResult({ ...fallback, origin: 'local' });
+            } finally {
+                runBtn.disabled = false;
+                runBtn.textContent = 'Run & Grade';
+            }
+        }
+
+        function evaluateLabPromptLocal({ task, prompt }) {
+            const normalized = prompt.toLowerCase();
+            const rubric = [
+                { area: 'Specificity', met: /\b\d+\b|target|audience|persona|deadline|budget/.test(normalized), note: 'Name numbers, roles, or constraints.' },
+                { area: 'Constraints', met: /tone|style|format|word|bullet|table|steps/.test(normalized), note: 'Mention tone or formatting requirements.' },
+                { area: 'Reasoning', met: /step|let\'s think|because|why|analyze|reason/.test(normalized), note: 'Tell the model to explain how it thinks.' }
+            ];
+
+            const metCount = rubric.filter((entry) => entry.met).length;
+            const score = Math.round((metCount / rubric.length) * 100);
+
+            const strengths = rubric.filter((entry) => entry.met).map((entry) => `${entry.area} ✅`);
+            const improvementPool = rubric.filter((entry) => !entry.met).map((entry) => `Add ${entry.area.toLowerCase()} cues (${entry.note})`);
+
+            while (improvementPool.length < 2) {
+                improvementPool.push('Layer in a persona plus numbered steps for clarity.');
+            }
+
+            return {
+                response: '📡 Offline coach: imagine GPT following your prompt and returning the requested output here.',
+                score,
+                summary: score >= 80 ? 'Strong structure detected.' : 'Add more structure for a higher score.',
+                strengths,
+                suggestions: improvementPool.slice(0, 2),
+                rubric
+            };
+        }
+
+        function renderLabResult(result) {
+            const box = document.getElementById('labResult');
+            if (!box) return;
+
+            const strengths = Array.isArray(result.strengths) ? result.strengths : [];
+            const suggestions = Array.isArray(result.suggestions) && result.suggestions.length
+                ? result.suggestions.slice(0, 2)
+                : ['Name the audience and success metric.', 'Specify format, tone, or reasoning steps.'];
+            const rubric = Array.isArray(result.rubric) ? result.rubric : [];
+
+            const rubricBadges = rubric.map((entry) => `
+                <span class="lab-pill">
+                    ${entry.area || 'Score'} ${entry.met ? '✅' : '⚠️'}
+                </span>
+            `).join('');
+
+            box.innerHTML = `
+                <div class="lab-score">${result.score ?? 0}/100</div>
+                ${result.summary ? `<p style="margin:4px 0 8px 0; font-weight:600;">${result.summary}</p>` : ''}
+                ${rubricBadges ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">${rubricBadges}</div>` : ''}
+                ${result.response ? `<div class="lab-model-reply">${escapeHtml(result.response)}</div>` : ''}
+                <div class="lab-lists">
+                    ${strengths.length ? `<div><strong>Strengths</strong><ul>${strengths.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></div>` : ''}
+                    <div><strong>Upgrade ideas</strong><ul>${suggestions.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></div>
+                </div>
+                ${result.origin === 'local' ? '<p style="margin-top:8px;font-size:11px;opacity:0.7;">Offline heuristic while GPT reconnects.</p>' : ''}
+            `;
+            box.classList.add('visible');
+        }
+
+        function resetPromptLab() {
+            const taskField = document.getElementById('labTask');
+            const promptField = document.getElementById('labPrompt');
+            const resultBox = document.getElementById('labResult');
+            if (taskField) {
+                taskField.value = '';
+                taskField.dataset.autofill = 'true';
+            }
+            if (promptField) {
+                promptField.value = '';
+                promptField.dataset.autofill = 'true';
+            }
+            if (resultBox) {
+                resultBox.innerHTML = '';
+                resultBox.classList.remove('visible');
+            }
+            selectLabScenario(activeLabScenario || 'cot');
+        }
+
+        function escapeHtml(str = '') {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
         }
     </script>
 </body>

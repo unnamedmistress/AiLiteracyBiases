@@ -17,8 +17,8 @@
             label: 'Next: Lesson 2 →'
         },
         quiz1: {
-            href: 'lesson4-advanced-prompting.html',
-            label: 'Next: Lesson 4 →'
+            href: 'lesson3-content-creation.html',
+            label: 'Next: Lesson 3 →'
         },
         'lesson2-learn': {
             href: 'game.html',
