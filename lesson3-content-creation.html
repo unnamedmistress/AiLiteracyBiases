@@ -691,11 +691,16 @@
 
         function answerQuestion(qIndex, answer, correct) {
             const options = document.querySelectorAll(`#quiz${qIndex} .quiz-option`);
-            options.forEach(opt => opt.style.pointerEvents = 'none');
+            if (!options.length) return;
+
+            const checkpointId = `quiz${qIndex}`;
+            if (completedCheckpoints.has(checkpointId)) {
+                return;
+            }
             
             if (answer === correct) {
                 options[answer].classList.add('correct');
-                const checkpointId = `quiz${qIndex}`;
+                options.forEach((opt) => (opt.style.pointerEvents = 'none'));
                 const freshlyCompleted = completeCheckpoint(checkpointId, { silentIfDuplicate: true });
                 const xpCopy = freshlyCompleted ? '+50 XP' : 'XP already claimed';
                 document.getElementById(`feedback${qIndex}`).innerHTML = `
@@ -704,10 +709,11 @@
                 `;
             } else {
                 options[answer].classList.add('incorrect');
+                options[answer].style.pointerEvents = 'none';
                 options[correct].classList.add('correct');
                 document.getElementById(`feedback${qIndex}`).innerHTML = `
                     <div style="color: #EF4444; font-weight: bold; margin-bottom: 10px;">❌ Not quite!</div>
-                    <div>${ethicsQuestions[qIndex].explanation}</div>
+                    <div>${ethicsQuestions[qIndex].explanation}<br><span style="display:inline-block;margin-top:8px;">Tap the highlighted answer to earn your XP.</span></div>
                 `;
             }
             
