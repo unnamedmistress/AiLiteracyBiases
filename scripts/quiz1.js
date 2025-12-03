@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         state.progressLogged = true;
         const xpMessage = scorePercent >= PASS_THRESHOLD
-            ? `${earnedXP} XP deposited · Lesson 4 unlocked`
+            ? `${earnedXP} XP deposited · jump back into Game Mode`
             : `${earnedXP} XP earned · keep practicing to hit ${PASS_THRESHOLD}%`;
         els.summaryXp.textContent = xpMessage;
     }
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         awardProgress(percent);
 
         els.summaryHeadline.textContent = percent >= PASS_THRESHOLD ? 'Certified AI Warm-Up Detective!' : 'Great reps—run it again?';
-        els.summaryCopy.textContent = `You answered ${correctCount}/${QUESTIONS.length} correctly (${percent}%). ${percent >= PASS_THRESHOLD ? 'Lesson 4 is unlocked.' : `Score ${PASS_THRESHOLD}% to crack Lesson 4.`}`;
+        els.summaryCopy.textContent = `You answered ${correctCount}/${QUESTIONS.length} correctly (${percent}%). ${percent >= PASS_THRESHOLD ? 'Head back to Game Mode to put those instincts to work.' : `Score ${PASS_THRESHOLD}% to prove you can guard every warm-up.`}`;
 
         els.scoreboard.innerHTML = state.responses.map((entry, index) => {
             const type = entry?.correct ? 'correct' : 'incorrect';
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     els.nextBtn.addEventListener('click', handleNext);
     els.continueBtn.addEventListener('click', () => {
-        window.location.href = 'lesson4-advanced-prompting.html';
+        window.location.href = 'game.html';
     });
     els.retryBtn.addEventListener('click', resetQuiz);
 
