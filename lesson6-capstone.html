@@ -202,6 +202,7 @@
             <div class="stats">
                 <div class="stat">
                     <div class="xp-bar"><div class="xp-fill" id="xpBar" style="width: 0%;"><span id="xpText">0/500</span></div></div>
+                    <div class="xp-readout" id="xpReadout">0/500</div>
                 </div>
                 <div class="stat">
                     <div style="font-size: 11px; opacity: 0.7;">Points</div>
@@ -628,6 +629,10 @@
                 const pct = Math.min((state.xp / state.xpToNext) * 100, 100);
                 if (xpBar) xpBar.style.width = `${pct}%`;
                 if (xpText) xpText.textContent = `${state.xp}/${state.xpToNext}`;
+            }
+            const readout = document.getElementById('xpReadout');
+            if (readout) {
+                readout.textContent = `${state.xp}/${state.xpToNext}`;
             }
         }
 

@@ -41,6 +41,15 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
+.xp-readout {
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0.85;
+    text-align: right;
+    letter-spacing: 0.04em;
+    margin-top: 4px;
+}
+
 body.with-global-nav {
     padding-top: 110px;
 }

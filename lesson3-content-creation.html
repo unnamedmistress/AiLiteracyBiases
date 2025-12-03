@@ -19,7 +19,7 @@
         .mission-board-header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; align-items: flex-start; }
         .mission-board-header h3 { margin: 0; font-size: 20px; }
         .mission-board-hint { font-size: 14px; color: rgba(255, 255, 255, 0.7); margin-top: 4px; }
-        .mission-board-progress { font-size: 14px; font-weight: 600; color: var(--color-gold); }
+        .mission-board-progress { font-size: 14px; font-weight: 700; color: #7c2d12; background: rgba(255, 255, 255, 0.9); padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(124, 45, 18, 0.25); box-shadow: 0 6px 12px rgba(15, 23, 42, 0.15); }
         .mission-chip-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 16px; }
         .mission-chip { border: 1px solid rgba(255, 255, 255, 0.2); border-radius: var(--radius-md); padding: 14px; display: flex; align-items: center; gap: 12px; background: rgba(0, 0, 0, 0.25); color: inherit; cursor: pointer; transition: transform var(--transition-base), border-color var(--transition-base); width: 100%; text-align: left; }
         .mission-chip:hover { transform: translateY(-3px); }
@@ -35,8 +35,8 @@
         .mission-status-icon { font-size: 16px; }
         .mission-return { margin-top: 12px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: inherit; padding: 10px 14px; border-radius: 999px; font-size: 12px; cursor: pointer; }
         .mission-return:hover { background: rgba(255, 255, 255, 0.15); }
-        .next-lock-hint { font-size: 13px; margin-top: 8px; color: rgba(255, 255, 255, 0.7); text-align: center; }
-        .next-lock-hint.unlocked { color: #10B981; font-weight: 600; }
+        .next-lock-hint { font-size: 13px; margin-top: 8px; color: #1e1b4b; text-align: center; background: rgba(255, 255, 255, 0.9); padding: 8px 16px; border-radius: 14px; border: 1px solid rgba(30, 27, 75, 0.2); display: inline-block; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12); }
+        .next-lock-hint.unlocked { color: #065f46; font-weight: 700; }
         .tool-showcase { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
         .tool-card { min-height: 160px; }
         .activity-card { display: flex; gap: 18px; padding: 22px; border-radius: var(--radius-lg); background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); transition: transform var(--transition-base); }
@@ -44,9 +44,16 @@
         .activity-icon { width: 60px; height: 60px; border-radius: var(--radius-md); background: rgba(255, 255, 255, 0.12); display: grid; place-items: center; font-size: 30px; }
         .activity-title { font-size: 20px; margin-bottom: 6px; }
         .activity-desc { color: var(--color-muted); font-size: 15px; }
-        .activity-reward { margin-top: 12px; color: var(--color-gold); font-weight: 600; }
+        .activity-reward { margin-top: 12px; color: #0f172a; font-weight: 700; background: rgba(255, 255, 255, 0.9); padding: 6px 12px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(15, 23, 42, 0.12); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15); }
         .prompt-builder { background: rgba(0, 0, 0, 0.35); border-radius: var(--radius-lg); padding: 24px; border: 1px solid rgba(255, 255, 255, 0.15); }
+        .prompt-instructions { font-size: 14px; line-height: 1.6; color: rgba(255, 255, 255, 0.85); margin-bottom: 16px; background: rgba(15, 23, 42, 0.45); border-left: 4px solid rgba(16, 185, 129, 0.8); padding: 12px 16px; border-radius: 12px; }
         .prompt-tips { margin-bottom: 12px; }
+        .prompt-feedback { margin-top: 18px; padding: 16px; border-radius: 14px; border: 1px solid rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.15); color: #ecfdf5; font-size: 14px; line-height: 1.6; display: none; }
+        .prompt-feedback.visible { display: block; }
+        .prompt-feedback.error { border-color: rgba(248, 113, 113, 0.65); background: rgba(248, 113, 113, 0.18); color: #fee2e2; }
+        .prompt-component-list { margin: 12px 0 0 18px; padding-left: 0; list-style: none; font-size: 13px; }
+        .prompt-component-list li { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .prompt-component-list .status { font-weight: 700; }
         .quiz-options { display: grid; gap: 12px; }
         .quiz-option { padding: 18px; border-radius: var(--radius-md); background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); cursor: pointer; transition: background var(--transition-base); }
         .quiz-option.correct { border-color: var(--color-accent); background: rgba(16, 185, 129, 0.2); }
@@ -70,9 +77,10 @@
                     <div class="stat-label">XP</div>
                     <div class="xp-bar">
                         <div class="xp-fill" id="xpBar">
-                            <span id="xpText">0/200</span>
+                            <span id="xpText">0/375</span>
                         </div>
                     </div>
+                    <div class="xp-readout" id="xpReadout">0/375</div>
                 </div>
             </div>
         </div>
@@ -185,6 +193,9 @@
                         <div class="prompt-builder">
                             <p style="margin-bottom: 15px; font-weight: bold;">Build the perfect image prompt:</p>
                             <textarea class="prompt-input" id="promptInput" placeholder="Example: A serene mountain landscape at sunset, with snow-capped peaks reflected in a crystal-clear lake, painted in the style of Bob Ross, warm colors, peaceful atmosphere, 8K quality"></textarea>
+                            <div class="prompt-instructions">
+                                <strong>How to complete this mission:</strong> Describe the <em>subject</em>, <em>style</em>, <em>mood</em>, <em>lighting</em>, and any <em>quality specs</em> (8K, DSLR, etc). You need at least three of these ingredients for full credit.
+                            </div>
                             
                             <div class="prompt-tips">
                                 <div style="font-weight: bold; margin: 15px 0 10px 0;">💡 Prompt Formula:</div>
@@ -196,6 +207,7 @@
                             </div>
                             
                             <button class="btn-primary" style="margin-top: 15px;" onclick="analyzePrompt()">Analyze My Prompt</button>
+                            <div id="promptFeedback" class="prompt-feedback" role="status" aria-live="polite"></div>
                         </div>
                         <button class="mission-return" type="button" data-scroll-top="missions">↑ Back to mission tracker</button>
                         
@@ -489,6 +501,10 @@
                 if (xpBar) xpBar.style.width = `${xpPercent}%`;
                 if (xpText) xpText.textContent = `${state.xp}/${state.xpToNext}`;
             }
+            const readout = document.getElementById('xpReadout');
+            if (readout) {
+                readout.textContent = `${state.xp}/${state.xpToNext}`;
+            }
         }
 
         function showNotification(message) {
@@ -509,40 +525,88 @@
         }
 
         function analyzePrompt() {
-            const prompt = document.getElementById('promptInput').value;
-            if (!prompt.trim()) {
-                alert('Please enter a prompt first!');
+            const input = document.getElementById('promptInput');
+            const feedbackBox = document.getElementById('promptFeedback');
+            if (!input || !feedbackBox) return;
+
+            const rawPrompt = input.value.trim();
+            if (!rawPrompt) {
+                renderPromptFeedback({
+                    box: feedbackBox,
+                    heading: 'No prompt detected',
+                    status: 'error',
+                    body: 'Describe what you want the AI to create first, then run the analyzer again.'
+                });
+                input.focus();
                 return;
             }
 
-            const components = {
-                subject: /(?:a |an |the )?\w+/i.test(prompt),
-                style: /(style|painted|photo|illustration|render)/i.test(prompt),
-                mood: /(atmosphere|mood|feeling|emotion)/i.test(prompt),
-                quality: /(8k|4k|detailed|high quality|professional)/i.test(prompt)
-            };
+            const normalized = rawPrompt.toLowerCase();
+            const componentChecks = [
+                {
+                    id: 'subject',
+                    label: 'Subject & action',
+                    hint: 'Tell the AI who/what is in the frame (e.g., astronaut, lion, neon city).',
+                    test: /(portrait|photo|close-up|scene|landscape|character|robot|city|mountain|forest|ocean|animal|person|creature|logo|poster|illustration|painting)/i
+                },
+                {
+                    id: 'style',
+                    label: 'Style / medium',
+                    hint: 'Name an art style or medium (watercolor, cinematic, 3D render, pixel art).',
+                    test: /(style|watercolor|oil painting|digital painting|illustration|cinematic|3d render|low poly|pixel art|photorealistic|film noir|anime|concept art)/i
+                },
+                {
+                    id: 'mood',
+                    label: 'Mood / atmosphere',
+                    hint: 'Include language like dramatic, serene, chaotic, cozy, tense.',
+                    test: /(mood|atmosphere|dramatic|serene|peaceful|energetic|gloomy|whimsical|moody|intense|playful|calm|epic)/i
+                },
+                {
+                    id: 'lighting',
+                    label: 'Lighting / camera',
+                    hint: 'Mention lighting or camera terms (golden hour, neon glow, macro shot).',
+                    test: /(lighting|lit|golden hour|sunset|sunrise|studio light|backlit|rim light|neon|volumetric|soft light|spotlight|dslr|macro|wide-angle|fisheye|depth of field)/i
+                },
+                {
+                    id: 'quality',
+                    label: 'Quality specs',
+                    hint: 'Add fidelity specs like 8K, ultra detailed, HDR, Unreal Engine.',
+                    test: /(8k|4k|ultra|high res|high-resolution|hdr|octane|unreal engine|ray tracing|hyperrealistic|dslr|high quality|sharp focus)/i
+                }
+            ];
 
-            let score = Object.values(components).filter(Boolean).length;
-            let feedback = `Prompt Analysis: ${score}/4 components detected\n\n`;
-            
-            if (!components.subject) feedback += '❌ Add a clear subject\n';
-            else feedback += '✅ Subject found\n';
-            
-            if (!components.style) feedback += '❌ Add style/medium\n';
-            else feedback += '✅ Style found\n';
-            
-            if (!components.mood) feedback += '❌ Add mood/atmosphere\n';
-            else feedback += '✅ Mood found\n';
-            
-            if (!components.quality) feedback += '❌ Add quality specs\n';
-            else feedback += '✅ Quality specs found\n';
+            const analysis = componentChecks.map((check) => ({
+                ...check,
+                met: check.test.test(normalized)
+            }));
+            const detectedCount = analysis.filter((item) => item.met).length;
+            const MIN_COMPONENTS_FOR_XP = 3;
 
-            if (score >= 3) {
-                const newlyCompleted = completeCheckpoint('promptAnalyzer');
-                feedback += newlyCompleted ? '\n🎉 Great prompt! +50 XP' : '\n✨ Prompt logged already—XP previously claimed.';
+            let xpMessage = 'Add at least three components to earn XP for this mission.';
+            if (detectedCount >= MIN_COMPONENTS_FOR_XP) {
+                const newlyCompleted = completeCheckpoint('promptAnalyzer', { silentIfDuplicate: true });
+                xpMessage = newlyCompleted ? '🎉 Mission complete! +50 XP added to your total.' : '✨ Prompt already logged—XP previously awarded.';
             }
 
-            alert(feedback);
+            const componentList = analysis.map((item) => {
+                const statusIcon = item.met ? '✅' : '❌';
+                const detail = item.met ? 'Looks great!' : item.hint;
+                return `<li><span class="status">${statusIcon}</span><div><strong>${item.label}</strong><br><span style="opacity:0.8;">${detail}</span></div></li>`;
+            }).join('');
+
+            renderPromptFeedback({
+                box: feedbackBox,
+                heading: `${detectedCount}/${componentChecks.length} prompt ingredients detected`,
+                status: detectedCount >= MIN_COMPONENTS_FOR_XP ? 'success' : 'error',
+                body: `<ul class="prompt-component-list">${componentList}</ul><div style="margin-top:12px;font-weight:600;">${xpMessage}</div>`
+            });
+        }
+
+        function renderPromptFeedback({ box, heading, body, status }) {
+            if (!box) return;
+            box.innerHTML = `<div style="font-size:18px;font-weight:700;margin-bottom:8px;">${heading}</div>${body}`;
+            box.classList.add('visible');
+            box.classList.toggle('error', status === 'error');
         }
 
         // Load ethics quiz

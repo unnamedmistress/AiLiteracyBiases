@@ -83,6 +83,14 @@ body.home-page {
     margin-top: 12px;
 }
 
+.progress-label {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin-bottom: 8px;
+}
+
 .home-btn-primary {
     background: linear-gradient(135deg, #10B981, #059669);
     color: #fff;
@@ -305,12 +313,88 @@ body.home-page {
     color: var(--color-text);
 }
 
+@media (max-width: 1024px) {
+    .home-shell {
+        padding: 28px 18px 84px;
+    }
+
+    .home-hero h1 {
+        font-size: 42px;
+    }
+}
+
+@media (max-width: 900px) {
+    .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .home-btn-primary,
+    .home-btn-secondary {
+        width: 100%;
+    }
+
+    .progress-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
 @media (max-width: 768px) {
     .home-hero h1 {
         font-size: 34px;
     }
 
     .home-card {
-        padding: 24px;
+        padding: 22px;
+    }
+
+    .quick-stats,
+    .lesson-grid,
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .path-steps {
+        flex-direction: column;
+    }
+
+    .path-step {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .home-shell {
+        padding: 20px 14px 70px;
+    }
+
+    .home-hero h1 {
+        font-size: 30px;
+    }
+
+    .hero-label {
+        align-self: flex-start;
+    }
+
+    .lesson-card,
+    .home-card {
+        padding: 20px;
+    }
+
+    .quick-stat strong {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+    .home-btn-primary,
+    .home-btn-secondary {
+        padding: 14px 20px;
+    }
+
+    .info-item {
+        padding: 14px;
     }
 }

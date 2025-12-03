@@ -83,6 +83,22 @@
             min-width: 90px;
         }
 
+        .stat-xp {
+            min-width: 240px;
+        }
+
+        .xp-progress {
+            width: 260px;
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .xp-progress .xp-readout {
+            text-align: left;
+        }
+
         .stat-label {
             font-size: 12px;
             color: var(--color-muted);
@@ -98,7 +114,7 @@
         }
 
         .xp-bar {
-            width: 250px;
+            width: 100%;
             height: 24px;
             background: rgba(15, 23, 42, 0.12);
             border-radius: 10px;
@@ -200,6 +216,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            flex-wrap: wrap;
         }
 
         .badge-icon {
@@ -353,177 +370,6 @@
             position: relative;
         }
 
-        /* FACTS Drag + Drop */
-        .facts-game {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .facts-intro {
-            text-align: center;
-        }
-
-        .facts-layout {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr);
-            gap: 20px;
-        }
-
-        .fact-card-pool {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            justify-content: center;
-        }
-
-        .fact-card {
-            min-width: 110px;
-            border: 2px dashed rgba(15, 23, 42, 0.25);
-            border-radius: 18px;
-            padding: 14px 18px;
-            background: rgba(255, 255, 255, 0.92);
-            box-shadow: 0 15px 25px rgba(148, 163, 184, 0.25);
-            font-size: 16px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            cursor: grab;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            align-items: flex-start;
-        }
-
-        .fact-card:focus-visible {
-            outline: 3px solid var(--primary);
-        }
-
-        .fact-card.dragging {
-            opacity: 0.6;
-        }
-
-        .fact-card.selected {
-            border-color: var(--primary);
-            box-shadow: 0 20px 30px rgba(14, 165, 233, 0.35);
-        }
-
-        .fact-card-locked {
-            opacity: 0.35;
-            cursor: not-allowed;
-        }
-
-        .fact-card-label {
-            font-size: 13px;
-            color: rgba(15, 23, 42, 0.65);
-            letter-spacing: normal;
-        }
-
-        .fact-slots {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 16px;
-        }
-
-        .fact-slot {
-            background: rgba(255, 255, 255, 0.92);
-            border-radius: 16px;
-            border: 1px solid rgba(15, 23, 42, 0.12);
-            padding: 16px;
-            min-height: 140px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            box-shadow: 0 12px 24px rgba(148, 163, 184, 0.2);
-        }
-
-        .fact-slot-title {
-            font-size: 13px;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: rgba(15, 23, 42, 0.55);
-        }
-
-        .fact-slot-text {
-            font-size: 15px;
-            line-height: 1.5;
-        }
-
-        .fact-slot-dropzone {
-            border: 2px dashed rgba(15, 23, 42, 0.2);
-            border-radius: 14px;
-            padding: 12px;
-            min-height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: rgba(15, 23, 42, 0.6);
-            transition: all 0.2s ease;
-        }
-
-        .fact-slot-dropzone.dragover {
-            border-color: var(--primary);
-            background: rgba(14, 165, 233, 0.08);
-            color: rgba(15, 23, 42, 0.8);
-        }
-
-        .fact-slot-dropzone.error {
-            border-color: var(--danger);
-            animation: shake 0.4s;
-        }
-
-        .fact-slot-dropzone.matched {
-            border-color: var(--success);
-            background: rgba(16, 185, 129, 0.12);
-            color: rgba(15, 23, 42, 0.9);
-            justify-content: flex-start;
-            gap: 10px;
-        }
-
-        .fact-slot-letter {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(16, 185, 129, 0.2);
-            display: grid;
-            place-items: center;
-            font-weight: 700;
-            font-size: 18px;
-        }
-
-        .facts-progress {
-            font-size: 15px;
-            text-align: center;
-        }
-
-        .facts-progress[data-state="error"] {
-            color: var(--danger);
-        }
-
-        .facts-progress[data-state="success"] {
-            color: var(--success);
-        }
-
-        .facts-actions {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .facts-complete {
-            border: 1px solid rgba(16, 185, 129, 0.5);
-            background: rgba(16, 185, 129, 0.12);
-            border-radius: 16px;
-            padding: 18px;
-            text-align: center;
-            display: none;
-        }
-
-        .facts-complete.visible {
-            display: block;
-        }
 
         .question-text {
             font-size: 18px;
@@ -920,6 +766,35 @@
             font-size: 28px;
         }
 
+        @media (max-width: 900px) {
+            .game-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .stats-bar {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .badge-strip {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-bar {
+                gap: 12px;
+            }
+            .stat {
+                flex: 1 1 140px;
+            }
+            .badge-strip {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+
         @media (max-width: 640px) {
             .next-lesson-cta {
                 flex-direction: column;
@@ -927,6 +802,31 @@
             }
             .next-lesson-cta .btn-primary {
                 width: 100%;
+            }
+            .stats-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .xp-progress {
+                width: 100%;
+            }
+            .xp-bar {
+                height: 20px;
+            }
+            .resume-panel {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .resume-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+            .resume-actions .btn-primary,
+            .resume-actions .btn-secondary {
+                width: 100%;
+            }
+            .game-modes {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -946,13 +846,16 @@
             <div class="stats-bar">
                 <div class="stat">
                     <div class="stat-label">Level</div>
-                    <div class="stat-value" id="level">1</div>
+                    <div class="stat-value" id="level">2</div>
                 </div>
-                <div class="stat">
+                <div class="stat stat-xp">
                     <div class="stat-label">XP</div>
-                    <div class="xp-bar">
-                        <div class="xp-fill" id="xpBar" style="width: 0%;"></div>
-                        <span class="xp-label" id="xpText">0/100</span>
+                    <div class="xp-progress">
+                        <div class="xp-bar">
+                            <div class="xp-fill" id="xpBar" style="width: 0%;"></div>
+                            <span class="xp-label" id="xpText">0/225</span>
+                        </div>
+                        <div class="xp-readout" id="xpReadout" aria-live="polite">0/225 XP</div>
                     </div>
                 </div>
                 <div class="stat">
@@ -1018,13 +921,6 @@
                             <div class="mode-reward">+100 XP with bonus multiplier</div>
                         </div>
                         
-                        <div class="mode-card" onclick="startMode('facts')">
-                            <div class="mode-icon">✅</div>
-                            <div class="mode-title">F.A.C.T.S. Training</div>
-                            <div class="mode-desc">Learn the verification framework</div>
-                            <div class="mode-reward">+75 XP + Certification</div>
-                        </div>
-                        
                         <div class="mode-card" onclick="startMode('realworld')">
                             <div class="mode-icon">💥</div>
                             <div class="mode-title">Real Disasters</div>
@@ -1075,7 +971,7 @@
             <div class="achievements-panel">
                 <div class="panel-header">
                     <h3>🎯 Daily Missions</h3>
-                    <span class="panel-pill">4 quests</span>
+                    <span class="panel-pill">3 quests</span>
                 </div>
                 <div class="achievements-grid">
                     <div class="achievement-item completed">
@@ -1091,13 +987,6 @@
                     </div>
                     <div class="achievement-item">
                         <div class="achievement-title">Complete Speed Quiz</div>
-                        <div class="achievement-progress">0/1 completed</div>
-                        <div class="progress-bar-mini">
-                            <div class="progress-fill-mini" style="width: 0%;"></div>
-                        </div>
-                    </div>
-                    <div class="achievement-item">
-                        <div class="achievement-title">Learn F.A.C.T.S. Framework</div>
                         <div class="achievement-progress">0/1 completed</div>
                         <div class="progress-bar-mini">
                             <div class="progress-fill-mini" style="width: 0%;"></div>
@@ -1162,6 +1051,8 @@
 
     <script>
         const LESSON_ID = 'lesson2-game';
+        const LESSON_NUMBER = 2;
+        const LESSON_XP_TARGET = 225;
         const COURSE_XP_CAP = 400;
         let tracker = null;
         let appProgress = null;
@@ -1173,9 +1064,9 @@
 
         // Game State
         const gameState = {
-            level: 1,
+            level: LESSON_NUMBER,
             xp: 0,
-            xpToNextLevel: 100,
+            xpToNextLevel: LESSON_XP_TARGET,
             points: 0,
             streak: 0,
             badges: ['first-steps'],
@@ -1187,12 +1078,15 @@
                 const raw = localStorage.getItem(GAME_STATE_STORAGE_KEY);
                 if (!raw) return null;
                 const parsed = JSON.parse(raw);
+                const savedXp = Math.max(0, Number(parsed.xp) || 0);
+                const savedPoints = Math.max(0, Number(parsed.points) || 0);
+                const savedStreak = Math.max(0, Number(parsed.streak) || 0);
                 return {
-                    level: Number(parsed.level) || 1,
-                    xp: Number(parsed.xp) || 0,
-                    xpToNextLevel: Number(parsed.xpToNextLevel) || 100,
-                    points: Number(parsed.points) || 0,
-                    streak: Number(parsed.streak) || 0,
+                    level: LESSON_NUMBER,
+                    xp: Math.min(savedXp, LESSON_XP_TARGET),
+                    xpToNextLevel: LESSON_XP_TARGET,
+                    points: savedPoints,
+                    streak: savedStreak,
                     badges: Array.isArray(parsed.badges) && parsed.badges.length ? parsed.badges : ['first-steps']
                 };
             } catch (error) {
@@ -1223,6 +1117,7 @@
         }
 
         const playerLeaderboardXp = document.getElementById('playerLeaderboardXp');
+        const xpReadout = document.getElementById('xpReadout');
         const resumePanel = document.getElementById('resumePanel');
         const resumeProgressLabel = document.getElementById('resumeProgressLabel');
         const resumeScenarioBtn = document.getElementById('resumeScenarioBtn');
@@ -1357,42 +1252,6 @@
             }
         ];
 
-        const FACTS_FRAMEWORK = [
-            {
-                letter: 'F',
-                title: 'Find Sources',
-                mantra: 'Trust but verify every link or cite.',
-                application: 'Double-check every citation actually exists before you quote it back to stakeholders.'
-            },
-            {
-                letter: 'A',
-                title: 'Ask Questions',
-                mantra: 'Interrogate overconfident claims.',
-                application: 'Push the model with "how do you know?" follow-ups until you hear real uncertainty.'
-            },
-            {
-                letter: 'C',
-                title: 'Consider Gaps',
-                mantra: 'Hunt for blind spots.',
-                application: 'Scan for missing viewpoints or data so hallucinations don’t sneak past your review.'
-            },
-            {
-                letter: 'T',
-                title: 'Try Uncertainty',
-                mantra: 'Invite "I do not know."',
-                application: 'Coach your AI to flag low-confidence answers instead of bluffing with confident prose.'
-            },
-            {
-                letter: 'S',
-                title: 'Save & Compare',
-                mantra: 'Track drift over time.',
-                application: 'Capture outputs and compare runs so you can spot bias or tone shifts immediately.'
-            }
-        ];
-
-        const FACTS_XP_REWARD = 75;
-        let factsGameState = { matched: 0, completed: false };
-        let factsSelectedCard = null;
 
         const scenarioResults = Array.from({ length: scenarios.length }, () => ({ status: null, selected: null }));
         const scenarioSession = {
@@ -1405,26 +1264,13 @@
 
         // Game Functions
         function addXP(amount) {
-            gameState.xp += amount;
+            gameState.xp = Math.min(gameState.xp + amount, gameState.xpToNextLevel);
             gameState.points += amount;
             awardCourseXP(amount);
-            
-            if (gameState.xp >= gameState.xpToNextLevel) {
-                levelUp();
-            }
             
             updateUI();
             showNotification(`+${amount} XP! 🎉`, 'success');
             showXPGain(amount);
-        }
-
-        function levelUp() {
-            gameState.level++;
-            gameState.xp = gameState.xp - gameState.xpToNextLevel;
-            gameState.xpToNextLevel = Math.floor(gameState.xpToNextLevel * 1.5);
-            
-            updateRankChip();
-            showNotification(`🎊 Level Up! You're now Level ${gameState.level}!`, 'levelup');
         }
 
         function updateRankChip() {
@@ -1442,6 +1288,9 @@
             const xpPercent = (gameState.xp / gameState.xpToNextLevel) * 100;
             document.getElementById('xpBar').style.width = xpPercent + '%';
             document.getElementById('xpText').textContent = `${gameState.xp}/${gameState.xpToNextLevel}`;
+            if (xpReadout) {
+                xpReadout.textContent = `${gameState.xp}/${gameState.xpToNextLevel} XP`;
+            }
             if (playerLeaderboardXp) {
                 playerLeaderboardXp.textContent = `${gameState.points} XP`;
             }
@@ -1503,8 +1352,6 @@
                 }
             } else if (mode === 'quiz') {
                 loadQuiz();
-            } else if (mode === 'facts') {
-                loadFACTS();
             } else if (mode === 'realworld') {
                 loadRealWorld();
             }
@@ -1876,63 +1723,6 @@
             `;
         }
 
-        function loadFACTS() {
-            const shuffledCards = shuffleFactsCards();
-            const poolHtml = shuffledCards
-                .map(
-                    (fact) => `
-                    <button class="fact-card" type="button" draggable="true" data-fact-card="${fact.letter}" aria-label="${fact.letter} stands for ${fact.title}" tabindex="0">
-                        <span style="font-size: 28px;">${fact.letter}</span>
-                        <span class="fact-card-label">${fact.title}</span>
-                    </button>
-                `
-                )
-                .join('');
-
-            const slotsHtml = FACTS_FRAMEWORK.map(
-                (fact) => `
-                <div class="fact-slot" data-fact-slot="${fact.letter}">
-                    <div class="fact-slot-title">${fact.title}</div>
-                    <p class="fact-slot-text">${fact.application}</p>
-                    <div class="fact-slot-dropzone" data-fact-drop="${fact.letter}" role="button" tabindex="0" aria-label="Drop the letter that unlocks ${fact.title}">
-                        Drop the matching letter
-                    </div>
-                </div>
-            `
-            ).join('');
-
-            document.getElementById('gameArea').innerHTML = `
-                <div class="challenge-active facts-game">
-                    <div class="facts-intro">
-                        <h2>🎯 F.A.C.T.S. Drag Lab</h2>
-                        <p>Snap each letter badge onto the real-world habit it unlocks. Nail all five to score +${FACTS_XP_REWARD} XP and unlock Lesson 4 momentum.</p>
-                    </div>
-                    <div class="facts-layout">
-                        <section>
-                            <h3 style="margin-bottom: 12px;">Badge Deck</h3>
-                            <div class="fact-card-pool" id="factCardPool">${poolHtml}</div>
-                        </section>
-                        <section>
-                            <h3 style="margin-bottom: 12px;">Mission Boards</h3>
-                            <div class="fact-slots" id="factSlots">${slotsHtml}</div>
-                        </section>
-                    </div>
-                    <p class="facts-progress" id="factsStatus" aria-live="polite">Match 0/${FACTS_FRAMEWORK.length} letters.</p>
-                    <div class="facts-actions">
-                        <button class="btn-secondary" type="button" id="factsResetBtn">Shuffle & Replay</button>
-                        <button class="btn-secondary" type="button" onclick="backToMenu()">Back to Mode Select</button>
-                    </div>
-                    <div class="facts-complete" id="factsCompletion" tabindex="-1">
-                        <h3 style="margin-bottom: 8px;">🔥 FACTS Mastered!</h3>
-                        <p style="margin-bottom: 16px;">You locked every habit. +${FACTS_XP_REWARD} XP added to your tracker.</p>
-                        <button class="btn-primary" type="button" onclick="backToMenu()">Return to Game Hub</button>
-                    </div>
-                </div>
-            `;
-
-            setupFactsGame();
-        }
-
         function loadRealWorld() {
             document.getElementById('gameArea').innerHTML = `
                 <div class="challenge-active">
@@ -1965,176 +1755,6 @@
                     <button class="btn-primary" onclick="addXP(150); backToMenu();">Complete Case Studies (+150 XP)</button>
                 </div>
             `;
-        }
-
-        function shuffleFactsCards() {
-            const clone = [...FACTS_FRAMEWORK];
-            for (let i = clone.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [clone[i], clone[j]] = [clone[j], clone[i]];
-            }
-            return clone;
-        }
-
-        function setupFactsGame() {
-            factsGameState.matched = 0;
-            factsGameState.completed = false;
-            resetFactSelection();
-            const cards = document.querySelectorAll('[data-fact-card]');
-            cards.forEach((card) => {
-                card.addEventListener('dragstart', handleFactDragStart);
-                card.addEventListener('dragend', handleFactDragEnd);
-                card.addEventListener('click', handleFactCardClick);
-                card.addEventListener('keydown', handleFactCardKey);
-            });
-
-            const dropzones = document.querySelectorAll('[data-fact-drop]');
-            dropzones.forEach((zone) => {
-                zone.addEventListener('dragover', handleFactDragOver);
-                zone.addEventListener('dragleave', handleFactDragLeave);
-                zone.addEventListener('drop', handleFactDrop);
-                zone.addEventListener('click', handleFactZoneClick);
-                zone.addEventListener('keydown', handleFactZoneKey);
-            });
-
-            const resetBtn = document.getElementById('factsResetBtn');
-            if (resetBtn) {
-                resetBtn.addEventListener('click', loadFACTS);
-            }
-
-            const completionPanel = document.getElementById('factsCompletion');
-            if (completionPanel) {
-                completionPanel.classList.remove('visible');
-            }
-
-            updateFactsProgress();
-        }
-
-        function handleFactDragStart(event) {
-            const card = event.currentTarget;
-            if (card.classList.contains('fact-card-locked')) {
-                event.preventDefault();
-                return;
-            }
-            event.dataTransfer.setData('text/plain', card.dataset.factCard);
-            card.classList.add('dragging');
-            resetFactSelection();
-            card.classList.add('selected');
-            factsSelectedCard = card;
-        }
-
-        function handleFactDragEnd(event) {
-            event.currentTarget.classList.remove('dragging');
-        }
-
-        function handleFactCardClick(event) {
-            const card = event.currentTarget;
-            if (card.classList.contains('fact-card-locked')) return;
-            if (factsSelectedCard === card) {
-                card.classList.remove('selected');
-                factsSelectedCard = null;
-                return;
-            }
-            resetFactSelection();
-            card.classList.add('selected');
-            factsSelectedCard = card;
-        }
-
-        function handleFactCardKey(event) {
-            if (event.key !== 'Enter' && event.key !== ' ') return;
-            event.preventDefault();
-            handleFactCardClick(event);
-        }
-
-        function handleFactDragOver(event) {
-            event.preventDefault();
-            event.currentTarget.classList.add('dragover');
-        }
-
-        function handleFactDragLeave(event) {
-            event.currentTarget.classList.remove('dragover');
-        }
-
-        function handleFactDrop(event) {
-            event.preventDefault();
-            const dropZone = event.currentTarget;
-            dropZone.classList.remove('dragover');
-            const letter = event.dataTransfer.getData('text/plain');
-            attemptFactMatch(letter, dropZone.dataset.factDrop, dropZone);
-        }
-
-        function handleFactZoneClick(event) {
-            const zone = event.currentTarget;
-            if (!factsSelectedCard) return;
-            attemptFactMatch(factsSelectedCard.dataset.factCard, zone.dataset.factDrop, zone);
-        }
-
-        function handleFactZoneKey(event) {
-            if (event.key !== 'Enter' && event.key !== ' ') return;
-            event.preventDefault();
-            handleFactZoneClick(event);
-        }
-
-        function resetFactSelection() {
-            if (factsSelectedCard) {
-                factsSelectedCard.classList.remove('selected');
-            }
-            factsSelectedCard = null;
-        }
-
-        function attemptFactMatch(letter, targetLetter, dropZone) {
-            if (!letter || !targetLetter || !dropZone || dropZone.dataset.matched === 'true' || factsGameState.completed) return;
-            const card = document.querySelector(`[data-fact-card="${letter}"]`);
-            if (card && card.classList.contains('fact-card-locked')) return;
-
-            if (letter === targetLetter) {
-                const fact = FACTS_FRAMEWORK.find((item) => item.letter === letter);
-                dropZone.dataset.matched = 'true';
-                dropZone.classList.add('matched');
-                dropZone.innerHTML = `
-                    <span class="fact-slot-letter">${letter}</span>
-                    <div>
-                        <div style="font-weight: 700;">${fact.title}</div>
-                        <p style="margin: 0; font-size: 13px; opacity: 0.7;">${fact.mantra}</p>
-                    </div>
-                `;
-                if (card) {
-                    card.classList.add('fact-card-locked');
-                    card.classList.remove('selected');
-                    card.setAttribute('draggable', 'false');
-                    card.setAttribute('tabindex', '-1');
-                }
-                factsGameState.matched += 1;
-                resetFactSelection();
-                updateFactsProgress();
-                if (factsGameState.matched === FACTS_FRAMEWORK.length) {
-                    finishFactsGame();
-                }
-            } else {
-                dropZone.classList.add('error');
-                setTimeout(() => dropZone.classList.remove('error'), 500);
-                updateFactsProgress('Not quite - try another letter.', 'error');
-            }
-        }
-
-        function updateFactsProgress(message = null, state = 'info') {
-            const status = document.getElementById('factsStatus');
-            if (!status) return;
-            status.textContent =
-                message || `Match ${factsGameState.matched}/${FACTS_FRAMEWORK.length} letters.`;
-            status.dataset.state = state;
-        }
-
-        function finishFactsGame() {
-            if (factsGameState.completed) return;
-            factsGameState.completed = true;
-            updateFactsProgress(`Every letter locked! +${FACTS_XP_REWARD} XP secured.`, 'success');
-            addXP(FACTS_XP_REWARD);
-            const completionPanel = document.getElementById('factsCompletion');
-            if (completionPanel) {
-                completionPanel.classList.add('visible');
-                completionPanel.focus();
-            }
         }
 
         function showCompletion(mode) {

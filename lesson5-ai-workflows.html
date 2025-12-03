@@ -39,7 +39,7 @@
         .stat-value { font-size: 20px; font-weight: bold; }
         .xp-bar { width: 180px; height: 18px; background: rgba(0,0,0,0.1); border-radius: 10px; overflow: hidden; }
         .xp-fill { height: 100%; background: linear-gradient(90deg, #00C9FF, #92FE9D); transition: width 0.5s; font-size: 11px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
-        .content { display: grid; grid-template-columns: 200px 1fr 280px; gap: 20px; }
+        .content { display: grid; grid-template-columns: 260px minmax(0, 1fr) 320px; gap: 20px; align-items: start; }
         @media (max-width: 1200px) { .content { grid-template-columns: 1fr; } }
         .sidebar, .panel { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 20px; padding: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
         .mode-toggle { display: flex; gap: 15px; justify-content: center; margin-bottom: 25px; }
@@ -117,6 +117,15 @@
         .progress-item { padding: 8px 0; font-size: 13px; }
         .progress-item.completed { opacity: 0.5; text-decoration: line-through; }
         .progress-item.active { font-weight: bold; color: #00C9FF; }
+        .score-panel h3 { font-size: 18px; margin-bottom: 10px; color: #00C9FF; }
+        .submission-box { width: 100%; min-height: 140px; padding: 12px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.1); resize: vertical; font-family: inherit; font-size: 14px; }
+        .score-output { margin-top: 12px; background: rgba(0,201,255,0.08); border: 1px solid rgba(0,201,255,0.25); border-radius: 14px; padding: 12px; font-size: 14px; min-height: 60px; }
+        .score-hint { margin: 12px 0 0 16px; font-size: 13px; color: rgba(0,0,0,0.7); }
+        .workflow-mini-card { background: rgba(0,201,255,0.08); border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 1px solid rgba(0,201,255,0.2); }
+        .score-panel .btn-primary { width: 100%; margin-top: 10px; }
+        .workflow-status { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #475569; }
+        .workflow-status.completed { color: #047857; }
+        .workflow-status.in-progress { color: #b45309; }
         .notification {
             position: fixed;
             top: 20px;
@@ -168,17 +177,20 @@
                     <div class="stat-label">XP</div>
                     <div class="xp-bar">
                         <div class="xp-fill" id="xpBar" style="width: 0%;">
-                            <span id="xpText">0/300</span>
+                            <span id="xpText">0/400</span>
                         </div>
                     </div>
+                    <div class="xp-readout" id="xpReadout">0/400</div>
                 </div>
                 <div class="stat">
                     <div class="stat-label">Workflow Points</div>
                     <div class="stat-value"><span id="points">0</span> XP</div>
                 </div>
+            </div>
+        </div>
 
         <div class="content">
-            <div class="sidebar" style="display: none;">
+            <div class="sidebar">
                 <h3 style="margin-bottom: 15px; font-size: 16px;">��� Progress</h3>
                 <div class="progress-item completed">✅ L1: Intro</div>
                 <div class="progress-item completed">✅ L2: Literacy</div>
@@ -212,8 +224,7 @@
                                 <div class="step-number">1️⃣</div>
                                 <div class="step-label">Research</div>
                             </div>
-                        </div>
-                    </div>
+                            <div class="step">
                                 <div class="step-number">2️⃣</div>
                                 <div class="step-label">Write</div>
                             </div>
@@ -420,19 +431,29 @@
                 </div>
             </div>
 
-            <div class="panel">
-                <h3 style="margin-bottom: 15px; font-size: 16px; color: #00C9FF;">��� Workflows</h3>
-                <div style="background: rgba(0,201,255,0.1); border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 13px;">
+            <div class="panel score-panel">
+                <h3>Workflow Submission Lab</h3>
+                <p style="font-size: 13px; opacity: 0.8; margin-bottom: 12px;">Paste your workflow plan (bullets, arrows, or numbered steps). We scan for coverage, tooling, and human checkpoints.</p>
+                <textarea class="submission-box" id="workflowSubmission" placeholder="Example: 1) Intake form → 2) GPT-5 classify ticket → 3) Route to Claude for draft → 4) Human QA → 5) Send via Zendesk"></textarea>
+                <button class="btn-primary" type="button" onclick="scoreWorkflowSubmission()">Score my workflow</button>
+                <div id="workflowScoreResult" class="score-output" role="status">Paste your workflow to get instant feedback.</div>
+                <ul class="score-hint">
+                    <li>Share at least three chained steps or handoffs</li>
+                    <li>Call out the AI tools/services you use</li>
+                    <li>Mention when humans review or approve</li>
+                </ul>
+                <h4 style="margin: 18px 0 10px; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; color: #0f172a;">Mission checklist</h4>
+                <div class="workflow-mini-card" data-workflow-card="workflowContent">
                     <div style="font-weight: bold;">Content Pipeline</div>
-                    <div style="font-size: 11px; opacity: 0.7; margin-top: 3px;">Not started</div>
+                    <div class="workflow-status">Not started</div>
                 </div>
-                <div style="background: rgba(0,201,255,0.1); border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 13px;">
+                <div class="workflow-mini-card" data-workflow-card="workflowData">
                     <div style="font-weight: bold;">Data Analysis</div>
-                    <div style="font-size: 11px; opacity: 0.7; margin-top: 3px;">Not started</div>
+                    <div class="workflow-status">Not started</div>
                 </div>
-                <div style="background: rgba(0,201,255,0.1); border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 13px;">
+                <div class="workflow-mini-card" data-workflow-card="workflowSupport">
                     <div style="font-weight: bold;">Support Bot</div>
-                    <div style="font-size: 11px; opacity: 0.7; margin-top: 3px;">Not started</div>
+                    <div class="workflow-status">Not started</div>
                 </div>
             </div>
         </div>
@@ -450,6 +471,12 @@
 
         const state = { xp: 0, xpToNext: 400, points: 0, mode: 'game' };
         const completedCheckpoints = new Set();
+        const pendingWorkflows = new Set();
+        const WORKFLOW_KEYWORDS = {
+            workflowContent: ['content', 'blog', 'post', 'copy', 'video', 'seo', 'dall-e', 'grammarly', 'surfer', 'newsletter'],
+            workflowData: ['data', 'csv', 'dataset', 'dashboard', 'chart', 'visual', 'insight', 'analysis', 'spreadsheet', 'bi'],
+            workflowSupport: ['support', 'ticket', 'customer', 'zendesk', 'helpdesk', 'escalate', 'escalation', 'csr', 'csat', 'chatbot', 'agent', 'triage']
+        };
         let tracker = null;
         let appProgress = null;
         let notificationTimer = null;
@@ -468,6 +495,7 @@
             state.xp = 0;
             state.points = 0;
             completedCheckpoints.clear();
+            pendingWorkflows.clear();
 
             Object.entries(CHECKPOINTS).forEach(([id, meta]) => {
                 if (saved && saved[id]) {
@@ -482,6 +510,7 @@
 
             state.points = state.xp;
             syncLessonStatus();
+            updateWorkflowCards();
         }
 
         function switchMode(mode) {
@@ -513,9 +542,32 @@
             }
 
             completedCheckpoints.add(id);
+            pendingWorkflows.delete(id);
             if (tracker) tracker.setCheckpoint(LESSON_ID, id, true);
             grantXP(meta.xp, meta.label);
+            updateWorkflowCards();
             return true;
+        }
+
+        function updateWorkflowCards() {
+            const cards = document.querySelectorAll('[data-workflow-card]');
+            if (!cards.length) return;
+            cards.forEach(card => {
+                const id = card.getAttribute('data-workflow-card');
+                const statusEl = card.querySelector('.workflow-status');
+                if (!id || !statusEl) return;
+                statusEl.classList.remove('completed', 'in-progress');
+
+                if (completedCheckpoints.has(id)) {
+                    statusEl.textContent = 'Completed';
+                    statusEl.classList.add('completed');
+                } else if (pendingWorkflows.has(id)) {
+                    statusEl.textContent = 'Needs detail';
+                    statusEl.classList.add('in-progress');
+                } else {
+                    statusEl.textContent = 'Not started';
+                }
+            });
         }
 
         function grantXP(amount, contextLabel) {
@@ -544,6 +596,10 @@
                 const pct = Math.min((state.xp / state.xpToNext) * 100, 100);
                 document.getElementById('xpBar').style.width = pct + '%';
                 document.getElementById('xpText').textContent = `${state.xp}/${state.xpToNext}`;
+            }
+            const readout = document.getElementById('xpReadout');
+            if (readout) {
+                readout.textContent = `${state.xp}/${state.xpToNext}`;
             }
             document.getElementById('points').textContent = state.points;
         }
@@ -596,6 +652,74 @@
                 presentationButtonId: 'presentBtn'
             });
             window.AILesson.updateXPBar({ xp: state.xp, xpToNext: state.xpToNext, barId: 'xpBar', textId: 'xpText' });
+        }
+
+        function scoreWorkflowSubmission() {
+            const inputEl = document.getElementById('workflowSubmission');
+            const resultEl = document.getElementById('workflowScoreResult');
+            if (!inputEl || !resultEl) return;
+
+            const raw = inputEl.value.trim();
+            if (!raw) {
+                resultEl.textContent = 'Paste your workflow outline to get scored.';
+                return;
+            }
+
+            const normalized = raw.toLowerCase();
+            const steps = raw.split(/\n|->|→|➡|➝/).map(part => part.trim()).filter(Boolean);
+            let score = 0;
+
+            if (steps.length >= 5) score += 35;
+            else if (steps.length >= 3) score += 25;
+            else if (steps.length >= 2) score += 15;
+            else score += 5;
+
+            const toolMention = /gpt|claude|dall-?e|zapier|make\b|n8n|langchain|flowise|grammarly|surfer|zendesk|notion|airtable|sheet|excel|hubspot/.test(normalized);
+            if (toolMention) score += 20;
+
+            const humanGate = /human|qa|review|approve|editor|manager|sign\s*off|escalate|handoff/.test(normalized);
+            if (humanGate) score += 20;
+
+            const routingLogic = /route|branch|\bif\b|conditional|classify|triage|handoff|chain|handover/.test(normalized);
+            if (routingLogic) score += 15;
+
+            if (raw.length > 220) score += 5;
+            if (/metric|kpi|monitor|feedback/.test(normalized)) score += 5;
+
+            score = Math.min(100, score);
+
+            let tierMessage = '💡 Outline is light. Add more steps, tooling, and review gates.';
+            if (score >= 85) tierMessage = '🔥 Production-ready! Clear tooling, routing, and QA checkpoints.';
+            else if (score >= 70) tierMessage = '✅ Strong workflow—consider metrics or failure paths to max the score.';
+            else if (score >= 50) tierMessage = '🛠️ Solid draft. Name tools and human approvals for more points.';
+
+            resultEl.innerHTML = `<strong style="font-size: 18px;">${score}/100</strong> · ${tierMessage}`;
+
+            const matched = detectWorkflowCategories(normalized);
+            if (!matched.length) {
+                resultEl.innerHTML += '<br><span style="font-size: 13px; opacity: 0.75;">Hint: Mention if this applies to content, data, or support.</span>';
+            }
+
+            matched.forEach(id => {
+                if (score >= 60) {
+                    pendingWorkflows.delete(id);
+                    completeCheckpoint(id, { silentIfDuplicate: true });
+                } else {
+                    pendingWorkflows.add(id);
+                }
+            });
+
+            updateWorkflowCards();
+        }
+
+        function detectWorkflowCategories(normalizedText) {
+            const matches = [];
+            Object.entries(WORKFLOW_KEYWORDS).forEach(([id, keywords]) => {
+                if (keywords.some(keyword => normalizedText.includes(keyword))) {
+                    matches.push(id);
+                }
+            });
+            return matches;
         }
 
         // Draw connection lines between workflow nodes
