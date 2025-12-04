@@ -149,6 +149,12 @@
         .badge.locked { opacity: 0.3; filter: grayscale(100%); }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
+        .header-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0 20px;
+        }
         .lab-panel { display: flex; flex-direction: column; gap: 18px; }
         .lab-panel h3 { font-size: 18px; }
         .lab-description { font-size: 13px; color: var(--color-muted); line-height: 1.5; }
@@ -249,6 +255,11 @@
                     <div class="stat-value"><span id="points">0</span> XP</div>
                 </div>
             </div>
+        </div>
+
+        <div class="header-pills progress-pills">
+            <div class="progress-pill" id="lessonProgressPill">Lesson Progress: 0/4 challenges</div>
+            <div class="progress-pill" id="globalProgressPill">Total XP: 0</div>
         </div>
 
         <div class="content">
@@ -576,10 +587,16 @@
         let appProgress = null;
         let notificationTimer = null;
         let activeLabScenario = 'cot';
+        const progressPills = {
+            lesson: null,
+            global: null
+        };
 
         document.addEventListener('DOMContentLoaded', () => {
             tracker = window.ProgressTracker || null;
             appProgress = window.AppProgress || null;
+            progressPills.lesson = document.getElementById('lessonProgressPill');
+            progressPills.global = document.getElementById('globalProgressPill');
             hydrateProgress();
             attachLessonChrome();
             updateUI();
@@ -812,16 +829,42 @@
             notificationTimer = setTimeout(() => wrapper.classList.add('hidden'), 3200);
         }
 
-        function syncLessonStatus() {
+        function getObjectiveProgress() {
             const totalObjectives = Object.keys(FIXED_CHECKPOINTS).length + 1;
-            const completed = completedCheckpoints.size + (state.tournamentXp > 0 ? 1 : 0);
-            if (completed >= totalObjectives) {
+            const completedObjectives = completedCheckpoints.size + (state.tournamentXp > 0 ? 1 : 0);
+            return { totalObjectives, completedObjectives };
+        }
+
+        function updateProgressPills() {
+            const { totalObjectives, completedObjectives } = getObjectiveProgress();
+            if (progressPills.lesson) {
+                progressPills.lesson.textContent = `Lesson Progress: ${completedObjectives}/${totalObjectives} challenges`;
+            }
+
+            if (progressPills.global) {
+                const overviewSource = appProgress || tracker;
+                const overview = overviewSource && typeof overviewSource.getOverview === 'function'
+                    ? overviewSource.getOverview()
+                    : null;
+                if (overview) {
+                    const lessonLabel = overview.total ? `${overview.completed}/${overview.total} lessons` : `${overview.completed} lessons`;
+                    progressPills.global.textContent = `Total XP: ${overview.xp} · ${lessonLabel}`;
+                } else {
+                    progressPills.global.textContent = `Total XP: ${state.xp}`;
+                }
+            }
+        }
+
+        function syncLessonStatus() {
+            const { totalObjectives, completedObjectives } = getObjectiveProgress();
+            if (completedObjectives >= totalObjectives) {
                 markLessonComplete();
-            } else if (completed > 0) {
+            } else if (completedObjectives > 0) {
                 setLessonStatus('in-progress');
             } else {
                 setLessonStatus('not-started');
             }
+            updateProgressPills();
         }
 
         function markLessonComplete() {
