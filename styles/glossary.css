@@ -74,3 +74,29 @@ body.glossary-page {
     font-size: 14px;
     line-height: 1.5;
 }
+
+@media (max-width: 768px) {
+    .glossary-shell {
+        padding: 24px 18px 60px;
+    }
+
+    .glossary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .glossary-shell {
+        padding: 20px 14px 48px;
+    }
+
+    .global-nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .glossary-card {
+        padding: 16px;
+    }
+}

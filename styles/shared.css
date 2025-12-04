@@ -353,6 +353,29 @@ body.with-global-nav {
     box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
 }
 
+.nav-current-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.85);
+    color: #065f46;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.professional-mode .nav-status-badge,
+.professional-mode .xp-readout,
+.professional-mode .xp-bar,
+.professional-mode .xp-label,
+.professional-mode [data-gamified="true"] {
+    display: none !important;
+}
+
 @media (max-width: 900px) {
     body.with-global-nav {
         padding-top: 100px;

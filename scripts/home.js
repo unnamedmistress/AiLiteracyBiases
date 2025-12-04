@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const QUIZ_MIN_SCORES = {
         quiz1: 75
     };
+    const MODE_STORAGE_KEY = 'aiProfessionalMode_v1';
 
     const DASHBOARD_ITEMS = [
         {
@@ -71,25 +72,114 @@ document.addEventListener('DOMContentLoaded', () => {
         progressCopy: document.getElementById('homeProgressCopy'),
         lessonCount: document.getElementById('homeLessonCount'),
         xpTotal: document.getElementById('homeXpTotal'),
-        quizScore: document.getElementById('homeQuizScore'),
+        nextLesson: document.getElementById('homeNextLesson'),
         startButtons: document.querySelectorAll('[data-start-course]'),
         scrollButtons: document.querySelectorAll('[data-scroll-target]'),
         resetBtn: document.getElementById('resetProgressBtn'),
-        resetWarning: document.getElementById('resetWarning')
+        resetWarning: document.getElementById('resetWarning'),
+        modeButtons: document.querySelectorAll('[data-mode-choice]'),
+        modeDescription: document.getElementById('modeToggleDescription')
     };
 
+    const RESET_CONFIRM_WINDOW = 8000;
+    let resetConfirmTimer = null;
+    let awaitingResetConfirm = false;
+    let professionalModeEnabled = false;
+
+    function readProfessionalModePreference() {
+        return localStorage.getItem(MODE_STORAGE_KEY) === 'professional';
+    }
+
+    function persistProfessionalModePreference(enabled) {
+        try {
+            localStorage.setItem(MODE_STORAGE_KEY, enabled ? 'professional' : 'learner');
+        } catch (error) {
+            console.warn('[home] Unable to persist mode preference.', error);
+        }
+    }
+
+    function broadcastProfessionalMode(enabled) {
+        const root = document.documentElement;
+        if (root) {
+            root.classList.toggle('professional-mode', Boolean(enabled));
+        }
+        const body = document.body;
+        if (body) {
+            body.classList.toggle('professional-mode', Boolean(enabled));
+        }
+        window.dispatchEvent(new CustomEvent('professionalmodechange', { detail: { enabled: Boolean(enabled) } }));
+    }
+
+    function updateModeControlsUI(enabled) {
+        if (els.modeButtons && els.modeButtons.length) {
+            els.modeButtons.forEach((button) => {
+                const wantsProfessional = button.dataset.modeChoice === 'professional';
+                button.setAttribute('aria-pressed', wantsProfessional === enabled ? 'true' : 'false');
+            });
+        }
+        if (els.modeDescription) {
+            els.modeDescription.textContent = enabled
+                ? 'Professional Mode strips XP, streaks, and badges to spotlight lesson progress only.'
+                : 'Learner Mode keeps XP, badges, and quests visible for extra motivation.';
+        }
+    }
+
+    function setProfessionalMode(enabled) {
+        professionalModeEnabled = Boolean(enabled);
+        persistProfessionalModePreference(professionalModeEnabled);
+        broadcastProfessionalMode(professionalModeEnabled);
+        updateModeControlsUI(professionalModeEnabled);
+    }
+
+    function initModePreference() {
+        professionalModeEnabled = readProfessionalModePreference();
+        broadcastProfessionalMode(professionalModeEnabled);
+        updateModeControlsUI(professionalModeEnabled);
+        if (els.modeButtons && els.modeButtons.length) {
+            els.modeButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    const wantsProfessional = button.dataset.modeChoice === 'professional';
+                    if (professionalModeEnabled === wantsProfessional) {
+                        return;
+                    }
+                    setProfessionalMode(wantsProfessional);
+                });
+            });
+        }
+    }
+
+    function performProgressReset() {
+        if (progressApi && progressApi.resetProgress) {
+            progressApi.resetProgress();
+        } else if (progressApi && progressApi.reset) {
+            progressApi.reset();
+        } else {
+            localStorage.removeItem('aiLiteracyProgress_v1');
+        }
+        window.location.reload();
+    }
+
     if (els.resetBtn) {
+        const defaultLabel = els.resetBtn.textContent || 'Reset Progress';
         els.resetBtn.addEventListener('click', () => {
-            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
-                if (progressApi && progressApi.resetProgress) {
-                    progressApi.resetProgress();
-                } else if (progressApi && progressApi.reset) {
-                    progressApi.reset();
-                } else {
-                    localStorage.removeItem('aiLiteracyProgress_v1');
-                }
-                window.location.reload();
+            if (!awaitingResetConfirm) {
+                awaitingResetConfirm = true;
+                els.resetBtn.textContent = 'Confirm Reset';
+                showResetWarning('This wipes all XP and lesson unlocks. Click "Confirm Reset" within 8 seconds to continue.');
+                clearTimeout(resetConfirmTimer);
+                resetConfirmTimer = setTimeout(() => {
+                    awaitingResetConfirm = false;
+                    els.resetBtn.textContent = defaultLabel;
+                    hideResetWarning();
+                }, RESET_CONFIRM_WINDOW);
+                return;
             }
+
+            awaitingResetConfirm = false;
+            clearTimeout(resetConfirmTimer);
+            els.resetBtn.textContent = defaultLabel;
+            hideResetWarning();
+            performProgressReset();
         });
     }
 
@@ -242,15 +332,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (els.xpTotal) {
             els.xpTotal.textContent = `${overview.xp || 0} XP`;
         }
-        if (els.quizScore) {
-            const score = getQuizScore('quiz1');
-            els.quizScore.textContent = score > 0 ? `${score}%` : 'Pending';
-        }
         if (overview.corrected) {
             showResetWarning('Progress numbers looked out of sync. Use Reset Progress to start from a clean slate.');
         } else {
             hideResetWarning();
         }
+        updateNextLessonCopy();
     }
 
     function initHeroButtons() {
@@ -274,6 +361,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function updateNextLessonCopy() {
+        if (!els.nextLesson) return;
+        const destination = getNextStartDestination();
+        if (!destination) {
+            els.nextLesson.textContent = 'All missions complete — review any lesson anytime.';
+            return;
+        }
+        const state = getItemState(destination);
+        if (state.completed) {
+            els.nextLesson.textContent = 'All missions complete — review any lesson anytime.';
+            return;
+        }
+        els.nextLesson.textContent = `Next: ${destination.title}`;
+    }
+
+    initModePreference();
     renderLessons();
     updateStats();
     initHeroButtons();

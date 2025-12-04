@@ -228,4 +228,46 @@ body.quiz-page {
 @media (max-width: 768px) {
     .quiz-hero h1 { font-size: 32px; }
     .quiz-shell { padding: 24px 16px 80px; }
+    .quiz-stage { padding: 22px; }
+}
+
+@media (max-width: 600px) {
+    .stage-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .quiz-option {
+        padding: 14px;
+        font-size: 15px;
+    }
+
+    .quiz-actions,
+    .summary-actions,
+    .quiz-meta {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .quiz-actions .btn,
+    .summary-actions .btn,
+    .quiz-actions button,
+    .summary-actions button {
+        width: 100%;
+    }
+
+    .prompt-card,
+    .quiz-hero,
+    .quiz-summary {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 420px) {
+    .quiz-hero h1 { font-size: 26px; }
+    .quiz-hero p { font-size: 16px; }
+    .quiz-option { font-size: 14px; }
+    .quiz-stage { padding: 18px; }
+    .feedback-banner { font-size: 14px; }
 }

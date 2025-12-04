@@ -1,0 +1,127 @@
+@media (max-width: 900px) {
+    .lesson-shell .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .lesson-shell .stats {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .lesson-shell .xp-cluster {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .lesson-shell .progress-pills {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .lesson-shell .mode-selector,
+    .lesson-shell .mode-toggle {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .lesson-shell .mode-btn {
+        flex: 1 1 48%;
+        min-width: 140px;
+    }
+
+    .lesson-shell .prompt-compare {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .lesson-shell .challenge-title {
+        font-size: 28px;
+    }
+
+    .lesson-shell .activity-card,
+    .lesson-shell .learning-card,
+    .lesson-shell .story-card,
+    .lesson-shell .card,
+    .lesson-shell .panel {
+        padding: 18px;
+    }
+
+    .lesson-shell .word-options {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+    }
+
+    .lesson-shell .voice-grid,
+    .lesson-shell .content-grid,
+    .lesson-shell .learning-showcase {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .lesson-shell .chat-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .lesson-shell .chat-controls select,
+    .lesson-shell .chat-controls button {
+        width: 100%;
+    }
+
+    .lesson-shell .story-card {
+        min-height: auto;
+    }
+
+    .lesson-shell .step-selector {
+        flex-direction: column;
+    }
+
+    .lesson-shell .step-pill {
+        width: 100%;
+    }
+}
+
+@media (max-width: 520px) {
+    .lesson-shell .challenge-title {
+        font-size: 24px;
+    }
+
+    .lesson-shell .mode-btn {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+
+    .lesson-shell .activity-card,
+    .lesson-shell .learning-card,
+    .lesson-shell .story-card,
+    .lesson-shell .self-checklist,
+    .lesson-shell .card,
+    .lesson-shell .panel {
+        padding: 14px;
+    }
+
+    .lesson-shell .word-options {
+        grid-template-columns: 1fr;
+    }
+
+    .lesson-shell .tone-word-bank,
+    .lesson-shell .path-steps,
+    .lesson-shell .mission-checklist {
+        gap: 8px;
+    }
+
+    .lesson-shell .progress-pills .progress-pill {
+        text-align: center;
+    }
+}

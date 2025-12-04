@@ -1,4 +1,33 @@
 (function () {
+    const MODE_STORAGE_KEY = 'aiProfessionalMode_v1';
+
+    function readProfessionalModePreference() {
+        try {
+            return localStorage.getItem(MODE_STORAGE_KEY) === 'professional';
+        } catch (error) {
+            console.warn('[nav] Unable to read mode preference.', error);
+            return false;
+        }
+    }
+
+    function applyProfessionalModeClass(enabled) {
+        const root = document.documentElement;
+        if (root) {
+            root.classList.toggle('professional-mode', Boolean(enabled));
+        }
+        const body = document.body;
+        if (body) {
+            body.classList.toggle('professional-mode', Boolean(enabled));
+        }
+    }
+
+    applyProfessionalModeClass(readProfessionalModePreference());
+    window.addEventListener('professionalmodechange', (event) => {
+        const specified = Boolean(event && event.detail && Object.prototype.hasOwnProperty.call(event.detail, 'enabled'));
+        const nextState = specified ? Boolean(event.detail.enabled) : readProfessionalModePreference();
+        applyProfessionalModeClass(nextState);
+    });
+
     const MAIN_LINKS = [
         { id: 'home', label: 'Home', href: 'index.html' },
         { id: 'about', label: 'About', href: 'landing.html' }
@@ -127,6 +156,10 @@
                 element.classList.add('active-lesson');
             }
             element.setAttribute('aria-current', group === 'lesson' ? 'step' : 'page');
+            const indicator = document.createElement('span');
+            indicator.className = 'nav-current-indicator';
+            indicator.textContent = "You're here";
+            element.appendChild(indicator);
         }
 
         if (group === 'lesson') {

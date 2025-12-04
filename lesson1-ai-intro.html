@@ -119,6 +119,13 @@
         .callout-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
         .next-lesson-hint { margin-top: 10px; font-size: 14px; color: var(--color-muted); }
         .next-lesson-hint.unlocked { color: #34d399; }
+        .tone-accessibility { margin-top: 12px; padding: 14px; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.06); display: flex; flex-direction: column; gap: 10px; }
+        .tone-accessibility label { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255, 255, 255, 0.85); }
+        .tone-picker-select { width: 100%; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.25); background: rgba(0, 0, 0, 0.4); color: inherit; padding: 10px 12px; font-weight: 600; }
+        .tone-clear-btn { align-self: flex-start; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.35); background: transparent; color: inherit; padding: 6px 16px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; transition: background var(--transition-base), border-color var(--transition-base); }
+        .tone-clear-btn:hover,
+        .tone-clear-btn:focus-visible { background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.55); outline: none; }
+        .tone-accessibility small { font-size: 12px; color: rgba(255, 255, 255, 0.7); }
         @media (max-width: 768px) {
             .challenge-title { font-size: 26px; }
             .chat-controls { flex-direction: column; align-items: stretch; }
@@ -133,6 +140,7 @@
             .probability-word { width: 70px; font-size: 13px; }
         }
     </style>
+    <link rel="stylesheet" href="styles/lesson-responsive.css">
     <script defer src="scripts/shared.js"></script>
     <script defer src="scripts/progress.js"></script>
     <script defer src="scripts/nav.js"></script>
@@ -220,6 +228,14 @@
                                 <p>Write a <span id="toneDropZone" class="tone-drop-zone" role="button" tabindex="0">choose tone</span> message to my boss to call out sick today.</p>
                                 <div class="status-pill">Tip: click a tone word or drag it into the slot. Tap the slot to clear.</div>
                                 <div class="tone-word-bank" id="toneWordBank"></div>
+                                <div class="tone-accessibility" aria-live="polite">
+                                    <label for="tonePicker">Keyboard tone picker</label>
+                                    <select id="tonePicker" class="tone-picker-select">
+                                        <option value="">Select a tone...</option>
+                                    </select>
+                                    <button type="button" class="tone-clear-btn" id="toneClearBtn">Clear tone slot</button>
+                                    <small>Tip: Focus a tone chip and press Enter, drag and drop, or choose from the picker.</small>
+                                </div>
                                 <div class="tone-output hidden" id="toneOutput"></div>
                             </div>
                         </div>
@@ -476,6 +492,8 @@
                 wordCelebration: document.getElementById('wordCelebration'),
                 toneDropZone: document.getElementById('toneDropZone'),
                 toneWordBank: document.getElementById('toneWordBank'),
+                tonePickerSelect: document.getElementById('tonePicker'),
+                toneClearButton: document.getElementById('toneClearBtn'),
                 toneOutput: document.getElementById('toneOutput'),
                 notification: document.getElementById('notification'),
                 notificationContent: document.getElementById('notificationContent'),
@@ -805,6 +823,9 @@
                 Array.from(elements.toneWordBank.children).forEach((btn) => {
                     btn.classList.toggle('selected', btn.dataset.tone === tone);
                 });
+                if (elements.tonePickerSelect && elements.tonePickerSelect.value !== (tone || '')) {
+                    elements.tonePickerSelect.value = tone || '';
+                }
                 if (tone) {
                     elements.toneOutput.textContent = toneResponses[tone];
                     elements.toneOutput.classList.remove('hidden');
@@ -836,6 +857,19 @@
                     btn.addEventListener('click', () => setSelectedTone(word));
                     elements.toneWordBank.appendChild(btn);
                 });
+                populateTonePicker();
+            }
+
+            function populateTonePicker() {
+                if (!elements.tonePickerSelect) return;
+                elements.tonePickerSelect.innerHTML = '<option value="">Select a tone...</option>';
+                toneWords.forEach((word) => {
+                    const option = document.createElement('option');
+                    option.value = word;
+                    option.textContent = word.charAt(0).toUpperCase() + word.slice(1);
+                    elements.tonePickerSelect.appendChild(option);
+                });
+                elements.tonePickerSelect.value = selectedTone || '';
             }
 
             function setActiveLearningStep(stepId) {
@@ -899,6 +933,18 @@
                         btn.setAttribute('aria-pressed', isComplete ? 'true' : 'false');
                     });
                 });
+            }
+
+            function initToneAccessibilityControls() {
+                if (elements.tonePickerSelect) {
+                    elements.tonePickerSelect.addEventListener('change', (event) => {
+                        const choice = event.target.value;
+                        setSelectedTone(choice || null);
+                    });
+                }
+                if (elements.toneClearButton) {
+                    elements.toneClearButton.addEventListener('click', () => setSelectedTone(null));
+                }
             }
 
             function initGameJumpers() {
@@ -1027,6 +1073,7 @@
             initToneExplainSection();
             initDropPanels();
             initMissionChecklist();
+            initToneAccessibilityControls();
 
             elements.toneDropZone.addEventListener('dragover', handleDragOver);
             elements.toneDropZone.addEventListener('dragenter', handleDragOver);
@@ -1036,7 +1083,11 @@
             elements.toneDropZone.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                     event.preventDefault();
-                    setSelectedTone(null);
+                    if (elements.tonePickerSelect) {
+                        elements.tonePickerSelect.focus();
+                    } else {
+                        setSelectedTone(null);
+                    }
                 }
             });
 

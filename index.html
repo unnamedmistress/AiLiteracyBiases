@@ -18,6 +18,16 @@
                 <button class="home-btn-primary" data-start-course>Start Course →</button>
                 <button class="home-btn-secondary" data-scroll-target="#lessonSection">View Curriculum</button>
             </div>
+            <section class="mode-preference" aria-labelledby="displayModeLabel">
+                <div class="mode-preference-header">
+                    <p id="displayModeLabel" class="mode-preference-kicker">Display Mode</p>
+                    <p class="mode-preference-status" id="modeToggleDescription">Learner Mode keeps XP, badges, and quests visible.</p>
+                </div>
+                <div class="mode-toggle" role="group" aria-label="Display mode selector">
+                    <button type="button" class="mode-toggle-btn" data-mode-choice="learner" aria-pressed="true">Learner</button>
+                    <button type="button" class="mode-toggle-btn" data-mode-choice="professional" aria-pressed="false">Professional</button>
+                </div>
+            </section>
         </section>
 
         <section class="home-card progress-panel">
@@ -31,17 +41,15 @@
                 <p class="progress-summary" id="homeProgressCopy">No lessons completed yet.</p>
             </div>
             <div class="quick-stats">
-                <article class="quick-stat">
-                    <span>Lessons</span>
+                <article class="quick-stat" data-role="lessons">
+                    <span>Lessons Complete</span>
                     <strong id="homeLessonCount">0/6</strong>
+                    <p class="quick-stat-note" id="homeNextLesson">Next: Lesson 1 · Warm-Up</p>
                 </article>
-                <article class="quick-stat">
-                    <span>Total XP</span>
+                <article class="quick-stat" data-role="xp" data-gamified="true">
+                    <span>XP Bank</span>
                     <strong id="homeXpTotal">0 XP</strong>
-                </article>
-                <article class="quick-stat">
-                    <span>Latest Quiz</span>
-                    <strong id="homeQuizScore">--</strong>
+                    <p class="quick-stat-note">Earn XP by finishing lessons and checkpoints.</p>
                 </article>
             </div>
             <div class="reset-controls">
@@ -58,7 +66,7 @@
             <div class="lesson-grid" id="lessonGrid"></div>
         </section>
 
-        <section class="home-card learning-path">
+        <section class="home-card learning-path" data-gamified="true">
             <h3>📚 Learning Path</h3>
             <div class="path-steps">
                 <span class="path-step">⚡️ Warm-Up</span>
@@ -75,7 +83,7 @@
         <section class="home-card info-section">
             <h3>✨ Course Features</h3>
             <div class="info-grid">
-                <article class="info-item">
+                <article class="info-item" data-gamified="true">
                     <div class="info-icon">🎮</div>
                     <h4>Gamified Learning</h4>
                     <p>Earn XP, collect badges, and replay mini-games.</p>

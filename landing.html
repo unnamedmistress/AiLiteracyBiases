@@ -14,18 +14,44 @@
 <body class="landing-page">
     <div class="landing-container">
         <header class="landing-header">
-            <div class="landing-logo">🕵️</div>
-            <h1 class="landing-title">AI Detective Academy</h1>
-            <p class="landing-subtitle">Master AI Literacy & Spot AI's Tricks</p>
-            <p class="landing-tagline">Learn to identify hallucinations, bias, and AI pathologies</p>
-            <div class="landing-cta">
-                <button class="landing-btn" data-link="lesson1-ai-intro.html">Start Lesson 1 →</button>
+            <div class="landing-hero-grid">
+                <div class="landing-hero-primary">
+                    <p class="landing-pill">Phase 3 Ready · December 2025</p>
+                    <div class="landing-logo">🕵️</div>
+                    <h1 class="landing-title">AI Detective Academy</h1>
+                    <p class="landing-subtitle">Master AI Literacy & Spot AI's Tricks</p>
+                    <p class="landing-tagline">Learn to identify hallucinations, bias, and AI pathologies</p>
+                    <ul class="hero-highlights">
+                        <li>✅ 6-lesson storyline mapped to real incidents</li>
+                        <li>🧭 Dual modes for classrooms, pros, and workshops</li>
+                        <li>🛡️ F.A.C.T.S. framework baked into every activity</li>
+                    </ul>
+                    <div class="landing-cta">
+                        <button class="landing-btn" data-link="lesson1-ai-intro.html">Start Lesson 1 →</button>
+                        <button class="landing-btn ghost" data-link="index.html">Open Dashboard</button>
+                    </div>
+                </div>
+                <aside class="landing-hero-panel" aria-label="Display modes overview">
+                    <p class="panel-eyebrow">Choose how you learn</p>
+                    <div class="panel-card">
+                        <h3>Learner Mode</h3>
+                        <p>Earn XP, badges, and replayable quests for younger audiences.</p>
+                    </div>
+                    <div class="panel-card" data-mode="professional">
+                        <h3>Professional Mode</h3>
+                        <p>Hide gamification and keep stakeholders focused on milestones.</p>
+                    </div>
+                    <p class="panel-note">Toggle modes anytime from the dashboard hero.</p>
+                </aside>
             </div>
         </header>
 
-        <section class="landing-progress">
-            <div id="landingProgressSummary">Begin your journey with Lesson 1.</div>
-            <div id="landingProgressDetail">No XP recorded yet — jump in to start tracking your milestones.</div>
+        <section class="landing-progress" role="status" aria-live="polite">
+            <div class="progress-copy">
+                <p class="progress-eyebrow">Progress Snapshot</p>
+                <p class="progress-summary" id="landingProgressSummary">Begin your journey with Lesson 1.</p>
+            </div>
+            <p class="progress-detail" id="landingProgressDetail">No XP recorded yet — jump in to start tracking your milestones.</p>
         </section>
 
         <section class="choice-container">
@@ -51,13 +77,10 @@
                     Earn XP, unlock badges, and level up while learning through interactive scenarios
                 </div>
                 <ul class="features-list">
-                    <li>Points, Levels & XP System</li>
-                    <li>6 Unlockable Achievement Badges</li>
-                    <li>Interactive Scenario Detective Mode</li>
-                    <li>Streak Bonuses & Multipliers</li>
-                    <li>Daily Missions & Challenges</li>
-                    <li>Leaderboard Competition</li>
-                    <li>Progress Tracking</li>
+                    <li>Points + level ups tied to every activity</li>
+                    <li>Replayable quizzes with instant explanations</li>
+                    <li>Streak-friendly reminders & badge cabinet</li>
+                    <li>Scenario detective mode for rapid feedback</li>
                 </ul>
                 <div class="choice-badge">🎯 Best for Active Learners</div>
             </article>
