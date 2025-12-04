@@ -78,7 +78,7 @@ body.landing-page {
 
 .choice-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 32px;
     margin-top: 32px;
 }
@@ -228,7 +228,35 @@ body.landing-page {
     font-size: 14px;
 }
 
+@media (max-width: 900px) {
+    .landing-container {
+        padding: 0 12px 40px;
+    }
+
+    .choice-card {
+        padding: 32px;
+    }
+}
+
 @media (max-width: 768px) {
+    body.landing-page {
+        padding: 12px;
+        align-items: flex-start;
+    }
+
     .landing-title { font-size: 32px; }
     .landing-logo { font-size: 48px; }
+    .landing-subtitle { font-size: 18px; }
+    .landing-progress { padding: 18px; }
+    .choice-card { padding: 24px; }
+    .landing-btn { width: 100%; }
+    .choice-container { gap: 20px; }
+}
+
+@media (max-width: 480px) {
+    .landing-title { font-size: 28px; }
+    .choice-title { font-size: 26px; }
+    .choice-description { font-size: 14px; }
+    .features-list li { font-size: 13px; }
+    .landing-progress { padding: 16px; }
 }

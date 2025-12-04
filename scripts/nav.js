@@ -18,6 +18,9 @@
         { id: 'lesson5', label: 'Lesson 5', href: 'lesson5-ai-workflows.html', locked: true, comingSoon: true },
         { id: 'lesson6', label: 'Lesson 6', href: 'lesson6-capstone.html', locked: true, comingSoon: true }
     ];
+    const PROGRESS_STORAGE_KEY = 'aiLiteracyProgress_v1';
+    const QUIZ_REQUIREMENTS = { quiz1: 75 };
+    let cachedProgressSnapshot = null;
 
     const PATH_TO_STATE = {
         '': { main: 'home' },
@@ -35,14 +38,64 @@
         'updates.html': { resource: 'updates' }
     };
 
-    function buildLink({ id, label, href, locked, comingSoon }, activeId, group) {
+    function loadProgressSnapshot() {
+        if (cachedProgressSnapshot) return cachedProgressSnapshot;
+        try {
+            const raw = localStorage.getItem(PROGRESS_STORAGE_KEY);
+            if (!raw) {
+                cachedProgressSnapshot = { lessons: {}, quizScores: {} };
+                return cachedProgressSnapshot;
+            }
+            const parsed = JSON.parse(raw);
+            cachedProgressSnapshot = {
+                lessons: typeof parsed?.lessons === 'object' && parsed?.lessons ? parsed.lessons : {},
+                quizScores: typeof parsed?.quizScores === 'object' && parsed?.quizScores ? parsed.quizScores : {}
+            };
+        } catch (error) {
+            console.warn('[nav] Failed to parse progress snapshot.', error);
+            cachedProgressSnapshot = { lessons: {}, quizScores: {} };
+        }
+        return cachedProgressSnapshot;
+    }
+
+    function getQuizStatus(snapshot, quizId) {
+        const score = Number(snapshot.quizScores?.[quizId]) || 0;
+        const required = QUIZ_REQUIREMENTS[quizId] ?? 1;
+        if (score >= required) return 'completed';
+        if (score > 0) return 'in-progress';
+        return 'not-started';
+    }
+
+    function getLessonStatusMeta(link) {
+        if (link.locked) {
+            return { status: 'locked', icon: '🔒', label: link.comingSoon ? 'Coming soon' : 'Locked' };
+        }
+        if (!link.id) return { status: 'not-started', icon: '', label: 'Not started' };
+        const snapshot = loadProgressSnapshot();
+        let status = snapshot.lessons?.[link.id] || 'not-started';
+        if (link.id.startsWith('quiz')) {
+            status = getQuizStatus(snapshot, link.id);
+        }
+        if (status === 'completed') {
+            return { status, icon: '✓', label: 'Completed' };
+        }
+        if (status === 'in-progress') {
+            return { status, icon: '🔄', label: 'In progress' };
+        }
+        return { status: 'not-started', icon: '', label: 'Not started' };
+    }
+
+    function buildLink(link, activeId, group) {
+        const { id, label, href, locked, comingSoon } = link;
         const isActive = activeId === id;
         const element = document.createElement(locked ? 'span' : 'a');
         element.className = `nav-link nav-link-${group}`;
         element.dataset.navId = id;
 
-        if (window.ProgressTracker && window.ProgressTracker.getLessonStatus(id) === 'completed') {
-            element.classList.add('is-completed');
+        let statusMeta = { status: 'not-started', icon: '', label: 'Not started' };
+        if (group === 'lesson') {
+            statusMeta = getLessonStatusMeta(link);
+            element.dataset.lessonStatus = statusMeta.status;
         }
 
         const labelSpan = document.createElement('span');
@@ -63,6 +116,9 @@
             }
         } else {
             element.href = href;
+            if (group === 'lesson') {
+                element.setAttribute('aria-label', `${label} · ${statusMeta.label}`);
+            }
         }
 
         if (isActive) {
@@ -71,6 +127,22 @@
                 element.classList.add('active-lesson');
             }
             element.setAttribute('aria-current', group === 'lesson' ? 'step' : 'page');
+        }
+
+        if (group === 'lesson') {
+            if (statusMeta.status === 'completed') {
+                element.classList.add('is-completed');
+            } else if (statusMeta.status === 'in-progress') {
+                element.classList.add('is-in-progress');
+            }
+            if (statusMeta.icon) {
+                const badge = document.createElement('span');
+                badge.className = `nav-status-badge nav-status-${statusMeta.status}`;
+                badge.setAttribute('role', 'img');
+                badge.setAttribute('aria-label', `${statusMeta.label}`);
+                badge.textContent = statusMeta.icon;
+                labelSpan.appendChild(badge);
+            }
         }
 
         return element;
