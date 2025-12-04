@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "npx serve .",
     "start": "npx serve .",
+    "build": "node build-tools/build-static.js",
     "vercel:dev": "vercel dev",
     "deploy": "vercel deploy --prod",
     "serve:static": "npx serve ."
