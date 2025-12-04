@@ -290,13 +290,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!els.lessonGrid) return;
         const cards = DASHBOARD_ITEMS.map((item) => {
             const state = getItemState(item);
+            const ariaLabel = state.locked
+                ? `${state.statusLabel} · ${item.title}`
+                : `${state.ctaLabel} ${item.title}`;
             return `
                 <article class="lesson-card ${state.locked ? 'locked' : ''}"${state.comingSoon ? ' data-coming-soon="true"' : ''}>
                     <div class="status-pill${state.modifier ? ` ${state.modifier}` : ''}">${state.statusLabel}</div>
                     <h3>${item.title}</h3>
                     <p>${item.summary}</p>
                     ${state.comingSoon ? '<p class="coming-soon-note">🚧 Launching soon · stay tuned</p>' : ''}
-                    <button type="button" data-path="${item.path}" data-locked="${state.locked}">${state.ctaLabel}</button>
+                    <button type="button" data-path="${item.path}" data-locked="${state.locked}" aria-label="${ariaLabel}">${state.ctaLabel}</button>
                 </article>
             `;
         }).join('');

@@ -163,7 +163,7 @@
                         </div>
 
                         <h3 style="margin: 40px 0 20px 0;" id="missionImage">🎯 Challenge 1: Image Creation Mastery</h3>
-                        <div class="activity-card" onclick="startActivity('image')">
+                        <div class="activity-card" role="button" tabindex="0" aria-label="Start Challenge 1: Image Creation Mastery" onclick="startActivity('image')" onkeydown="handleActivityCardKey(event, 'image')">
                             <div class="activity-icon">🖼️</div>
                             <div class="activity-title">Create 3 Different AI Images</div>
                             <div class="activity-desc">
@@ -179,7 +179,7 @@
                         <button class="mission-return" type="button" data-scroll-top="missions">↑ Back to mission tracker</button>
 
                         <h3 style="margin: 30px 0 20px 0;" id="missionVideo">🎬 Challenge 2: Video Generation</h3>
-                        <div class="activity-card" onclick="startActivity('video')">
+                        <div class="activity-card" role="button" tabindex="0" aria-label="Start Challenge 2: Video Generation" onclick="startActivity('video')" onkeydown="handleActivityCardKey(event, 'video')">
                             <div class="activity-icon">🎬</div>
                             <div class="activity-title">Create a 5-Second AI Video</div>
                             <div class="activity-desc">
@@ -206,11 +206,11 @@
                             
                             <div class="prompt-tips">
                                 <div style="font-weight: bold; margin: 15px 0 10px 0;">💡 Prompt Formula:</div>
-                                <div class="tip-chip" onclick="addToPrompt('[Subject]')">Subject (What)</div>
-                                <div class="tip-chip" onclick="addToPrompt('[Style]')">Style (How it looks)</div>
-                                <div class="tip-chip" onclick="addToPrompt('[Mood/Atmosphere]')">Mood</div>
-                                <div class="tip-chip" onclick="addToPrompt('[Lighting]')">Lighting</div>
-                                <div class="tip-chip" onclick="addToPrompt('[Quality: 8K, detailed, professional]')">Quality specs</div>
+                                <div class="tip-chip" role="button" tabindex="0" aria-label="Add subject placeholder to prompt" onclick="addToPrompt('[Subject]')" onkeydown="handleTipKey(event, '[Subject]')">Subject (What)</div>
+                                <div class="tip-chip" role="button" tabindex="0" aria-label="Add style placeholder to prompt" onclick="addToPrompt('[Style]')" onkeydown="handleTipKey(event, '[Style]')">Style (How it looks)</div>
+                                <div class="tip-chip" role="button" tabindex="0" aria-label="Add mood placeholder to prompt" onclick="addToPrompt('[Mood/Atmosphere]')" onkeydown="handleTipKey(event, '[Mood/Atmosphere]')">Mood</div>
+                                <div class="tip-chip" role="button" tabindex="0" aria-label="Add lighting placeholder to prompt" onclick="addToPrompt('[Lighting]')" onkeydown="handleTipKey(event, '[Lighting]')">Lighting</div>
+                                <div class="tip-chip" role="button" tabindex="0" aria-label="Add quality specs placeholder to prompt" onclick="addToPrompt('[Quality: 8K, detailed, professional]')" onkeydown="handleTipKey(event, '[Quality: 8K, detailed, professional]')">Quality specs</div>
                             </div>
                             
                             <button class="btn-primary" style="margin-top: 15px;" id="promptAnalyzeBtn" onclick="analyzePrompt()">Analyze My Prompt</button>
@@ -531,6 +531,13 @@
             }
         }
 
+        function handleActivityCardKey(event, type) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                startActivity(type);
+            }
+        }
+
         function updateUI() {
             if (window.AILesson && typeof window.AILesson.updateXPBar === 'function') {
                 window.AILesson.updateXPBar({ xp: state.xp, xpToNext: state.xpToNext, barId: 'xpBar', textId: 'xpText' });
@@ -562,6 +569,13 @@
             const input = document.getElementById('promptInput');
             input.value += (input.value ? ' ' : '') + text;
             input.focus();
+        }
+
+        function handleTipKey(event, text) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                addToPrompt(text);
+            }
         }
 
         async function analyzePrompt() {
@@ -680,7 +694,7 @@
                         <div style="font-weight: bold; margin-bottom: 15px;">${i + 1}. ${q.q}</div>
                         <div class="quiz-options" id="quiz${i}">
                             ${q.options.map((opt, j) => `
-                                <div class="quiz-option" onclick="answerQuestion(${i}, ${j}, ${q.correct})">${opt}</div>
+                                <div class="quiz-option" role="button" tabindex="0" aria-label="Select option ${j + 1} for question ${i + 1}" onclick="answerQuestion(${i}, ${j}, ${q.correct})" onkeydown="handleQuizOptionKey(event, ${i}, ${j}, ${q.correct})">${opt}</div>
                             `).join('')}
                         </div>
                         <div id="feedback${i}" style="display: none; margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 10px;"></div>
@@ -688,6 +702,13 @@
                 `;
             });
             document.getElementById('quizContainer').innerHTML = html;
+        }
+
+        function handleQuizOptionKey(event, qIndex, answer, correct) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                answerQuestion(qIndex, answer, correct);
+            }
         }
 
         function answerQuestion(qIndex, answer, correct) {
