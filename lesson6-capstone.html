@@ -601,9 +601,9 @@
             }
 
             if (appProgress && typeof appProgress.addXP === 'function') {
-                appProgress.addXP(increment);
+                appProgress.addXP(increment, { lessonId: LESSON_ID });
             } else if (tracker && typeof tracker.addXP === 'function') {
-                tracker.addXP(increment);
+                tracker.addXP(increment, { lessonId: LESSON_ID });
             }
 
             updateUI();

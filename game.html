@@ -1829,9 +1829,9 @@
             if (tracker) tracker.setCheckpoint(LESSON_ID, 'awardedXp', courseXpAwarded);
 
             if (appProgress && typeof appProgress.addXP === 'function') {
-                appProgress.addXP(credit);
+                appProgress.addXP(credit, { lessonId: LESSON_ID });
             } else if (tracker && typeof tracker.addXP === 'function') {
-                tracker.addXP(credit);
+                tracker.addXP(credit, { lessonId: LESSON_ID });
             }
         }
 

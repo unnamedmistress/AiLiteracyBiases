@@ -81,6 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
                 if (progressApi && progressApi.resetProgress) {
                     progressApi.resetProgress();
+                } else if (progressApi && progressApi.reset) {
+                    progressApi.reset();
                 } else {
                     localStorage.removeItem('aiLiteracyProgress_v1');
                 }

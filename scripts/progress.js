@@ -5,7 +5,8 @@
         xp: 0,
         lessons: {},
         checkpoints: {},
-        quizScores: {}
+        quizScores: {},
+        lessonXP: {}
     };
 
     function cloneDefault() {
@@ -13,7 +14,8 @@
             xp: DEFAULT_STATE.xp,
             lessons: { ...DEFAULT_STATE.lessons },
             checkpoints: { ...DEFAULT_STATE.checkpoints },
-            quizScores: { ...DEFAULT_STATE.quizScores }
+            quizScores: { ...DEFAULT_STATE.quizScores },
+            lessonXP: { ...DEFAULT_STATE.lessonXP }
         };
     }
 
@@ -26,7 +28,8 @@
                 xp: typeof parsed.xp === 'number' ? parsed.xp : 0,
                 lessons: typeof parsed.lessons === 'object' && parsed.lessons ? parsed.lessons : {},
                 checkpoints: typeof parsed.checkpoints === 'object' && parsed.checkpoints ? parsed.checkpoints : {},
-                quizScores: typeof parsed.quizScores === 'object' && parsed.quizScores ? parsed.quizScores : {}
+                quizScores: typeof parsed.quizScores === 'object' && parsed.quizScores ? parsed.quizScores : {},
+                lessonXP: typeof parsed.lessonXP === 'object' && parsed.lessonXP ? parsed.lessonXP : {}
             };
         } catch (error) {
             console.warn('[ProgressTracker] Failed to parse progress payload.', error);
@@ -35,6 +38,7 @@
     }
 
     let state = loadState();
+    sanitizeState();
 
     function getTrackedLessonIds() {
         const ids = new Set([...KNOWN_LESSONS, ...Object.keys(state.lessons || {})]);
@@ -49,6 +53,112 @@
         }
     }
 
+    function countCompletedLessons() {
+        return Object.values(state.lessons || {}).filter((status) => status === 'completed').length;
+    }
+
+    function sumLessonXP() {
+        return Object.values(state.lessonXP || {}).reduce((total, lessonValue) => {
+            const normalized = Number(lessonValue);
+            if (Number.isFinite(normalized) && normalized > 0) {
+                return total + normalized;
+            }
+            return total;
+        }, 0);
+    }
+
+    function sanitizeState() {
+        if (!state || typeof state !== 'object') {
+            state = cloneDefault();
+            persist();
+            return;
+        }
+
+        let mutated = false;
+        if (typeof state.lessons !== 'object' || !state.lessons) {
+            state.lessons = {};
+            mutated = true;
+        }
+        if (typeof state.checkpoints !== 'object' || !state.checkpoints) {
+            state.checkpoints = {};
+            mutated = true;
+        }
+        if (typeof state.quizScores !== 'object' || !state.quizScores) {
+            state.quizScores = {};
+            mutated = true;
+        }
+        if (typeof state.lessonXP !== 'object' || !state.lessonXP) {
+            state.lessonXP = {};
+            mutated = true;
+        }
+
+        state.xp = Number(state.xp) || 0;
+        if (state.xp < 0) {
+            state.xp = 0;
+            mutated = true;
+        }
+
+        const completedLessons = countCompletedLessons();
+        if (completedLessons === 0) {
+            if (state.xp !== 0) {
+                state.xp = 0;
+                mutated = true;
+            }
+            if (Object.keys(state.quizScores).length) {
+                state.quizScores = {};
+                mutated = true;
+            }
+            if (Object.keys(state.lessonXP).length) {
+                state.lessonXP = {};
+                mutated = true;
+            }
+        }
+
+        let ledgerXP = sumLessonXP();
+        if (!ledgerXP && state.xp > 0) {
+            state.lessonXP.__legacy = state.xp;
+            ledgerXP = state.xp;
+            mutated = true;
+        }
+        if (ledgerXP !== state.xp) {
+            state.xp = ledgerXP;
+            mutated = true;
+        }
+
+        if (mutated) persist();
+    }
+
+    function resetAllState() {
+        state = cloneDefault();
+        persist();
+    }
+
+    function resolveLessonKey(metadata = {}) {
+        if (!metadata || typeof metadata !== 'object') return '__global';
+        const { lessonId, lesson, source } = metadata;
+        return String(lessonId || lesson || source || '__global');
+    }
+
+    function mutateLessonXP(delta = 0, metadata = {}) {
+        const adjustment = Number(delta);
+        if (!Number.isFinite(adjustment) || adjustment === 0) return;
+        if (!state.lessonXP || typeof state.lessonXP !== 'object') {
+            state.lessonXP = {};
+        }
+        const key = resolveLessonKey(metadata);
+        const existing = Number(state.lessonXP[key]) || 0;
+        const updated = Math.max(0, existing + adjustment);
+        if (updated === 0) {
+            delete state.lessonXP[key];
+        } else {
+            state.lessonXP[key] = updated;
+        }
+    }
+
+    function recomputeTotalXP() {
+        state.xp = Math.max(0, sumLessonXP());
+    }
+
     function ensureLessonStructures(lessonId) {
         if (!lessonId) return;
         if (!state.lessons[lessonId]) state.lessons[lessonId] = 'not-started';
@@ -59,17 +169,19 @@
         getXP() {
             return state.xp;
         },
-        addXP(amount = 0) {
-            const delta = Number(amount);
+        addXP(amount = 0, metadata = {}) {
+            const delta = Math.round(Number(amount) || 0);
             if (!Number.isFinite(delta) || delta <= 0) return state.xp;
-            state.xp += Math.round(delta);
+            mutateLessonXP(delta, metadata);
+            recomputeTotalXP();
             persist();
             return state.xp;
         },
-        adjustXP(amount = 0) {
-            const delta = Number(amount);
+        adjustXP(amount = 0, metadata = {}) {
+            const delta = Math.round(Number(amount) || 0);
             if (!Number.isFinite(delta) || delta === 0) return state.xp;
-            state.xp = Math.max(0, state.xp + Math.round(delta));
+            mutateLessonXP(delta, metadata);
+            recomputeTotalXP();
             persist();
             return state.xp;
         },
@@ -87,6 +199,10 @@
             ensureLessonStructures(lessonId);
             state.lessons[lessonId] = 'not-started';
             state.checkpoints[lessonId] = {};
+            if (state.lessonXP && state.lessonXP[lessonId]) {
+                delete state.lessonXP[lessonId];
+            }
+            recomputeTotalXP();
             persist();
         },
         markLessonComplete(lessonId) {
@@ -141,8 +257,10 @@
             return { ...state.lessons };
         },
         reset() {
-            state = cloneDefault();
-            persist();
+            resetAllState();
+        },
+        resetProgress() {
+            resetAllState();
         }
     };
 
@@ -154,14 +272,15 @@
         isLessonComplete: (lessonId) => ProgressTracker.getLessonStatus(lessonId) === 'completed',
         getLessonStatus: (lessonId) => ProgressTracker.getLessonStatus(lessonId),
         getLessonStatuses: () => ProgressTracker.getLessonMap(),
-        addXP: (amount) => ProgressTracker.addXP(amount),
-        adjustXP: (amount) => ProgressTracker.adjustXP(amount),
+        addXP: (amount, metadata) => ProgressTracker.addXP(amount, metadata),
+        adjustXP: (amount, metadata) => ProgressTracker.adjustXP(amount, metadata),
         getXP: () => ProgressTracker.getXP(),
         markQuizScore: (quizId, score) => ProgressTracker.setQuizScore(quizId, score),
         getQuizScore: (quizId) => ProgressTracker.getQuizScore(quizId),
         getQuizScores: () => ProgressTracker.getQuizScores(),
         getOverview: () => ProgressTracker.getOverview(),
         resetLesson: (lessonId) => ProgressTracker.resetLesson(lessonId),
-        reset: () => ProgressTracker.reset()
+        reset: () => ProgressTracker.reset(),
+        resetProgress: () => ProgressTracker.resetProgress()
     };
 })();

@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const earnedXP = scorePercent >= PASS_THRESHOLD ? 60 : scorePercent >= 50 ? 40 : 20;
         try {
             if (tracker.markQuizScore) tracker.markQuizScore(QUIZ_ID, scorePercent);
-            if (tracker.addXP) tracker.addXP(earnedXP);
+            if (tracker.addXP) tracker.addXP(earnedXP, { lessonId: QUIZ_ID });
             if (scorePercent >= PASS_THRESHOLD) {
                 markQuizComplete();
                 setQuizStatus('completed');

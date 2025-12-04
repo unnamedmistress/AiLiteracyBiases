@@ -622,7 +622,7 @@
                 updateXPBar();
                 showNotification(`${reason} (+${amount} XP)`);
                 if (tracker) {
-                    tracker.addXP(amount);
+                    tracker.addXP(amount, { lessonId: LESSON_ID });
                 }
                 updateProgressPills();
             }
@@ -981,7 +981,7 @@
                 if (!confirmed) return;
                 const xpToRemove = Number(state.xp) || 0;
                 if (xpToRemove > 0 && tracker && typeof tracker.adjustXP === 'function') {
-                    tracker.adjustXP(-xpToRemove);
+                    tracker.adjustXP(-xpToRemove, { lessonId: LESSON_ID });
                 }
                 resetLessonState();
                 showNotification('Lesson reset. Earn each XP burst again.');

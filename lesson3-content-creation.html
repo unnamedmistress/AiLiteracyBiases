@@ -850,9 +850,9 @@
             }
 
             if (appProgress && typeof appProgress.addXP === 'function') {
-                appProgress.addXP(delta);
+                appProgress.addXP(delta, { lessonId: LESSON_ID });
             } else if (tracker && typeof tracker.addXP === 'function') {
-                tracker.addXP(delta);
+                tracker.addXP(delta, { lessonId: LESSON_ID });
             }
 
             updateUI();

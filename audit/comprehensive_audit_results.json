@@ -1,0 +1,1474 @@
+{
+  "audit_metadata": {
+    "audit_id": "AUDIT-20251203-N828",
+    "app_url": "https://ai-literacy-biases-n828.vercel.app/",
+    "audit_start_ts": "2025-12-03T18:00:00Z",
+    "audit_end_ts": "2025-12-03T19:30:00Z",
+    "auditor_name": "Manus AI (Senior UX Developer Persona)",
+    "total_items": 32
+  },
+  "focus_areas": [
+    {
+      "focus_area_id": "A1",
+      "focus_area_name": "UX and interaction design",
+      "status": "completed",
+      "summary_for_humans": [
+        "Core interactions work well with excellent feedback, but mode switching is confusing and progress state is inconsistent.",
+        "Activities provide immediate, clear feedback but suffer from feedback overload (multiple simultaneous notifications).",
+        "Critical issue: Progress shows 512 XP and 25% quiz completion despite 0 lessons complete\u2014suggests broken state management or test data not cleared."
+      ],
+      "todo_items": [
+        {
+          "id": "A1-01",
+          "title": "Fix inconsistent progress state across the app",
+          "type": "Tech",
+          "severity": "high",
+          "effort": "M",
+          "focus_area_id": "A1",
+          "focus_area_name": "UX and interaction design",
+          "user_flow": "Landing page \u2192 Any lesson",
+          "affected_surface": "Progress cards on landing page, lesson headers showing XP and lesson completion",
+          "problem_description": "Landing page shows '0/8 lessons complete (0%)' but simultaneously displays '512 XP' and '25% quiz' completion. This is mathematically impossible and confusing. When entering Lesson 1, header shows 'Total XP: 512 \u00b7 0/8 lessons' which contradicts the lesson XP counter showing '0/110'. This suggests either test data wasn't cleared, localStorage is corrupted, or state management is broken.",
+          "why_it_matters": "Users cannot trust the progress system if numbers contradict each other. This undermines the entire gamification strategy and makes it impossible to understand actual progress. For an AI literacy course teaching users to spot inconsistencies, having inconsistent data in the app itself is particularly damaging to credibility.",
+          "suggested_fix": "Audit the state management system. Check if progress data is being loaded from localStorage without validation. Add a state consistency check on app load that validates: (1) if lessons_completed === 0, then total_xp should be 0 and quiz_percent should be 0; (2) total_xp should equal sum of all lesson XP earned; (3) quiz_percent should only show if quiz has been started. Implement a 'Reset Progress' function that properly clears ALL state, not just some fields.",
+          "code_level_hint": "Look for localStorage.getItem('progress') or similar. Add validation: if (progress.lessons_completed === 0 && progress.total_xp > 0) { resetProgress(); }. Ensure the 'Reset Progress' button calls a comprehensive clearState() function that removes all localStorage keys related to progress.",
+          "acceptance_criteria": [
+            "Landing page shows consistent numbers: if 0 lessons complete, then 0 XP and 0% quiz",
+            "Total XP in header matches sum of lesson XP",
+            "Reset Progress button clears ALL progress data including XP, quiz %, and lesson states"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A1-02",
+          "title": "Add active state styling to mode toggle buttons",
+          "type": "Visual",
+          "severity": "high",
+          "effort": "XS",
+          "focus_area_id": "A1",
+          "focus_area_name": "UX and interaction design",
+          "user_flow": "Any lesson page with Game Mode / Learn toggle",
+          "affected_surface": "Mode toggle buttons in lesson headers",
+          "problem_description": "The '\ud83c\udfae Game Mode' and '\ud83d\udcda Learn' buttons look identical with no visual indication of which mode is currently active. Users cannot tell which mode they're in, leading to confusion about whether clicking will switch modes or is just a label. After clicking 'Go to game warm-ups', the page shows game activities but the mode buttons still look the same.",
+          "why_it_matters": "Mode switching is a core feature of the learning experience. Users need to know their current context to understand what type of content they're viewing (educational vs. interactive). Without clear active states, users may click the wrong button or not realize they can switch modes.",
+          "suggested_fix": "Implement clear active/inactive states for mode buttons. Active mode should have a solid background color (e.g., the current button color) while inactive mode should be outline-only or muted. Add aria-pressed='true' to the active button for accessibility. Consider adding a subtle indicator like 'Current Mode' text or a checkmark icon.",
+          "code_level_hint": "Add a 'mode-active' CSS class that applies solid background. Toggle it based on currentMode state: <button className={currentMode === 'game' ? 'mode-active' : 'mode-inactive'}>. Use CSS: .mode-active { background: solid; } .mode-inactive { background: transparent; border: 2px solid; opacity: 0.6; }",
+          "acceptance_criteria": [
+            "Active mode button has visually distinct styling (solid background)",
+            "Inactive mode button has muted styling (outline only, reduced opacity)",
+            "Clicking a mode button updates the visual state immediately"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A1-03",
+          "title": "Reduce feedback overload on activity completion",
+          "type": "UX",
+          "severity": "medium",
+          "effort": "S",
+          "focus_area_id": "A1",
+          "focus_area_name": "UX and interaction design",
+          "user_flow": "Lesson 1 Game Mode \u2192 Complete any activity",
+          "affected_surface": "Activity completion feedback (success boxes, toasts, inline messages, progress updates)",
+          "problem_description": "When completing Activity 1, users see: (1) success box with checkmark and message, (2) +40 XP badge, (3) inline feedback text, (4) progress update in header, (5) toast notification at bottom, (6) probability visualization. While all are positive, the simultaneous appearance of 6 different feedback elements creates visual chaos and cognitive overload.",
+          "why_it_matters": "Excessive feedback is as bad as no feedback. Users should feel rewarded, not overwhelmed. The current approach distracts from the learning content and makes the interface feel 'noisy'. For 9th graders especially, this can be overstimulating.",
+          "suggested_fix": "Consolidate to 3 core feedback elements: (1) Visual confirmation on the selected answer (green highlight + checkmark), (2) One success message box with explanation and XP gain, (3) Animated progress bar update. Remove the redundant toast notification and inline feedback text. Consider a subtle confetti animation instead of multiple text notifications.",
+          "code_level_hint": "In the activity completion handler, remove the toast notification call. Combine the success message and XP display into a single modal or inline box. Use CSS transitions to animate the XP bar smoothly: transition: width 0.5s ease-out;",
+          "acceptance_criteria": [
+            "Only 3 feedback elements appear on activity completion",
+            "No redundant toast notifications",
+            "Feedback feels celebratory but not overwhelming"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A1-04",
+          "title": "Make breadcrumb 'Home' link clickable",
+          "type": "UX",
+          "severity": "medium",
+          "effort": "XS",
+          "focus_area_id": "A1",
+          "focus_area_name": "UX and interaction design",
+          "user_flow": "Any lesson page",
+          "affected_surface": "Breadcrumb navigation showing 'Home / Lesson 1: Prompt Wizardry Warm-Up'",
+          "problem_description": "The breadcrumb shows 'Home / Lesson 1...' but 'Home' is not clickable. It appears as plain text, missing a standard navigation pattern. Users expect breadcrumbs to be clickable links back to parent pages.",
+          "why_it_matters": "Breadcrumbs are a standard navigation pattern. Non-clickable breadcrumbs violate user expectations and remove an easy way to return to the landing page. This forces users to use the hamburger menu or browser back button.",
+          "suggested_fix": "Convert 'Home' in the breadcrumb to a clickable link that navigates to the landing page (index.html or /). Style it with hover effects (underline, color change) to indicate interactivity.",
+          "code_level_hint": "Change from <span>Home</span> to <a href='/'>Home</a>. Add CSS: .breadcrumb a:hover { text-decoration: underline; color: var(--link-color); }",
+          "acceptance_criteria": [
+            "'Home' in breadcrumb is a clickable link",
+            "Clicking 'Home' navigates to landing page",
+            "Hover state indicates it's clickable"
+          ],
+          "is_micro_ux": true
+        },
+        {
+          "id": "A1-05",
+          "title": "Add tooltip to restart button",
+          "type": "UX",
+          "severity": "low",
+          "effort": "XS",
+          "focus_area_id": "A1",
+          "focus_area_name": "UX and interaction design",
+          "user_flow": "Lesson pages",
+          "affected_surface": "Restart button (\u21ba symbol) in lesson header",
+          "problem_description": "The restart button shows only a '\u21ba' symbol with no text label. While the symbol is somewhat recognizable, it may not be clear to all users, especially younger students. A tooltip appears on hover ('Restart Lesson 1 warm-ups') but this requires discovery.",
+          "why_it_matters": "Icon-only buttons require users to learn their meaning. Adding a visible text label or ensuring the tooltip is prominent improves discoverability and reduces cognitive load.",
+          "suggested_fix": "Either add a text label next to the icon ('Restart') or ensure the tooltip appears quickly on hover (reduce delay to 0.3s). Consider using a more explicit icon or adding an aria-label for screen readers.",
+          "code_level_hint": "Add title attribute or use a tooltip library: <button title='Restart Lesson' aria-label='Restart Lesson 1 warm-ups'>\u21ba</button>. Or add visible text: <button>\u21ba Restart</button>",
+          "acceptance_criteria": [
+            "Tooltip appears within 0.5s of hover",
+            "Button has clear aria-label for screen readers",
+            "Consider adding visible text label for clarity"
+          ],
+          "is_micro_ux": true
+        },
+        {
+          "id": "A1-06",
+          "title": "Clarify difference between 'Go to game warm-ups' and 'Game Mode' button",
+          "type": "UX",
+          "severity": "medium",
+          "effort": "S",
+          "focus_area_id": "A1",
+          "focus_area_name": "UX and interaction design",
+          "user_flow": "Lesson 1 Learn Mode \u2192 Attempting to access Game Mode",
+          "affected_surface": "Mode toggle buttons and 'Go to game warm-ups' CTA",
+          "problem_description": "The page has both a '\ud83c\udfae Game Mode' toggle button in the header AND a 'Go to game warm-ups' button in the content. It's unclear if these do the same thing or different things. Clicking 'Go to game warm-ups' scrolls to activities, but the mode toggle buttons remain visible with no state change.",
+          "why_it_matters": "Redundant CTAs with unclear purposes create confusion. Users don't know which button to click or what the difference is. This violates the principle of clear, singular paths to actions.",
+          "suggested_fix": "Remove the redundant 'Go to game warm-ups' button from the Learn Mode content. Make the '\ud83c\udfae Game Mode' toggle button the only way to switch modes. Alternatively, if both are needed, clearly differentiate them: 'Game Mode' could switch the entire page view, while 'Go to game warm-ups' could be a quick scroll/jump link within the same mode.",
+          "code_level_hint": "If keeping both, add clear labels: 'Switch to Game Mode' vs 'Jump to Activities'. Or remove the redundant button and rely solely on the mode toggle. Ensure clicking the mode toggle updates the page content and button states.",
+          "acceptance_criteria": [
+            "Only one clear path to access game activities",
+            "If both buttons exist, their purposes are clearly differentiated",
+            "Mode toggle button shows active state when in Game Mode"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A1-07",
+          "title": "Improve 'CHOOSE TONE' drop zone affordance",
+          "type": "UX",
+          "severity": "medium",
+          "effort": "S",
+          "focus_area_id": "A1",
+          "focus_area_name": "UX and interaction design",
+          "user_flow": "Lesson 1 Game Mode \u2192 Activity 3",
+          "affected_surface": "Tone selection drop zone in Activity 3",
+          "problem_description": "The 'CHOOSE TONE' element looks like a button but is actually a drop zone for dragging tone words. The instructions say 'CLICK A TONE WORD OR DRAG IT INTO THE SLOT' but the drop zone styling doesn't clearly indicate it's a drop target. It has a button-like appearance which suggests clicking it directly would do something.",
+          "why_it_matters": "Unclear affordances lead to user confusion and failed interactions. Users may try clicking 'CHOOSE TONE' expecting a dropdown menu. The drag-and-drop interaction may not be discoverable, especially on mobile devices where drag-and-drop is less common.",
+          "suggested_fix": "Restyle the drop zone to look less like a button and more like an input field or placeholder. Use a dashed border, lighter background, and placeholder text like '[Drop tone here]'. Ensure clicking a tone word works as the primary interaction, with drag-and-drop as an optional alternative. On mobile, disable drag-and-drop and only use click-to-fill.",
+          "code_level_hint": "Change styling: .tone-drop-zone { border: 2px dashed #ccc; background: rgba(255,255,255,0.5); cursor: default; }. On tone button click, update the drop zone text: dropZone.textContent = clickedTone;",
+          "acceptance_criteria": [
+            "Drop zone looks like a placeholder, not a clickable button",
+            "Clicking a tone word fills the drop zone (primary interaction)",
+            "Drag-and-drop works as alternative on desktop",
+            "Mobile users can complete activity without drag-and-drop"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A1-08",
+          "title": "Remove redundant 'unlock Lesson 2' messaging",
+          "type": "Content",
+          "severity": "low",
+          "effort": "XS",
+          "focus_area_id": "A1",
+          "focus_area_name": "UX and interaction design",
+          "user_flow": "Lesson 1 Game Mode \u2192 Viewing activities",
+          "affected_surface": "'Go to Lesson 2' button and surrounding text",
+          "problem_description": "The 'Go to Lesson 2 \u00b7 Learn Mode' button has a tooltip saying 'Complete every warm-up to unlock Lesson 2', and below it is text saying 'Finish 2 more activities to unlock Lesson 2.' This is redundant and takes up visual space.",
+          "why_it_matters": "Redundant messaging adds clutter without adding value. Users only need to see the unlock requirement once, preferably in the most prominent location.",
+          "suggested_fix": "Remove the text below the button. Keep only the button tooltip or a single line of text. Alternatively, show the remaining activities count in a more compact format like a badge on the button: 'Go to Lesson 2 (2 left)'.",
+          "code_level_hint": "Remove the redundant <p> tag. Or consolidate into button text: <button>Go to Lesson 2 \u00b7 Learn Mode <span class='badge'>2 activities left</span></button>",
+          "acceptance_criteria": [
+            "Unlock requirement shown only once",
+            "No redundant text below the button",
+            "Remaining activities count is clear and compact"
+          ],
+          "is_micro_ux": true
+        },
+        {
+          "id": "A1-09",
+          "title": "Ensure Activity 2 (Voice Mimic) provides feedback",
+          "type": "UX",
+          "severity": "medium",
+          "effort": "M",
+          "focus_area_id": "A1",
+          "focus_area_name": "UX and interaction design",
+          "user_flow": "Lesson 1 Game Mode \u2192 Activity 2",
+          "affected_surface": "Voice Mimic Chat activity with character dropdown and Send button",
+          "problem_description": "Activity 2 was not fully tested in this audit pass, but it requires users to select a character voice and click Send. It's unclear what happens after clicking Send\u2014does it show an AI-generated response? Does it require 3 sends to complete? The 'VOICES TRIED: 0/3' counter suggests multiple interactions are needed.",
+          "why_it_matters": "If Activity 2 requires multiple interactions without clear feedback on what to do next, users may get stuck. The activity should provide immediate feedback after each Send click and clearly indicate progress toward the 3-voice goal.",
+          "suggested_fix": "After clicking Send, immediately show an AI-generated response in the character's voice. Update the 'VOICES TRIED' counter. Provide feedback like 'Great! Try 2 more voices.' After 3 voices, show completion message and award XP. Ensure the dropdown resets or disables already-tried voices.",
+          "code_level_hint": "On Send click: (1) Call AI API or show pre-generated response, (2) Increment voicesTried counter, (3) Update UI with response and progress, (4) If voicesTried === 3, show completion modal and award XP.",
+          "acceptance_criteria": [
+            "Clicking Send shows immediate AI response",
+            "VOICES TRIED counter updates after each send",
+            "After 3 voices, activity completes with XP reward",
+            "Clear feedback guides user through the 3-voice requirement"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A1-10",
+          "title": "Test and fix Activity 2 accessibility on smaller screens",
+          "type": "UX",
+          "severity": "medium",
+          "effort": "S",
+          "focus_area_id": "A1",
+          "focus_area_name": "UX and interaction design",
+          "user_flow": "Lesson 1 Game Mode \u2192 Activity 2 on mobile or small laptop screens",
+          "affected_surface": "Voice Mimic Chat dropdown and Send button",
+          "problem_description": "In the previous audit (different URL), Activity 2 controls were difficult to access due to scrolling/layout issues. This needs to be verified on the current site. The dropdown and Send button must be easily accessible without excessive scrolling.",
+          "why_it_matters": "If users cannot access the controls to complete an activity, it's a critical blocker. This is especially important for mobile users or those with smaller laptop screens.",
+          "suggested_fix": "Test Activity 2 on multiple screen sizes (mobile, tablet, small laptop). Ensure the dropdown and Send button are always visible and accessible. Implement auto-scroll to bring the active activity into view. Add spacing between activities to prevent overlap.",
+          "code_level_hint": "Use CSS media queries to adjust layout for smaller screens. Add scrollIntoView() when an activity becomes active: activityElement.scrollIntoView({ behavior: 'smooth', block: 'center' });",
+          "acceptance_criteria": [
+            "Activity 2 controls are accessible on screens as small as 375px width",
+            "No excessive scrolling required to reach Send button",
+            "Auto-scroll brings active activity into view"
+          ],
+          "is_micro_ux": false
+        }
+      ]
+    },
+    {
+      "focus_area_id": "A2",
+      "focus_area_name": "Information architecture and navigation clarity",
+      "status": "completed",
+      "summary_for_humans": [
+        "Navigation menu is well-organized with clear sections (MAIN, RESOURCES, LESSONS) but lacks progress indicators.",
+        "Menu shows all lessons including 'COMING SOON' items, which clutters the list and shows unavailable content.",
+        "No visual indication of which lessons are completed, in progress, or locked\u2014forces users to remember their state."
+      ],
+      "todo_items": [
+        {
+          "id": "A2-01",
+          "title": "Add progress indicators to navigation menu",
+          "type": "UX",
+          "severity": "high",
+          "effort": "S",
+          "focus_area_id": "A2",
+          "focus_area_name": "Information architecture and navigation clarity",
+          "user_flow": "Any page \u2192 Open hamburger menu",
+          "affected_surface": "Hamburger navigation menu, LESSONS section",
+          "problem_description": "The navigation menu lists all lessons (Lesson 1-6, Quiz 1) but provides no visual indication of completion status. Users cannot see which lessons they've completed, which are in progress, or which are locked. This forces users to close the menu, check the landing page, then reopen the menu to navigate\u2014an unnecessary extra step.",
+          "why_it_matters": "Navigation should help users understand where they are and where they can go. Without progress indicators, the menu becomes a simple list rather than a wayfinding tool. This is especially problematic for a sequential learning path where lesson order matters.",
+          "suggested_fix": "Add status icons next to each lesson in the menu: \u2705 for completed, \ud83d\udd04 for in progress, \ud83d\udd12 for locked, and no icon for available. Use color coding: green for completed, yellow for in progress, gray for locked. Match the status shown on the landing page lesson cards.",
+          "code_level_hint": "In the menu rendering logic, check each lesson's status from the progress state: lessons.map(lesson => { const icon = lesson.completed ? '\u2705' : lesson.inProgress ? '\ud83d\udd04' : lesson.locked ? '\ud83d\udd12' : ''; return <a className={`lesson-${lesson.status}`}>{icon} {lesson.title}</a> })",
+          "acceptance_criteria": [
+            "Each lesson in the menu shows a status icon",
+            "Icon matches the lesson's actual state (completed/in progress/locked)",
+            "Visual styling (color) reinforces the status"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A2-02",
+          "title": "Hide or clearly mark 'COMING SOON' lessons in menu",
+          "type": "Content",
+          "severity": "medium",
+          "effort": "XS",
+          "focus_area_id": "A2",
+          "focus_area_name": "Information architecture and navigation clarity",
+          "user_flow": "Any page \u2192 Open hamburger menu \u2192 View LESSONS section",
+          "affected_surface": "Hamburger navigation menu showing Lesson 5 and 6",
+          "problem_description": "The menu shows Lesson 5 and Lesson 6 with 'COMING SOON' labels. This clutters the navigation with unavailable content. Users may click on these expecting to access them, only to find they're not yet available.",
+          "why_it_matters": "Navigation should focus on available actions. Showing unavailable content creates false expectations and adds visual noise. It's better to hide these lessons entirely or make them visually distinct (grayed out, at the bottom, with clear unavailability indicators).",
+          "suggested_fix": "Either (1) hide Lesson 5 and 6 from the menu entirely until they're available, or (2) move them to a separate 'Coming Soon' section at the bottom of the menu with muted styling and disabled links. If keeping them visible, add clear text like '(Not Yet Available)' and disable the links.",
+          "code_level_hint": "Filter out coming soon lessons: const availableLessons = lessons.filter(l => !l.comingSoon); Or add a separate section: <div className='coming-soon'><h4>Coming Soon</h4>{comingSoonLessons.map(...)}</div>",
+          "acceptance_criteria": [
+            "Coming soon lessons are either hidden or clearly separated",
+            "If visible, they are grayed out and not clickable",
+            "Users don't waste clicks on unavailable content"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A2-03",
+          "title": "Add current page indicator in navigation menu",
+          "type": "UX",
+          "severity": "medium",
+          "effort": "XS",
+          "focus_area_id": "A2",
+          "focus_area_name": "Information architecture and navigation clarity",
+          "user_flow": "Any page \u2192 Open hamburger menu",
+          "affected_surface": "Hamburger navigation menu",
+          "problem_description": "When opening the menu from a lesson page, there's no visual indication of which page the user is currently on. All menu items look identical, making it hard to orient oneself within the site structure.",
+          "why_it_matters": "Users need to know 'you are here' to understand their context. A current page indicator helps with wayfinding and prevents users from accidentally clicking on the page they're already on.",
+          "suggested_fix": "Highlight the current page in the menu with a different background color, bold text, or a 'Current' badge. Use aria-current='page' for accessibility.",
+          "code_level_hint": "Compare current URL with menu item href: <a href='/lesson1' className={currentPath === '/lesson1' ? 'active' : ''} aria-current={currentPath === '/lesson1' ? 'page' : undefined}>Lesson 1</a>. CSS: .active { background: rgba(255,255,255,0.2); font-weight: bold; }",
+          "acceptance_criteria": [
+            "Current page is visually distinct in the menu",
+            "Styling is subtle but clear (not overwhelming)",
+            "aria-current attribute is set for accessibility"
+          ],
+          "is_micro_ux": true
+        },
+        {
+          "id": "A2-04",
+          "title": "Improve menu section hierarchy and spacing",
+          "type": "Visual",
+          "severity": "low",
+          "effort": "XS",
+          "focus_area_id": "A2",
+          "focus_area_name": "Information architecture and navigation clarity",
+          "user_flow": "Any page \u2192 Open hamburger menu",
+          "affected_surface": "Hamburger navigation menu sections (MAIN, RESOURCES, LESSONS)",
+          "problem_description": "The menu sections (MAIN, RESOURCES, LESSONS) are well-organized but could benefit from clearer visual hierarchy. The section headers could be more prominent, and spacing between sections could be increased for better scannability.",
+          "why_it_matters": "Clear visual hierarchy helps users quickly scan and find what they need. Better spacing reduces cognitive load and makes the menu feel less cramped.",
+          "suggested_fix": "Increase font size and weight of section headers (MAIN, RESOURCES, LESSONS). Add more vertical spacing between sections. Consider using a subtle divider line or background color difference.",
+          "code_level_hint": "CSS: .menu-section-header { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; margin-top: 1.5rem; margin-bottom: 0.5rem; } .menu-section { margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; }",
+          "acceptance_criteria": [
+            "Section headers are visually distinct from menu items",
+            "Adequate spacing between sections improves scannability",
+            "Menu feels organized and easy to navigate"
+          ],
+          "is_micro_ux": true
+        },
+        {
+          "id": "A2-05",
+          "title": "Test and document 'View Curriculum' vs 'Start Course' distinction",
+          "type": "UX",
+          "severity": "medium",
+          "effort": "S",
+          "focus_area_id": "A2",
+          "focus_area_name": "Information architecture and navigation clarity",
+          "user_flow": "Landing page \u2192 Click 'View Curriculum' or 'Start Course'",
+          "affected_surface": "Hero section CTAs on landing page",
+          "problem_description": "The landing page has two primary CTAs: 'Start Course' and 'View Curriculum'. The difference between these is not immediately clear. Do they go to different pages? Does one start the first lesson while the other shows an overview? This ambiguity can cause decision paralysis.",
+          "why_it_matters": "Users should not have to guess what a button does. Clear, distinct CTAs with obvious purposes reduce friction and help users choose the right path for their needs.",
+          "suggested_fix": "Test what 'View Curriculum' does. If it shows the same content as scrolling down the landing page, remove it or change it to 'Browse Lessons'. If it goes to a different page, add descriptive subtext: 'Start Course \u2192 Begin Lesson 1 now' vs 'View Curriculum \u2192 See all lessons and topics'.",
+          "code_level_hint": "Add aria-label or title attributes for clarity: <button aria-label='Start Course: Begin Lesson 1 immediately'>Start Course \u2192</button>. Or add subtext: <button>Start Course<span className='subtext'>Begin Lesson 1</span></button>",
+          "acceptance_criteria": [
+            "The purpose of each CTA is clear from the button text or subtext",
+            "Users can confidently choose between the two options",
+            "If both do the same thing, consolidate to one CTA"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A2-06",
+          "title": "Add breadcrumbs to all lesson and quiz pages",
+          "type": "UX",
+          "severity": "medium",
+          "effort": "S",
+          "focus_area_id": "A2",
+          "focus_area_name": "Information architecture and navigation clarity",
+          "user_flow": "Any lesson or quiz page",
+          "affected_surface": "Page headers showing navigation path",
+          "problem_description": "Lesson 1 has a breadcrumb ('Home / Lesson 1: Prompt Wizardry Warm-Up') but 'Home' is not clickable (see A1-04). Need to verify if all pages have breadcrumbs and if they're consistent. Breadcrumbs are a key wayfinding tool that should be present on all non-home pages.",
+          "why_it_matters": "Breadcrumbs help users understand where they are in the site hierarchy and provide an easy way to navigate back to parent pages. Consistent breadcrumbs across all pages improve the overall navigation experience.",
+          "suggested_fix": "Ensure all lesson and quiz pages have breadcrumbs. Make all breadcrumb links clickable. Use a consistent format: 'Home / [Section] / [Page Title]'. For quizzes, consider: 'Home / Quizzes / Quiz 1'.",
+          "code_level_hint": "Create a Breadcrumb component that takes the current page path and generates links: <Breadcrumb path={['Home', 'Lessons', 'Lesson 1']} />. Render on all pages except the landing page.",
+          "acceptance_criteria": [
+            "All lesson and quiz pages have breadcrumbs",
+            "All breadcrumb segments are clickable links (except current page)",
+            "Breadcrumb format is consistent across the site"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A2-07",
+          "title": "Consider adding a site map or course overview page",
+          "type": "UX",
+          "severity": "low",
+          "effort": "M",
+          "focus_area_id": "A2",
+          "focus_area_name": "Information architecture and navigation clarity",
+          "user_flow": "Landing page \u2192 'View Curriculum' or new 'Course Overview' link",
+          "affected_surface": "New page showing full course structure",
+          "problem_description": "The landing page shows lesson cards and a learning path timeline, but there's no single page that shows the full course structure with all lessons, quizzes, topics, and estimated time. Users may want to see the big picture before committing to the course.",
+          "why_it_matters": "A course overview page helps users understand the full scope of the course, set expectations for time commitment, and decide if the course is right for them. It's especially valuable for adult learners who need to plan their time.",
+          "suggested_fix": "Create a 'Course Overview' or 'Curriculum' page that shows: (1) All lessons with topics covered, (2) Estimated time for each lesson, (3) Prerequisites and dependencies, (4) Learning outcomes, (5) Total course duration. Link to this from the landing page and navigation menu.",
+          "code_level_hint": "Create a new curriculum.html page with a structured layout. Use an accordion or expandable cards to show lesson details. Add a 'Time to Complete' badge for each lesson. Link from the landing page: <a href='/curriculum'>View Full Curriculum</a>",
+          "acceptance_criteria": [
+            "Course overview page shows all lessons and topics",
+            "Time estimates are provided for each lesson",
+            "Page is accessible from landing page and navigation menu"
+          ],
+          "is_micro_ux": false
+        }
+      ]
+    },
+    {
+      "focus_area_id": "A3",
+      "focus_area_name": "Content and pedagogy",
+      "status": "completed",
+      "summary_for_humans": [
+        "Quiz feedback is clear and immediate ('Nice catch! You enforced the right safeguard.').",
+        "Content quality is excellent\u2014scenarios are realistic and educational.",
+        "Missing: explanatory feedback for wrong answers (only shows correct answer feedback)."
+      ],
+      "todo_items": [
+        {
+          "id": "A3-01",
+          "title": "Add explanatory feedback for incorrect quiz answers",
+          "type": "Content",
+          "severity": "high",
+          "effort": "M",
+          "focus_area_id": "A3",
+          "focus_area_name": "Content and pedagogy",
+          "user_flow": "Quiz 1 \u2192 Select wrong answer",
+          "affected_surface": "Quiz feedback system",
+          "problem_description": "When selecting the correct answer in Quiz 1, users see 'Nice catch! You enforced the right safeguard.' However, there's no indication of what happens when users select wrong answers. Do they get feedback explaining why it's wrong? Do they get a second chance? This is critical for learning\u2014mistakes are teaching opportunities.",
+          "why_it_matters": "Effective pedagogy requires explaining WHY an answer is wrong, not just marking it incorrect. Without explanatory feedback, users don't learn from mistakes. This is especially important for AI literacy where nuanced understanding matters.",
+          "suggested_fix": "For each wrong answer, provide specific feedback explaining: (1) Why this choice is problematic, (2) What the correct approach is, (3) The real-world consequences of this mistake. Example: 'Trusting the AI without verification could spread misinformation. Always check claims against the model's knowledge cutoff.'",
+          "code_level_hint": "In quiz answer data, add a 'feedback' field for each option: { text: 'Ask it to summarize...', correct: false, feedback: 'This approach ignores the knowledge cutoff issue and could lead to hallucinated content being treated as fact.' }. Display this feedback when the option is selected.",
+          "acceptance_criteria": [
+            "Wrong answers show specific explanatory feedback",
+            "Feedback explains why the answer is wrong and what the correct approach is",
+            "Users learn from mistakes, not just see 'Incorrect'"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A3-02",
+          "title": "Add 'Why this matters' context to quiz scenarios",
+          "type": "Content",
+          "severity": "medium",
+          "effort": "M",
+          "focus_area_id": "A3",
+          "focus_area_name": "Content and pedagogy",
+          "user_flow": "Quiz 1 \u2192 Read scenario",
+          "affected_surface": "Quiz scenario descriptions",
+          "problem_description": "Quiz scenarios present situations but don't explain the real-world stakes. For example, the knowledge cutoff scenario doesn't mention that this mistake could lead to citing non-existent sources in a professional report. Adding context helps learners understand why these skills matter beyond passing a quiz.",
+          "why_it_matters": "Adult learners especially need to see the practical relevance of what they're learning. 9th graders benefit from understanding real-world consequences. Context increases engagement and retention.",
+          "suggested_fix": "Add a 'Why this matters' callout box to each scenario explaining the real-world impact. Example: '\ud83d\udca1 Why this matters: In a professional setting, citing non-existent sources can damage your credibility and your organization's reputation.'",
+          "code_level_hint": "Add a 'context' field to each quiz question: { scenario: '...', context: 'In professional settings, this mistake could lead to...', question: '...' }. Display in a styled callout box above the question.",
+          "acceptance_criteria": [
+            "Each quiz scenario includes real-world context",
+            "Context is displayed in a visually distinct callout",
+            "Context explains practical stakes, not just theoretical concepts"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A3-03",
+          "title": "Test and document Lesson 4-5 grading mechanism",
+          "type": "UX",
+          "severity": "critical",
+          "effort": "L",
+          "focus_area_id": "A3",
+          "focus_area_name": "Content and pedagogy",
+          "user_flow": "Lesson 4 or 5 \u2192 Complete prompting exercises",
+          "affected_surface": "Lessons 4 and 5 (Advanced Prompting and AI Workflows)",
+          "problem_description": "Based on the original audit request, Lessons 4 and 5 rely on users going to external AI playgrounds (ChatGPT, etc.) to practice prompting, but there's NO WAY to grade or verify their work. This was identified as a critical issue in the previous audit. Need to verify if this is still the case on the current site.",
+          "why_it_matters": "Without grading, users can skip the exercises entirely and still progress. There's no feedback loop to ensure learning. This breaks the course's progression system and makes XP/completion meaningless for these lessons.",
+          "suggested_fix": "Three options: (1) Build an integrated AI playground with automated grading based on prompt quality metrics, (2) Implement a peer review system where users submit prompts and review others' work, (3) Add self-assessment checklists where users evaluate their own prompts against criteria. Option 1 is ideal but requires significant development. Option 3 is a quick win.",
+          "code_level_hint": "For self-assessment: Create a checklist component with criteria like 'Does your prompt specify the audience?', 'Does it include tone guidance?', 'Is the task clearly defined?'. Users must check all items to proceed. Store responses in localStorage. For integrated playground: Use OpenAI API with prompt evaluation logic.",
+          "acceptance_criteria": [
+            "Users cannot complete Lessons 4-5 without demonstrating prompt skills",
+            "Some form of feedback or verification is provided",
+            "Progress tracking accurately reflects lesson completion"
+          ],
+          "is_micro_ux": false
+        }
+      ]
+    },
+    {
+      "focus_area_id": "A4",
+      "focus_area_name": "Gamification and progress tracking",
+      "status": "completed",
+      "summary_for_humans": [
+        "Gamification is OVER-ENGINEERED with 8+ separate metrics (XP, lessons, quiz %, badges, streaks, leaderboard, daily missions, levels).",
+        "Progress state is inconsistent (592 XP with 0 lessons complete\u2014see A1-01).",
+        "For 9th graders, this is overwhelming. For adults, it feels juvenile and distracting from learning."
+      ],
+      "todo_items": [
+        {
+          "id": "A4-01",
+          "title": "Simplify gamification to 2-3 core metrics",
+          "type": "UX",
+          "severity": "high",
+          "effort": "L",
+          "focus_area_id": "A4",
+          "focus_area_name": "Gamification and progress tracking",
+          "user_flow": "Entire course experience",
+          "affected_surface": "All progress displays, landing page, lesson headers",
+          "problem_description": "The course tracks too many gamification metrics: XP, lesson completion, quiz percentage, badges, streaks, leaderboard position, daily missions, and levels. This is cognitive overload. Users don't know which metric matters most. The landing page shows 3 separate progress cards (Lessons 0/8, Total XP 592, Latest Quiz 25%), and lessons show even more metrics.",
+          "why_it_matters": "Excessive gamification distracts from learning. Research shows that too many extrinsic motivators can reduce intrinsic motivation. For adult learners, this feels patronizing. For 9th graders, it's overwhelming. Simplicity increases focus on actual learning.",
+          "suggested_fix": "Reduce to 3 core metrics: (1) Lesson Progress (X/8 complete), (2) Current Lesson XP (for immediate feedback), (3) Optional: Badges for major milestones only. Remove or hide: quiz %, streaks, leaderboard, daily missions, levels. Offer a 'Professional Mode' toggle that hides all gamification except lesson progress.",
+          "code_level_hint": "Add a settings toggle: professionalMode = localStorage.getItem('professionalMode') === 'true'. Conditionally render gamification elements: {!professionalMode && <XPDisplay />}. Update landing page to show only lesson progress by default. Move other metrics to a separate 'Stats' page.",
+          "acceptance_criteria": [
+            "Landing page shows maximum 2 progress metrics by default",
+            "Professional Mode toggle hides all gamification except lesson progress",
+            "UI feels cleaner and less cluttered"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A4-02",
+          "title": "Add progress persistence warning before Reset Progress",
+          "type": "UX",
+          "severity": "medium",
+          "effort": "XS",
+          "focus_area_id": "A4",
+          "focus_area_name": "Gamification and progress tracking",
+          "user_flow": "Landing page \u2192 Click Reset Progress",
+          "affected_surface": "Reset Progress button",
+          "problem_description": "The 'Reset Progress' button is visible on the landing page but there's no indication of what it does or whether it's reversible. Users might click it accidentally or without understanding the consequences.",
+          "why_it_matters": "Destructive actions should always have confirmation dialogs. Losing progress accidentally is frustrating and could cause users to abandon the course.",
+          "suggested_fix": "Add a confirmation modal when Reset Progress is clicked: 'Are you sure you want to reset all progress? This will erase your XP, lesson completion, and quiz scores. This action cannot be undone.' Require typing 'RESET' or clicking a secondary confirmation button.",
+          "code_level_hint": "On button click, show modal: if (confirm('Are you sure you want to reset ALL progress? This cannot be undone.')) { resetProgress(); }. Better: use a custom modal with explicit confirmation. Add a 'Cancel' button as the default action.",
+          "acceptance_criteria": [
+            "Clicking Reset Progress shows a confirmation modal",
+            "Modal clearly explains what will be erased",
+            "User must explicitly confirm before reset occurs"
+          ],
+          "is_micro_ux": true
+        },
+        {
+          "id": "A4-03",
+          "title": "Show XP breakdown on hover or in a modal",
+          "type": "UX",
+          "severity": "low",
+          "effort": "S",
+          "focus_area_id": "A4",
+          "focus_area_name": "Gamification and progress tracking",
+          "user_flow": "Landing page \u2192 View Total XP",
+          "affected_surface": "Total XP card on landing page",
+          "problem_description": "The landing page shows 'Total XP: 592' but doesn't explain where this XP came from. Users can't see a breakdown by lesson or activity. This makes XP feel arbitrary and reduces its motivational value.",
+          "why_it_matters": "Transparent progress tracking increases trust and motivation. Users want to see how they earned their XP and what they can earn next.",
+          "suggested_fix": "Make the XP card clickable to show a breakdown modal: 'Lesson 1: 80 XP (2/3 activities), Quiz 1: 25 XP (1/4 questions), etc.' Or add a small info icon that shows a tooltip with the breakdown.",
+          "code_level_hint": "Add onClick handler to XP card: <div onClick={() => setShowXPBreakdown(true)}>. Create a modal component that maps through progress data and displays XP by source. Add cursor: pointer and hover effect to indicate clickability.",
+          "acceptance_criteria": [
+            "XP card is clickable or has an info icon",
+            "Clicking shows a breakdown of XP by source",
+            "Breakdown is clear and easy to understand"
+          ],
+          "is_micro_ux": true
+        }
+      ]
+    },
+    {
+      "focus_area_id": "A5",
+      "focus_area_name": "Accessibility",
+      "status": "partial",
+      "summary_for_humans": [
+        "Basic accessibility appears functional (keyboard navigation works, hamburger menu is accessible).",
+        "Need to test: screen reader compatibility, color contrast, ARIA labels, focus indicators.",
+        "Drag-and-drop in Activity 3 is not accessible\u2014needs click-based alternative."
+      ],
+      "todo_items": [
+        {
+          "id": "A5-01",
+          "title": "Ensure drag-and-drop has keyboard-accessible alternative",
+          "type": "Accessibility",
+          "severity": "high",
+          "effort": "S",
+          "focus_area_id": "A5",
+          "focus_area_name": "Accessibility",
+          "user_flow": "Lesson 1 Game Mode \u2192 Activity 3",
+          "affected_surface": "Tone selection drag-and-drop in Activity 3",
+          "problem_description": "Activity 3 instructions say 'CLICK A TONE WORD OR DRAG IT INTO THE SLOT', suggesting drag-and-drop is supported. However, drag-and-drop is not accessible to keyboard-only users or screen reader users. The click alternative is good, but it needs to be clearly the primary interaction method.",
+          "why_it_matters": "WCAG 2.1 Level AA requires that all functionality be keyboard accessible. Drag-and-drop without keyboard alternatives excludes users with motor disabilities and screen reader users.",
+          "suggested_fix": "Ensure clicking a tone word fills the slot (already implemented based on testing). Make this the primary interaction. Add keyboard navigation: use arrow keys to navigate tone words, Enter to select. Add aria-label to the drop zone: 'Selected tone: [tone]' or 'No tone selected'.",
+          "code_level_hint": "Add keyboard event listeners: onKeyDown={(e) => { if (e.key === 'Enter') selectTone(tone); }}. Ensure all tone buttons are focusable with tabindex. Add aria-live region to announce selection: <div aria-live='polite'>{selectedTone ? `Selected: ${selectedTone}` : 'No tone selected'}</div>",
+          "acceptance_criteria": [
+            "Activity 3 can be completed using only keyboard",
+            "Screen readers announce tone selection",
+            "Focus indicators are visible on all interactive elements"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A5-02",
+          "title": "Audit color contrast for WCAG AA compliance",
+          "type": "Accessibility",
+          "severity": "medium",
+          "effort": "S",
+          "focus_area_id": "A5",
+          "focus_area_name": "Accessibility",
+          "user_flow": "All pages",
+          "affected_surface": "Text, buttons, and interactive elements",
+          "problem_description": "Need to verify that all text and interactive elements meet WCAG AA contrast ratio requirements (4.5:1 for normal text, 3:1 for large text). The purple background with white text appears to have good contrast, but need to test all color combinations systematically.",
+          "why_it_matters": "Insufficient contrast makes content difficult or impossible to read for users with low vision or color blindness. WCAG AA compliance is a legal requirement in many jurisdictions.",
+          "suggested_fix": "Use a contrast checker tool (WebAIM, Lighthouse, axe DevTools) to audit all color combinations. Fix any failing combinations by adjusting colors. Common issues: light gray text on white backgrounds, colored buttons with insufficient contrast.",
+          "code_level_hint": "Run Lighthouse accessibility audit in Chrome DevTools. Use browser extension like axe DevTools. Check CSS for color values and test against backgrounds. Update CSS variables for consistent contrast: --text-primary: #000; --text-secondary: #333; --bg-primary: #fff;",
+          "acceptance_criteria": [
+            "All text meets 4.5:1 contrast ratio (or 3:1 for large text)",
+            "Interactive elements have sufficient contrast in all states (default, hover, focus, disabled)",
+            "Lighthouse accessibility score is 90+"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A5-03",
+          "title": "Add skip navigation link",
+          "type": "Accessibility",
+          "severity": "medium",
+          "effort": "XS",
+          "focus_area_id": "A5",
+          "focus_area_name": "Accessibility",
+          "user_flow": "All pages",
+          "affected_surface": "Page header",
+          "problem_description": "There's no 'Skip to main content' link for keyboard and screen reader users. This means users must tab through the entire navigation menu on every page before reaching the main content.",
+          "why_it_matters": "Skip links are a WCAG Level A requirement. They significantly improve the experience for keyboard and screen reader users by allowing them to bypass repetitive navigation.",
+          "suggested_fix": "Add a 'Skip to main content' link as the first focusable element on the page. Make it visually hidden by default but visible on focus. Link it to the main content area with an id.",
+          "code_level_hint": "Add at the top of <body>: <a href='#main-content' class='skip-link'>Skip to main content</a>. CSS: .skip-link { position: absolute; top: -40px; left: 0; background: #000; color: #fff; padding: 8px; z-index: 100; } .skip-link:focus { top: 0; }. Add id='main-content' to the main content container.",
+          "acceptance_criteria": [
+            "Skip link is the first focusable element on every page",
+            "Link is visible when focused",
+            "Clicking link moves focus to main content"
+          ],
+          "is_micro_ux": true
+        }
+      ]
+    },
+    {
+      "focus_area_id": "A6",
+      "focus_area_name": "Visual design and responsiveness",
+      "status": "partial",
+      "summary_for_humans": [
+        "Desktop design is clean and modern with good use of color and spacing.",
+        "Mobile responsiveness not tested yet\u2014need to verify layouts on 375px, 768px, 1024px widths.",
+        "Some visual hierarchy issues: too many competing elements on landing page."
+      ],
+      "todo_items": [
+        {
+          "id": "A6-01",
+          "title": "Test and fix mobile responsiveness (375px-768px)",
+          "type": "Visual",
+          "severity": "high",
+          "effort": "M",
+          "focus_area_id": "A6",
+          "focus_area_name": "Visual design and responsiveness",
+          "user_flow": "All pages on mobile devices",
+          "affected_surface": "Entire site layout",
+          "problem_description": "Mobile responsiveness has not been tested in this audit. Need to verify that all pages, activities, and quizzes work well on mobile devices (especially 375px width for iPhone SE and similar devices). Common issues: buttons too small, text too small, horizontal scrolling, overlapping elements.",
+          "why_it_matters": "Mobile usage is significant, especially for younger learners. A poor mobile experience will cause users to abandon the course. Many 9th graders will access this on their phones.",
+          "suggested_fix": "Test on multiple screen sizes using browser DevTools. Fix common issues: increase button sizes to minimum 44x44px, use responsive font sizes (rem units), ensure proper viewport meta tag, test touch targets, prevent horizontal scroll. Use CSS Grid or Flexbox with proper breakpoints.",
+          "code_level_hint": "Add viewport meta tag: <meta name='viewport' content='width=device-width, initial-scale=1'>. Use media queries: @media (max-width: 768px) { .lesson-card { width: 100%; } }. Test touch targets: button { min-height: 44px; min-width: 44px; }",
+          "acceptance_criteria": [
+            "All pages render correctly on 375px, 768px, and 1024px widths",
+            "No horizontal scrolling on any page",
+            "All buttons and interactive elements are easily tappable (44x44px minimum)",
+            "Text is readable without zooming"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A6-02",
+          "title": "Reduce visual clutter on landing page",
+          "type": "Visual",
+          "severity": "medium",
+          "effort": "S",
+          "focus_area_id": "A6",
+          "focus_area_name": "Visual design and responsiveness",
+          "user_flow": "Landing page",
+          "affected_surface": "Landing page layout",
+          "problem_description": "The landing page has many competing elements: hero section, 2 CTAs, 3 progress cards, 7 lesson cards, learning path timeline, and 4 feature cards. This creates visual overwhelm and makes it hard to know where to focus. The page feels cluttered despite good individual component design.",
+          "why_it_matters": "Visual hierarchy guides user attention. Too many elements of equal visual weight create confusion and decision paralysis. Users should immediately know the primary action (start the course).",
+          "suggested_fix": "Simplify the landing page: (1) Make 'Start Course' the dominant CTA, remove or de-emphasize 'View Curriculum', (2) Reduce progress cards from 3 to 1 (just show lesson progress), (3) Show only next 3 lessons, hide completed and future lessons, (4) Move feature cards to a separate 'About' page. Use progressive disclosure.",
+          "code_level_hint": "Restructure landing page layout: <Hero><PrimaryCTA /></Hero><ProgressCard /><NextLessons limit={3} /><LearningPath />. Hide other elements behind 'View All Lessons' link. Use CSS to create clear visual hierarchy: primary CTA should be 2x size of secondary elements.",
+          "acceptance_criteria": [
+            "Landing page has one clear primary CTA",
+            "Maximum 3 sections visible above the fold",
+            "Page feels focused and uncluttered"
+          ],
+          "is_micro_ux": false
+        }
+      ]
+    },
+    {
+      "focus_area_id": "A7",
+      "focus_area_name": "Performance and load times",
+      "status": "not_tested",
+      "summary_for_humans": [
+        "Performance not tested in this audit due to time constraints.",
+        "Recommend running Lighthouse performance audit.",
+        "Check for: large images, unoptimized assets, render-blocking resources, excessive JavaScript."
+      ],
+      "todo_items": [
+        {
+          "id": "A7-01",
+          "title": "Run Lighthouse performance audit and fix critical issues",
+          "type": "Tech",
+          "severity": "medium",
+          "effort": "M",
+          "focus_area_id": "A7",
+          "focus_area_name": "Performance and load times",
+          "user_flow": "All pages",
+          "affected_surface": "Site-wide performance",
+          "problem_description": "Performance has not been audited. Slow load times can cause users to abandon the course, especially on mobile devices or slow connections. Common issues: large images, unoptimized JavaScript, render-blocking CSS, lack of caching.",
+          "why_it_matters": "Performance is a key user experience factor. Google research shows that 53% of mobile users abandon sites that take longer than 3 seconds to load. For educational content, fast load times keep learners engaged.",
+          "suggested_fix": "Run Lighthouse performance audit in Chrome DevTools. Address critical issues: (1) Optimize images (use WebP, lazy loading), (2) Minify CSS/JS, (3) Implement caching headers, (4) Use CDN for static assets, (5) Defer non-critical JavaScript. Target: Lighthouse score 90+.",
+          "code_level_hint": "Add lazy loading to images: <img loading='lazy' />. Minify assets in build process. Add caching headers in server config. Use code splitting for JavaScript: import() for non-critical components. Optimize fonts: use font-display: swap.",
+          "acceptance_criteria": [
+            "Lighthouse performance score is 90+ on desktop and 80+ on mobile",
+            "First Contentful Paint < 1.5s",
+            "Time to Interactive < 3.5s",
+            "All images are optimized and lazy-loaded"
+          ],
+          "is_micro_ux": false
+        }
+      ]
+    },
+    {
+      "focus_area_id": "A8",
+      "focus_area_name": "Trust and safety",
+      "status": "not_applicable",
+      "summary_for_humans": [
+        "No user-generated content or social features observed, so trust/safety concerns are minimal.",
+        "Privacy policy and terms of service links not found\u2014should be added to footer.",
+        "No data collection or account system observed."
+      ],
+      "todo_items": [
+        {
+          "id": "A8-01",
+          "title": "Add privacy policy and terms of service links to footer",
+          "type": "Content",
+          "severity": "medium",
+          "effort": "S",
+          "focus_area_id": "A8",
+          "focus_area_name": "Trust and safety",
+          "user_flow": "All pages",
+          "affected_surface": "Page footer",
+          "problem_description": "No privacy policy or terms of service links are visible on the site. Even though the site appears to only use localStorage (no server-side data collection), it's best practice to have these documents, especially for educational content that may be used by minors.",
+          "why_it_matters": "Transparency about data usage builds trust. For educational institutions using this course, privacy policies may be required by law (FERPA, COPPA). Parents and teachers need to know what data is collected and how it's used.",
+          "suggested_fix": "Create simple privacy policy and terms of service pages. Add links to the footer of all pages. Privacy policy should explain: (1) What data is collected (localStorage only), (2) How it's used (progress tracking), (3) That no data is sent to servers, (4) How to delete data (Reset Progress button).",
+          "code_level_hint": "Create privacy.html and terms.html pages. Add footer component: <footer><a href='/privacy'>Privacy Policy</a> | <a href='/terms'>Terms of Service</a></footer>. Include footer on all pages.",
+          "acceptance_criteria": [
+            "Privacy policy and terms of service pages exist",
+            "Links are visible in footer on all pages",
+            "Privacy policy clearly explains data usage"
+          ],
+          "is_micro_ux": false
+        }
+      ]
+    },
+    {
+      "focus_area_id": "A9",
+      "focus_area_name": "Error handling and edge cases",
+      "status": "partial",
+      "summary_for_humans": [
+        "No error messages observed during testing\u2014need to test error scenarios.",
+        "What happens if localStorage is full or disabled?",
+        "What happens if a user tries to access a locked lesson directly via URL?"
+      ],
+      "todo_items": [
+        {
+          "id": "A9-01",
+          "title": "Add error handling for localStorage failures",
+          "type": "Tech",
+          "severity": "medium",
+          "effort": "S",
+          "focus_area_id": "A9",
+          "focus_area_name": "Error handling and edge cases",
+          "user_flow": "Any interaction that saves progress",
+          "affected_surface": "Progress tracking system",
+          "problem_description": "The site relies on localStorage for progress tracking, but there's no visible error handling for cases where localStorage is disabled, full, or fails to save. Users could lose progress without knowing why.",
+          "why_it_matters": "localStorage can fail in private browsing mode, when storage is full, or when disabled by browser settings. Users need to know if their progress isn't being saved so they can take action (enable localStorage, clear storage, etc.).",
+          "suggested_fix": "Wrap all localStorage operations in try-catch blocks. If save fails, show a user-friendly error message: 'Unable to save progress. Please check your browser settings and ensure cookies/storage are enabled.' Provide a fallback mode that warns users their progress won't be saved.",
+          "code_level_hint": "Create a storage utility: function saveProgress(data) { try { localStorage.setItem('progress', JSON.stringify(data)); } catch (e) { showError('Unable to save progress. Your browser may have storage disabled.'); return false; } return true; }. Check storage availability on page load.",
+          "acceptance_criteria": [
+            "localStorage failures are caught and handled gracefully",
+            "Users see a clear error message if progress can't be saved",
+            "Site doesn't crash or show cryptic errors"
+          ],
+          "is_micro_ux": false
+        },
+        {
+          "id": "A9-02",
+          "title": "Implement lesson locking and redirect for locked lessons",
+          "type": "UX",
+          "severity": "medium",
+          "effort": "S",
+          "focus_area_id": "A9",
+          "focus_area_name": "Error handling and edge cases",
+          "user_flow": "Attempt to access locked lesson via direct URL",
+          "affected_surface": "Lesson access control",
+          "problem_description": "The landing page shows lesson status (IN PROGRESS, NOT STARTED, etc.) and suggests sequential unlocking, but it's unclear if lessons are actually locked. Can users access Lesson 3 directly via URL without completing Lessons 1-2? If so, the sequential progression system is meaningless.",
+          "why_it_matters": "If the course is designed for sequential learning, lessons should be actually locked, not just visually indicated as locked. Otherwise, users can skip ahead and miss foundational content.",
+          "suggested_fix": "Implement server-side or client-side lesson locking. Check progress on lesson page load. If user hasn't completed prerequisites, redirect to the last available lesson with a message: 'Complete Lesson 1 to unlock Lesson 2.' Or show a locked state with clear requirements.",
+          "code_level_hint": "On lesson page load: const progress = getProgress(); if (!progress.lesson1Complete && currentLesson === 'lesson2') { window.location.href = '/lesson1'; showToast('Complete Lesson 1 first'); }. Or show a lock screen overlay with requirements.",
+          "acceptance_criteria": [
+            "Users cannot access locked lessons via direct URL",
+            "Attempting to access locked lesson shows clear message",
+            "Message explains what needs to be completed to unlock"
+          ],
+          "is_micro_ux": false
+        }
+      ]
+    }
+  ],
+  "all_todo_items": [
+    {
+      "id": "A1-01",
+      "title": "Fix inconsistent progress state across the app",
+      "type": "Tech",
+      "severity": "high",
+      "effort": "M",
+      "focus_area_id": "A1",
+      "focus_area_name": "UX and interaction design",
+      "user_flow": "Landing page \u2192 Any lesson",
+      "affected_surface": "Progress cards on landing page, lesson headers showing XP and lesson completion",
+      "problem_description": "Landing page shows '0/8 lessons complete (0%)' but simultaneously displays '512 XP' and '25% quiz' completion. This is mathematically impossible and confusing. When entering Lesson 1, header shows 'Total XP: 512 \u00b7 0/8 lessons' which contradicts the lesson XP counter showing '0/110'. This suggests either test data wasn't cleared, localStorage is corrupted, or state management is broken.",
+      "why_it_matters": "Users cannot trust the progress system if numbers contradict each other. This undermines the entire gamification strategy and makes it impossible to understand actual progress. For an AI literacy course teaching users to spot inconsistencies, having inconsistent data in the app itself is particularly damaging to credibility.",
+      "suggested_fix": "Audit the state management system. Check if progress data is being loaded from localStorage without validation. Add a state consistency check on app load that validates: (1) if lessons_completed === 0, then total_xp should be 0 and quiz_percent should be 0; (2) total_xp should equal sum of all lesson XP earned; (3) quiz_percent should only show if quiz has been started. Implement a 'Reset Progress' function that properly clears ALL state, not just some fields.",
+      "code_level_hint": "Look for localStorage.getItem('progress') or similar. Add validation: if (progress.lessons_completed === 0 && progress.total_xp > 0) { resetProgress(); }. Ensure the 'Reset Progress' button calls a comprehensive clearState() function that removes all localStorage keys related to progress.",
+      "acceptance_criteria": [
+        "Landing page shows consistent numbers: if 0 lessons complete, then 0 XP and 0% quiz",
+        "Total XP in header matches sum of lesson XP",
+        "Reset Progress button clears ALL progress data including XP, quiz %, and lesson states"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A1-02",
+      "title": "Add active state styling to mode toggle buttons",
+      "type": "Visual",
+      "severity": "high",
+      "effort": "XS",
+      "focus_area_id": "A1",
+      "focus_area_name": "UX and interaction design",
+      "user_flow": "Any lesson page with Game Mode / Learn toggle",
+      "affected_surface": "Mode toggle buttons in lesson headers",
+      "problem_description": "The '\ud83c\udfae Game Mode' and '\ud83d\udcda Learn' buttons look identical with no visual indication of which mode is currently active. Users cannot tell which mode they're in, leading to confusion about whether clicking will switch modes or is just a label. After clicking 'Go to game warm-ups', the page shows game activities but the mode buttons still look the same.",
+      "why_it_matters": "Mode switching is a core feature of the learning experience. Users need to know their current context to understand what type of content they're viewing (educational vs. interactive). Without clear active states, users may click the wrong button or not realize they can switch modes.",
+      "suggested_fix": "Implement clear active/inactive states for mode buttons. Active mode should have a solid background color (e.g., the current button color) while inactive mode should be outline-only or muted. Add aria-pressed='true' to the active button for accessibility. Consider adding a subtle indicator like 'Current Mode' text or a checkmark icon.",
+      "code_level_hint": "Add a 'mode-active' CSS class that applies solid background. Toggle it based on currentMode state: <button className={currentMode === 'game' ? 'mode-active' : 'mode-inactive'}>. Use CSS: .mode-active { background: solid; } .mode-inactive { background: transparent; border: 2px solid; opacity: 0.6; }",
+      "acceptance_criteria": [
+        "Active mode button has visually distinct styling (solid background)",
+        "Inactive mode button has muted styling (outline only, reduced opacity)",
+        "Clicking a mode button updates the visual state immediately"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A1-03",
+      "title": "Reduce feedback overload on activity completion",
+      "type": "UX",
+      "severity": "medium",
+      "effort": "S",
+      "focus_area_id": "A1",
+      "focus_area_name": "UX and interaction design",
+      "user_flow": "Lesson 1 Game Mode \u2192 Complete any activity",
+      "affected_surface": "Activity completion feedback (success boxes, toasts, inline messages, progress updates)",
+      "problem_description": "When completing Activity 1, users see: (1) success box with checkmark and message, (2) +40 XP badge, (3) inline feedback text, (4) progress update in header, (5) toast notification at bottom, (6) probability visualization. While all are positive, the simultaneous appearance of 6 different feedback elements creates visual chaos and cognitive overload.",
+      "why_it_matters": "Excessive feedback is as bad as no feedback. Users should feel rewarded, not overwhelmed. The current approach distracts from the learning content and makes the interface feel 'noisy'. For 9th graders especially, this can be overstimulating.",
+      "suggested_fix": "Consolidate to 3 core feedback elements: (1) Visual confirmation on the selected answer (green highlight + checkmark), (2) One success message box with explanation and XP gain, (3) Animated progress bar update. Remove the redundant toast notification and inline feedback text. Consider a subtle confetti animation instead of multiple text notifications.",
+      "code_level_hint": "In the activity completion handler, remove the toast notification call. Combine the success message and XP display into a single modal or inline box. Use CSS transitions to animate the XP bar smoothly: transition: width 0.5s ease-out;",
+      "acceptance_criteria": [
+        "Only 3 feedback elements appear on activity completion",
+        "No redundant toast notifications",
+        "Feedback feels celebratory but not overwhelming"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A1-04",
+      "title": "Make breadcrumb 'Home' link clickable",
+      "type": "UX",
+      "severity": "medium",
+      "effort": "XS",
+      "focus_area_id": "A1",
+      "focus_area_name": "UX and interaction design",
+      "user_flow": "Any lesson page",
+      "affected_surface": "Breadcrumb navigation showing 'Home / Lesson 1: Prompt Wizardry Warm-Up'",
+      "problem_description": "The breadcrumb shows 'Home / Lesson 1...' but 'Home' is not clickable. It appears as plain text, missing a standard navigation pattern. Users expect breadcrumbs to be clickable links back to parent pages.",
+      "why_it_matters": "Breadcrumbs are a standard navigation pattern. Non-clickable breadcrumbs violate user expectations and remove an easy way to return to the landing page. This forces users to use the hamburger menu or browser back button.",
+      "suggested_fix": "Convert 'Home' in the breadcrumb to a clickable link that navigates to the landing page (index.html or /). Style it with hover effects (underline, color change) to indicate interactivity.",
+      "code_level_hint": "Change from <span>Home</span> to <a href='/'>Home</a>. Add CSS: .breadcrumb a:hover { text-decoration: underline; color: var(--link-color); }",
+      "acceptance_criteria": [
+        "'Home' in breadcrumb is a clickable link",
+        "Clicking 'Home' navigates to landing page",
+        "Hover state indicates it's clickable"
+      ],
+      "is_micro_ux": true
+    },
+    {
+      "id": "A1-05",
+      "title": "Add tooltip to restart button",
+      "type": "UX",
+      "severity": "low",
+      "effort": "XS",
+      "focus_area_id": "A1",
+      "focus_area_name": "UX and interaction design",
+      "user_flow": "Lesson pages",
+      "affected_surface": "Restart button (\u21ba symbol) in lesson header",
+      "problem_description": "The restart button shows only a '\u21ba' symbol with no text label. While the symbol is somewhat recognizable, it may not be clear to all users, especially younger students. A tooltip appears on hover ('Restart Lesson 1 warm-ups') but this requires discovery.",
+      "why_it_matters": "Icon-only buttons require users to learn their meaning. Adding a visible text label or ensuring the tooltip is prominent improves discoverability and reduces cognitive load.",
+      "suggested_fix": "Either add a text label next to the icon ('Restart') or ensure the tooltip appears quickly on hover (reduce delay to 0.3s). Consider using a more explicit icon or adding an aria-label for screen readers.",
+      "code_level_hint": "Add title attribute or use a tooltip library: <button title='Restart Lesson' aria-label='Restart Lesson 1 warm-ups'>\u21ba</button>. Or add visible text: <button>\u21ba Restart</button>",
+      "acceptance_criteria": [
+        "Tooltip appears within 0.5s of hover",
+        "Button has clear aria-label for screen readers",
+        "Consider adding visible text label for clarity"
+      ],
+      "is_micro_ux": true
+    },
+    {
+      "id": "A1-06",
+      "title": "Clarify difference between 'Go to game warm-ups' and 'Game Mode' button",
+      "type": "UX",
+      "severity": "medium",
+      "effort": "S",
+      "focus_area_id": "A1",
+      "focus_area_name": "UX and interaction design",
+      "user_flow": "Lesson 1 Learn Mode \u2192 Attempting to access Game Mode",
+      "affected_surface": "Mode toggle buttons and 'Go to game warm-ups' CTA",
+      "problem_description": "The page has both a '\ud83c\udfae Game Mode' toggle button in the header AND a 'Go to game warm-ups' button in the content. It's unclear if these do the same thing or different things. Clicking 'Go to game warm-ups' scrolls to activities, but the mode toggle buttons remain visible with no state change.",
+      "why_it_matters": "Redundant CTAs with unclear purposes create confusion. Users don't know which button to click or what the difference is. This violates the principle of clear, singular paths to actions.",
+      "suggested_fix": "Remove the redundant 'Go to game warm-ups' button from the Learn Mode content. Make the '\ud83c\udfae Game Mode' toggle button the only way to switch modes. Alternatively, if both are needed, clearly differentiate them: 'Game Mode' could switch the entire page view, while 'Go to game warm-ups' could be a quick scroll/jump link within the same mode.",
+      "code_level_hint": "If keeping both, add clear labels: 'Switch to Game Mode' vs 'Jump to Activities'. Or remove the redundant button and rely solely on the mode toggle. Ensure clicking the mode toggle updates the page content and button states.",
+      "acceptance_criteria": [
+        "Only one clear path to access game activities",
+        "If both buttons exist, their purposes are clearly differentiated",
+        "Mode toggle button shows active state when in Game Mode"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A1-07",
+      "title": "Improve 'CHOOSE TONE' drop zone affordance",
+      "type": "UX",
+      "severity": "medium",
+      "effort": "S",
+      "focus_area_id": "A1",
+      "focus_area_name": "UX and interaction design",
+      "user_flow": "Lesson 1 Game Mode \u2192 Activity 3",
+      "affected_surface": "Tone selection drop zone in Activity 3",
+      "problem_description": "The 'CHOOSE TONE' element looks like a button but is actually a drop zone for dragging tone words. The instructions say 'CLICK A TONE WORD OR DRAG IT INTO THE SLOT' but the drop zone styling doesn't clearly indicate it's a drop target. It has a button-like appearance which suggests clicking it directly would do something.",
+      "why_it_matters": "Unclear affordances lead to user confusion and failed interactions. Users may try clicking 'CHOOSE TONE' expecting a dropdown menu. The drag-and-drop interaction may not be discoverable, especially on mobile devices where drag-and-drop is less common.",
+      "suggested_fix": "Restyle the drop zone to look less like a button and more like an input field or placeholder. Use a dashed border, lighter background, and placeholder text like '[Drop tone here]'. Ensure clicking a tone word works as the primary interaction, with drag-and-drop as an optional alternative. On mobile, disable drag-and-drop and only use click-to-fill.",
+      "code_level_hint": "Change styling: .tone-drop-zone { border: 2px dashed #ccc; background: rgba(255,255,255,0.5); cursor: default; }. On tone button click, update the drop zone text: dropZone.textContent = clickedTone;",
+      "acceptance_criteria": [
+        "Drop zone looks like a placeholder, not a clickable button",
+        "Clicking a tone word fills the drop zone (primary interaction)",
+        "Drag-and-drop works as alternative on desktop",
+        "Mobile users can complete activity without drag-and-drop"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A1-08",
+      "title": "Remove redundant 'unlock Lesson 2' messaging",
+      "type": "Content",
+      "severity": "low",
+      "effort": "XS",
+      "focus_area_id": "A1",
+      "focus_area_name": "UX and interaction design",
+      "user_flow": "Lesson 1 Game Mode \u2192 Viewing activities",
+      "affected_surface": "'Go to Lesson 2' button and surrounding text",
+      "problem_description": "The 'Go to Lesson 2 \u00b7 Learn Mode' button has a tooltip saying 'Complete every warm-up to unlock Lesson 2', and below it is text saying 'Finish 2 more activities to unlock Lesson 2.' This is redundant and takes up visual space.",
+      "why_it_matters": "Redundant messaging adds clutter without adding value. Users only need to see the unlock requirement once, preferably in the most prominent location.",
+      "suggested_fix": "Remove the text below the button. Keep only the button tooltip or a single line of text. Alternatively, show the remaining activities count in a more compact format like a badge on the button: 'Go to Lesson 2 (2 left)'.",
+      "code_level_hint": "Remove the redundant <p> tag. Or consolidate into button text: <button>Go to Lesson 2 \u00b7 Learn Mode <span class='badge'>2 activities left</span></button>",
+      "acceptance_criteria": [
+        "Unlock requirement shown only once",
+        "No redundant text below the button",
+        "Remaining activities count is clear and compact"
+      ],
+      "is_micro_ux": true
+    },
+    {
+      "id": "A1-09",
+      "title": "Ensure Activity 2 (Voice Mimic) provides feedback",
+      "type": "UX",
+      "severity": "medium",
+      "effort": "M",
+      "focus_area_id": "A1",
+      "focus_area_name": "UX and interaction design",
+      "user_flow": "Lesson 1 Game Mode \u2192 Activity 2",
+      "affected_surface": "Voice Mimic Chat activity with character dropdown and Send button",
+      "problem_description": "Activity 2 was not fully tested in this audit pass, but it requires users to select a character voice and click Send. It's unclear what happens after clicking Send\u2014does it show an AI-generated response? Does it require 3 sends to complete? The 'VOICES TRIED: 0/3' counter suggests multiple interactions are needed.",
+      "why_it_matters": "If Activity 2 requires multiple interactions without clear feedback on what to do next, users may get stuck. The activity should provide immediate feedback after each Send click and clearly indicate progress toward the 3-voice goal.",
+      "suggested_fix": "After clicking Send, immediately show an AI-generated response in the character's voice. Update the 'VOICES TRIED' counter. Provide feedback like 'Great! Try 2 more voices.' After 3 voices, show completion message and award XP. Ensure the dropdown resets or disables already-tried voices.",
+      "code_level_hint": "On Send click: (1) Call AI API or show pre-generated response, (2) Increment voicesTried counter, (3) Update UI with response and progress, (4) If voicesTried === 3, show completion modal and award XP.",
+      "acceptance_criteria": [
+        "Clicking Send shows immediate AI response",
+        "VOICES TRIED counter updates after each send",
+        "After 3 voices, activity completes with XP reward",
+        "Clear feedback guides user through the 3-voice requirement"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A1-10",
+      "title": "Test and fix Activity 2 accessibility on smaller screens",
+      "type": "UX",
+      "severity": "medium",
+      "effort": "S",
+      "focus_area_id": "A1",
+      "focus_area_name": "UX and interaction design",
+      "user_flow": "Lesson 1 Game Mode \u2192 Activity 2 on mobile or small laptop screens",
+      "affected_surface": "Voice Mimic Chat dropdown and Send button",
+      "problem_description": "In the previous audit (different URL), Activity 2 controls were difficult to access due to scrolling/layout issues. This needs to be verified on the current site. The dropdown and Send button must be easily accessible without excessive scrolling.",
+      "why_it_matters": "If users cannot access the controls to complete an activity, it's a critical blocker. This is especially important for mobile users or those with smaller laptop screens.",
+      "suggested_fix": "Test Activity 2 on multiple screen sizes (mobile, tablet, small laptop). Ensure the dropdown and Send button are always visible and accessible. Implement auto-scroll to bring the active activity into view. Add spacing between activities to prevent overlap.",
+      "code_level_hint": "Use CSS media queries to adjust layout for smaller screens. Add scrollIntoView() when an activity becomes active: activityElement.scrollIntoView({ behavior: 'smooth', block: 'center' });",
+      "acceptance_criteria": [
+        "Activity 2 controls are accessible on screens as small as 375px width",
+        "No excessive scrolling required to reach Send button",
+        "Auto-scroll brings active activity into view"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A2-01",
+      "title": "Add progress indicators to navigation menu",
+      "type": "UX",
+      "severity": "high",
+      "effort": "S",
+      "focus_area_id": "A2",
+      "focus_area_name": "Information architecture and navigation clarity",
+      "user_flow": "Any page \u2192 Open hamburger menu",
+      "affected_surface": "Hamburger navigation menu, LESSONS section",
+      "problem_description": "The navigation menu lists all lessons (Lesson 1-6, Quiz 1) but provides no visual indication of completion status. Users cannot see which lessons they've completed, which are in progress, or which are locked. This forces users to close the menu, check the landing page, then reopen the menu to navigate\u2014an unnecessary extra step.",
+      "why_it_matters": "Navigation should help users understand where they are and where they can go. Without progress indicators, the menu becomes a simple list rather than a wayfinding tool. This is especially problematic for a sequential learning path where lesson order matters.",
+      "suggested_fix": "Add status icons next to each lesson in the menu: \u2705 for completed, \ud83d\udd04 for in progress, \ud83d\udd12 for locked, and no icon for available. Use color coding: green for completed, yellow for in progress, gray for locked. Match the status shown on the landing page lesson cards.",
+      "code_level_hint": "In the menu rendering logic, check each lesson's status from the progress state: lessons.map(lesson => { const icon = lesson.completed ? '\u2705' : lesson.inProgress ? '\ud83d\udd04' : lesson.locked ? '\ud83d\udd12' : ''; return <a className={`lesson-${lesson.status}`}>{icon} {lesson.title}</a> })",
+      "acceptance_criteria": [
+        "Each lesson in the menu shows a status icon",
+        "Icon matches the lesson's actual state (completed/in progress/locked)",
+        "Visual styling (color) reinforces the status"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A2-02",
+      "title": "Hide or clearly mark 'COMING SOON' lessons in menu",
+      "type": "Content",
+      "severity": "medium",
+      "effort": "XS",
+      "focus_area_id": "A2",
+      "focus_area_name": "Information architecture and navigation clarity",
+      "user_flow": "Any page \u2192 Open hamburger menu \u2192 View LESSONS section",
+      "affected_surface": "Hamburger navigation menu showing Lesson 5 and 6",
+      "problem_description": "The menu shows Lesson 5 and Lesson 6 with 'COMING SOON' labels. This clutters the navigation with unavailable content. Users may click on these expecting to access them, only to find they're not yet available.",
+      "why_it_matters": "Navigation should focus on available actions. Showing unavailable content creates false expectations and adds visual noise. It's better to hide these lessons entirely or make them visually distinct (grayed out, at the bottom, with clear unavailability indicators).",
+      "suggested_fix": "Either (1) hide Lesson 5 and 6 from the menu entirely until they're available, or (2) move them to a separate 'Coming Soon' section at the bottom of the menu with muted styling and disabled links. If keeping them visible, add clear text like '(Not Yet Available)' and disable the links.",
+      "code_level_hint": "Filter out coming soon lessons: const availableLessons = lessons.filter(l => !l.comingSoon); Or add a separate section: <div className='coming-soon'><h4>Coming Soon</h4>{comingSoonLessons.map(...)}</div>",
+      "acceptance_criteria": [
+        "Coming soon lessons are either hidden or clearly separated",
+        "If visible, they are grayed out and not clickable",
+        "Users don't waste clicks on unavailable content"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A2-03",
+      "title": "Add current page indicator in navigation menu",
+      "type": "UX",
+      "severity": "medium",
+      "effort": "XS",
+      "focus_area_id": "A2",
+      "focus_area_name": "Information architecture and navigation clarity",
+      "user_flow": "Any page \u2192 Open hamburger menu",
+      "affected_surface": "Hamburger navigation menu",
+      "problem_description": "When opening the menu from a lesson page, there's no visual indication of which page the user is currently on. All menu items look identical, making it hard to orient oneself within the site structure.",
+      "why_it_matters": "Users need to know 'you are here' to understand their context. A current page indicator helps with wayfinding and prevents users from accidentally clicking on the page they're already on.",
+      "suggested_fix": "Highlight the current page in the menu with a different background color, bold text, or a 'Current' badge. Use aria-current='page' for accessibility.",
+      "code_level_hint": "Compare current URL with menu item href: <a href='/lesson1' className={currentPath === '/lesson1' ? 'active' : ''} aria-current={currentPath === '/lesson1' ? 'page' : undefined}>Lesson 1</a>. CSS: .active { background: rgba(255,255,255,0.2); font-weight: bold; }",
+      "acceptance_criteria": [
+        "Current page is visually distinct in the menu",
+        "Styling is subtle but clear (not overwhelming)",
+        "aria-current attribute is set for accessibility"
+      ],
+      "is_micro_ux": true
+    },
+    {
+      "id": "A2-04",
+      "title": "Improve menu section hierarchy and spacing",
+      "type": "Visual",
+      "severity": "low",
+      "effort": "XS",
+      "focus_area_id": "A2",
+      "focus_area_name": "Information architecture and navigation clarity",
+      "user_flow": "Any page \u2192 Open hamburger menu",
+      "affected_surface": "Hamburger navigation menu sections (MAIN, RESOURCES, LESSONS)",
+      "problem_description": "The menu sections (MAIN, RESOURCES, LESSONS) are well-organized but could benefit from clearer visual hierarchy. The section headers could be more prominent, and spacing between sections could be increased for better scannability.",
+      "why_it_matters": "Clear visual hierarchy helps users quickly scan and find what they need. Better spacing reduces cognitive load and makes the menu feel less cramped.",
+      "suggested_fix": "Increase font size and weight of section headers (MAIN, RESOURCES, LESSONS). Add more vertical spacing between sections. Consider using a subtle divider line or background color difference.",
+      "code_level_hint": "CSS: .menu-section-header { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; margin-top: 1.5rem; margin-bottom: 0.5rem; } .menu-section { margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; }",
+      "acceptance_criteria": [
+        "Section headers are visually distinct from menu items",
+        "Adequate spacing between sections improves scannability",
+        "Menu feels organized and easy to navigate"
+      ],
+      "is_micro_ux": true
+    },
+    {
+      "id": "A2-05",
+      "title": "Test and document 'View Curriculum' vs 'Start Course' distinction",
+      "type": "UX",
+      "severity": "medium",
+      "effort": "S",
+      "focus_area_id": "A2",
+      "focus_area_name": "Information architecture and navigation clarity",
+      "user_flow": "Landing page \u2192 Click 'View Curriculum' or 'Start Course'",
+      "affected_surface": "Hero section CTAs on landing page",
+      "problem_description": "The landing page has two primary CTAs: 'Start Course' and 'View Curriculum'. The difference between these is not immediately clear. Do they go to different pages? Does one start the first lesson while the other shows an overview? This ambiguity can cause decision paralysis.",
+      "why_it_matters": "Users should not have to guess what a button does. Clear, distinct CTAs with obvious purposes reduce friction and help users choose the right path for their needs.",
+      "suggested_fix": "Test what 'View Curriculum' does. If it shows the same content as scrolling down the landing page, remove it or change it to 'Browse Lessons'. If it goes to a different page, add descriptive subtext: 'Start Course \u2192 Begin Lesson 1 now' vs 'View Curriculum \u2192 See all lessons and topics'.",
+      "code_level_hint": "Add aria-label or title attributes for clarity: <button aria-label='Start Course: Begin Lesson 1 immediately'>Start Course \u2192</button>. Or add subtext: <button>Start Course<span className='subtext'>Begin Lesson 1</span></button>",
+      "acceptance_criteria": [
+        "The purpose of each CTA is clear from the button text or subtext",
+        "Users can confidently choose between the two options",
+        "If both do the same thing, consolidate to one CTA"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A2-06",
+      "title": "Add breadcrumbs to all lesson and quiz pages",
+      "type": "UX",
+      "severity": "medium",
+      "effort": "S",
+      "focus_area_id": "A2",
+      "focus_area_name": "Information architecture and navigation clarity",
+      "user_flow": "Any lesson or quiz page",
+      "affected_surface": "Page headers showing navigation path",
+      "problem_description": "Lesson 1 has a breadcrumb ('Home / Lesson 1: Prompt Wizardry Warm-Up') but 'Home' is not clickable (see A1-04). Need to verify if all pages have breadcrumbs and if they're consistent. Breadcrumbs are a key wayfinding tool that should be present on all non-home pages.",
+      "why_it_matters": "Breadcrumbs help users understand where they are in the site hierarchy and provide an easy way to navigate back to parent pages. Consistent breadcrumbs across all pages improve the overall navigation experience.",
+      "suggested_fix": "Ensure all lesson and quiz pages have breadcrumbs. Make all breadcrumb links clickable. Use a consistent format: 'Home / [Section] / [Page Title]'. For quizzes, consider: 'Home / Quizzes / Quiz 1'.",
+      "code_level_hint": "Create a Breadcrumb component that takes the current page path and generates links: <Breadcrumb path={['Home', 'Lessons', 'Lesson 1']} />. Render on all pages except the landing page.",
+      "acceptance_criteria": [
+        "All lesson and quiz pages have breadcrumbs",
+        "All breadcrumb segments are clickable links (except current page)",
+        "Breadcrumb format is consistent across the site"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A2-07",
+      "title": "Consider adding a site map or course overview page",
+      "type": "UX",
+      "severity": "low",
+      "effort": "M",
+      "focus_area_id": "A2",
+      "focus_area_name": "Information architecture and navigation clarity",
+      "user_flow": "Landing page \u2192 'View Curriculum' or new 'Course Overview' link",
+      "affected_surface": "New page showing full course structure",
+      "problem_description": "The landing page shows lesson cards and a learning path timeline, but there's no single page that shows the full course structure with all lessons, quizzes, topics, and estimated time. Users may want to see the big picture before committing to the course.",
+      "why_it_matters": "A course overview page helps users understand the full scope of the course, set expectations for time commitment, and decide if the course is right for them. It's especially valuable for adult learners who need to plan their time.",
+      "suggested_fix": "Create a 'Course Overview' or 'Curriculum' page that shows: (1) All lessons with topics covered, (2) Estimated time for each lesson, (3) Prerequisites and dependencies, (4) Learning outcomes, (5) Total course duration. Link to this from the landing page and navigation menu.",
+      "code_level_hint": "Create a new curriculum.html page with a structured layout. Use an accordion or expandable cards to show lesson details. Add a 'Time to Complete' badge for each lesson. Link from the landing page: <a href='/curriculum'>View Full Curriculum</a>",
+      "acceptance_criteria": [
+        "Course overview page shows all lessons and topics",
+        "Time estimates are provided for each lesson",
+        "Page is accessible from landing page and navigation menu"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A3-01",
+      "title": "Add explanatory feedback for incorrect quiz answers",
+      "type": "Content",
+      "severity": "high",
+      "effort": "M",
+      "focus_area_id": "A3",
+      "focus_area_name": "Content and pedagogy",
+      "user_flow": "Quiz 1 \u2192 Select wrong answer",
+      "affected_surface": "Quiz feedback system",
+      "problem_description": "When selecting the correct answer in Quiz 1, users see 'Nice catch! You enforced the right safeguard.' However, there's no indication of what happens when users select wrong answers. Do they get feedback explaining why it's wrong? Do they get a second chance? This is critical for learning\u2014mistakes are teaching opportunities.",
+      "why_it_matters": "Effective pedagogy requires explaining WHY an answer is wrong, not just marking it incorrect. Without explanatory feedback, users don't learn from mistakes. This is especially important for AI literacy where nuanced understanding matters.",
+      "suggested_fix": "For each wrong answer, provide specific feedback explaining: (1) Why this choice is problematic, (2) What the correct approach is, (3) The real-world consequences of this mistake. Example: 'Trusting the AI without verification could spread misinformation. Always check claims against the model's knowledge cutoff.'",
+      "code_level_hint": "In quiz answer data, add a 'feedback' field for each option: { text: 'Ask it to summarize...', correct: false, feedback: 'This approach ignores the knowledge cutoff issue and could lead to hallucinated content being treated as fact.' }. Display this feedback when the option is selected.",
+      "acceptance_criteria": [
+        "Wrong answers show specific explanatory feedback",
+        "Feedback explains why the answer is wrong and what the correct approach is",
+        "Users learn from mistakes, not just see 'Incorrect'"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A3-02",
+      "title": "Add 'Why this matters' context to quiz scenarios",
+      "type": "Content",
+      "severity": "medium",
+      "effort": "M",
+      "focus_area_id": "A3",
+      "focus_area_name": "Content and pedagogy",
+      "user_flow": "Quiz 1 \u2192 Read scenario",
+      "affected_surface": "Quiz scenario descriptions",
+      "problem_description": "Quiz scenarios present situations but don't explain the real-world stakes. For example, the knowledge cutoff scenario doesn't mention that this mistake could lead to citing non-existent sources in a professional report. Adding context helps learners understand why these skills matter beyond passing a quiz.",
+      "why_it_matters": "Adult learners especially need to see the practical relevance of what they're learning. 9th graders benefit from understanding real-world consequences. Context increases engagement and retention.",
+      "suggested_fix": "Add a 'Why this matters' callout box to each scenario explaining the real-world impact. Example: '\ud83d\udca1 Why this matters: In a professional setting, citing non-existent sources can damage your credibility and your organization's reputation.'",
+      "code_level_hint": "Add a 'context' field to each quiz question: { scenario: '...', context: 'In professional settings, this mistake could lead to...', question: '...' }. Display in a styled callout box above the question.",
+      "acceptance_criteria": [
+        "Each quiz scenario includes real-world context",
+        "Context is displayed in a visually distinct callout",
+        "Context explains practical stakes, not just theoretical concepts"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A3-03",
+      "title": "Test and document Lesson 4-5 grading mechanism",
+      "type": "UX",
+      "severity": "critical",
+      "effort": "L",
+      "focus_area_id": "A3",
+      "focus_area_name": "Content and pedagogy",
+      "user_flow": "Lesson 4 or 5 \u2192 Complete prompting exercises",
+      "affected_surface": "Lessons 4 and 5 (Advanced Prompting and AI Workflows)",
+      "problem_description": "Based on the original audit request, Lessons 4 and 5 rely on users going to external AI playgrounds (ChatGPT, etc.) to practice prompting, but there's NO WAY to grade or verify their work. This was identified as a critical issue in the previous audit. Need to verify if this is still the case on the current site.",
+      "why_it_matters": "Without grading, users can skip the exercises entirely and still progress. There's no feedback loop to ensure learning. This breaks the course's progression system and makes XP/completion meaningless for these lessons.",
+      "suggested_fix": "Three options: (1) Build an integrated AI playground with automated grading based on prompt quality metrics, (2) Implement a peer review system where users submit prompts and review others' work, (3) Add self-assessment checklists where users evaluate their own prompts against criteria. Option 1 is ideal but requires significant development. Option 3 is a quick win.",
+      "code_level_hint": "For self-assessment: Create a checklist component with criteria like 'Does your prompt specify the audience?', 'Does it include tone guidance?', 'Is the task clearly defined?'. Users must check all items to proceed. Store responses in localStorage. For integrated playground: Use OpenAI API with prompt evaluation logic.",
+      "acceptance_criteria": [
+        "Users cannot complete Lessons 4-5 without demonstrating prompt skills",
+        "Some form of feedback or verification is provided",
+        "Progress tracking accurately reflects lesson completion"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A4-01",
+      "title": "Simplify gamification to 2-3 core metrics",
+      "type": "UX",
+      "severity": "high",
+      "effort": "L",
+      "focus_area_id": "A4",
+      "focus_area_name": "Gamification and progress tracking",
+      "user_flow": "Entire course experience",
+      "affected_surface": "All progress displays, landing page, lesson headers",
+      "problem_description": "The course tracks too many gamification metrics: XP, lesson completion, quiz percentage, badges, streaks, leaderboard position, daily missions, and levels. This is cognitive overload. Users don't know which metric matters most. The landing page shows 3 separate progress cards (Lessons 0/8, Total XP 592, Latest Quiz 25%), and lessons show even more metrics.",
+      "why_it_matters": "Excessive gamification distracts from learning. Research shows that too many extrinsic motivators can reduce intrinsic motivation. For adult learners, this feels patronizing. For 9th graders, it's overwhelming. Simplicity increases focus on actual learning.",
+      "suggested_fix": "Reduce to 3 core metrics: (1) Lesson Progress (X/8 complete), (2) Current Lesson XP (for immediate feedback), (3) Optional: Badges for major milestones only. Remove or hide: quiz %, streaks, leaderboard, daily missions, levels. Offer a 'Professional Mode' toggle that hides all gamification except lesson progress.",
+      "code_level_hint": "Add a settings toggle: professionalMode = localStorage.getItem('professionalMode') === 'true'. Conditionally render gamification elements: {!professionalMode && <XPDisplay />}. Update landing page to show only lesson progress by default. Move other metrics to a separate 'Stats' page.",
+      "acceptance_criteria": [
+        "Landing page shows maximum 2 progress metrics by default",
+        "Professional Mode toggle hides all gamification except lesson progress",
+        "UI feels cleaner and less cluttered"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A4-02",
+      "title": "Add progress persistence warning before Reset Progress",
+      "type": "UX",
+      "severity": "medium",
+      "effort": "XS",
+      "focus_area_id": "A4",
+      "focus_area_name": "Gamification and progress tracking",
+      "user_flow": "Landing page \u2192 Click Reset Progress",
+      "affected_surface": "Reset Progress button",
+      "problem_description": "The 'Reset Progress' button is visible on the landing page but there's no indication of what it does or whether it's reversible. Users might click it accidentally or without understanding the consequences.",
+      "why_it_matters": "Destructive actions should always have confirmation dialogs. Losing progress accidentally is frustrating and could cause users to abandon the course.",
+      "suggested_fix": "Add a confirmation modal when Reset Progress is clicked: 'Are you sure you want to reset all progress? This will erase your XP, lesson completion, and quiz scores. This action cannot be undone.' Require typing 'RESET' or clicking a secondary confirmation button.",
+      "code_level_hint": "On button click, show modal: if (confirm('Are you sure you want to reset ALL progress? This cannot be undone.')) { resetProgress(); }. Better: use a custom modal with explicit confirmation. Add a 'Cancel' button as the default action.",
+      "acceptance_criteria": [
+        "Clicking Reset Progress shows a confirmation modal",
+        "Modal clearly explains what will be erased",
+        "User must explicitly confirm before reset occurs"
+      ],
+      "is_micro_ux": true
+    },
+    {
+      "id": "A4-03",
+      "title": "Show XP breakdown on hover or in a modal",
+      "type": "UX",
+      "severity": "low",
+      "effort": "S",
+      "focus_area_id": "A4",
+      "focus_area_name": "Gamification and progress tracking",
+      "user_flow": "Landing page \u2192 View Total XP",
+      "affected_surface": "Total XP card on landing page",
+      "problem_description": "The landing page shows 'Total XP: 592' but doesn't explain where this XP came from. Users can't see a breakdown by lesson or activity. This makes XP feel arbitrary and reduces its motivational value.",
+      "why_it_matters": "Transparent progress tracking increases trust and motivation. Users want to see how they earned their XP and what they can earn next.",
+      "suggested_fix": "Make the XP card clickable to show a breakdown modal: 'Lesson 1: 80 XP (2/3 activities), Quiz 1: 25 XP (1/4 questions), etc.' Or add a small info icon that shows a tooltip with the breakdown.",
+      "code_level_hint": "Add onClick handler to XP card: <div onClick={() => setShowXPBreakdown(true)}>. Create a modal component that maps through progress data and displays XP by source. Add cursor: pointer and hover effect to indicate clickability.",
+      "acceptance_criteria": [
+        "XP card is clickable or has an info icon",
+        "Clicking shows a breakdown of XP by source",
+        "Breakdown is clear and easy to understand"
+      ],
+      "is_micro_ux": true
+    },
+    {
+      "id": "A5-01",
+      "title": "Ensure drag-and-drop has keyboard-accessible alternative",
+      "type": "Accessibility",
+      "severity": "high",
+      "effort": "S",
+      "focus_area_id": "A5",
+      "focus_area_name": "Accessibility",
+      "user_flow": "Lesson 1 Game Mode \u2192 Activity 3",
+      "affected_surface": "Tone selection drag-and-drop in Activity 3",
+      "problem_description": "Activity 3 instructions say 'CLICK A TONE WORD OR DRAG IT INTO THE SLOT', suggesting drag-and-drop is supported. However, drag-and-drop is not accessible to keyboard-only users or screen reader users. The click alternative is good, but it needs to be clearly the primary interaction method.",
+      "why_it_matters": "WCAG 2.1 Level AA requires that all functionality be keyboard accessible. Drag-and-drop without keyboard alternatives excludes users with motor disabilities and screen reader users.",
+      "suggested_fix": "Ensure clicking a tone word fills the slot (already implemented based on testing). Make this the primary interaction. Add keyboard navigation: use arrow keys to navigate tone words, Enter to select. Add aria-label to the drop zone: 'Selected tone: [tone]' or 'No tone selected'.",
+      "code_level_hint": "Add keyboard event listeners: onKeyDown={(e) => { if (e.key === 'Enter') selectTone(tone); }}. Ensure all tone buttons are focusable with tabindex. Add aria-live region to announce selection: <div aria-live='polite'>{selectedTone ? `Selected: ${selectedTone}` : 'No tone selected'}</div>",
+      "acceptance_criteria": [
+        "Activity 3 can be completed using only keyboard",
+        "Screen readers announce tone selection",
+        "Focus indicators are visible on all interactive elements"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A5-02",
+      "title": "Audit color contrast for WCAG AA compliance",
+      "type": "Accessibility",
+      "severity": "medium",
+      "effort": "S",
+      "focus_area_id": "A5",
+      "focus_area_name": "Accessibility",
+      "user_flow": "All pages",
+      "affected_surface": "Text, buttons, and interactive elements",
+      "problem_description": "Need to verify that all text and interactive elements meet WCAG AA contrast ratio requirements (4.5:1 for normal text, 3:1 for large text). The purple background with white text appears to have good contrast, but need to test all color combinations systematically.",
+      "why_it_matters": "Insufficient contrast makes content difficult or impossible to read for users with low vision or color blindness. WCAG AA compliance is a legal requirement in many jurisdictions.",
+      "suggested_fix": "Use a contrast checker tool (WebAIM, Lighthouse, axe DevTools) to audit all color combinations. Fix any failing combinations by adjusting colors. Common issues: light gray text on white backgrounds, colored buttons with insufficient contrast.",
+      "code_level_hint": "Run Lighthouse accessibility audit in Chrome DevTools. Use browser extension like axe DevTools. Check CSS for color values and test against backgrounds. Update CSS variables for consistent contrast: --text-primary: #000; --text-secondary: #333; --bg-primary: #fff;",
+      "acceptance_criteria": [
+        "All text meets 4.5:1 contrast ratio (or 3:1 for large text)",
+        "Interactive elements have sufficient contrast in all states (default, hover, focus, disabled)",
+        "Lighthouse accessibility score is 90+"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A5-03",
+      "title": "Add skip navigation link",
+      "type": "Accessibility",
+      "severity": "medium",
+      "effort": "XS",
+      "focus_area_id": "A5",
+      "focus_area_name": "Accessibility",
+      "user_flow": "All pages",
+      "affected_surface": "Page header",
+      "problem_description": "There's no 'Skip to main content' link for keyboard and screen reader users. This means users must tab through the entire navigation menu on every page before reaching the main content.",
+      "why_it_matters": "Skip links are a WCAG Level A requirement. They significantly improve the experience for keyboard and screen reader users by allowing them to bypass repetitive navigation.",
+      "suggested_fix": "Add a 'Skip to main content' link as the first focusable element on the page. Make it visually hidden by default but visible on focus. Link it to the main content area with an id.",
+      "code_level_hint": "Add at the top of <body>: <a href='#main-content' class='skip-link'>Skip to main content</a>. CSS: .skip-link { position: absolute; top: -40px; left: 0; background: #000; color: #fff; padding: 8px; z-index: 100; } .skip-link:focus { top: 0; }. Add id='main-content' to the main content container.",
+      "acceptance_criteria": [
+        "Skip link is the first focusable element on every page",
+        "Link is visible when focused",
+        "Clicking link moves focus to main content"
+      ],
+      "is_micro_ux": true
+    },
+    {
+      "id": "A6-01",
+      "title": "Test and fix mobile responsiveness (375px-768px)",
+      "type": "Visual",
+      "severity": "high",
+      "effort": "M",
+      "focus_area_id": "A6",
+      "focus_area_name": "Visual design and responsiveness",
+      "user_flow": "All pages on mobile devices",
+      "affected_surface": "Entire site layout",
+      "problem_description": "Mobile responsiveness has not been tested in this audit. Need to verify that all pages, activities, and quizzes work well on mobile devices (especially 375px width for iPhone SE and similar devices). Common issues: buttons too small, text too small, horizontal scrolling, overlapping elements.",
+      "why_it_matters": "Mobile usage is significant, especially for younger learners. A poor mobile experience will cause users to abandon the course. Many 9th graders will access this on their phones.",
+      "suggested_fix": "Test on multiple screen sizes using browser DevTools. Fix common issues: increase button sizes to minimum 44x44px, use responsive font sizes (rem units), ensure proper viewport meta tag, test touch targets, prevent horizontal scroll. Use CSS Grid or Flexbox with proper breakpoints.",
+      "code_level_hint": "Add viewport meta tag: <meta name='viewport' content='width=device-width, initial-scale=1'>. Use media queries: @media (max-width: 768px) { .lesson-card { width: 100%; } }. Test touch targets: button { min-height: 44px; min-width: 44px; }",
+      "acceptance_criteria": [
+        "All pages render correctly on 375px, 768px, and 1024px widths",
+        "No horizontal scrolling on any page",
+        "All buttons and interactive elements are easily tappable (44x44px minimum)",
+        "Text is readable without zooming"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A6-02",
+      "title": "Reduce visual clutter on landing page",
+      "type": "Visual",
+      "severity": "medium",
+      "effort": "S",
+      "focus_area_id": "A6",
+      "focus_area_name": "Visual design and responsiveness",
+      "user_flow": "Landing page",
+      "affected_surface": "Landing page layout",
+      "problem_description": "The landing page has many competing elements: hero section, 2 CTAs, 3 progress cards, 7 lesson cards, learning path timeline, and 4 feature cards. This creates visual overwhelm and makes it hard to know where to focus. The page feels cluttered despite good individual component design.",
+      "why_it_matters": "Visual hierarchy guides user attention. Too many elements of equal visual weight create confusion and decision paralysis. Users should immediately know the primary action (start the course).",
+      "suggested_fix": "Simplify the landing page: (1) Make 'Start Course' the dominant CTA, remove or de-emphasize 'View Curriculum', (2) Reduce progress cards from 3 to 1 (just show lesson progress), (3) Show only next 3 lessons, hide completed and future lessons, (4) Move feature cards to a separate 'About' page. Use progressive disclosure.",
+      "code_level_hint": "Restructure landing page layout: <Hero><PrimaryCTA /></Hero><ProgressCard /><NextLessons limit={3} /><LearningPath />. Hide other elements behind 'View All Lessons' link. Use CSS to create clear visual hierarchy: primary CTA should be 2x size of secondary elements.",
+      "acceptance_criteria": [
+        "Landing page has one clear primary CTA",
+        "Maximum 3 sections visible above the fold",
+        "Page feels focused and uncluttered"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A7-01",
+      "title": "Run Lighthouse performance audit and fix critical issues",
+      "type": "Tech",
+      "severity": "medium",
+      "effort": "M",
+      "focus_area_id": "A7",
+      "focus_area_name": "Performance and load times",
+      "user_flow": "All pages",
+      "affected_surface": "Site-wide performance",
+      "problem_description": "Performance has not been audited. Slow load times can cause users to abandon the course, especially on mobile devices or slow connections. Common issues: large images, unoptimized JavaScript, render-blocking CSS, lack of caching.",
+      "why_it_matters": "Performance is a key user experience factor. Google research shows that 53% of mobile users abandon sites that take longer than 3 seconds to load. For educational content, fast load times keep learners engaged.",
+      "suggested_fix": "Run Lighthouse performance audit in Chrome DevTools. Address critical issues: (1) Optimize images (use WebP, lazy loading), (2) Minify CSS/JS, (3) Implement caching headers, (4) Use CDN for static assets, (5) Defer non-critical JavaScript. Target: Lighthouse score 90+.",
+      "code_level_hint": "Add lazy loading to images: <img loading='lazy' />. Minify assets in build process. Add caching headers in server config. Use code splitting for JavaScript: import() for non-critical components. Optimize fonts: use font-display: swap.",
+      "acceptance_criteria": [
+        "Lighthouse performance score is 90+ on desktop and 80+ on mobile",
+        "First Contentful Paint < 1.5s",
+        "Time to Interactive < 3.5s",
+        "All images are optimized and lazy-loaded"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A8-01",
+      "title": "Add privacy policy and terms of service links to footer",
+      "type": "Content",
+      "severity": "medium",
+      "effort": "S",
+      "focus_area_id": "A8",
+      "focus_area_name": "Trust and safety",
+      "user_flow": "All pages",
+      "affected_surface": "Page footer",
+      "problem_description": "No privacy policy or terms of service links are visible on the site. Even though the site appears to only use localStorage (no server-side data collection), it's best practice to have these documents, especially for educational content that may be used by minors.",
+      "why_it_matters": "Transparency about data usage builds trust. For educational institutions using this course, privacy policies may be required by law (FERPA, COPPA). Parents and teachers need to know what data is collected and how it's used.",
+      "suggested_fix": "Create simple privacy policy and terms of service pages. Add links to the footer of all pages. Privacy policy should explain: (1) What data is collected (localStorage only), (2) How it's used (progress tracking), (3) That no data is sent to servers, (4) How to delete data (Reset Progress button).",
+      "code_level_hint": "Create privacy.html and terms.html pages. Add footer component: <footer><a href='/privacy'>Privacy Policy</a> | <a href='/terms'>Terms of Service</a></footer>. Include footer on all pages.",
+      "acceptance_criteria": [
+        "Privacy policy and terms of service pages exist",
+        "Links are visible in footer on all pages",
+        "Privacy policy clearly explains data usage"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A9-01",
+      "title": "Add error handling for localStorage failures",
+      "type": "Tech",
+      "severity": "medium",
+      "effort": "S",
+      "focus_area_id": "A9",
+      "focus_area_name": "Error handling and edge cases",
+      "user_flow": "Any interaction that saves progress",
+      "affected_surface": "Progress tracking system",
+      "problem_description": "The site relies on localStorage for progress tracking, but there's no visible error handling for cases where localStorage is disabled, full, or fails to save. Users could lose progress without knowing why.",
+      "why_it_matters": "localStorage can fail in private browsing mode, when storage is full, or when disabled by browser settings. Users need to know if their progress isn't being saved so they can take action (enable localStorage, clear storage, etc.).",
+      "suggested_fix": "Wrap all localStorage operations in try-catch blocks. If save fails, show a user-friendly error message: 'Unable to save progress. Please check your browser settings and ensure cookies/storage are enabled.' Provide a fallback mode that warns users their progress won't be saved.",
+      "code_level_hint": "Create a storage utility: function saveProgress(data) { try { localStorage.setItem('progress', JSON.stringify(data)); } catch (e) { showError('Unable to save progress. Your browser may have storage disabled.'); return false; } return true; }. Check storage availability on page load.",
+      "acceptance_criteria": [
+        "localStorage failures are caught and handled gracefully",
+        "Users see a clear error message if progress can't be saved",
+        "Site doesn't crash or show cryptic errors"
+      ],
+      "is_micro_ux": false
+    },
+    {
+      "id": "A9-02",
+      "title": "Implement lesson locking and redirect for locked lessons",
+      "type": "UX",
+      "severity": "medium",
+      "effort": "S",
+      "focus_area_id": "A9",
+      "focus_area_name": "Error handling and edge cases",
+      "user_flow": "Attempt to access locked lesson via direct URL",
+      "affected_surface": "Lesson access control",
+      "problem_description": "The landing page shows lesson status (IN PROGRESS, NOT STARTED, etc.) and suggests sequential unlocking, but it's unclear if lessons are actually locked. Can users access Lesson 3 directly via URL without completing Lessons 1-2? If so, the sequential progression system is meaningless.",
+      "why_it_matters": "If the course is designed for sequential learning, lessons should be actually locked, not just visually indicated as locked. Otherwise, users can skip ahead and miss foundational content.",
+      "suggested_fix": "Implement server-side or client-side lesson locking. Check progress on lesson page load. If user hasn't completed prerequisites, redirect to the last available lesson with a message: 'Complete Lesson 1 to unlock Lesson 2.' Or show a locked state with clear requirements.",
+      "code_level_hint": "On lesson page load: const progress = getProgress(); if (!progress.lesson1Complete && currentLesson === 'lesson2') { window.location.href = '/lesson1'; showToast('Complete Lesson 1 first'); }. Or show a lock screen overlay with requirements.",
+      "acceptance_criteria": [
+        "Users cannot access locked lessons via direct URL",
+        "Attempting to access locked lesson shows clear message",
+        "Message explains what needs to be completed to unlock"
+      ],
+      "is_micro_ux": false
+    }
+  ]
+}
