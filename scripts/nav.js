@@ -47,6 +47,14 @@
         { id: 'lesson5', label: 'Lesson 5', href: 'lesson5-ai-workflows.html', locked: true, comingSoon: true },
         { id: 'lesson6', label: 'Lesson 6', href: 'lesson6-capstone.html', locked: true, comingSoon: true }
     ];
+    const LESSON_UNLOCK_RULES = {
+        lesson2: 'lesson1',
+        quiz1: 'lesson2',
+        lesson3: 'quiz1',
+        lesson4: 'lesson3',
+        lesson5: 'lesson4',
+        lesson6: 'lesson5'
+    };
     const PROGRESS_STORAGE_KEY = 'aiLiteracyProgress_v1';
     const QUIZ_REQUIREMENTS = { quiz1: 75 };
     let cachedProgressSnapshot = null;
@@ -95,35 +103,59 @@
         return 'not-started';
     }
 
-    function getLessonStatusMeta(link) {
-        if (link.locked) {
-            return { status: 'locked', icon: '🔒', label: link.comingSoon ? 'Coming soon' : 'Locked' };
+    function requirementMet(snapshot, requirementId) {
+        if (!requirementId) return true;
+        if (requirementId.startsWith('quiz')) {
+            const quizScore = Number(snapshot.quizScores?.[requirementId]) || 0;
+            const needed = QUIZ_REQUIREMENTS[requirementId] ?? 1;
+            return quizScore >= needed;
         }
-        if (!link.id) return { status: 'not-started', icon: '', label: 'Not started' };
+        return snapshot.lessons?.[requirementId] === 'completed';
+    }
+
+    function getLessonStatusMeta(link) {
+        if (!link.id) return { status: 'not-started', icon: '', label: 'Not started', locked: false };
         const snapshot = loadProgressSnapshot();
+        const prerequisite = LESSON_UNLOCK_RULES[link.id];
+        const gated = Boolean(prerequisite && !requirementMet(snapshot, prerequisite));
+        if (link.locked || gated) {
+            return {
+                status: 'locked',
+                icon: '🔒',
+                label: link.comingSoon ? 'Coming soon' : gated ? 'Locked · Finish the previous mission' : 'Locked',
+                locked: true,
+                comingSoon: Boolean(link.comingSoon),
+                prerequisite
+            };
+        }
         let status = snapshot.lessons?.[link.id] || 'not-started';
         if (link.id.startsWith('quiz')) {
             status = getQuizStatus(snapshot, link.id);
         }
         if (status === 'completed') {
-            return { status, icon: '✓', label: 'Completed' };
+            return { status, icon: '✓', label: 'Completed', locked: false };
         }
         if (status === 'in-progress') {
-            return { status, icon: '🔄', label: 'In progress' };
+            return { status, icon: '🔄', label: 'In progress', locked: false };
         }
-        return { status: 'not-started', icon: '', label: 'Not started' };
+        return { status: 'not-started', icon: '', label: 'Not started', locked: false };
     }
 
     function buildLink(link, activeId, group) {
         const { id, label, href, locked, comingSoon } = link;
         const isActive = activeId === id;
-        const element = document.createElement(locked ? 'span' : 'a');
-        element.className = `nav-link nav-link-${group}`;
-        element.dataset.navId = id;
+        let computedLock = Boolean(locked);
+        let statusMeta = { status: 'not-started', icon: '', label: 'Not started', locked: false };
 
-        let statusMeta = { status: 'not-started', icon: '', label: 'Not started' };
         if (group === 'lesson') {
             statusMeta = getLessonStatusMeta(link);
+            computedLock = computedLock || Boolean(statusMeta.locked);
+        }
+
+        const element = document.createElement(computedLock ? 'span' : 'a');
+        element.className = `nav-link nav-link-${group}`;
+        element.dataset.navId = id;
+        if (group === 'lesson') {
             element.dataset.lessonStatus = statusMeta.status;
         }
 
@@ -132,12 +164,13 @@
         labelSpan.textContent = label;
         element.appendChild(labelSpan);
 
-        if (locked) {
+        if (computedLock) {
             element.classList.add('is-locked');
             element.setAttribute('aria-disabled', 'true');
-            element.setAttribute('title', comingSoon ? 'Coming soon' : 'Locked');
-            element.setAttribute('aria-label', `${label} (${comingSoon ? 'Coming Soon' : 'Locked'})`);
-            if (comingSoon) {
+            const lockCopy = comingSoon || statusMeta.comingSoon ? 'Coming soon' : 'Locked';
+            element.setAttribute('title', lockCopy);
+            element.setAttribute('aria-label', `${label} (${lockCopy})`);
+            if (comingSoon || statusMeta.comingSoon) {
                 const badge = document.createElement('span');
                 badge.className = 'nav-coming-soon';
                 badge.textContent = 'Coming Soon';

@@ -10,6 +10,18 @@
         { id: 'lesson6', label: 'Lesson 6: Capstone', path: 'lesson6-capstone.html' },
         { id: 'lesson7-placeholder', label: 'Lesson 7 (Coming Soon)', path: '#' }
     ];
+    const LESSON_REQUIREMENTS = {
+        'lesson2-learn': 'lesson1',
+        'lesson2-game': 'lesson1',
+        lesson3: 'quiz1',
+        lesson4: 'lesson3',
+        lesson5: 'lesson4',
+        lesson6: 'lesson5',
+        quiz1: 'lesson2'
+    };
+    const QUIZ_GATE_REQUIREMENTS = {
+        quiz1: 75
+    };
 
     const CUSTOM_NEXT = {
         lesson1: {
@@ -104,6 +116,31 @@
                 window.location.href = destination.href;
             });
         });
+    }
+
+    function requirementMet(lessonId, api) {
+        const requirement = LESSON_REQUIREMENTS[lessonId];
+        if (!requirement) return true;
+        if (!api) return false;
+        if (requirement.startsWith('quiz')) {
+            const neededScore = QUIZ_GATE_REQUIREMENTS[requirement] ?? 1;
+            const actualScore = api.getQuizScore ? Number(api.getQuizScore(requirement)) || 0 : 0;
+            return actualScore >= neededScore;
+        }
+        const status = api.getLessonStatus ? api.getLessonStatus(requirement) : 'not-started';
+        return status === 'completed';
+    }
+    
+    function guardLessonAccess(lessonId) {
+        const api = window.AppProgress || window.ProgressTracker || null;
+        if (!lessonId) return true;
+        if (!api) return false;
+        if (!requirementMet(lessonId, api)) {
+            alert('Finish the previous mission before jumping ahead. Redirecting you back to the dashboard.');
+            window.location.href = 'index.html';
+            return false;
+        }
+        return true;
     }
 
     function setNavigationButtons(lessonId, containerSelector = '.footer-nav') {
@@ -277,6 +314,9 @@
     document.addEventListener('DOMContentLoaded', () => {
         const lessonId = document.body?.dataset?.lessonId;
         if (!lessonId || !window.AILesson) return;
+        if (!guardLessonAccess(lessonId)) {
+            return;
+        }
         const breadcrumbSelector = document.body.dataset.breadcrumbSelector || '.breadcrumb';
         const footerSelector = document.body.dataset.footerSelector || '.footer-nav';
         window.AILesson.initLessonNavigation({ lessonId, breadcrumbSelector, footerSelector });
