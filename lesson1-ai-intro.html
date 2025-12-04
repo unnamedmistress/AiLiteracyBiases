@@ -371,6 +371,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             const LESSON_ID = 'lesson1';
             const tracker = window.ProgressTracker || null;
+            const appProgress = window.AppProgress || null;
+            const overviewSource = appProgress || tracker;
             const characters = [
                 { id: 'mickey', name: 'Mickey Mouse', response: 'Gosh! Being truthful is always the top policy!' },
                 { id: 'scrooge', name: 'Ebenezer Scrooge', response: 'Bah! Yet honesty remains the soundest policy for profit.' },
@@ -520,6 +522,47 @@
             let celebrationTimer;
             let selectedTone = null;
 
+            function addGlobalXP(amount) {
+                const delta = Math.round(Number(amount) || 0);
+                if (!delta) return;
+                const metadata = { lessonId: LESSON_ID };
+                if (appProgress && typeof appProgress.addXP === 'function') {
+                    appProgress.addXP(delta, metadata);
+                } else if (tracker && typeof tracker.addXP === 'function') {
+                    tracker.addXP(delta, metadata);
+                }
+            }
+
+            function adjustGlobalXP(amount) {
+                const delta = Math.round(Number(amount) || 0);
+                if (!delta) return;
+                const metadata = { lessonId: LESSON_ID };
+                if (appProgress && typeof appProgress.adjustXP === 'function') {
+                    appProgress.adjustXP(delta, metadata);
+                } else if (tracker && typeof tracker.adjustXP === 'function') {
+                    tracker.adjustXP(delta, metadata);
+                }
+            }
+
+            function applyLessonStatus(status) {
+                if (!status) return;
+                if (appProgress && typeof appProgress.setLessonStatus === 'function') {
+                    appProgress.setLessonStatus(LESSON_ID, status);
+                } else if (tracker && typeof tracker.setLessonStatus === 'function') {
+                    tracker.setLessonStatus(LESSON_ID, status);
+                }
+            }
+
+            function completeLesson() {
+                if (appProgress && typeof appProgress.markLessonComplete === 'function') {
+                    appProgress.markLessonComplete(LESSON_ID);
+                } else if (tracker && typeof tracker.markLessonComplete === 'function') {
+                    tracker.markLessonComplete(LESSON_ID);
+                } else {
+                    applyLessonStatus('completed');
+                }
+            }
+
             function getCompletedActivitiesCount() {
                 return ['mimicComplete', 'wordComplete', 'toneComplete'].reduce((count, key) => count + (state[key] ? 1 : 0), 0);
             }
@@ -558,8 +601,10 @@
                 }
 
                 if (elements.globalProgressPill) {
-                    if (tracker) {
-                        const overview = tracker.getOverview();
+                    const overview = overviewSource && typeof overviewSource.getOverview === 'function'
+                        ? overviewSource.getOverview()
+                        : null;
+                    if (overview) {
                         const lessonLabel = overview.total ? `${overview.completed}/${overview.total} lessons` : `${overview.completed} lessons`;
                         elements.globalProgressPill.textContent = `Total XP: ${overview.xp} · ${lessonLabel}`;
                     } else {
@@ -569,14 +614,13 @@
             }
 
             function syncLessonStatus() {
-                if (!tracker) return;
                 const completedCount = getCompletedActivitiesCount();
                 if (completedCount === 0) {
-                    tracker.setLessonStatus(LESSON_ID, 'not-started');
+                    applyLessonStatus('not-started');
                 } else if (completedCount < 3) {
-                    tracker.setLessonStatus(LESSON_ID, 'in-progress');
+                    applyLessonStatus('in-progress');
                 } else {
-                    tracker.markLessonComplete(LESSON_ID);
+                    completeLesson();
                 }
             }
 
@@ -636,12 +680,12 @@
             }
 
             function grantXP(amount, reason) {
-                state.xp = Math.min(state.xpToNext, state.xp + amount);
+                const delta = Math.max(0, Number(amount) || 0);
+                if (!delta) return;
+                state.xp = Math.min(state.xpToNext, state.xp + delta);
                 updateXPBar();
-                showNotification(`${reason} (+${amount} XP)`);
-                if (tracker) {
-                    tracker.addXP(amount, { lessonId: LESSON_ID });
-                }
+                showNotification(`${reason} (+${delta} XP)`);
+                addGlobalXP(delta);
                 updateProgressPills();
             }
 
@@ -975,7 +1019,9 @@
                 state.xp = 0;
                 selectedTone = null;
 
-                if (tracker) {
+                if (appProgress && typeof appProgress.resetLesson === 'function') {
+                    appProgress.resetLesson(LESSON_ID);
+                } else if (tracker) {
                     if (typeof tracker.resetLesson === 'function') {
                         tracker.resetLesson(LESSON_ID);
                     } else {
@@ -1026,8 +1072,8 @@
                 const confirmed = window.confirm('Reset Lesson 1 progress so you can replay the warm-ups from scratch? This removes the XP you earned here.');
                 if (!confirmed) return;
                 const xpToRemove = Number(state.xp) || 0;
-                if (xpToRemove > 0 && tracker && typeof tracker.adjustXP === 'function') {
-                    tracker.adjustXP(-xpToRemove, { lessonId: LESSON_ID });
+                if (xpToRemove > 0) {
+                    adjustGlobalXP(-xpToRemove);
                 }
                 resetLessonState();
                 showNotification('Lesson reset. Earn each XP burst again.');

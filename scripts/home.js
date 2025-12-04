@@ -72,6 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
         progressCopy: document.getElementById('homeProgressCopy'),
         lessonCount: document.getElementById('homeLessonCount'),
         xpTotal: document.getElementById('homeXpTotal'),
+        quizStatus: document.getElementById('homeQuizStatus'),
+        quizNote: document.getElementById('homeQuizNote'),
         nextLesson: document.getElementById('homeNextLesson'),
         startButtons: document.querySelectorAll('[data-start-course]'),
         scrollButtons: document.querySelectorAll('[data-scroll-target]'),
@@ -338,6 +340,26 @@ document.addEventListener('DOMContentLoaded', () => {
             hideResetWarning();
         }
         updateNextLessonCopy();
+        updateQuizSummary();
+    }
+
+    function updateQuizSummary() {
+        if (!els.quizStatus || !els.quizNote) return;
+        const quizId = 'quiz1';
+        const score = getQuizScore(quizId);
+        const requirement = getQuizRequirement(quizId);
+        if (score >= requirement) {
+            els.quizStatus.textContent = 'Passed';
+            els.quizNote.textContent = `Score ${score}% · Lesson 3 unlocked.`;
+            return;
+        }
+        if (score > 0) {
+            els.quizStatus.textContent = 'Retry Needed';
+            els.quizNote.textContent = `Score ${score}% · Need ${requirement}% to unlock Lesson 3.`;
+            return;
+        }
+        els.quizStatus.textContent = 'Pending';
+        els.quizNote.textContent = `Score ${requirement}% or higher to unlock Lesson 3.`;
     }
 
     function initHeroButtons() {

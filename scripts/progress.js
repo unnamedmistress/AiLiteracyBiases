@@ -1,6 +1,7 @@
 (function () {
     const STORAGE_KEY = 'aiLiteracyProgress_v1';
     const KNOWN_LESSONS = ['lesson1', 'lesson2', 'lesson3', 'lesson4', 'lesson5', 'lesson6'];
+    const KNOWN_QUIZZES = ['quiz1'];
     const DEFAULT_STATE = {
         xp: 0,
         lessons: {},
@@ -40,8 +41,21 @@
     let state = loadState();
     sanitizeState();
 
+    function isLessonIdentifier(id) {
+        if (typeof id !== 'string' || !id) return false;
+        return KNOWN_LESSONS.includes(id) || id.startsWith('lesson');
+    }
+
+    function isQuizIdentifier(id) {
+        if (typeof id !== 'string' || !id) return false;
+        return KNOWN_QUIZZES.includes(id) || id.startsWith('quiz');
+    }
+
     function getTrackedLessonIds() {
-        const ids = new Set([...KNOWN_LESSONS, ...Object.keys(state.lessons || {})]);
+        const ids = new Set(KNOWN_LESSONS);
+        Object.keys(state.lessons || {}).forEach((key) => {
+            if (isLessonIdentifier(key)) ids.add(key);
+        });
         return Array.from(ids);
     }
 
@@ -54,7 +68,19 @@
     }
 
     function countCompletedLessons() {
-        return Object.values(state.lessons || {}).filter((status) => status === 'completed').length;
+        if (!state.lessons || typeof state.lessons !== 'object') return 0;
+        return getTrackedLessonIds().filter((lessonId) => state.lessons[lessonId] === 'completed').length;
+    }
+
+    function getQuizStatuses() {
+        const entries = {};
+        if (!state.lessons || typeof state.lessons !== 'object') return entries;
+        Object.keys(state.lessons).forEach((key) => {
+            if (isQuizIdentifier(key)) {
+                entries[key] = state.lessons[key];
+            }
+        });
+        return entries;
     }
 
     function sumLessonXP() {
@@ -216,12 +242,20 @@
             const completedLessons = lessonIds.filter((lessonId) => state.lessons[lessonId] === 'completed').length;
             const totalLessons = lessonIds.length;
             const completionRate = totalLessons ? Math.round((completedLessons / totalLessons) * 100) : 0;
+            const quizStatuses = getQuizStatuses();
+            const quizCompleted = Object.values(quizStatuses).filter((status) => status === 'completed').length;
+            const quizTotal = Math.max(KNOWN_QUIZZES.length, Object.keys(quizStatuses).length);
             return {
                 xp: state.xp,
                 completed: completedLessons,
                 total: totalLessons,
                 completion: completionRate,
-                quizzes: { ...state.quizScores }
+                quizzes: { ...state.quizScores },
+                quizStatus: quizStatuses,
+                quizTotals: {
+                    completed: quizCompleted,
+                    total: quizTotal
+                }
             };
         },
         setCheckpoint(lessonId, checkpointId, value = true) {
