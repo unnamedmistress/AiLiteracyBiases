@@ -670,10 +670,28 @@
 
         function switchMode(mode) {
             state.mode = mode;
-            document.getElementById('gameMode').classList.toggle('hidden', mode !== 'game');
-            document.getElementById('presentMode').classList.toggle('hidden', mode !== 'present');
-            document.getElementById('gameBtn').classList.toggle('active', mode === 'game');
-            document.getElementById('presentBtn').classList.toggle('active', mode === 'present');
+            const normalized = mode === 'game' ? 'game' : 'presentation';
+            if (window.lessonMode && typeof window.lessonMode.setMode === 'function') {
+                window.lessonMode.setMode(normalized);
+                return;
+            }
+
+            const showGame = normalized === 'game';
+            const gamePanel = document.getElementById('gameMode');
+            const learnPanel = document.getElementById('presentMode');
+            const gameButton = document.getElementById('gameBtn');
+            const learnButton = document.getElementById('presentBtn');
+
+            if (gamePanel) gamePanel.classList.toggle('hidden', !showGame);
+            if (learnPanel) learnPanel.classList.toggle('hidden', showGame);
+            if (gameButton) {
+                gameButton.classList.toggle('active', showGame);
+                gameButton.setAttribute('aria-pressed', showGame ? 'true' : 'false');
+            }
+            if (learnButton) {
+                learnButton.classList.toggle('active', !showGame);
+                learnButton.setAttribute('aria-pressed', showGame ? 'false' : 'true');
+            }
         }
 
         function loadMission(missionKey) {

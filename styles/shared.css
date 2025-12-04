@@ -445,29 +445,49 @@ a {
 .mode-selector,
 .mode-toggle {
     display: inline-flex;
+    align-items: center;
     background: rgba(255, 255, 255, 0.85);
-    border-radius: 14px;
-    padding: 6px;
+    border-radius: 999px;
+    padding: 4px;
     gap: 6px;
     margin-bottom: 24px;
-    border: 1px solid rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.04);
 }
 
 .mode-btn {
-    border: none;
+    position: relative;
+    border: 1px solid transparent;
     background: transparent;
     color: var(--color-muted);
     font-weight: 600;
-    padding: 10px 20px;
-    border-radius: 12px;
+    padding: 10px 22px;
+    border-radius: 999px;
     cursor: pointer;
     transition: var(--transition-base);
+    min-width: 140px;
+    text-align: center;
 }
 
-.mode-btn.active {
-    background: rgba(15, 23, 42, 0.08);
+.mode-btn:hover {
+    color: var(--color-muted-strong);
+}
+
+.mode-btn:focus-visible {
+    outline: 3px solid rgba(16, 185, 129, 0.35);
+    outline-offset: 2px;
+}
+
+.mode-btn.active,
+.mode-btn[aria-pressed="true"] {
+    background: var(--color-surface-strong);
     color: var(--color-text);
-    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.12);
+    border-color: rgba(16, 185, 129, 0.5);
+    box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.45), 0 6px 18px rgba(15, 23, 42, 0.12);
+}
+
+.mode-btn[aria-pressed="false"] {
+    opacity: 0.8;
 }
 
 .btn,

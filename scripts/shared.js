@@ -183,22 +183,45 @@
         const presentationPanel = document.getElementById(presentationPanelId);
         const gameBtn = document.getElementById(gameButtonId);
         const presentBtn = document.getElementById(presentationButtonId);
+        let currentMode = null;
 
-        function setMode(mode) {
-            if (!gamePanel || !presentationPanel) return;
-
-            const showGame = mode === 'game';
-            gamePanel.classList.toggle('hidden', !showGame);
-            presentationPanel.classList.toggle('hidden', showGame);
-
-            if (gameBtn && presentBtn) {
-                gameBtn.classList.toggle('active', showGame);
-                presentBtn.classList.toggle('active', !showGame);
-            }
+        function syncButtonState(targetBtn, isActive) {
+            if (!targetBtn) return;
+            targetBtn.classList.toggle('active', isActive);
+            targetBtn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
         }
 
-        if (gameBtn) gameBtn.addEventListener('click', () => setMode('game'));
-        if (presentBtn) presentBtn.addEventListener('click', () => setMode('presentation'));
+        function togglePanel(panel, shouldShow) {
+            if (!panel) return;
+            panel.classList.toggle('hidden', !shouldShow);
+            panel.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+        }
+
+        function setMode(mode = defaultMode) {
+            const normalizedMode = mode === 'game' ? 'game' : 'presentation';
+            if (currentMode === normalizedMode) return;
+            currentMode = normalizedMode;
+
+            const showGame = normalizedMode === 'game';
+            togglePanel(gamePanel, showGame);
+            togglePanel(presentationPanel, !showGame);
+
+            syncButtonState(gameBtn, showGame);
+            syncButtonState(presentBtn, !showGame);
+        }
+
+        if (gameBtn) {
+            gameBtn.addEventListener('click', () => setMode('game'));
+            gameBtn.setAttribute('type', 'button');
+            if (gamePanelId) gameBtn.setAttribute('aria-controls', gamePanelId);
+            gameBtn.setAttribute('aria-pressed', 'false');
+        }
+        if (presentBtn) {
+            presentBtn.addEventListener('click', () => setMode('presentation'));
+            presentBtn.setAttribute('type', 'button');
+            if (presentationPanelId) presentBtn.setAttribute('aria-controls', presentationPanelId);
+            presentBtn.setAttribute('aria-pressed', 'false');
+        }
 
         setMode(defaultMode);
         return { setMode };
