@@ -405,6 +405,24 @@ body.home-page {
     .quick-stat strong {
         font-size: 22px;
     }
+
+    .reset-controls {
+        align-items: stretch;
+        text-align: left;
+    }
+
+    .reset-controls button {
+        width: 100%;
+    }
+
+    .hero-actions {
+        width: 100%;
+    }
+
+    .lesson-card button {
+        width: 100%;
+        text-align: center;
+    }
 }
 
 @media (max-width: 480px) {

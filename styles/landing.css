@@ -260,3 +260,39 @@ body.landing-page {
     .features-list li { font-size: 13px; }
     .landing-progress { padding: 16px; }
 }
+
+@media (max-width: 600px) {
+    .choice-card {
+        padding: 20px;
+    }
+
+    .choice-icon {
+        font-size: 60px;
+    }
+
+    .choice-title {
+        font-size: 24px;
+    }
+
+    .choice-description {
+        text-align: left;
+    }
+
+    .features-list li {
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 420px) {
+    .landing-container {
+        padding: 0 6px 28px;
+    }
+
+    .landing-progress {
+        font-size: 14px;
+    }
+
+    .landing-cta {
+        width: 100%;
+    }
+}
