@@ -618,6 +618,64 @@ a {
     font-weight: 600;
 }
 
+.self-checklist {
+    margin-top: 22px;
+    padding: 18px 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(248, 250, 252, 0.85);
+    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.05);
+}
+
+.self-checklist.attention {
+    box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.35);
+}
+
+.self-checklist h4 {
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.self-checklist p {
+    font-size: 13px;
+    color: var(--color-muted);
+    margin-bottom: 12px;
+}
+
+.self-checklist-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.self-checklist-item label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.self-checklist-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+}
+
+.self-checklist-status {
+    margin-top: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-muted);
+}
+
+.self-checklist-status.complete {
+    color: var(--color-accent-dark);
+}
+
 .ethics-warning {
     border-left: 4px solid var(--color-danger);
     padding: 24px;

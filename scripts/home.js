@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
             comingSoon: true
         }
     ];
+    const DEFAULT_TOTAL_LESSONS = DASHBOARD_ITEMS.filter((item) => item.type === 'lesson').length;
 
     const els = {
         lessonGrid: document.getElementById('lessonGrid'),
@@ -73,7 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
         quizScore: document.getElementById('homeQuizScore'),
         startButtons: document.querySelectorAll('[data-start-course]'),
         scrollButtons: document.querySelectorAll('[data-scroll-target]'),
-        resetBtn: document.getElementById('resetProgressBtn')
+        resetBtn: document.getElementById('resetProgressBtn'),
+        resetWarning: document.getElementById('resetWarning')
     };
 
     if (els.resetBtn) {
@@ -221,16 +223,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateStats() {
-        const overview = progressApi && progressApi.getOverview ? progressApi.getOverview() : { xp: 0, completed: 0, total: DASHBOARD_ITEMS.filter((i) => i.type === 'lesson').length };
-        const totalLessons = overview.total || DASHBOARD_ITEMS.filter((i) => i.type === 'lesson').length;
+        const overview = getOverviewSnapshot();
+        const totalLessons = overview.total || DEFAULT_TOTAL_LESSONS;
         const completionRate = totalLessons ? Math.round((overview.completed / totalLessons) * 100) : 0;
         if (els.progressFill) {
             els.progressFill.style.width = `${completionRate}%`;
         }
         if (els.progressCopy) {
-            els.progressCopy.textContent = totalLessons
-                ? `${overview.completed}/${totalLessons} lessons complete (${completionRate}%)`
-                : 'Progress tracking unavailable.';
+            els.progressCopy.textContent = overview.corrected
+                ? 'Progress data was reset to keep stats accurate. Resume when ready.'
+                : totalLessons
+                    ? `${overview.completed}/${totalLessons} lessons complete (${completionRate}%)`
+                    : 'Progress tracking unavailable.';
         }
         if (els.lessonCount) {
             els.lessonCount.textContent = `${overview.completed}/${totalLessons}`;
@@ -241,6 +245,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (els.quizScore) {
             const score = getQuizScore('quiz1');
             els.quizScore.textContent = score > 0 ? `${score}%` : 'Pending';
+        }
+        if (overview.corrected) {
+            showResetWarning('Progress numbers looked out of sync. Use Reset Progress to start from a clean slate.');
+        } else {
+            hideResetWarning();
         }
     }
 
@@ -268,4 +277,34 @@ document.addEventListener('DOMContentLoaded', () => {
     renderLessons();
     updateStats();
     initHeroButtons();
+
+    function getOverviewSnapshot() {
+        const raw = progressApi && progressApi.getOverview ? progressApi.getOverview() : null;
+        return normalizeOverview(raw);
+    }
+
+    function normalizeOverview(raw = {}) {
+        const total = Number(raw.total) || DEFAULT_TOTAL_LESSONS;
+        const completed = Math.min(total, Math.max(0, Number(raw.completed) || 0));
+        const xp = Math.max(0, Number(raw.xp) || 0);
+        const corrected = completed === 0 && xp > 0;
+        return {
+            xp: corrected ? 0 : xp,
+            completed,
+            total,
+            corrected
+        };
+    }
+
+    function showResetWarning(message) {
+        if (!els.resetWarning) return;
+        els.resetWarning.textContent = message;
+        els.resetWarning.classList.remove('hidden');
+    }
+
+    function hideResetWarning() {
+        if (!els.resetWarning) return;
+        els.resetWarning.textContent = '';
+        els.resetWarning.classList.add('hidden');
+    }
 });

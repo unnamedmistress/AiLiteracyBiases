@@ -385,6 +385,12 @@
 
                     <div class="validation-bar">
                         <div id="validationStatus" class="validation-status">Build the workflow above...</div>
+                        <div class="self-checklist" id="workflowChecklist">
+                            <h4>Human-in-the-loop Checklist</h4>
+                            <p>Confirm each safeguard before validating your automation.</p>
+                            <ul class="self-checklist-list" id="workflowChecklistList"></ul>
+                            <div class="self-checklist-status" id="workflowChecklistStatus" aria-live="polite">Complete all checks to unlock validation.</div>
+                        </div>
                         <div style="display: flex; gap: 10px;">
                             <button onclick="resetBuilder()" style="padding: 8px 16px; background: #cbd5e1; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: #475569;">Reset</button>
                             <button onclick="validateWorkflow()" style="padding: 8px 20px; background: #00C9FF; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white;">Validate Workflow</button>
@@ -589,6 +595,13 @@
             workflowSupport: { xp: 130, label: 'Support Bot Workflow' },
             workflowData: { xp: 120, label: 'Data Insights Workflow' }
         };
+        const WORKFLOW_CHECKLIST_ITEMS = [
+            { id: 'intake', label: 'I defined how work enters the system (inputs & triggers).' },
+            { id: 'ai-mix', label: 'Each step pairs the right AI or tool for the job.' },
+            { id: 'human-gate', label: 'A human review or fail-safe exists before handoff.' },
+            { id: 'handoff', label: 'The output and success metric are clearly documented.' }
+        ];
+        const WORKFLOW_CHECKLIST_STORAGE_KEY = 'lesson5_selfChecklist';
 
         const MISSIONS = {
             content: {
@@ -633,6 +646,7 @@
 
         const state = { xp: 0, xpToNext: 400, points: 0, mode: 'game', currentMission: 'content', builder: [] };
         const completedCheckpoints = new Set();
+        let workflowChecklistState = {};
         let tracker = null;
         let appProgress = null;
         let notificationTimer = null;
@@ -644,6 +658,7 @@
             attachLessonChrome();
             updateUI();
             loadMission('content');
+            initWorkflowChecklist();
         });
 
         function hydrateProgress() {
@@ -664,6 +679,7 @@
             }
 
             state.points = state.xp;
+            loadWorkflowChecklist(saved);
             syncLessonStatus();
             updateMissionCards();
         }
@@ -814,6 +830,11 @@
         }
 
         function validateWorkflow() {
+            if (!isWorkflowChecklistComplete()) {
+                updateValidationStatus('Complete the checklist before validating your workflow.', 'error');
+                focusWorkflowChecklist();
+                return;
+            }
             const mission = MISSIONS[state.currentMission];
             const currentSequence = state.builder;
             const targetSequence = mission.sequence;
@@ -995,6 +1016,96 @@
             `;
             feedback.classList.add('visible');
             feedback.classList.toggle('error', (result.score ?? 0) < 60);
+        }
+
+        function loadWorkflowChecklist(savedCheckpoints = {}) {
+            workflowChecklistState = {};
+            let source = null;
+            if (savedCheckpoints && typeof savedCheckpoints.selfChecklist === 'object') {
+                source = savedCheckpoints.selfChecklist;
+            }
+            if (!source) {
+                source = getStoredWorkflowChecklistFallback();
+            }
+            if (source && typeof source === 'object') {
+                WORKFLOW_CHECKLIST_ITEMS.forEach((item) => {
+                    if (source[item.id]) {
+                        workflowChecklistState[item.id] = true;
+                    }
+                });
+            }
+        }
+
+        function getStoredWorkflowChecklistFallback() {
+            try {
+                const raw = localStorage.getItem(WORKFLOW_CHECKLIST_STORAGE_KEY);
+                return raw ? JSON.parse(raw) : null;
+            } catch (error) {
+                console.warn('Lesson 5 checklist payload failed to parse.', error);
+                return null;
+            }
+        }
+
+        function persistWorkflowChecklist() {
+            if (tracker && typeof tracker.setCheckpoint === 'function') {
+                tracker.setCheckpoint(LESSON_ID, 'selfChecklist', { ...workflowChecklistState });
+            }
+            try {
+                localStorage.setItem(WORKFLOW_CHECKLIST_STORAGE_KEY, JSON.stringify(workflowChecklistState));
+            } catch (error) {
+                console.warn('Lesson 5 checklist payload failed to persist.', error);
+            }
+        }
+
+        function initWorkflowChecklist() {
+            const list = document.getElementById('workflowChecklistList');
+            if (!list) return;
+            list.innerHTML = '';
+            WORKFLOW_CHECKLIST_ITEMS.forEach((item) => {
+                const inputId = `workflow-check-${item.id}`;
+                const li = document.createElement('li');
+                li.className = 'self-checklist-item';
+                li.innerHTML = `
+                    <label for="${inputId}">
+                        <input type="checkbox" id="${inputId}" data-check-id="${item.id}" ${workflowChecklistState[item.id] ? 'checked' : ''}>
+                        <span>${item.label}</span>
+                    </label>
+                `;
+                list.appendChild(li);
+            });
+            list.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+                input.addEventListener('change', handleWorkflowChecklistChange);
+            });
+            updateWorkflowChecklistStatus();
+        }
+
+        function handleWorkflowChecklistChange(event) {
+            const checkbox = event.target;
+            if (!checkbox || !checkbox.dataset.checkId) return;
+            workflowChecklistState[checkbox.dataset.checkId] = checkbox.checked;
+            persistWorkflowChecklist();
+            updateWorkflowChecklistStatus();
+        }
+
+        function updateWorkflowChecklistStatus() {
+            const statusEl = document.getElementById('workflowChecklistStatus');
+            if (!statusEl) return;
+            const total = WORKFLOW_CHECKLIST_ITEMS.length;
+            const confirmed = WORKFLOW_CHECKLIST_ITEMS.filter((item) => workflowChecklistState[item.id]).length;
+            statusEl.textContent = `${confirmed}/${total} checks confirmed`;
+            statusEl.classList.toggle('complete', confirmed === total);
+        }
+
+        function isWorkflowChecklistComplete() {
+            return WORKFLOW_CHECKLIST_ITEMS.every((item) => workflowChecklistState[item.id]);
+        }
+
+        function focusWorkflowChecklist() {
+            const section = document.getElementById('workflowChecklist');
+            if (!section) return;
+            section.classList.add('attention');
+            section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => section.classList.remove('attention'), 1200);
         }
 
         function grantXP(amount, contextLabel) {

@@ -325,6 +325,12 @@
                                 <strong>Task:</strong> "Get AI to write a compelling product description for noise-cancelling headphones that targets remote workers."
                             </div>
                             <textarea id="tournamentPrompt" class="prompt-input" placeholder="Write your prompt here..."></textarea>
+                            <div class="self-checklist" id="promptChecklist">
+                                <h4>Self-Review Checklist</h4>
+                                <p>Confirm your prompt hits each quality bar before submitting.</p>
+                                <ul class="self-checklist-list" id="promptChecklistList"></ul>
+                                <div class="self-checklist-status" id="promptChecklistStatus" aria-live="polite">Confirm all checks to unlock scoring.</div>
+                            </div>
                             <button class="btn-primary" style="margin-top: 10px;" onclick="evaluatePrompt()">Submit for Scoring</button>
                             <div id="promptScore" style="margin-top: 15px; display: none;"></div>
                         </div>
@@ -554,9 +560,17 @@
                 prompt: ''
             }
         };
+        const PROMPT_CHECKLIST_ITEMS = [
+            { id: 'audience', label: 'I named a clear audience or persona.' },
+            { id: 'format', label: 'I specified output format, tone, or constraints.' },
+            { id: 'goal', label: 'I described the outcome or success metric I expect.' },
+            { id: 'safety', label: 'I reviewed for bias, safety, or factual guardrails.' }
+        ];
+        const PROMPT_CHECKLIST_STORAGE_KEY = 'lesson4_selfChecklist';
 
         const state = { xp: 0, xpToNext: 405, mode: 'presentation', tournamentXp: 0 };
         const completedCheckpoints = new Set();
+        let promptChecklistState = {};
         let tracker = null;
         let appProgress = null;
         let notificationTimer = null;
@@ -569,6 +583,7 @@
             attachLessonChrome();
             updateUI();
             initPromptLab();
+            initPromptSelfChecklist();
         });
 
         function hydrateProgress() {
@@ -593,6 +608,7 @@
                 state.xp = Math.max(state.xp, Number(saved.xpEarned));
             }
 
+            loadPromptChecklist(saved);
             syncLessonStatus();
         }
 
@@ -647,6 +663,11 @@
             const prompt = document.getElementById('tournamentPrompt').value.trim();
             if (!prompt) {
                 alert('Please write a prompt first!');
+                return;
+            }
+            if (!isPromptChecklistComplete()) {
+                alert('Complete the self-review checklist before submitting for scoring.');
+                focusPromptChecklist();
                 return;
             }
 
@@ -986,6 +1007,96 @@
                 resultBox.classList.remove('visible');
             }
             selectLabScenario(activeLabScenario || 'cot');
+        }
+
+        function loadPromptChecklist(savedCheckpoints = {}) {
+            promptChecklistState = {};
+            let source = null;
+            if (savedCheckpoints && typeof savedCheckpoints.selfChecklist === 'object') {
+                source = savedCheckpoints.selfChecklist;
+            }
+            if (!source) {
+                source = getStoredPromptChecklistFallback();
+            }
+            if (source && typeof source === 'object') {
+                PROMPT_CHECKLIST_ITEMS.forEach((item) => {
+                    if (source[item.id]) {
+                        promptChecklistState[item.id] = true;
+                    }
+                });
+            }
+        }
+
+        function getStoredPromptChecklistFallback() {
+            try {
+                const raw = localStorage.getItem(PROMPT_CHECKLIST_STORAGE_KEY);
+                return raw ? JSON.parse(raw) : null;
+            } catch (error) {
+                console.warn('Lesson 4 checklist payload failed to parse.', error);
+                return null;
+            }
+        }
+
+        function persistPromptChecklist() {
+            if (tracker && typeof tracker.setCheckpoint === 'function') {
+                tracker.setCheckpoint(LESSON_ID, 'selfChecklist', { ...promptChecklistState });
+            }
+            try {
+                localStorage.setItem(PROMPT_CHECKLIST_STORAGE_KEY, JSON.stringify(promptChecklistState));
+            } catch (error) {
+                console.warn('Lesson 4 checklist payload failed to persist.', error);
+            }
+        }
+
+        function initPromptSelfChecklist() {
+            const list = document.getElementById('promptChecklistList');
+            if (!list) return;
+            list.innerHTML = '';
+            PROMPT_CHECKLIST_ITEMS.forEach((item) => {
+                const inputId = `prompt-check-${item.id}`;
+                const li = document.createElement('li');
+                li.className = 'self-checklist-item';
+                li.innerHTML = `
+                    <label for="${inputId}">
+                        <input type="checkbox" id="${inputId}" data-check-id="${item.id}" ${promptChecklistState[item.id] ? 'checked' : ''}>
+                        <span>${item.label}</span>
+                    </label>
+                `;
+                list.appendChild(li);
+            });
+            list.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+                input.addEventListener('change', handlePromptChecklistChange);
+            });
+            updatePromptChecklistStatus();
+        }
+
+        function handlePromptChecklistChange(event) {
+            const checkbox = event.target;
+            if (!checkbox || !checkbox.dataset.checkId) return;
+            promptChecklistState[checkbox.dataset.checkId] = checkbox.checked;
+            persistPromptChecklist();
+            updatePromptChecklistStatus();
+        }
+
+        function updatePromptChecklistStatus() {
+            const statusEl = document.getElementById('promptChecklistStatus');
+            if (!statusEl) return;
+            const total = PROMPT_CHECKLIST_ITEMS.length;
+            const confirmed = PROMPT_CHECKLIST_ITEMS.filter((item) => promptChecklistState[item.id]).length;
+            statusEl.textContent = `${confirmed}/${total} checks confirmed`;
+            statusEl.classList.toggle('complete', confirmed === total);
+        }
+
+        function isPromptChecklistComplete() {
+            return PROMPT_CHECKLIST_ITEMS.every((item) => promptChecklistState[item.id]);
+        }
+
+        function focusPromptChecklist() {
+            const section = document.getElementById('promptChecklist');
+            if (!section) return;
+            section.classList.add('attention');
+            section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => section.classList.remove('attention'), 1200);
         }
 
         function escapeHtml(str = '') {
