@@ -15,7 +15,7 @@
             <h1>AI Detective Academy</h1>
             <p>Master AI literacy, spot hallucinations in the wild, and earn XP as you progress through six premium lessons plus live-fire warm-up quizzes.</p>
             <div class="hero-actions">
-                <button class="home-btn-primary" data-start-course>Start Course →</button>
+                <button class="home-btn-primary" data-start-course aria-label="Start or resume AI Detective Academy">Start Course →</button>
             </div>
             <section class="mode-preference" aria-labelledby="displayModeLabel">
                 <div class="mode-preference-header">
@@ -23,8 +23,8 @@
                     <p class="mode-preference-status" id="modeToggleDescription">Learner Mode keeps XP, badges, and quests visible.</p>
                 </div>
                 <div class="mode-toggle" role="group" aria-label="Display mode selector">
-                    <button type="button" class="mode-toggle-btn" data-mode-choice="learner" aria-pressed="true">Learner</button>
-                    <button type="button" class="mode-toggle-btn" data-mode-choice="professional" aria-pressed="false">Professional</button>
+                    <button type="button" class="mode-toggle-btn" data-mode-choice="learner" aria-pressed="true" aria-label="Switch to Learner Mode view">Learner</button>
+                    <button type="button" class="mode-toggle-btn" data-mode-choice="professional" aria-pressed="false" aria-label="Switch to Professional Mode view">Professional</button>
                 </div>
             </section>
         </section>
@@ -57,7 +57,7 @@
                 </article>
             </div>
             <div class="reset-controls">
-                <button id="resetProgressBtn" class="home-btn-secondary" style="font-size: 12px; padding: 8px 16px;">Reset Progress</button>
+                <button id="resetProgressBtn" class="home-btn-secondary" style="font-size: 12px; padding: 8px 16px;" aria-label="Reset saved progress and XP">Reset Progress</button>
                 <p id="resetWarning" class="reset-warning hidden" role="status" aria-live="polite"></p>
             </div>
         </section>

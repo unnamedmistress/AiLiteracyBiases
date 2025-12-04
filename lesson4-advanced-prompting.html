@@ -295,7 +295,7 @@
                         </p>
 
                         <h3 style="margin: 25px 0 15px 0;">🧠 Challenge 1: Chain-of-Thought</h3>
-                        <div class="activity-card" onclick="startChallenge('cot')">
+                        <div class="activity-card" role="button" tabindex="0" aria-label="Start Chain-of-Thought challenge" onclick="startChallenge('cot')" onkeydown="handleLesson4CardKey(event, 'cot')">
                             <div class="activity-icon">🧩</div>
                             <div class="activity-title">Master Chain-of-Thought Prompting</div>
                             <div class="activity-desc">
@@ -308,7 +308,7 @@
                         </div>
 
                         <h3 style="margin: 25px 0 15px 0;">🎭 Challenge 2: Role-Playing Mastery</h3>
-                        <div class="activity-card" onclick="startChallenge('role')">
+                        <div class="activity-card" role="button" tabindex="0" aria-label="Start Role-Playing challenge" onclick="startChallenge('role')" onkeydown="handleLesson4CardKey(event, 'role')">
                             <div class="activity-icon">🎙️</div>
                             <div class="activity-title">Transform AI into Different Experts</div>
                             <div class="activity-desc">
@@ -321,7 +321,7 @@
                         </div>
 
                         <h3 style="margin: 25px 0 15px 0;">📐 Challenge 3: Few-Shot Learning</h3>
-                        <div class="activity-card" onclick="startChallenge('fewshot')">
+                        <div class="activity-card" role="button" tabindex="0" aria-label="Start Few-shot challenge" onclick="startChallenge('fewshot')" onkeydown="handleLesson4CardKey(event, 'fewshot')">
                             <div class="activity-icon">📊</div>
                             <div class="activity-title">Teach AI by Example</div>
                             <div class="activity-desc">
@@ -648,6 +648,13 @@
             if (learnButton) {
                 learnButton.classList.toggle('active', !showGame);
                 learnButton.setAttribute('aria-pressed', showGame ? 'false' : 'true');
+            }
+        }
+
+        function handleLesson4CardKey(event, challenge) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                startChallenge(challenge);
             }
         }
 

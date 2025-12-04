@@ -937,22 +937,22 @@
                         </div>
                     </div>
                     
-                    <div class="game-modes">
-                        <div class="mode-card" onclick="startMode('scenarios')">
+                        <div class="game-modes">
+                            <div class="mode-card" role="button" tabindex="0" aria-label="Start Scenario Detective mode" onclick="startMode('scenarios')" onkeydown="handleModeCardKey(event, 'scenarios')">
                             <div class="mode-icon">🎭</div>
                             <div class="mode-title">Scenario Detective</div>
                             <div class="mode-desc">Read AI outputs and identify the pathology</div>
                             <div class="mode-reward">+50 XP per correct answer</div>
                         </div>
                         
-                        <div class="mode-card" onclick="startMode('quiz')">
+                        <div class="mode-card" role="button" tabindex="0" aria-label="Start Speed Quiz mode" onclick="startMode('quiz')" onkeydown="handleModeCardKey(event, 'quiz')">
                             <div class="mode-icon">⚡</div>
                             <div class="mode-title">Speed Quiz</div>
                             <div class="mode-desc">Test your knowledge under time pressure</div>
                             <div class="mode-reward">+100 XP with bonus multiplier</div>
                         </div>
                         
-                        <div class="mode-card" onclick="startMode('realworld')">
+                        <div class="mode-card" role="button" tabindex="0" aria-label="View Real Disasters mode" onclick="startMode('realworld')" onkeydown="handleModeCardKey(event, 'realworld')">
                             <div class="mode-icon">💥</div>
                             <div class="mode-title">Real Disasters</div>
                             <div class="mode-desc">Learn from actual AI failures</div>
@@ -1364,6 +1364,13 @@
             scenarioQuestionStart = Date.now();
             clearScenarioProgress();
             updateResumePanel();
+        }
+
+        function handleModeCardKey(event, mode) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                startMode(mode);
+            }
         }
 
         function startMode(mode, options = {}) {

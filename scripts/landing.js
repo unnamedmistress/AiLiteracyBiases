@@ -13,10 +13,21 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('professionalmodechange', refreshProgressCopy);
 
     document.querySelectorAll('[data-link]').forEach((el) => {
-        el.addEventListener('click', () => {
+        const activate = () => {
             const target = el.getAttribute('data-link');
             if (target) window.location.href = target;
-        });
+        };
+
+        el.addEventListener('click', activate);
+
+        if (!['BUTTON', 'A'].includes((el.tagName || '').toUpperCase())) {
+            el.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    activate();
+                }
+            });
+        }
     });
 
     function refreshProgressCopy() {

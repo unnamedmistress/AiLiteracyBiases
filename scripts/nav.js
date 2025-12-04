@@ -251,6 +251,7 @@
         toggle.className = 'nav-toggle';
         toggle.setAttribute('aria-expanded', 'false');
         toggle.setAttribute('aria-controls', 'navDrawer');
+        toggle.setAttribute('aria-label', 'Open menu');
         toggle.innerHTML = '<span class="sr-only">Toggle navigation</span><span class="nav-toggle-bars" aria-hidden="true"></span>';
 
         const overlay = document.createElement('div');
@@ -279,6 +280,7 @@
         function setDrawerState(open) {
             nav.classList.toggle('nav-open', open);
             toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
         }
 
         toggle.addEventListener('click', () => {
