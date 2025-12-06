@@ -11,7 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
             type: 'lesson',
             title: 'Lesson 1 · Warm-Up',
             summary: 'Tone basics, probability radar, and three Prompt Wizardry mini-games.',
-            path: 'lesson1/l1-p1-learn-intro.html'
+            path: 'lesson1/l1-p1-learn-intro.html',
+            icon: '⚡️',
+            time: '8 min'
         },
         {
             id: 'lesson2',
@@ -19,7 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Lesson 2 · AI Literacy',
             summary: '32 machine pathologies, F.A.C.T.S. framework, and real disaster drills.',
             path: 'lesson2/l2-p1-learn-intro.html',
-            requires: 'lesson1'
+            requires: 'lesson1',
+            icon: '🧭',
+            time: '25 min'
         },
         {
             id: 'quiz1',
@@ -27,7 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Quiz 1 · Warm-Up Review',
             summary: 'Check your instincts before unlocking Lesson 3.',
             path: 'quiz1.html',
-            requires: 'lesson2'
+            requires: 'lesson2',
+            icon: '🎯',
+            time: '5 min'
         },
         {
             id: 'lesson3',
@@ -35,7 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Lesson 3 · Content Creation',
             summary: 'Ethical content systems, AI collaborator roles, and guardrails.',
             path: 'lesson3/l3-p1-learn-intro.html',
-            requires: 'quiz1'
+            requires: 'quiz1',
+            icon: '🎨',
+            time: '18 min'
         },
         {
             id: 'lesson4',
@@ -43,7 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Lesson 4 · Advanced Prompting',
             summary: 'Layered prompting blueprints for research, marketing, and ops.',
             path: 'lesson4/l4-p1-learn-intro.html',
-            requires: 'lesson3'
+            requires: 'lesson3',
+            icon: '🔮',
+            time: '22 min'
         },
         {
             id: 'lesson5',
@@ -51,7 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Lesson 5 · AI Workflows',
             summary: 'Chain multiple models, automate reviews, and add human escalation.',
             path: 'lesson5/l5-p1-learn-intro.html',
-            requires: 'lesson4'
+            requires: 'lesson4',
+            icon: '🌐',
+            time: '20 min'
         },
         {
             id: 'lesson6',
@@ -59,7 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Lesson 6 · Capstone',
             summary: 'Ship your AI policy, lesson plan, or automation brief for certification.',
             path: 'lesson6-capstone.html',
-            requires: 'lesson5'
+            requires: 'lesson5',
+            icon: '🎓',
+            time: '30 min'
         }
     ];
     const DEFAULT_TOTAL_LESSONS = DASHBOARD_ITEMS.filter((item) => item.type === 'lesson').length;
@@ -273,10 +287,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 : `${state.ctaLabel} ${item.title}`;
             return `
                 <article class="lesson-card ${state.locked ? 'locked' : ''}"${state.comingSoon ? ' data-coming-soon="true"' : ''}>
-                    <div class="status-pill${state.modifier ? ` ${state.modifier}` : ''}">${state.statusLabel}</div>
-                    <h3>${item.title}</h3>
+                    <div class="lesson-header">
+                        <span class="lesson-icon" aria-hidden="true">${item.icon || '📘'}</span>
+                        <div class="lesson-titles">
+                            <div class="status-pill${state.modifier ? ` ${state.modifier}` : ''}">${state.statusLabel}</div>
+                            <h3>${item.title}</h3>
+                        </div>
+                    </div>
                     <p>${item.summary}</p>
-                    ${state.comingSoon ? '<p class="coming-soon-note">🚧 Launching soon · stay tuned</p>' : ''}
+                    <div class="lesson-meta">
+                        <span class="time-estimate">⏱ ${item.time || '10 min'}</span>
+                        ${state.comingSoon ? '<span class="coming-soon-note">🚧 Launching soon · stay tuned</span>' : ''}
+                    </div>
                     <button type="button" data-path="${item.path}" data-locked="${state.locked}" aria-label="${ariaLabel}">${state.ctaLabel}</button>
                 </article>
             `;

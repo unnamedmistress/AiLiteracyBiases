@@ -34,6 +34,17 @@
         return `${getBasePrefix()}${href}`;
     }
 
+    function ensureRewardsScript() {
+        if (window.Rewards && typeof window.Rewards.showReward === 'function') return;
+        const existing = document.querySelector('script[data-rewards]');
+        if (existing) return;
+        const script = document.createElement('script');
+        script.src = resolveHref('scripts/rewards.js');
+        script.defer = true;
+        script.dataset.rewards = 'true';
+        document.head.appendChild(script);
+    }
+
     const LANDING_PAGE = 'landing.html';
 
     const LESSON_SEQUENCE = [
@@ -175,6 +186,45 @@
             return false;
         }
         return true;
+    }
+
+    function initAnswerFeedback() {
+        const buttons = Array.from(document.querySelectorAll('[data-answer]'));
+        if (!buttons.length) return;
+        buttons.forEach((btn) => {
+            btn.setAttribute('role', 'button');
+            btn.setAttribute('tabindex', '0');
+            const explanation = btn.dataset.explanation || '';
+            const correct = btn.dataset.correct === 'true' || btn.dataset.answer === 'correct';
+            btn.addEventListener('click', () => applyFeedback(btn, correct, explanation));
+            btn.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    applyFeedback(btn, correct, explanation);
+                }
+            });
+        });
+    }
+
+    function applyFeedback(clickedBtn, isCorrect, explanation) {
+        const group = clickedBtn.closest('[data-answer-group]') || clickedBtn.parentElement;
+        const buttons = group ? Array.from(group.querySelectorAll('[data-answer]')) : [clickedBtn];
+        buttons.forEach((btn) => {
+            btn.classList.remove('correct', 'incorrect');
+        });
+        clickedBtn.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+        if (explanation) {
+            let expl = group ? group.querySelector('.answer-explanation') : null;
+            if (!expl && group) {
+                expl = document.createElement('div');
+                expl.className = 'answer-explanation';
+                group.appendChild(expl);
+            }
+            if (expl) {
+                expl.textContent = explanation;
+            }
+        }
     }
 
     function setNavigationButtons(lessonId, containerSelector = '.footer-nav') {
@@ -373,6 +423,9 @@
         window.AILesson.initLessonNavigation({ lessonId, breadcrumbSelector, footerSelector });
         initNextLessonButtons(lessonId);
         scrollGameExperiencesToTop();
+
+        ensureRewardsScript();
+        initAnswerFeedback();
 
         const looksLikeSummary = Boolean(document.querySelector('[data-next-lesson]'));
         if (looksLikeSummary && window.ProgressTracker && typeof window.ProgressTracker.markLessonComplete === 'function') {
