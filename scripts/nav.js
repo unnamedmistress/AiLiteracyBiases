@@ -39,8 +39,8 @@
     ];
 
     const LESSON_LINKS = [
-        { id: 'lesson1', label: 'Lesson 1', href: 'lesson1-ai-intro.html' },
-        { id: 'lesson2', label: 'Lesson 2', href: 'presentation.html' },
+        { id: 'lesson1', label: 'Lesson 1', href: 'lesson1/l1-p1-learn-intro.html' },
+        { id: 'lesson2', label: 'Lesson 2', href: 'lesson2/l2-p1-learn-intro.html' },
         { id: 'lesson3', label: 'Lesson 3', href: 'lesson3-content-creation.html' },
         { id: 'quiz1', label: 'Quiz 1', href: 'quiz1.html' },
         { id: 'lesson4', label: 'Lesson 4', href: 'lesson4-advanced-prompting.html' },
@@ -63,9 +63,18 @@
         '': { main: 'home' },
         'index.html': { main: 'home' },
         'landing.html': { main: 'about' },
-        'lesson1-ai-intro.html': { lesson: 'lesson1' },
+        'lesson1-ai-intro.html': { lesson: 'lesson1' }, // Legacy support
+        'lesson1/l1-p1-learn-intro.html': { lesson: 'lesson1' },
+        'lesson1/l1-p2-game-prediction.html': { lesson: 'lesson1' },
+        'lesson1/l1-p3-learn-tone.html': { lesson: 'lesson1' },
+        'lesson1/l1-p4-game-voice.html': { lesson: 'lesson1' },
+        'lesson1/l1-p5-game-tone.html': { lesson: 'lesson1' },
+        'lesson1/l1-p6-summary.html': { lesson: 'lesson1' },
         'quiz1.html': { lesson: 'quiz1' },
-        'presentation.html': { lesson: 'lesson2' },
+        'presentation.html': { lesson: 'lesson2' }, // Legacy support
+        'lesson2/l2-p1-learn-intro.html': { lesson: 'lesson2' },
+        'lesson2/l2-p2-learn-hallucinations.html': { lesson: 'lesson2' },
+        'lesson2/l2-p3-game-hallucinations.html': { lesson: 'lesson2' },
         'game.html': { lesson: 'lesson2' },
         'lesson3-content-creation.html': { lesson: 'lesson3' },
         'lesson4-advanced-prompting.html': { lesson: 'lesson4' },
