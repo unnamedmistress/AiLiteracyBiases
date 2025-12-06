@@ -44,7 +44,7 @@
 
     const MAIN_LINKS = [
         { id: 'home', label: 'Home', href: LANDING_PAGE },
-        { id: 'about', label: 'About', href: 'landing.html' }
+           { id: 'about', label: 'About', href: 'about.html' }
     ];
 
     const RESOURCE_LINKS = [
@@ -77,7 +77,7 @@
         '': { main: 'home' },
         'index.html': { main: 'home' },
         'landing.html': { main: 'home' },
-        'landing.html': { main: 'about' },
+            'about.html': { main: 'about' },
         'lesson1-ai-intro.html': { lesson: 'lesson1' }, // Legacy support
         'lesson1/l1-p1-learn-intro.html': { lesson: 'lesson1' },
         'lesson1/l1-p2-game-prediction.html': { lesson: 'lesson1' },
@@ -324,6 +324,7 @@
         const brandLink = document.createElement('a');
         brandLink.href = LANDING_PAGE;
         brandLink.textContent = 'AI Detective Academy';
+            brandLink.setAttribute('aria-label', 'AI Detective Academy home');
         brand.appendChild(brandLink);
 
         const toggle = document.createElement('button');
@@ -363,14 +364,6 @@
             toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
         }
 
-        toggle.addEventListener('click', () => {
-            const nextState = !nav.classList.contains('nav-open');
-            setDrawerState(nextState);
-        });
-
-        overlay.addEventListener('click', () => setDrawerState(false));
-        closeBtn.addEventListener('click', () => setDrawerState(false));
-
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape' && nav.classList.contains('nav-open')) {
                 setDrawerState(false);
@@ -394,6 +387,37 @@
             setDrawerState(false);
             window.location.href = resolveHref(href);
         });
+
+            function focusFirstLink() {
+                const firstLink = drawer.querySelector('a, button');
+                if (firstLink) firstLink.focus();
+            }
+
+            nav.addEventListener('keydown', (event) => {
+                if (!nav.classList.contains('nav-open')) return;
+                if (event.key === 'Tab') {
+                    const focusable = drawer.querySelectorAll('a, button');
+                    if (!focusable.length) return;
+                    const first = focusable[0];
+                    const last = focusable[focusable.length - 1];
+                    if (event.shiftKey && document.activeElement === first) {
+                        event.preventDefault();
+                        last.focus();
+                    } else if (!event.shiftKey && document.activeElement === last) {
+                        event.preventDefault();
+                        first.focus();
+                    }
+                }
+            });
+
+            toggle.addEventListener('click', () => {
+                const nextState = !nav.classList.contains('nav-open');
+                setDrawerState(nextState);
+                if (nextState) focusFirstLink();
+            });
+
+            overlay.addEventListener('click', () => setDrawerState(false));
+            closeBtn.addEventListener('click', () => setDrawerState(false));
 
         document.body.classList.add('with-global-nav');
         document.body.prepend(nav);

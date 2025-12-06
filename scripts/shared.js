@@ -192,6 +192,12 @@
             const prevLesson = LESSON_SEQUENCE[index - 1];
             const prevBtn = createNavButton(`← Previous`, prevLesson.path, 'btn-secondary');
             container.appendChild(prevBtn);
+        } else {
+            const prevBtn = document.createElement('span');
+            prevBtn.className = 'btn btn-secondary is-disabled';
+            prevBtn.textContent = '← Previous';
+            prevBtn.setAttribute('aria-disabled', 'true');
+            container.appendChild(prevBtn);
         }
 
         container.appendChild(mainBtn);
@@ -206,6 +212,12 @@
         if (index < LESSON_SEQUENCE.length - 2) {
             const nextLesson = LESSON_SEQUENCE[index + 1];
             const nextBtn = createNavButton(`Next →`, nextLesson.path, 'btn-primary');
+            container.appendChild(nextBtn);
+        } else {
+            const nextBtn = document.createElement('span');
+            nextBtn.className = 'btn btn-primary is-disabled';
+            nextBtn.textContent = 'Next →';
+            nextBtn.setAttribute('aria-disabled', 'true');
             container.appendChild(nextBtn);
         }
     }

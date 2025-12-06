@@ -224,6 +224,41 @@ body.with-global-nav {
     width: 100%;
 }
 
+.nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    text-decoration: none;
+    transition: background var(--transition-base), color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+    background: rgba(16, 185, 129, 0.1);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.nav-link.is-active,
+.nav-link.active-lesson {
+    background: rgba(16, 185, 129, 0.14);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    font-weight: 700;
+}
+
+.nav-link.is-locked {
+    color: var(--color-muted);
+    cursor: not-allowed;
+}
+
+.nav-status-badge {
+    margin-left: 8px;
+    font-size: 13px;
+}
+
 .sr-only {
     position: absolute;
     width: 1px;
@@ -483,6 +518,12 @@ a {
 
 .btn-next:disabled,
 .btn-next.is-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.btn.is-disabled {
     opacity: 0.5;
     cursor: not-allowed;
     box-shadow: none;
