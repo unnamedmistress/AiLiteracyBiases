@@ -1,5 +1,17 @@
 (function () {
     const MODE_STORAGE_KEY = 'aiProfessionalMode_v1';
+    function getBasePrefix() {
+        const path = window.location && window.location.pathname ? window.location.pathname : '';
+        const segments = path.split('/').filter(Boolean);
+        const depth = Math.max(0, segments.length - 1);
+        return depth ? '../'.repeat(depth) : '';
+    }
+
+    function resolveHref(href) {
+        if (!href) return href;
+        if (/^(https?:)?\/\//i.test(href) || href.startsWith('#')) return href;
+        return `${getBasePrefix()}${href}`;
+    }
 
     function readProfessionalModePreference() {
         try {
@@ -242,7 +254,7 @@
                 element.appendChild(badge);
             }
         } else {
-            element.href = href;
+            element.href = resolveHref(href);
             if (group === 'lesson') {
                 element.setAttribute('aria-label', `${label} · ${statusMeta.label}`);
             }
@@ -377,7 +389,7 @@
                 group: anchor.className || 'link'
             });
             setDrawerState(false);
-            window.location.href = href;
+            window.location.href = resolveHref(href);
         });
 
         document.body.classList.add('with-global-nav');

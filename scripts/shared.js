@@ -21,6 +21,19 @@
         }
     }
 
+    function getBasePrefix() {
+        const path = window.location && window.location.pathname ? window.location.pathname : '';
+        const segments = path.split('/').filter(Boolean);
+        const depth = Math.max(0, segments.length - 1);
+        return depth ? '../'.repeat(depth) : '';
+    }
+
+    function resolveHref(href) {
+        if (!href) return href;
+        if (/^(https?:)?\/\//i.test(href) || href.startsWith('#')) return href;
+        return `${getBasePrefix()}${href}`;
+    }
+
     const LESSON_SEQUENCE = [
         { id: 'lesson1', label: 'Lesson 1: Prompt Wizardry Warm-Up', path: 'lesson1/l1-p1-learn-intro.html' },
         { id: 'lesson2', label: 'Lesson 2: AI Literacy', path: 'lesson2/l2-p1-learn-intro.html' },
@@ -129,8 +142,9 @@
             }
 
             button.addEventListener('click', () => {
+                const targetHref = resolveHref(destination.href);
                 emitAnalytics('next_lesson_click', { fromLesson: currentLessonId, target: destination.id || destination.href });
-                window.location.href = destination.href;
+                window.location.href = targetHref;
             });
         });
     }
@@ -197,7 +211,7 @@
     function createNavButton(label, href, className) {
         const button = document.createElement('a');
         button.textContent = label;
-        button.href = href;
+        button.href = resolveHref(href);
         button.className = `btn ${className}`.trim();
         return button;
     }
