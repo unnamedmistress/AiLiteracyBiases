@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 2: AI's Bad Habits</title>
+    
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .lesson-shell { display: flex; flex-direction: column; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .hero-section { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, rgba(157, 78, 221, 0.1), rgba(0, 217, 255, 0.1)); border-radius: var(--radius-lg); margin-bottom: 32px; }
+        .emoji-large { font-size: 64px; margin-bottom: 16px; }
+        .hero-title { font-size: 36px; margin-bottom: 12px; line-height: 1.2; }
+        .subtitle { font-size: 18px; color: var(--color-muted); margin-bottom: 24px; }
+        .did-you-know { background: rgba(255, 255, 255, 0.05); border-radius: var(--radius-md); padding: 16px; margin-top: 24px; border: 1px solid rgba(255, 255, 255, 0.15); }
+        .dyk-title { font-weight: 600; font-size: 16px; margin-bottom: 8px; }
+        .agenda-section { margin-top: 32px; }
+        .section-title { font-size: 28px; margin-bottom: 20px; }
+        .agenda-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+        .agenda-item { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.04); padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; transition: transform 0.2s ease, border-color 0.2s ease; cursor: pointer; }
+        .agenda-item:hover { transform: translateY(-4px); border-color: var(--color-accent); }
+        .agenda-icon { font-size: 32px; }
+        .agenda-title { font-weight: 600; font-size: 14px; }
+        .progress-nav { margin-top: 32px; display: flex; justify-content: center; }
+        .btn-next { padding: 14px 32px; font-size: 16px; font-weight: 600; border-radius: var(--radius-md); background: linear-gradient(135deg, #10B981, #059669); color: #fff; border: none; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+        .progress-indicator { text-align: center; color: var(--color-muted); font-size: 14px; margin-bottom: 16px; }
+        @media (max-width: 768px) {
+            .hero-title { font-size: 28px; }
+            .agenda-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+        }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson2">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🤖 Lesson 2: AI Literacy</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <div class="hero-section">
+            <div class="emoji-large">🤖💥</div>
+            <h1 class="hero-title">AI's Bad Habits:<br>Learn to Spot Them Before They Trick You</h1>
+            <p class="subtitle">A Fun & Witty Guide to Responsible AI Use for Everyday Humans</p>
+            <div class="did-you-know">
+                <div class="dyk-title">💡 Did You Know?</div>
+                <p>AI makes mistakes ALL THE TIME - but most people don't know how to spot them. You're about to become an AI detective! 🕵️</p>
+            </div>
+        </div>
+
+        <div class="agenda-section">
+            <h2 class="section-title">🗺️ Your Learning Journey</h2>
+            <div class="agenda-grid">
+                <div class="agenda-item">
+                    <div class="agenda-icon">🧠</div>
+                    <div class="agenda-title">32 Machine Pathologies</div>
+                </div>
+                <div class="agenda-item">
+                    <div class="agenda-icon">⏰</div>
+                    <div class="agenda-title">Knowledge Cutoff</div>
+                </div>
+                <div class="agenda-item">
+                    <div class="agenda-icon">🪙</div>
+                    <div class="agenda-title">Tokens & Data Limits</div>
+                </div>
+                <div class="agenda-item">
+                    <div class="agenda-icon">🛡️</div>
+                    <div class="agenda-title">3 Critical Safety Tips</div>
+                </div>
+                <div class="agenda-item">
+                    <div class="agenda-icon">✅</div>
+                    <div class="agenda-title">F.A.C.T.S. Framework</div>
+                </div>
+                <div class="agenda-item">
+                    <div class="agenda-icon">💥</div>
+                    <div class="agenda-title">Real Disaster Stories</div>
+                </div>
+                <div class="agenda-item">
+                    <div class="agenda-icon">🎯</div>
+                    <div class="agenda-title">Interactive Quiz</div>
+                </div>
+                <div class="agenda-item">
+                    <div class="agenda-icon">🚀</div>
+                    <div class="agenda-title">Your Challenge</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-indicator">Page 1 of 11 • Introduction to AI's Bad Habits</div>
+        <div class="progress-nav">
+            <button class="btn-next" onclick="window.location.href='l2-p2-learn-hallucinations.html'">Begin: Learn about Hallucinations →</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson2';
+            const PAGE_ID = 'l2-p1';
+            const tracker = window.ProgressTracker || null;
+            
+            // Mark this page as visited
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            }
+        });
+    </script>
+</body>
+</html>
