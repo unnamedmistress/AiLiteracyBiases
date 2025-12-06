@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 1: What is an AI?</title>
+    
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .lesson-shell { display: flex; flex-direction: column; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .challenge-section { display: flex; flex-direction: column; gap: 24px; }
+        .challenge-title { font-size: 34px; margin-bottom: 8px; }
+        .challenge-desc { color: var(--color-muted); line-height: 1.6; font-size: 18px; }
+        .learning-showcase { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; margin-top: 24px; }
+        .story-card { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.04); padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+        .story-header h3 { margin-bottom: 4px; font-size: 20px; }
+        .story-header p { margin: 0; color: var(--color-muted); }
+        .prompt-compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; }
+        .prompt-block { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.18); padding: 16px; background: rgba(255, 255, 255, 0.06); }
+        .prompt-label { font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 8px; }
+        .prompt-text { font-family: 'Courier New', Courier, monospace; font-size: 14px; background: rgba(0, 0, 0, 0.25); padding: 10px; border-radius: var(--radius-sm); margin-bottom: 10px; }
+        .prompt-output { font-size: 15px; line-height: 1.5; }
+        .prompt-weight { font-size: 12px; margin-top: 10px; color: var(--color-muted); }
+        .cost-callout { margin-top: 18px; padding: 16px; border-radius: var(--radius-md); border: 1px dashed rgba(250, 204, 21, 0.7); background: rgba(250, 204, 21, 0.1); }
+        .cost-callout strong { color: #facc15; }
+        .progress-nav { margin-top: 32px; display: flex; justify-content: center; }
+        .btn-next { padding: 14px 32px; font-size: 16px; font-weight: 600; border-radius: var(--radius-md); background: linear-gradient(135deg, #10B981, #059669); color: #fff; border: none; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+        .progress-indicator { text-align: center; color: var(--color-muted); font-size: 14px; margin-bottom: 16px; }
+        @media (max-width: 768px) {
+            .challenge-title { font-size: 26px; }
+            .prompt-compare { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson1">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">⚡️ Lesson 1: What is an AI?</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <div class="challenge-section">
+            <h1 class="challenge-title">Lesson 1 · Understanding AI Personalities</h1>
+            <p class="challenge-desc">This is your fun, witty crash course in what AI actually is, why tone is the secret sauce, and how prediction math runs the whole show. Think science fair meets improv club.</p>
+
+            <section class="learning-showcase">
+                <article class="story-card">
+                    <div class="story-header">
+                        <h3>Do you have to be polite to the AI?</h3>
+                        <p>Toggle one word and track how probability weights, tone, and even cloud costs shift.</p>
+                    </div>
+                    <p>Try this sentence pair and observe how "please" nudges the model toward softer verbs and higher confidence in caretaking language.</p>
+                    <div class="prompt-compare" aria-label="Prompt comparison">
+                        <div class="prompt-block">
+                            <div class="prompt-label">Prompt A</div>
+                            <div class="prompt-text">Write a loving message to my spouse that I'll be late tonight.</div>
+                            <p class="prompt-output"><strong>Model reply:</strong> "Hey love, running late tonight but I can't wait to catch up when I'm home."</p>
+                            <p class="prompt-weight">Top token confidence: "running" 62%, "late" 21%, "love" 8%</p>
+                        </div>
+                        <div class="prompt-block">
+                            <div class="prompt-label">Prompt B</div>
+                            <div class="prompt-text">Write a loving message to my spouse that I'll be late tonight please.</div>
+                            <p class="prompt-output"><strong>Model reply:</strong> "Hey love, I'm so sorry but I'll be late tonight—please save me a hug when I get in."</p>
+                            <p class="prompt-weight">Top token confidence: "sorry" 74%, "please" 18%, "hug" 6%</p>
+                        </div>
+                    </div>
+                    <p class="prompt-weight">Adding "please" raises the probability of apologetic verbs and inserts persuasion tokens like "sorry" or "hug" because the model sees politeness as a strong cue for empathy.</p>
+                    <div class="cost-callout">
+                        <p><strong>Token cost reality:</strong> Assuming OpenAI's GPT-4o mini input pricing of about $0.000005 per token, the single word "please" (~1 token) costs ~$0.000005 every time. A conversation that uses "please" and "thank you" 20 times adds roughly $0.0002 in compute per user. At a million users per day, those niceties translate to about $200 in extra daily compute spend.</p>
+                    </div>
+                </article>
+            </section>
+
+            <div class="progress-indicator">Page 1 of 6 • Understanding AI</div>
+            <div class="progress-nav">
+                <button class="btn-next" onclick="window.location.href='l1-p2-game-prediction.html'">Next: Play the Prediction Game →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize progress tracking for multi-page lesson
+            const lessonId = 'lesson1';
+            const pageId = 'l1-p1';
+            
+            // Mark this page as visited
+            if (window.ProgressTracker) {
+                window.ProgressTracker.setCheckpoint(lessonId, pageId, true);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -11,14 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
             type: 'lesson',
             title: 'Lesson 1 · Warm-Up',
             summary: 'Tone basics, probability radar, and three Prompt Wizardry mini-games.',
-            path: 'lesson1-ai-intro.html'
+            path: 'lesson1/l1-p1-learn-intro.html'
         },
         {
             id: 'lesson2',
             type: 'lesson',
             title: 'Lesson 2 · AI Literacy',
             summary: '32 machine pathologies, F.A.C.T.S. framework, and real disaster drills.',
-            path: 'presentation.html',
+            path: 'lesson2/l2-p1-learn-intro.html',
             requires: 'lesson1'
         },
         {
@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initHeroButtons() {
         const destination = getNextStartDestination();
-        const startPath = destination?.path || 'lesson1-ai-intro.html';
+        const startPath = destination?.path || 'lesson1/l1-p1-learn-intro.html';
         const ctaLabel = getStartButtonLabel(destination);
         els.startButtons.forEach((button) => {
             button.textContent = ctaLabel;

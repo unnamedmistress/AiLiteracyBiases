@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Game: Tone Lab</title>
+    
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .lesson-shell { display: flex; flex-direction: column; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .challenge-section { display: flex; flex-direction: column; gap: 24px; }
+        .challenge-title { font-size: 34px; margin-bottom: 8px; }
+        .challenge-desc { color: var(--color-muted); line-height: 1.6; font-size: 16px; }
+        .activity-card { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+        .activity-meta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; font-size: 14px; color: var(--color-muted); }
+        .activity-meta span { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(255, 255, 255, 0.08); border-radius: 999px; }
+        .activity-body { display: grid; gap: 18px; }
+        .status-pill { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); }
+        .tone-drop-zone { display: inline-flex; align-items: center; justify-content: center; padding: 10px 14px; min-width: 140px; border-radius: var(--radius-md); border: 2px dashed rgba(255, 255, 255, 0.25); text-transform: uppercase; font-weight: 600; cursor: pointer; transition: border-color var(--transition-base), background var(--transition-base); }
+        .tone-drop-zone.active { border-style: solid; border-color: var(--color-accent); background: rgba(16, 185, 129, 0.15); }
+        .tone-drop-zone.filled { border-style: solid; border-color: #facc15; background: rgba(250, 204, 21, 0.15); color: #fde047; }
+        .tone-word-bank { display: flex; flex-wrap: wrap; gap: 10px; }
+        .tone-word { padding: 8px 14px; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.04); cursor: grab; text-transform: capitalize; font-weight: 600; transition: background var(--transition-base), border-color var(--transition-base); }
+        .tone-word:active { cursor: grabbing; }
+        .tone-word:hover { background: rgba(255, 255, 255, 0.12); }
+        .tone-word.selected { background: var(--color-accent); color: #0f172a; border-color: var(--color-accent); }
+        .tone-output { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.18); padding: 16px; background: rgba(0, 0, 0, 0.3); font-size: 16px; line-height: 1.6; }
+        .tone-accessibility { margin-top: 12px; padding: 14px; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.06); display: flex; flex-direction: column; gap: 10px; }
+        .tone-accessibility label { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255, 255, 255, 0.85); }
+        .tone-picker-select { width: 100%; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.25); background: rgba(0, 0, 0, 0.4); color: inherit; padding: 10px 12px; font-weight: 600; }
+        .tone-clear-btn { align-self: flex-start; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.35); background: transparent; color: inherit; padding: 6px 16px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; transition: background var(--transition-base), border-color var(--transition-base); }
+        .tone-clear-btn:hover, .tone-clear-btn:focus-visible { background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.55); outline: none; }
+        .tone-accessibility small { font-size: 12px; color: rgba(255, 255, 255, 0.7); }
+        .hidden { display: none; }
+        .progress-nav { margin-top: 32px; display: flex; justify-content: center; }
+        .btn-next { padding: 14px 32px; font-size: 16px; font-weight: 600; border-radius: var(--radius-md); background: linear-gradient(135deg, #10B981, #059669); color: #fff; border: none; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+        .progress-indicator { text-align: center; color: var(--color-muted); font-size: 14px; margin-bottom: 16px; }
+        @media (max-width: 768px) {
+            .challenge-title { font-size: 26px; }
+        }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson1">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🎭 Game: Tone Lab</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <div class="challenge-section">
+            <h1 class="challenge-title">Activity 3: Tone Changes Everything</h1>
+            <p class="challenge-desc">Experiment with different tone words to see how a single adjective completely reshapes the message. Click or drag tone words to the slot!</p>
+
+            <div class="activity-card" id="toneLab">
+                <div class="activity-meta">
+                    <span>🎭 Activity 3</span>
+                    <span>Tone Changes Everything</span>
+                    <span>Goal: test multiple tones</span>
+                </div>
+                <div class="activity-body">
+                    <p>Write a <span id="toneDropZone" class="tone-drop-zone" role="button" tabindex="0">choose tone</span> message to my boss to call out sick today.</p>
+                    <div class="status-pill">Tip: click a tone word or drag it into the slot. Tap the slot to clear.</div>
+                    <div class="tone-word-bank" id="toneWordBank"></div>
+                    <div class="tone-accessibility" aria-live="polite">
+                        <label for="tonePicker">Keyboard tone picker</label>
+                        <select id="tonePicker" class="tone-picker-select">
+                            <option value="">Select a tone...</option>
+                        </select>
+                        <button type="button" class="tone-clear-btn" id="toneClearBtn">Clear tone slot</button>
+                        <small>Tip: Focus a tone chip and press Enter, drag and drop, or choose from the picker.</small>
+                    </div>
+                    <div class="tone-output hidden" id="toneOutput"></div>
+                </div>
+            </div>
+
+            <div class="progress-indicator">Page 5 of 6 • Tone Lab Game</div>
+            <div class="progress-nav">
+                <button class="btn-next" id="nextPageBtn" disabled onclick="window.location.href='l1-p6-summary.html'">Next: Lesson 1 Summary →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson1';
+            const PAGE_ID = 'l1-p5';
+            const tracker = window.ProgressTracker || null;
+            
+            const toneWords = ['compelling', 'pathetic', 'mad', 'happy', 'distracted', 'short', 'formal', 'friendly', 'urgent', 'apologetic'];
+            const toneResponses = {
+                compelling: "Hey boss, I'm really under the weather and won't be able to give my best today. I'll make up for it when I'm back.",
+                pathetic: "Hey boss, I'm sooo sick... I can't even move. Please let me stay home.",
+                mad: "Boss, I'm sick. Don't expect me in.",
+                happy: "Morning! Feeling pretty ill today, so I'll rest up and be back with a smile tomorrow.",
+                distracted: "Hi - um, I'm sick today, can't come. Thanks.",
+                short: 'Sick today, staying home.',
+                formal: 'Dear Boss, I regret to inform you that illness prevents my attendance today.',
+                friendly: "Hey Boss! I'm feeling rough today, going to rest and catch you tomorrow.",
+                urgent: "Boss, I woke up really sick. Need to stay home and recover.",
+                apologetic: "I'm sorry, but I'm too sick to come in today. I'll keep you posted."
+            };
+
+            const savedCheckpoints = tracker ? tracker.getCheckpoints(LESSON_ID) : {};
+            let selectedTone = null;
+            let toneComplete = Boolean(savedCheckpoints.toneComplete);
+            let tonesUsed = new Set(savedCheckpoints.tonesUsed || []);
+
+            const elements = {
+                toneDropZone: document.getElementById('toneDropZone'),
+                toneWordBank: document.getElementById('toneWordBank'),
+                tonePickerSelect: document.getElementById('tonePicker'),
+                toneClearButton: document.getElementById('toneClearBtn'),
+                toneOutput: document.getElementById('toneOutput'),
+                nextPageBtn: document.getElementById('nextPageBtn')
+            };
+
+            function applyTone(tone) {
+                if (!tone || !toneResponses[tone]) return;
+                selectedTone = tone;
+                tonesUsed.add(tone);
+                
+                if (elements.toneDropZone) {
+                    elements.toneDropZone.textContent = tone;
+                    elements.toneDropZone.classList.add('filled');
+                }
+                if (elements.toneOutput) {
+                    elements.toneOutput.textContent = toneResponses[tone];
+                    elements.toneOutput.classList.remove('hidden');
+                }
+                
+                // Mark all used tone words
+                document.querySelectorAll('.tone-word').forEach((word) => {
+                    if (tonesUsed.has(word.dataset.tone)) {
+                        word.classList.add('selected');
+                    }
+                });
+
+                // Check if enough tones have been tried
+                if (tonesUsed.size >= 3 && !toneComplete) {
+                    toneComplete = true;
+                    if (tracker) {
+                        tracker.setCheckpoint(LESSON_ID, 'toneComplete', true);
+                        tracker.setCheckpoint(LESSON_ID, 'tonesUsed', Array.from(tonesUsed));
+                    }
+                    if (elements.nextPageBtn) {
+                        elements.nextPageBtn.disabled = false;
+                    }
+                }
+                
+                // Save progress
+                if (tracker) {
+                    tracker.setCheckpoint(LESSON_ID, 'tonesUsed', Array.from(tonesUsed));
+                }
+            }
+
+            function clearTone() {
+                selectedTone = null;
+                if (elements.toneDropZone) {
+                    elements.toneDropZone.textContent = 'choose tone';
+                    elements.toneDropZone.classList.remove('filled');
+                }
+                if (elements.toneOutput) {
+                    elements.toneOutput.classList.add('hidden');
+                }
+            }
+
+            // Build tone word bank
+            toneWords.forEach((tone) => {
+                const word = document.createElement('div');
+                word.className = 'tone-word';
+                word.textContent = tone;
+                word.dataset.tone = tone;
+                if (tonesUsed.has(tone)) {
+                    word.classList.add('selected');
+                }
+                word.addEventListener('click', () => applyTone(tone));
+                elements.toneWordBank.appendChild(word);
+
+                // Add to picker
+                const option = document.createElement('option');
+                option.value = tone;
+                option.textContent = tone;
+                elements.tonePickerSelect.appendChild(option);
+            });
+
+            // Event listeners
+            if (elements.toneDropZone) {
+                elements.toneDropZone.addEventListener('click', clearTone);
+            }
+            if (elements.toneClearButton) {
+                elements.toneClearButton.addEventListener('click', clearTone);
+            }
+            if (elements.tonePickerSelect) {
+                elements.tonePickerSelect.addEventListener('change', (e) => {
+                    if (e.target.value) {
+                        applyTone(e.target.value);
+                    }
+                });
+            }
+
+            // Check if already completed
+            if (toneComplete) {
+                if (elements.nextPageBtn) {
+                    elements.nextPageBtn.disabled = false;
+                }
+            }
+
+            // Mark page as visited
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            }
+        });
+    </script>
+</body>
+</html>
