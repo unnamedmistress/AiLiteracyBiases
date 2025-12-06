@@ -34,6 +34,8 @@
         return `${getBasePrefix()}${href}`;
     }
 
+    const LANDING_PAGE = 'landing.html';
+
     const LESSON_SEQUENCE = [
         { id: 'lesson1', label: 'Lesson 1: Prompt Wizardry Warm-Up', path: 'lesson1/l1-p1-learn-intro.html' },
         { id: 'lesson2', label: 'Lesson 2: AI Literacy', path: 'lesson2/l2-p1-learn-intro.html' },
@@ -168,7 +170,7 @@
         if (!api) return false;
         if (!requirementMet(lessonId, api)) {
             alert('Finish the previous mission before jumping ahead. Redirecting you back to the dashboard.');
-            window.location.href = 'index.html';
+            window.location.href = LANDING_PAGE;
             emitAnalytics('lesson_blocked', { lessonId, reason: 'prerequisite' });
             return false;
         }
@@ -184,7 +186,7 @@
 
         container.innerHTML = '';
 
-        const mainBtn = createNavButton('Main Menu', 'index.html', 'btn-secondary');
+        const mainBtn = createNavButton('Main Menu', LANDING_PAGE, 'btn-secondary');
 
         if (index > 0) {
             const prevLesson = LESSON_SEQUENCE[index - 1];
@@ -224,7 +226,7 @@
         container.innerHTML = '';
 
         const homeLink = document.createElement('a');
-        homeLink.href = 'index.html';
+        homeLink.href = LANDING_PAGE;
         homeLink.textContent = 'Home';
         container.appendChild(homeLink);
 

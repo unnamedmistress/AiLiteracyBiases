@@ -40,8 +40,10 @@
         applyProfessionalModeClass(nextState);
     });
 
+    const LANDING_PAGE = 'landing.html';
+
     const MAIN_LINKS = [
-        { id: 'home', label: 'Home', href: 'index.html' },
+        { id: 'home', label: 'Home', href: LANDING_PAGE },
         { id: 'about', label: 'About', href: 'landing.html' }
     ];
 
@@ -74,6 +76,7 @@
     const PATH_TO_STATE = {
         '': { main: 'home' },
         'index.html': { main: 'home' },
+        'landing.html': { main: 'home' },
         'landing.html': { main: 'about' },
         'lesson1-ai-intro.html': { lesson: 'lesson1' }, // Legacy support
         'lesson1/l1-p1-learn-intro.html': { lesson: 'lesson1' },
@@ -319,7 +322,7 @@
         const brand = document.createElement('div');
         brand.className = 'nav-brand';
         const brandLink = document.createElement('a');
-        brandLink.href = 'index.html';
+        brandLink.href = LANDING_PAGE;
         brandLink.textContent = 'AI Detective Academy';
         brand.appendChild(brandLink);
 
