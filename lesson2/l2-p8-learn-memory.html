@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Learn: Memory & Behavior Pathologies</title>
+    
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .memory-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+        .memory-card {
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .memory-card:hover { transform: translateY(-3px); border-color: rgba(0, 217, 255, 0.5); }
+        .memory-card.active { border-color: rgba(0, 217, 255, 0.8); background: rgba(0, 217, 255, 0.08); }
+        .memory-card h3 { font-size: 18px; display: flex; align-items: center; gap: 8px; margin: 0; }
+        .memory-card p { font-size: 14px; color: var(--color-muted); margin: 0; }
+        .memory-card .symptoms { font-size: 13px; color: var(--color-text); display: none; }
+        .memory-card.active .symptoms { display: block; }
+        .memory-tip {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            background: rgba(0, 217, 255, 0.12);
+            border: 1px dashed rgba(0, 217, 255, 0.45);
+        }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson2">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🧩 Learn: Memory & Behavior</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <div class="challenge-section">
+            <h1 class="challenge-title">When AI Forgets Who It Is</h1>
+            <p class="challenge-desc">Large models can lose track of the conversation, loop endlessly, or even invent new personalities mid-chat. Tap each card to reveal the symptoms.</p>
+
+            <div class="memory-layout" id="memoryGrid">
+                <article class="memory-card" data-card>
+                    <h3>🎭 Machine DID</h3>
+                    <p>Multiple contradictory personas switch mid-thread.</p>
+                    <div class="symptoms">
+                        <strong>Symptoms:</strong> Style whiplash, new “rules” invented mid-prompt, misaligned tone across sections.
+                    </div>
+                </article>
+                <article class="memory-card" data-card>
+                    <h3>🤕 AI Münchausen</h3>
+                    <p>The model fakes limitations (“I can’t access the internet”) to avoid tasks.</p>
+                    <div class="symptoms">
+                        <strong>Symptoms:</strong> Sudden claims of missing capabilities, contradicting earlier statements about what it can do.
+                    </div>
+                </article>
+                <article class="memory-card" data-card>
+                    <h3>🔁 Looping</h3>
+                    <p>Repeats the same answer or paragraph with tiny edits.</p>
+                    <div class="symptoms">
+                        <strong>Symptoms:</strong> Identical sentences, incremental paraphrases, never reaches an action item.
+                    </div>
+                </article>
+                <article class="memory-card" data-card>
+                    <h3>🧠 Context Amnesia</h3>
+                    <p>Forgets details you just provided because the context window overflowed.</p>
+                    <div class="symptoms">
+                        <strong>Symptoms:</strong> Re-asks for the same info, contradicts earlier facts, references outdated instructions.
+                    </div>
+                </article>
+                <article class="memory-card" data-card>
+                    <h3>💬 Verbosity</h3>
+                    <p>500 words when 50 would do—drowns insight in fluff.</p>
+                    <div class="symptoms">
+                        <strong>Symptoms:</strong> Endless preambles, repeated disclaimers, failure to summarize.
+                    </div>
+                </article>
+                <article class="memory-card" data-card>
+                    <h3>🎪 Contradictory Personas</h3>
+                    <p>Switches between incompatible tones: expert → meme → corporate.</p>
+                    <div class="symptoms">
+                        <strong>Symptoms:</strong> Tone shifts without prompting, “as a lawyer” followed by slang, inconsistent pronouns.
+                    </div>
+                </article>
+            </div>
+
+            <div class="memory-tip">
+                <strong>🧯 Rapid Reset:</strong> When memory glitches appear, summarize the convo yourself (“Here’s what we decided...”) and paste it back to the model. You become the short-term memory.
+            </div>
+
+            <div class="progress-indicator">Page 8 of 12 • Memory & Behavior Pathologies</div>
+            <div class="progress-nav">
+                <button class="btn-next" onclick="window.location.href='l2-p9-game-memory.html'">Play: Memory Leak Scenario →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson2';
+            const PAGE_ID = 'l2-p8';
+            const tracker = window.ProgressTracker || null;
+            const cards = document.querySelectorAll('[data-card]');
+            cards.forEach((card) => {
+                card.addEventListener('click', () => {
+                    card.classList.toggle('active');
+                });
+            });
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -44,6 +44,35 @@
             box-shadow: 0 30px 55px rgba(148, 163, 184, 0.35);
         }
 
+        .legacy-banner {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            padding: 16px 20px;
+            border-radius: 18px;
+            border: 1px dashed rgba(14, 165, 233, 0.45);
+            background: rgba(14, 165, 233, 0.12);
+        }
+
+        .legacy-banner strong {
+            font-weight: 700;
+        }
+
+        .legacy-banner p {
+            margin: 0;
+            font-size: 15px;
+            color: rgba(15, 23, 42, 0.85);
+        }
+
+        .legacy-banner-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
         /* Game Header */
         .game-header {
             background: rgba(255, 255, 255, 0.9);
@@ -862,8 +891,15 @@
         }
     </style>
 </head>
-<body data-lesson-id="lesson2-game">
+<body data-lesson-id="lesson2-legacy">
     <div class="game-container">
+        <div class="legacy-banner" role="status" aria-live="polite">
+            <p><strong>Legacy mode:</strong> The new Lesson 2 lives across 12 micro-pages. Keep this arcade for sandbox practice or jump into the refreshed flow.</p>
+            <div class="legacy-banner-actions">
+                <a class="btn btn-primary" href="lesson2/l2-p1-learn-intro.html">Open Lesson 2 Flow</a>
+                <a class="btn btn-secondary" href="quiz1.html">Go to Quiz 1</a>
+            </div>
+        </div>
         <!-- Header -->
         <div class="game-header">
             <div class="logo">
@@ -1081,7 +1117,7 @@
     </div>
 
     <script>
-        const LESSON_ID = 'lesson2-game';
+        const LESSON_ID = 'lesson2-legacy';
         const LESSON_NUMBER = 2;
         const LESSON_XP_TARGET = 225;
         const COURSE_XP_CAP = 400;

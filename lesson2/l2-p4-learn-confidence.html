@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Learn: Confidence Pathologies</title>
+    
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .confidence-deck {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+        .confidence-card {
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .confidence-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 215, 0, 0.65);
+        }
+        .confidence-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            align-self: flex-start;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            background: rgba(255, 215, 0, 0.15);
+            color: #b45309;
+            font-weight: 600;
+        }
+        .confidence-tip {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 1px dashed rgba(255, 215, 0, 0.5);
+            background: rgba(255, 215, 0, 0.1);
+        }
+        .confidence-grid-hint {
+            display: flex;
+            gap: 12px;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.04);
+            margin-bottom: 16px;
+            align-items: flex-start;
+        }
+        .confidence-grid-hint strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson2">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">💪 Learn: Confidence Pathologies</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <div class="challenge-section">
+            <h1 class="challenge-title">When AI Is Way Too Sure Of Itself</h1>
+            <p class="challenge-desc">These pathologies show up when a model sounds authoritative even when it is wildly off-base. Knowing the tells lets you slow down before you trust it.</p>
+
+            <div class="confidence-grid-hint">
+                <div style="font-size: 28px;">🎯</div>
+                <div>
+                    <strong>Look for tone + certainty mismatches.</strong>
+                    Any time the system gives confident commands without citing verifiable sources, assume a confidence pathology is hiding inside.
+                </div>
+            </div>
+
+            <div class="confidence-deck">
+                <article class="confidence-card">
+                    <span class="confidence-chip">🦚 Artificial Narcissism</span>
+                    <p>AI behaves like the smartest person in the room, even when it is guessing. It oversells its skills, pads resumes, or fabricates credentials (“As a licensed attorney...”).</p>
+                    <p class="confidence-tip">👀 Spot it: Ask follow-up questions that require proof. Narcissistic models crumble when you demand receipts.</p>
+                </article>
+                <article class="confidence-card">
+                    <span class="confidence-chip">🎯 Overconfidence</span>
+                    <p>The model presents uncertain or probabilistic information as absolute fact. It loves definitive verbs: “will”, “guarantee”, “100%”.</p>
+                    <p class="confidence-tip">🛑 Defuse it: Reframe prompts with “What makes you uncertain?” or “Give me 3 possibilities + confidence scores.”</p>
+                </article>
+                <article class="confidence-card">
+                    <span class="confidence-chip">👑 False Authority</span>
+                    <p>AI takes on expert personas without training data to back it up (i.e., giving medical or legal advice it scraped from blogs).</p>
+                    <p class="confidence-tip">📉 Audit it: Ask “Where did you gain this expertise?” If it can’t cite sources newer than its knowledge cutoff, downgrade trust.</p>
+                </article>
+                <article class="confidence-card">
+                    <span class="confidence-chip">🙈 Blind Spots</span>
+                    <p>The system literally does not know what it does not know. It cannot recognize its own training gaps or uncertainty zones.</p>
+                    <p class="confidence-tip">🧭 Guardrail it: Bake in prompts like “Tell me what might be missing” so you surface blind spots before acting.</p>
+                </article>
+            </div>
+
+            <div class="progress-indicator">Page 4 of 12 • Confidence Pathologies</div>
+            <div class="progress-nav">
+                <button class="btn-next" onclick="window.location.href='l2-p5-game-confidence.html'">Play: Confidence Reality Check →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson2';
+            const PAGE_ID = 'l2-p4';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            }
+        });
+    </script>
+</body>
+</html>

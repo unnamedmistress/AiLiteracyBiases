@@ -20,11 +20,20 @@ const lesson1Flow = [
     { file: 'lesson1/l1-p6-summary.html', nextLink: '../lesson2/l2-p1-learn-intro.html' }
 ];
 
-// Define the expected navigation flow for Lesson 2 (partial)
+// Define the expected navigation flow for Lesson 2
 const lesson2Flow = [
     { file: 'lesson2/l2-p1-learn-intro.html', nextLink: 'l2-p2-learn-hallucinations.html' },
     { file: 'lesson2/l2-p2-learn-hallucinations.html', nextLink: 'l2-p3-game-hallucinations.html' },
-    { file: 'lesson2/l2-p3-game-hallucinations.html', nextLink: '../presentation.html' }
+    { file: 'lesson2/l2-p3-game-hallucinations.html', nextLink: 'l2-p4-learn-confidence.html' },
+    { file: 'lesson2/l2-p4-learn-confidence.html', nextLink: 'l2-p5-game-confidence.html' },
+    { file: 'lesson2/l2-p5-game-confidence.html', nextLink: 'l2-p6-learn-values.html' },
+    { file: 'lesson2/l2-p6-learn-values.html', nextLink: 'l2-p7-game-values.html' },
+    { file: 'lesson2/l2-p7-game-values.html', nextLink: 'l2-p8-learn-memory.html' },
+    { file: 'lesson2/l2-p8-learn-memory.html', nextLink: 'l2-p9-game-memory.html' },
+    { file: 'lesson2/l2-p9-game-memory.html', nextLink: 'l2-p10-learn-facts.html' },
+    { file: 'lesson2/l2-p10-learn-facts.html', nextLink: 'l2-p11-game-disasters.html' },
+    { file: 'lesson2/l2-p11-game-disasters.html', nextLink: 'l2-p12-summary.html' },
+    { file: 'lesson2/l2-p12-summary.html', nextLink: '../quiz1.html' }
 ];
 
 let passed = 0;
@@ -67,7 +76,7 @@ function testNavigationFlow(flow, lessonName) {
 testNavigationFlow(lesson1Flow, 'Lesson 1');
 
 // Test Lesson 2
-testNavigationFlow(lesson2Flow, 'Lesson 2 (Partial)');
+testNavigationFlow(lesson2Flow, 'Lesson 2');
 
 // Check that legacy files still exist
 console.log('📦 Checking Legacy Files:');

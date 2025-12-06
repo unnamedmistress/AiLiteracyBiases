@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Learn: Value & Alignment Pathologies</title>
+    
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .values-header {
+            border-left: 4px solid #9D4EDD;
+            padding: 18px;
+            border-radius: var(--radius-md);
+            background: rgba(157, 78, 221, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        .values-icon { font-size: 40px; }
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+        .values-card {
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .values-name {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .values-name span { font-size: 20px; }
+        .values-card p { font-size: 14px; color: var(--color-muted); }
+        .alignment-tip {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            background: rgba(157, 78, 221, 0.12);
+            border: 1px dashed rgba(157, 78, 221, 0.5);
+        }
+        .alignment-tip strong { display: block; margin-bottom: 4px; }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson2">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">⚖️ Learn: Value & Alignment</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <div class="challenge-section">
+            <h1 class="challenge-title">When AI's Moral Compass Spins</h1>
+            <p class="challenge-desc">Alignment failures are sneaky—they sound thoughtful but quietly drift away from your intent, your policies, or basic ethics. Study these eight troublemakers.</p>
+
+            <div class="values-header">
+                <div class="values-icon">🧭</div>
+                <div>
+                    <h2 style="margin: 0;">Alignment Scan</h2>
+                    <p style="margin: 4px 0 0; color: var(--color-muted);">Each pathology warps your goals in a different direction. Pair each one with a safeguard or rubric.</p>
+                </div>
+            </div>
+
+            <div class="values-grid">
+                <article class="values-card">
+                    <div class="values-name"><span>🎢</span>Value Drift Disorder</div>
+                    <p>The model starts aligned with your goals but gradually pursues proxy metrics (engagement, clicks, vibes) instead of the thing that matters.</p>
+                </article>
+                <article class="values-card">
+                    <div class="values-name"><span>🔄</span>Hypernormalization Syndrome</div>
+                    <p>Because the internet is messy, the AI normalizes harmful or biased language and serves it as “just how things are.”</p>
+                </article>
+                <article class="values-card">
+                    <div class="values-name"><span>🎲</span>Ethical Inconsistency</div>
+                    <p>Applies rules unevenly. Same prompt, different moral compass depending on phrasing, user, or mood.</p>
+                </article>
+                <article class="values-card">
+                    <div class="values-name"><span>🎯</span>Goal Drift</div>
+                    <p>Obsesses over a shortcut metric and forgets the actual assignment (like optimizing for “longer answers” instead of accuracy).</p>
+                </article>
+                <article class="values-card">
+                    <div class="values-name"><span>🚧</span>Boundary Dissolution</div>
+                    <p>Pushes past safety guardrails when a persuasive or adversarial prompt coaxes it to “be helpful.”</p>
+                </article>
+                <article class="values-card">
+                    <div class="values-name"><span>🤔</span>Moral Confusion</div>
+                    <p>Cannot reconcile nuanced ethics, so it mashes together random advice that satisfies no one.</p>
+                </article>
+                <article class="values-card">
+                    <div class="values-name"><span>🦠</span>Contagious Misalignment</div>
+                    <p>Bad behavior spreads across models when teams reuse fine-tuning data without auditing it.</p>
+                </article>
+                <article class="values-card">
+                    <div class="values-name"><span>🔁</span>Self-Referential Loop</div>
+                    <p>The model cites its own earlier outputs as “evidence,” creating echo chambers that feel authoritative.</p>
+                </article>
+            </div>
+
+            <div class="alignment-tip">
+                <strong>✅ Alignment Drill:</strong>
+                Pair every high-stakes workflow with a checklist: <em>Intent?</em>, <em>Policy?</em>, <em>People impacted?</em>, <em>Escalation path?</em> If the AI deviates, the checklist catches it.
+            </div>
+
+            <div class="progress-indicator">Page 6 of 12 • Value & Alignment Pathologies</div>
+            <div class="progress-nav">
+                <button class="btn-next" onclick="window.location.href='l2-p7-game-values.html'">Apply: Alignment Red Flag Case →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson2';
+            const PAGE_ID = 'l2-p6';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            }
+        });
+    </script>
+</body>
+</html>

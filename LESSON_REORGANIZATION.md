@@ -58,38 +58,6 @@ The original `lesson1-ai-intro.html` (1,169 lines) has been split into 6 focused
 - **Gamification:** Each game must be completed to proceed
 - **Progress persistence:** Uses ProgressTracker to save state across pages
 
-### Lesson 2: Partial Implementation (3 Pages - Pattern Demonstration)
-
-The original `presentation.html` + `game.html` (3,908 lines combined) requires a similar Learn→Game pattern. Three example pages demonstrate the structure:
-
-1. **l2-p1-learn-intro.html** - Introduction
-   - Hero section: "AI's Bad Habits"
-   - Learning journey agenda with 8 topics
-   - **Navigation:** → Begin: Learn about Hallucinations
-
-2. **l2-p2-learn-hallucinations.html** - Hallucination Pathologies
-   - Category header with icon and description
-   - 5 expandable pathology cards:
-     - Fabrication
-     - Confabulation
-     - Synthetic Psychosis
-     - Making Up Sources
-     - Citation Invention
-   - **Interactive:** Click cards to expand descriptions
-   - **Navigation:** → Apply Your Knowledge: Play the Hallucination Case
-
-3. **l2-p3-game-hallucinations.html** - Scenario Detective Game
-   - Scenario: AI citing a fake research paper
-   - 4 multiple choice options
-   - Instant feedback with explanation
-   - **Progress Tracking:** Enables next button after answering
-   - **Navigation:** → Next: Learn About Confidence Pathologies
-
-#### Full Lesson 2 Structure (Planned)
-
-The complete implementation would follow this pattern:
-
-```
 l2-p1-learn-intro.html (Introduction)
 l2-p2-learn-hallucinations.html → l2-p3-game-hallucinations.html
 l2-p4-learn-confidence.html → l2-p5-game-confidence.html
@@ -98,9 +66,24 @@ l2-p8-learn-memory.html → l2-p9-game-memory.html
 l2-p10-learn-facts.html (F.A.C.T.S. Framework)
 l2-p11-game-disasters.html (Real-World Disasters matching game)
 l2-p12-summary.html (Key Takeaways & Quiz link)
-```
+### Lesson 2: Complete Implementation (12 Pages)
 
-Approximately 12 pages total, covering all 4 pathology categories + F.A.C.T.S. framework + disasters + summary.
+The original `presentation.html` + `game.html` (3,908 lines combined) is now fully reorganized into a micro-learning flow. Each segment alternates Learn → Apply:
+
+1. **l2-p1-learn-intro.html** – Hero, roadmap, onboarding CTA.
+2. **l2-p2-learn-hallucinations.html** – Expandable cards for 5 hallucination failures.
+3. **l2-p3-game-hallucinations.html** – Scenario detective game focused on fake citations.
+4. **l2-p4-learn-confidence.html** – Confidence deck covering narcissism, false authority, blind spots.
+5. **l2-p5-game-confidence.html** – Medical overconfidence scenario with checklist.
+6. **l2-p6-learn-values.html** – Alignment grid for drift, hypernormalization, goal drift, etc.
+7. **l2-p7-game-values.html** – Policy rewrite scenario that tests hypernormalization.
+8. **l2-p8-learn-memory.html** – Tap-to-reveal cards for memory/behavior glitches.
+9. **l2-p9-game-memory.html** – Context overflow troubleshooting game.
+10. **l2-p10-learn-facts.html** – Full F.A.C.T.S. framework walkthrough + checklist.
+11. **l2-p11-game-disasters.html** – Matching game tying real disasters to pathologies.
+12. **l2-p12-summary.html** – Key takeaways, badge reveal, and CTA to Quiz 1.
+
+Each page uses the shared shell, breadcrumb, and progress tracker, so progress persists through all 12 checkpoints before unlocking `quiz1.html`.
 
 ## Technical Implementation
 
@@ -174,28 +157,13 @@ Original files are preserved for reference:
 
 ## Next Steps for Complete Implementation
 
-### Lesson 2 Remaining Work
+### Lesson 2 Follow-Up
 
-1. **Create Confidence Pathologies Pages**
-   - l2-p4-learn-confidence.html (Artificial Narcissism, Overconfidence, False Authority, Blind Spots)
-   - l2-p5-game-confidence.html (Scenario focusing on overconfidence)
+Lesson 2 micro-lessons are now live. Remaining tasks focus on polish and QA:
 
-2. **Create Value & Alignment Pathologies Pages**
-   - l2-p6-learn-values.html (Value Drift, Hypernormalization, Ethical Inconsistency, etc.)
-   - l2-p7-game-values.html (Scenario focusing on value misalignment)
-
-3. **Create Memory & Behavior Pathologies Pages**
-   - l2-p8-learn-memory.html (Machine DID, Context Amnesia, etc.)
-   - l2-p9-game-memory.html (Scenario focusing on memory issues)
-
-4. **Create F.A.C.T.S. Framework Page**
-   - l2-p10-learn-facts.html (Teach the full F.A.C.T.S. safety checklist)
-
-5. **Create Disasters Game Page**
-   - l2-p11-game-disasters.html (Match real-world AI disasters to pathology types)
-
-6. **Create Summary Page**
-   - l2-p12-summary.html (Key takeaways, link to Quiz 1)
+1. **Full Regression Pass** – Click through all 12 pages on desktop + mobile, confirm progress checkpoints persist, and ensure quiz gating respects the new lesson ID.
+2. **Legacy References** – Update any marketing/landing content that still links directly to `presentation.html` or `game.html` if we want learners to start in the new flow.
+3. **Accessibility Review** – Re-run axe/keyboard sweeps on the new cards, dropdowns, and CTA buttons to confirm focus states and announcements are consistent.
 
 ### Integration Work
 

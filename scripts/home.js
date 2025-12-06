@@ -187,31 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getLessonStatus(id) {
         if (!progressApi) return 'not-started';
-        
-        // Special handling for Lesson 2 (Presentation OR Game)
-        if (id === 'lesson2') {
-            const status = progressApi.getLessonStatus ? progressApi.getLessonStatus(id) : 'not-started';
-            if (status === 'completed') return 'completed';
-            
-            const gameStatus = progressApi.getLessonStatus ? progressApi.getLessonStatus('lesson2-game') : 'not-started';
-            if (gameStatus === 'completed') return 'completed';
-            
-            if (status === 'in-progress' || gameStatus === 'in-progress') return 'in-progress';
-            return 'not-started';
-        }
-
         return progressApi.getLessonStatus ? progressApi.getLessonStatus(id) : 'not-started';
     }
 
     function isLessonComplete(id) {
         if (!progressApi) return false;
-
-        // Special handling for Lesson 2
-        if (id === 'lesson2') {
-            if (progressApi.isLessonComplete && progressApi.isLessonComplete('lesson2')) return true;
-            if (progressApi.isLessonComplete && progressApi.isLessonComplete('lesson2-game')) return true;
-        }
-
         if (progressApi.isLessonComplete) return progressApi.isLessonComplete(id);
         return getLessonStatus(id) === 'completed';
     }

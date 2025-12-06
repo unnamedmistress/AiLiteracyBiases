@@ -28,19 +28,26 @@ The original **1,169-line** `lesson1-ai-intro.html` has been split into:
 - ✅ Gamification with completion requirements
 - ✅ Mobile-optimized layouts
 
-### Lesson 2: Pattern Demonstration (3 Pages)
+### Lesson 2: Complete Implementation (12 Pages)
 
-Created 3 example pages from the **3,908-line** combined `presentation.html` + `game.html`:
+Rebuilt the **3,908-line** `presentation.html` + `game.html` into a 12-step Learn → Apply flow:
 
-| Page | Filename | Content | Lines |
-|------|----------|---------|-------|
-| 1 | `l2-p1-learn-intro.html` | Hero section with learning journey agenda | 126 |
-| 2 | `l2-p2-learn-hallucinations.html` | 5 hallucination pathologies with expandable cards | 156 |
-| 3 | `l2-p3-game-hallucinations.html` | Scenario Detective game for hallucinations | 186 |
+| Page | Filename | Focus |
+|------|----------|-------|
+| 1 | `l2-p1-learn-intro.html` | Hero + learning roadmap |
+| 2 | `l2-p2-learn-hallucinations.html` | Hallucination cards |
+| 3 | `l2-p3-game-hallucinations.html` | Scenario detective (fake sources) |
+| 4 | `l2-p4-learn-confidence.html` | Confidence failure deck |
+| 5 | `l2-p5-game-confidence.html` | Medical overconfidence scenario |
+| 6 | `l2-p6-learn-values.html` | Value/alignment grid |
+| 7 | `l2-p7-game-values.html` | Policy hypernormalization scenario |
+| 8 | `l2-p8-learn-memory.html` | Tap-to-reveal memory glitches |
+| 9 | `l2-p9-game-memory.html` | Context amnesia troubleshooting |
+| 10 | `l2-p10-learn-facts.html` | Full F.A.C.T.S. walkthrough |
+| 11 | `l2-p11-game-disasters.html` | Real disaster matching game |
+| 12 | `l2-p12-summary.html` | Takeaways + Quiz 1 unlock |
 
-**Total:** 3 files, ~468 lines
-
-**Future Implementation:** Following this same pattern, Lesson 2 would become approximately 11-12 pages covering all pathology categories, F.A.C.T.S. framework, disasters game, and summary.
+Every page reuses the shared shell, breadcrumb, and checkpoint tracking so progress persists across the entire lesson and automatically unlocks `quiz1.html` when the summary is viewed.
 
 ## 🔧 Technical Changes
 
@@ -55,9 +62,18 @@ Created 3 example pages from the **3,908-line** combined `presentation.html` + `
   └── l1-p6-summary.html
 
 /lesson2/
-  ├── l2-p1-learn-intro.html
-  ├── l2-p2-learn-hallucinations.html
-  └── l2-p3-game-hallucinations.html
+   ├── l2-p1-learn-intro.html
+   ├── l2-p2-learn-hallucinations.html
+   ├── l2-p3-game-hallucinations.html
+   ├── l2-p4-learn-confidence.html
+   ├── l2-p5-game-confidence.html
+   ├── l2-p6-learn-values.html
+   ├── l2-p7-game-values.html
+   ├── l2-p8-learn-memory.html
+   ├── l2-p9-game-memory.html
+   ├── l2-p10-learn-facts.html
+   ├── l2-p11-game-disasters.html
+   └── l2-p12-summary.html
 
 /
   ├── LESSON_REORGANIZATION.md (comprehensive documentation)
@@ -66,22 +82,25 @@ Created 3 example pages from the **3,908-line** combined `presentation.html` + `
 ```
 
 ### Files Modified
-- `scripts/shared.js` - Updated lesson paths in LESSON_SEQUENCE and CUSTOM_NEXT
-- `scripts/home.js` - Updated dashboard items with new lesson entry points
-- `scripts/nav.js` - Added all new page paths with legacy support
+- `scripts/shared.js` - Updated LESSON_SEQUENCE, requirements, and next overrides for the new flow
+- `scripts/home.js` - Dashboard gating now references the consolidated Lesson 2 ID
+- `scripts/nav.js` - Added every new page to PATH_TO_STATE for breadcrumb highlighting
+- `styles/shared.css` - Introduced shared shell/progress styles for layout consistency
+- `test-navigation.js` - Expanded automated checks to the full 12-page sequence
+- `presentation.html` - Flagged as a legacy slide deck with redirect banner to the new Lesson 2 pages
+- `game.html` - Marked as a sandbox experience with CTA links and renamed progress ID (`lesson2-legacy`)
 
 ### Files Preserved (Backward Compatibility)
-- `lesson1-ai-intro.html` ✅ Original preserved
-- `presentation.html` ✅ Original preserved
-- `game.html` ✅ Original preserved
+- `lesson1-ai-intro.html` ✅ Original preserved for archival reference
+- `presentation.html` ✅ Still available as a legacy slide deck (now shows banner pointing to the micro-learning flow)
+- `game.html` ✅ Still accessible as the arcade sandbox for practice (progress tracked under `lesson2-legacy`)
 
 ## 🧪 Testing & Quality Assurance
 
 ### Automated Tests
-- ✅ **12/12 navigation tests passing**
-  - All Lesson 1 page-to-page navigation verified
-  - All Lesson 2 page-to-page navigation verified
-  - Legacy file preservation confirmed
+- ✅ **21/21 navigation tests passing**
+   - Lesson 1 (6 pages) and Lesson 2 (12 pages) next-button links verified
+   - Legacy file preservation confirmed for `lesson1-ai-intro.html`, `presentation.html`, `game.html`
 
 ### Code Quality
 - ✅ **Code Review**: 3 issues found and fixed
@@ -91,13 +110,12 @@ Created 3 example pages from the **3,908-line** combined `presentation.html` + `
 
 ### Manual Verification Needed
 The following should be tested manually in a browser:
-1. Navigate through all 6 Lesson 1 pages
-2. Verify progress tracking persists across page transitions
-3. Test game interactions (word selection, voice mimic, tone selection)
-4. Verify XP tracking works correctly
-5. Test on mobile device (< 768px width)
-6. Test keyboard navigation (Tab, Enter, Arrow keys)
-7. Test with screen reader
+1. Navigate through all 12 Lesson 2 micro-pages (desktop + mobile) to verify breadcrumbs, checkpoints, and CTA chaining
+2. Repeat the Lesson 1 walkthrough to ensure shared shell updates didn’t regress the original flow
+3. Exercise the interactive experiences (cards, quizzes, drag/drop) with keyboard-only and screen-reader tooling
+4. Confirm the new legacy banners on `presentation.html` and `game.html` clearly route learners into the micro-learning pages
+5. Reset localStorage and replay `game.html` to ensure the renamed `lesson2-legacy` checkpoints/XPs persist as expected
+6. Re-run `quiz1.html` unlock logic after completing `lesson2/l2-p12-summary.html`
 
 ## 📈 Impact Metrics
 
@@ -109,7 +127,7 @@ The following should be tested manually in a browser:
 
 ### After (New Structure)
 - **Lesson 1:** 6 files, ~243 lines per page average, zero scrolling
-- **Lesson 2:** 3+ files (pattern established), focused content chunks
+- **Lesson 2:** 12 micro-pages (complete), each covering 1-2 concepts
 - **User Experience:** Active learning with immediate practice
 - **Cognitive Load:** Low - 1-2 concepts per page max
 
@@ -134,38 +152,15 @@ The following should be tested manually in a browser:
 
 ## 🚀 Next Steps (Optional Future Work)
 
-### Complete Lesson 2 Implementation
-To fully implement Lesson 2 following the established pattern:
+### Stabilize the Micro-Learning Rollout
+1. **Full QA Sweep** – Run the manual checklist (desktop, tablet, mobile, keyboard, screen-reader) for all twelve Lesson 2 pages plus Lesson 1 to ensure the shared shell remains solid.
+2. **Analytics & Telemetry** – Instrument ProgressTracker/AppProgress to capture completion funnel data for each new micro-page, so we can spot drop-off points.
+3. **Legacy Deprecation Plan** – Decide when to sunset `presentation.html` and `game.html` entirely (or migrate them into the new shell) now that banners redirect learners.
 
-1. **Create Confidence Pathologies** (2 pages)
-   - l2-p4-learn-confidence.html
-   - l2-p5-game-confidence.html
-
-2. **Create Value & Alignment Pathologies** (2 pages)
-   - l2-p6-learn-values.html
-   - l2-p7-game-values.html
-
-3. **Create Memory & Behavior Pathologies** (2 pages)
-   - l2-p8-learn-memory.html
-   - l2-p9-game-memory.html
-
-4. **Add F.A.C.T.S. Framework** (1 page)
-   - l2-p10-learn-facts.html
-
-5. **Add Disasters Game** (1 page)
-   - l2-p11-game-disasters.html
-
-6. **Add Summary** (1 page)
-   - l2-p12-summary.html
-
-**Estimated Effort:** ~6-8 hours following the existing pattern
-
-### Update Other Lessons
-Apply the same micro-learning pattern to:
-- Lesson 3: Content Creation
-- Lesson 4: Advanced Prompting
-- Lesson 5: AI Workflows
-- Lesson 6: Capstone
+### Extend the Pattern
+1. **Lessons 3–6** – Break the remaining long-form lessons into micro-pages that mirror the Lesson 1/2 structure (shared shell, progress tracker, Learn→Apply chain).
+2. **Capstone Enhancements** – Once Lessons 3–6 are modular, revisit Lesson 6 to layer in gated challenges and certificate previews that react to the new XP data.
+3. **Quiz Library Refresh** – Mirror the new UX inside `quiz1.html`, then replicate for future quizzes so assessments feel cohesive with the micro-lessons.
 
 ## 📚 Documentation
 

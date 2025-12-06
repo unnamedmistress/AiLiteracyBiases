@@ -219,6 +219,35 @@ body {
   padding: var(--space-32);
 }
 
+.legacy-banner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-32);
+  padding: 20px 24px;
+  border-radius: var(--radius-xl);
+  border: 1px dashed rgba(16, 185, 129, 0.45);
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.legacy-banner strong {
+  font-weight: var(--font-weight-bold);
+}
+
+.legacy-banner p {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  color: rgba(15, 23, 42, 0.85);
+}
+
+.legacy-banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 .slide {
   min-height: 100vh;
   display: flex;
@@ -1051,7 +1080,7 @@ body {
 }
     </style>
 </head>
-<body data-lesson-id="lesson2-learn">
+<body data-lesson-id="lesson2-legacy">
     <div style="position: fixed; top: 0; left: 0; right: 0; background: rgba(19, 52, 59, 0.95); backdrop-filter: blur(10px); padding: 15px 20px; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1);">
         <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
             <div style="font-size: 14px; opacity: 0.9;">
@@ -1062,6 +1091,13 @@ body {
         </div>
     </div>
     <div class="presentation" style="padding-top: 60px;">
+      <div class="legacy-banner" role="status" aria-live="polite">
+        <p><strong>New Lesson 2 experience:</strong> The full AI Literacy journey now lives across 12 micro-pages with progress tracking. Keep this slide deck for reference or jump into the updated flow.</p>
+        <div class="legacy-banner-actions">
+          <a class="btn btn-primary" href="lesson2/l2-p1-learn-intro.html">Open Lesson 2 Flow</a>
+          <a class="btn btn-secondary" href="quiz1.html">Go to Quiz 1</a>
+        </div>
+      </div>
         <!-- Slide 1: Hero -->
         <section class="slide hero">
             <div class="emoji-large">🤖💥</div>

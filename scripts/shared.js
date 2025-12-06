@@ -1,18 +1,16 @@
 (function () {
     const LESSON_SEQUENCE = [
         { id: 'lesson1', label: 'Lesson 1: Prompt Wizardry Warm-Up', path: 'lesson1/l1-p1-learn-intro.html' },
-        { id: 'lesson2-learn', label: 'Lesson 2: AI Literacy', path: 'lesson2/l2-p1-learn-intro.html' },
-        { id: 'lesson2-game', label: 'Lesson 2: Game Mode', path: 'game.html' },
-        { id: 'lesson3', label: 'Lesson 3: Content Creation', path: 'lesson3-content-creation.html' },
+        { id: 'lesson2', label: 'Lesson 2: AI Literacy', path: 'lesson2/l2-p1-learn-intro.html' },
         { id: 'quiz1', label: 'Quiz 1: Warm-Up Review', path: 'quiz1.html' },
+        { id: 'lesson3', label: 'Lesson 3: Content Creation', path: 'lesson3-content-creation.html' },
         { id: 'lesson4', label: 'Lesson 4: Advanced Prompting', path: 'lesson4-advanced-prompting.html' },
         { id: 'lesson5', label: 'Lesson 5: AI Workflows', path: 'lesson5-ai-workflows.html' },
         { id: 'lesson6', label: 'Lesson 6: Capstone', path: 'lesson6-capstone.html' },
         { id: 'lesson7-placeholder', label: 'Lesson 7 (Coming Soon)', path: '#' }
     ];
     const LESSON_REQUIREMENTS = {
-        'lesson2-learn': 'lesson1',
-        'lesson2-game': 'lesson1',
+        lesson2: 'lesson1',
         lesson3: 'quiz1',
         lesson4: 'lesson3',
         lesson5: 'lesson4',
@@ -32,13 +30,9 @@
             href: 'lesson3-content-creation.html',
             label: 'Next: Lesson 3 →'
         },
-        'lesson2-learn': {
-            href: 'game.html',
-            label: 'Next: Game Mode →'
-        },
-        'lesson2-game': {
-            href: 'lesson3-content-creation.html',
-            label: 'Next: Lesson 3 →'
+        lesson2: {
+            href: 'quiz1.html',
+            label: 'Next: Quiz 1 →'
         },
         lesson6: {
             href: 'certificate.html',
