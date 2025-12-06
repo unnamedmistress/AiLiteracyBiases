@@ -3,9 +3,9 @@
         { id: 'lesson1', label: 'Lesson 1: Prompt Wizardry Warm-Up', path: 'lesson1/l1-p1-learn-intro.html' },
         { id: 'lesson2', label: 'Lesson 2: AI Literacy', path: 'lesson2/l2-p1-learn-intro.html' },
         { id: 'quiz1', label: 'Quiz 1: Warm-Up Review', path: 'quiz1.html' },
-        { id: 'lesson3', label: 'Lesson 3: Content Creation', path: 'lesson3-content-creation.html' },
-        { id: 'lesson4', label: 'Lesson 4: Advanced Prompting', path: 'lesson4-advanced-prompting.html' },
-        { id: 'lesson5', label: 'Lesson 5: AI Workflows', path: 'lesson5-ai-workflows.html' },
+        { id: 'lesson3', label: 'Lesson 3: Content Creation', path: 'lesson3/l3-p1-learn-intro.html' },
+        { id: 'lesson4', label: 'Lesson 4: Advanced Prompting', path: 'lesson4/l4-p1-learn-intro.html' },
+        { id: 'lesson5', label: 'Lesson 5: AI Workflows', path: 'lesson5/l5-p1-learn-intro.html' },
         { id: 'lesson6', label: 'Lesson 6: Capstone', path: 'lesson6-capstone.html' },
         { id: 'lesson7-placeholder', label: 'Lesson 7 (Coming Soon)', path: '#' }
     ];
@@ -27,7 +27,7 @@
             label: 'Next: Lesson 2 →'
         },
         quiz1: {
-            href: 'lesson3-content-creation.html',
+            href: 'lesson3/l3-p1-learn-intro.html',
             label: 'Next: Lesson 3 →'
         },
         lesson2: {

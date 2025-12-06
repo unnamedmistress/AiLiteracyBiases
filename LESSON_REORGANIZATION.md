@@ -4,6 +4,12 @@
 
 This reorganization transforms the AI Literacy course from long, scrollable single-page lessons into a micro-learning flow with sequential, focused pages. The new structure alternates between "Learn" and "Game/Apply" content to improve engagement and reduce cognitive load.
 
+> **Update:** Lessons 3–5 are now also split into micro-pages using the same shell, breadcrumbs, and checkpoint tracking.
+> - Lesson 3 (10 pages): `lesson3/l3-p1-learn-intro.html` → summary
+> - Lesson 4 (12 pages): `lesson4/l4-p1-learn-intro.html` → summary
+> - Lesson 5 (10 pages): `lesson5/l5-p1-learn-intro.html` → summary
+> Navigation (`scripts/nav.js`), home dashboard (`scripts/home.js`), and `test-navigation.js` have been updated to point at the new entry pages and verify all next links.
+
 ## Changes Implemented
 
 ### Lesson 1: Complete Reorganization (6 Pages)

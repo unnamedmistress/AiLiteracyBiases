@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     els.nextBtn.addEventListener('click', handleNext);
     els.continueBtn.addEventListener('click', () => {
-        window.location.href = 'lesson3-content-creation.html';
+        window.location.href = 'lesson3/l3-p1-learn-intro.html';
     });
     els.retryBtn.addEventListener('click', resetQuiz);
 

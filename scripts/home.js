@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             type: 'lesson',
             title: 'Lesson 3 · Content Creation',
             summary: 'Ethical content systems, AI collaborator roles, and guardrails.',
-            path: 'lesson3-content-creation.html',
+            path: 'lesson3/l3-p1-learn-intro.html',
             requires: 'quiz1'
         },
         {
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             type: 'lesson',
             title: 'Lesson 4 · Advanced Prompting',
             summary: 'Layered prompting blueprints for research, marketing, and ops.',
-            path: 'lesson4-advanced-prompting.html',
+            path: 'lesson4/l4-p1-learn-intro.html',
             requires: 'lesson3'
         },
         {
@@ -50,9 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
             type: 'lesson',
             title: 'Lesson 5 · AI Workflows',
             summary: 'Chain multiple models, automate reviews, and add human escalation.',
-            path: 'lesson5-ai-workflows.html',
-            requires: 'lesson4',
-            comingSoon: true
+            path: 'lesson5/l5-p1-learn-intro.html',
+            requires: 'lesson4'
         },
         {
             id: 'lesson6',

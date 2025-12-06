@@ -6,9 +6,9 @@ A complete 6-lesson gamified course teaching critical AI literacy, ethical conte
 
 - **Landing Page**: [https://unnamedmistress.github.io/AiLiteracyBiases/](https://unnamedmistress.github.io/AiLiteracyBiases/)
 - **Lesson 2**: [AI Literacy & Bias](https://unnamedmistress.github.io/AiLiteracyBiases/game.html)
-- **Lesson 3**: [Content Creation](https://unnamedmistress.github.io/AiLiteracyBiases/lesson3-content-creation.html)
-- **Lesson 4**: [Advanced Prompting](https://unnamedmistress.github.io/AiLiteracyBiases/lesson4-advanced-prompting.html)
-- **Lesson 5**: [AI Workflows](https://unnamedmistress.github.io/AiLiteracyBiases/lesson5-ai-workflows.html)
+- **Lesson 3**: [Content Creation](https://unnamedmistress.github.io/AiLiteracyBiases/lesson3/l3-p1-learn-intro.html)
+- **Lesson 4**: [Advanced Prompting](https://unnamedmistress.github.io/AiLiteracyBiases/lesson4/l4-p1-learn-intro.html)
+- **Lesson 5**: [AI Workflows](https://unnamedmistress.github.io/AiLiteracyBiases/lesson5/l5-p1-learn-intro.html)
 - **Lesson 6**: [Capstone Project](https://unnamedmistress.github.io/AiLiteracyBiases/lesson6-capstone.html)
 
 ## Features

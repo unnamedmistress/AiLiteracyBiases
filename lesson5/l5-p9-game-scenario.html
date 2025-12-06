@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 5: AI Workflows · Game: Real-World Scenario</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson5">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🚀 Lesson 5: AI Workflows</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <section class="hero-section">
+            <div class="emoji-large">📈</div>
+            <h1 class="hero-title">Game: Real-world scenario</h1>
+            <p class="subtitle">Design an end-to-end workflow for a specific client brief.</p>
+        </section>
+
+        <div class="section">
+            <h2>Activity</h2>
+            <ol>
+                <li>Choose a scenario: blog factory, support bot, or data insights.</li>
+                <li>Map stages with owners: AI vs tool vs human; note data contracts.</li>
+                <li>Add guardrails and metrics (SLAs, cost/latency budgets, quality checks).</li>
+            </ol>
+        </div>
+
+        <div class="progress-indicator">Page 9 of 10 • Game: Scenario</div>
+        <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
+            <button class="btn btn-secondary" type="button" onclick="window.location.href='l5-p8-learn-guardrails.html'">← Back</button>
+            <button class="btn btn-primary" type="button" onclick="window.location.href='l5-p10-summary.html'">Next: Summary →</button>
+        </div>
+        <div class="footer-nav"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson5';
+            const PAGE_ID = 'l5-p9';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+        });
+    </script>
+</body>
+</html>

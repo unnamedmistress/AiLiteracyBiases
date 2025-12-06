@@ -36,6 +36,50 @@ const lesson2Flow = [
     { file: 'lesson2/l2-p12-summary.html', nextLink: '../quiz1.html' }
 ];
 
+// Define the expected navigation flow for Lesson 3
+const lesson3Flow = [
+    { file: 'lesson3/l3-p1-learn-intro.html', nextLink: 'l3-p2-learn-briefs.html' },
+    { file: 'lesson3/l3-p2-learn-briefs.html', nextLink: 'l3-p3-game-brief-diagnostics.html' },
+    { file: 'lesson3/l3-p3-game-brief-diagnostics.html', nextLink: 'l3-p4-learn-structure.html' },
+    { file: 'lesson3/l3-p4-learn-structure.html', nextLink: 'l3-p5-game-structure.html' },
+    { file: 'lesson3/l3-p5-game-structure.html', nextLink: 'l3-p6-learn-style.html' },
+    { file: 'lesson3/l3-p6-learn-style.html', nextLink: 'l3-p7-game-style.html' },
+    { file: 'lesson3/l3-p7-game-style.html', nextLink: 'l3-p8-learn-safety.html' },
+    { file: 'lesson3/l3-p8-learn-safety.html', nextLink: 'l3-p9-game-safety.html' },
+    { file: 'lesson3/l3-p9-game-safety.html', nextLink: 'l3-p10-summary.html' },
+    { file: 'lesson3/l3-p10-summary.html', nextLink: 'data-next-lesson' }
+];
+
+// Define the expected navigation flow for Lesson 4
+const lesson4Flow = [
+    { file: 'lesson4/l4-p1-learn-intro.html', nextLink: 'l4-p2-learn-fewshot.html' },
+    { file: 'lesson4/l4-p2-learn-fewshot.html', nextLink: 'l4-p3-game-fewshot.html' },
+    { file: 'lesson4/l4-p3-game-fewshot.html', nextLink: 'l4-p4-learn-cot.html' },
+    { file: 'lesson4/l4-p4-learn-cot.html', nextLink: 'l4-p5-game-cot.html' },
+    { file: 'lesson4/l4-p5-game-cot.html', nextLink: 'l4-p6-learn-tools.html' },
+    { file: 'lesson4/l4-p6-learn-tools.html', nextLink: 'l4-p7-game-tools.html' },
+    { file: 'lesson4/l4-p7-game-tools.html', nextLink: 'l4-p8-learn-rag.html' },
+    { file: 'lesson4/l4-p8-learn-rag.html', nextLink: 'l4-p9-game-rag.html' },
+    { file: 'lesson4/l4-p9-game-rag.html', nextLink: 'l4-p10-learn-safety.html' },
+    { file: 'lesson4/l4-p10-learn-safety.html', nextLink: 'l4-p11-game-safety.html' },
+    { file: 'lesson4/l4-p11-game-safety.html', nextLink: 'l4-p12-summary.html' },
+    { file: 'lesson4/l4-p12-summary.html', nextLink: 'data-next-lesson' }
+];
+
+// Define the expected navigation flow for Lesson 5
+const lesson5Flow = [
+    { file: 'lesson5/l5-p1-learn-intro.html', nextLink: 'l5-p2-learn-patterns.html' },
+    { file: 'lesson5/l5-p2-learn-patterns.html', nextLink: 'l5-p3-game-builder.html' },
+    { file: 'lesson5/l5-p3-game-builder.html', nextLink: 'l5-p4-learn-bottlenecks.html' },
+    { file: 'lesson5/l5-p4-learn-bottlenecks.html', nextLink: 'l5-p5-game-debug.html' },
+    { file: 'lesson5/l5-p5-game-debug.html', nextLink: 'l5-p6-learn-automation.html' },
+    { file: 'lesson5/l5-p6-learn-automation.html', nextLink: 'l5-p7-game-automation.html' },
+    { file: 'lesson5/l5-p7-game-automation.html', nextLink: 'l5-p8-learn-guardrails.html' },
+    { file: 'lesson5/l5-p8-learn-guardrails.html', nextLink: 'l5-p9-game-scenario.html' },
+    { file: 'lesson5/l5-p9-game-scenario.html', nextLink: 'l5-p10-summary.html' },
+    { file: 'lesson5/l5-p10-summary.html', nextLink: 'data-next-lesson' }
+];
+
 let passed = 0;
 let failed = 0;
 
@@ -58,7 +102,9 @@ function testNavigationFlow(flow, lessonName) {
         const content = fs.readFileSync(filePath, 'utf8');
         
         // Check if the expected next link is present
-        const hasNextLink = content.includes(nextLink);
+        const hasNextLink = nextLink === 'data-next-lesson'
+            ? content.includes('data-next-lesson')
+            : content.includes(nextLink);
         
         if (hasNextLink) {
             console.log(`  ✅ PASS: ${file} → ${nextLink}`);
@@ -77,6 +123,15 @@ testNavigationFlow(lesson1Flow, 'Lesson 1');
 
 // Test Lesson 2
 testNavigationFlow(lesson2Flow, 'Lesson 2');
+
+// Test Lesson 3
+testNavigationFlow(lesson3Flow, 'Lesson 3');
+
+// Test Lesson 4
+testNavigationFlow(lesson4Flow, 'Lesson 4');
+
+// Test Lesson 5
+testNavigationFlow(lesson5Flow, 'Lesson 5');
 
 // Check that legacy files still exist
 console.log('📦 Checking Legacy Files:');

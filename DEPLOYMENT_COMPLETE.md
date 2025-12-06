@@ -15,19 +15,19 @@
 - Status: COMPLETE & DEPLOYED
 
 #### Lesson 3: AI Content Creation & Ethics
-- File: `lesson3-content-creation.html`
+- File: `lesson3/l3-p1-learn-intro.html` (10 micro-pages)
 - Topics: DALL-E 3, Midjourney, Runway, Suno, ElevenLabs
 - Game Features: Ethics quiz, prompt builder, tool showcase
 - Status: COMPLETE & DEPLOYED
 
 #### Lesson 4: Advanced Prompting Techniques
-- File: `lesson4-advanced-prompting.html`
+- File: `lesson4/l4-p1-learn-intro.html` (12 micro-pages)
 - Topics: Chain-of-Thought, Few-Shot, Role-Based, System Prompts
 - Game Features: 3 challenges, prompt tournament, scoring system
 - Status: COMPLETE & DEPLOYED
 
 #### Lesson 5: AI Workflows (Visual)
-- File: `lesson5-ai-workflows.html`
+- File: `lesson5/l5-p1-learn-intro.html` (10 micro-pages)
 - Topics: Sequential/parallel pipelines, workflow patterns, automation tools
 - Game Features: Interactive workflow builder, 3 workflow challenges
 - Status: COMPLETE & DEPLOYED
@@ -44,9 +44,9 @@
 
 - **Landing Page**: https://unnamedmistress.github.io/AiLiteracyBiases/
 - **Lesson 2**: https://unnamedmistress.github.io/AiLiteracyBiases/game.html
-- **Lesson 3**: https://unnamedmistress.github.io/AiLiteracyBiases/lesson3-content-creation.html
-- **Lesson 4**: https://unnamedmistress.github.io/AiLiteracyBiases/lesson4-advanced-prompting.html
-- **Lesson 5**: https://unnamedmistress.github.io/AiLiteracyBiases/lesson5-ai-workflows.html
+- **Lesson 3**: https://unnamedmistress.github.io/AiLiteracyBiases/lesson3/l3-p1-learn-intro.html
+- **Lesson 4**: https://unnamedmistress.github.io/AiLiteracyBiases/lesson4/l4-p1-learn-intro.html
+- **Lesson 5**: https://unnamedmistress.github.io/AiLiteracyBiases/lesson5/l5-p1-learn-intro.html
 - **Lesson 6**: https://unnamedmistress.github.io/AiLiteracyBiases/lesson6-capstone.html
 
 ---

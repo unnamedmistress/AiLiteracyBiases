@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 5: AI Workflows · Building Blocks</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson5">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🚀 Lesson 5: AI Workflows</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <section class="hero-section">
+            <div class="emoji-large">🧩</div>
+            <h1 class="hero-title">Workflow building blocks</h1>
+            <p class="subtitle">Inputs → model → tools → human review → outputs.</p>
+        </section>
+
+        <div class="section">
+            <h2>Patterns</h2>
+            <ul>
+                <li><strong>Inputs:</strong> structured fields, files, or URLs; sanitize + validate early.</li>
+                <li><strong>AI steps:</strong> prompting templates, CoT, tool calls, and retrieval for facts.</li>
+                <li><strong>Human-in-the-loop:</strong> approvals for high-risk or ambiguous cases.</li>
+                <li><strong>Outputs:</strong> typed schemas (JSON), post-checks, and logging.</li>
+            </ul>
+        </div>
+
+        <div class="progress-indicator">Page 2 of 10 • Learn: Building Blocks</div>
+        <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
+            <button class="btn btn-secondary" type="button" onclick="window.location.href='l5-p1-learn-intro.html'">← Back</button>
+            <button class="btn btn-primary" type="button" onclick="window.location.href='l5-p3-game-builder.html'">Next: Build Your First Workflow →</button>
+        </div>
+        <div class="footer-nav"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson5';
+            const PAGE_ID = 'l5-p2';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+        });
+    </script>
+</body>
+</html>

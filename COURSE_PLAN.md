@@ -8,7 +8,7 @@
 - **Status**: ✅ Deployed
 
 ### Lesson 3: AI Content Creation & Ethics  
-- **File**: `lesson3-content-creation.html`
+- **File**: `lesson3/l3-p1-learn-intro.html`
 - **Topics**: Image/Video generation, Prompt engineering, Copyright, Deepfakes, Ethics
 - **Tools Covered**: DALL-E 3, Midjourney, Runway, Stable Diffusion, Suno, ElevenLabs
 - **Activities**: Create 3 AI images, Generate video, Ethics quiz, Prompt building
@@ -19,7 +19,7 @@
 ## 🚧 Lessons To Be Built
 
 ### Lesson 4: Advanced Prompting Techniques
-**File**: `lesson4-advanced-prompting.html`
+**File**: `lesson4/l4-p1-learn-intro.html` (12-page micro flow)
 
 **Game Mode Activities**:
 1. **Chain-of-Thought Challenge** - Solve complex problems step-by-step
@@ -42,7 +42,7 @@
 ---
 
 ### Lesson 5: AI Workflows (Visual & Interactive)
-**File**: `lesson5-ai-workflows.html`
+**File**: `lesson5/l5-p1-learn-intro.html` (10-page micro flow)
 
 **Visual Workflow Examples**:
 1. **Content Creation Pipeline**
@@ -197,9 +197,12 @@ Upon completion, users receive:
 ├── index.html (landing page)
 ├── game.html (Lesson 2 - game mode)
 ├── presentation.html (Lesson 2 - presentation)
-├── lesson3-content-creation.html
-├── lesson4-advanced-prompting.html
-├── lesson5-ai-workflows.html
+├── lesson3/ (10 micro-pages, intro → summary)
+├── lesson4/ (12 micro-pages, intro → summary)
+├── lesson5/ (10 micro-pages, intro → summary)
+├── lesson3-content-creation.html (legacy)
+├── lesson4-advanced-prompting.html (legacy)
+├── lesson5-ai-workflows.html (legacy)
 ├── lesson6-capstone.html
 ├── styles/
 │   └── shared.css (common styles)

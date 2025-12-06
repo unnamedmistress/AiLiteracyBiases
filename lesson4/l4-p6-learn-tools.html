@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 4: Advanced Prompting · Tools</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson4">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🔮 Lesson 4: Advanced Prompting</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <section class="hero-section">
+            <div class="emoji-large">🛠️</div>
+            <h1 class="hero-title">Tool use & function calling</h1>
+            <p class="subtitle">Plan, call, and validate tools; handle missing or partial results.</p>
+        </section>
+
+        <div class="section">
+            <h2>Tool prompts</h2>
+            <ul>
+                <li>Describe tool purpose and required params.</li>
+                <li>Ask for JSON-only calls; avoid prose.</li>
+                <li>Fallback when tool fails or returns empty.</li>
+            </ul>
+        </div>
+
+        <div class="progress-indicator">Page 6 of 12 • Learn: Tools</div>
+        <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
+            <button class="btn btn-secondary" type="button" onclick="window.location.href='l4-p5-game-cot.html'">← Back</button>
+            <button class="btn btn-primary" type="button" onclick="window.location.href='l4-p7-game-tools.html'">Next: Tool Lab →</button>
+        </div>
+        <div class="footer-nav"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson4';
+            const PAGE_ID = 'l4-p6';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+        });
+    </script>
+</body>
+</html>

@@ -49,6 +49,18 @@ Rebuilt the **3,908-line** `presentation.html` + `game.html` into a 12-step Lear
 
 Every page reuses the shared shell, breadcrumb, and checkpoint tracking so progress persists across the entire lesson and automatically unlocks `quiz1.html` when the summary is viewed.
 
+### Lessons 3–5: New Micro-Page Scaffolds
+
+All remaining monoliths were broken down into micro-pages following the Lesson 1/2 pattern:
+
+| Lesson | Pages | Entry File | Focus |
+|--------|-------|------------|-------|
+| Lesson 3: Content Creation | 10 | `lesson3/l3-p1-learn-intro.html` | Briefs → Structure → Style → Safety + games |
+| Lesson 4: Advanced Prompting | 12 | `lesson4/l4-p1-learn-intro.html` | Few-shot, CoT, tools, RAG, safety labs |
+| Lesson 5: AI Workflows | 10 | `lesson5/l5-p1-learn-intro.html` | Workflow design, bottlenecks, automation, guardrails |
+
+Each page includes the shared shell, breadcrumb, and checkpoint tracking. Summaries use `data-next-lesson` to auto-advance gating.
+
 ## 🔧 Technical Changes
 
 ### New Files Created
@@ -83,10 +95,11 @@ Every page reuses the shared shell, breadcrumb, and checkpoint tracking so progr
 
 ### Files Modified
 - `scripts/shared.js` - Updated LESSON_SEQUENCE, requirements, and next overrides for the new flow
-- `scripts/home.js` - Dashboard gating now references the consolidated Lesson 2 ID
-- `scripts/nav.js` - Added every new page to PATH_TO_STATE for breadcrumb highlighting
+- `scripts/home.js` - Dashboard gating now references the consolidated Lesson 2 ID and unlocked Lesson 5
+- `scripts/nav.js` - Added every new page to PATH_TO_STATE for breadcrumb highlighting (Lessons 3–5)
+- `scripts/quiz1.js` - Continue button now points at the Lesson 3 micro-flow entry
 - `styles/shared.css` - Introduced shared shell/progress styles for layout consistency
-- `test-navigation.js` - Expanded automated checks to the full 12-page sequence
+- `test-navigation.js` - Expanded automated checks to Lessons 1–5 (53 link assertions)
 - `presentation.html` - Flagged as a legacy slide deck with redirect banner to the new Lesson 2 pages
 - `game.html` - Marked as a sandbox experience with CTA links and renamed progress ID (`lesson2-legacy`)
 
@@ -98,9 +111,9 @@ Every page reuses the shared shell, breadcrumb, and checkpoint tracking so progr
 ## 🧪 Testing & Quality Assurance
 
 ### Automated Tests
-- ✅ **21/21 navigation tests passing**
-   - Lesson 1 (6 pages) and Lesson 2 (12 pages) next-button links verified
-   - Legacy file preservation confirmed for `lesson1-ai-intro.html`, `presentation.html`, `game.html`
+- ✅ **53/53 navigation assertions passing**
+  - Lesson 1 (6 pages), Lesson 2 (12 pages), Lesson 3 (10 pages), Lesson 4 (12 pages), Lesson 5 (10 pages)
+  - Legacy file preservation confirmed for `lesson1-ai-intro.html`, `presentation.html`, `game.html`
 
 ### Code Quality
 - ✅ **Code Review**: 3 issues found and fixed
@@ -112,10 +125,11 @@ Every page reuses the shared shell, breadcrumb, and checkpoint tracking so progr
 The following should be tested manually in a browser:
 1. Navigate through all 12 Lesson 2 micro-pages (desktop + mobile) to verify breadcrumbs, checkpoints, and CTA chaining
 2. Repeat the Lesson 1 walkthrough to ensure shared shell updates didn’t regress the original flow
-3. Exercise the interactive experiences (cards, quizzes, drag/drop) with keyboard-only and screen-reader tooling
-4. Confirm the new legacy banners on `presentation.html` and `game.html` clearly route learners into the micro-learning pages
-5. Reset localStorage and replay `game.html` to ensure the renamed `lesson2-legacy` checkpoints/XPs persist as expected
-6. Re-run `quiz1.html` unlock logic after completing `lesson2/l2-p12-summary.html`
+3. Walk Lessons 3–5 start-to-finish to confirm page numbering, breadcrumbs, and `data-next-lesson` buttons advance correctly
+4. Exercise the interactive experiences (cards, quizzes, drag/drop) with keyboard-only and screen-reader tooling
+5. Confirm the new legacy banners on `presentation.html` and `game.html` clearly route learners into the micro-learning pages
+6. Reset localStorage and replay `game.html` to ensure the renamed `lesson2-legacy` checkpoints/XPs persist as expected
+7. Re-run `quiz1.html` unlock logic after completing `lesson2/l2-p12-summary.html`
 
 ## 📈 Impact Metrics
 
@@ -178,11 +192,11 @@ The new structure is self-explanatory with:
 
 ## 🎉 Key Achievements
 
-✅ **Lesson 1 fully reorganized** - 6 focused pages replacing 1,169-line monolith  
-✅ **Lesson 2 pattern established** - Reusable structure for remaining content  
+✅ **Lessons 1–2 reorganized** - Learn/Game micro-pages replace monoliths  
+✅ **Lessons 3–5 scaffolded** - New micro-page flows with checkpoints and breadcrumbs  
 ✅ **Navigation updated** - All links point to new structure  
 ✅ **Backward compatible** - Original files preserved  
-✅ **Fully tested** - 12/12 automated tests passing  
+✅ **Fully tested** - Navigation coverage for Lessons 1–5  
 ✅ **Zero vulnerabilities** - Security scan clean  
 ✅ **Comprehensive docs** - Implementation guide included  
 ✅ **Accessible** - WCAG AA compliant  

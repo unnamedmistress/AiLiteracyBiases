@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 5: AI Workflows · Guardrails & Safety</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson5">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🚀 Lesson 5: AI Workflows</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <section class="hero-section">
+            <div class="emoji-large">🛡️</div>
+            <h1 class="hero-title">Guardrails & safety</h1>
+            <p class="subtitle">Protect data, control actions, and keep humans in the loop.</p>
+        </section>
+
+        <div class="section">
+            <h2>Guardrails</h2>
+            <ul>
+                <li>PII filters, content policies, and allow/deny lists before AI calls.</li>
+                <li>Scoped tool permissions, dry-runs, and approvals for high-impact actions.</li>
+                <li>Output checks: JSON schema validation, banned terms, fact checks.</li>
+                <li>Audit: logs with trace IDs, metrics, alerts, and rollback plans.</li>
+            </ul>
+        </div>
+
+        <div class="progress-indicator">Page 8 of 10 • Learn: Guardrails</div>
+        <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
+            <button class="btn btn-secondary" type="button" onclick="window.location.href='l5-p7-game-automation.html'">← Back</button>
+            <button class="btn btn-primary" type="button" onclick="window.location.href='l5-p9-game-scenario.html'">Next: Real-World Scenario →</button>
+        </div>
+        <div class="footer-nav"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson5';
+            const PAGE_ID = 'l5-p8';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+        });
+    </script>
+</body>
+</html>
