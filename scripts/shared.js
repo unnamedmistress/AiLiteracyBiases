@@ -1,4 +1,26 @@
 (function () {
+    function getDataLayer() {
+        if (!Array.isArray(window.dataLayer)) {
+            window.dataLayer = [];
+        }
+        return window.dataLayer;
+    }
+
+    function emitAnalytics(eventName, payload = {}) {
+        if (!eventName) return;
+        const entry = { event: eventName, ts: Date.now(), ...payload };
+        try {
+            const handler = typeof window.analyticsEvent === 'function' ? window.analyticsEvent : null;
+            if (handler && handler !== emitAnalytics) {
+                handler(eventName, payload);
+                return;
+            }
+            getDataLayer().push(entry);
+        } catch (error) {
+            console.warn('[analytics] Failed to push event', error);
+        }
+    }
+
     const LESSON_SEQUENCE = [
         { id: 'lesson1', label: 'Lesson 1: Prompt Wizardry Warm-Up', path: 'lesson1/l1-p1-learn-intro.html' },
         { id: 'lesson2', label: 'Lesson 2: AI Literacy', path: 'lesson2/l2-p1-learn-intro.html' },
@@ -107,6 +129,7 @@
             }
 
             button.addEventListener('click', () => {
+                emitAnalytics('next_lesson_click', { fromLesson: currentLessonId, target: destination.id || destination.href });
                 window.location.href = destination.href;
             });
         });
@@ -132,6 +155,7 @@
         if (!requirementMet(lessonId, api)) {
             alert('Finish the previous mission before jumping ahead. Redirecting you back to the dashboard.');
             window.location.href = 'index.html';
+            emitAnalytics('lesson_blocked', { lessonId, reason: 'prerequisite' });
             return false;
         }
         return true;
@@ -291,6 +315,10 @@
         });
     }
 
+    if (typeof window.analyticsEvent !== 'function') {
+        window.analyticsEvent = emitAnalytics;
+    }
+
     window.AILesson = {
         LESSON_SEQUENCE,
         initLessonNavigation: function (options = {}) {
@@ -302,7 +330,8 @@
         getNextLessonDestination: getAutoNextDestination,
         initModeToggle,
         updateXPBar,
-        findLessonIndex
+        findLessonIndex,
+        trackEvent: emitAnalytics
     };
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -316,5 +345,11 @@
         window.AILesson.initLessonNavigation({ lessonId, breadcrumbSelector, footerSelector });
         initNextLessonButtons(lessonId);
         scrollGameExperiencesToTop();
+
+        const looksLikeSummary = Boolean(document.querySelector('[data-next-lesson]'));
+        if (looksLikeSummary && window.ProgressTracker && typeof window.ProgressTracker.markLessonComplete === 'function') {
+            window.ProgressTracker.markLessonComplete(lessonId);
+            emitAnalytics('lesson_completed', { lessonId, source: 'summary-page' });
+        }
     });
 })();

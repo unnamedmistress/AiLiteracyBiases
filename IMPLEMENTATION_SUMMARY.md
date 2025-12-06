@@ -1,5 +1,11 @@
 # Lesson Reorganization - Implementation Summary
 
+## 🔄 Latest Updates
+- Added data layer analytics hooks (progress, checkpoints, nav) with `window.dataLayer`/`analyticsEvent` for funnel tracking.
+- Summary pages now auto-mark lessons complete; checkpoint writes set lessons to in-progress by default.
+- Lesson 6 Capstone unlocked on dashboard/nav with analytics for checklist toggles, submissions, and XP awards.
+- Progress storage hardened (invalid JSON sanitization) and nav tests extended to cover the capstone entry.
+
 ## ✅ Task Complete
 
 This PR successfully implements the micro-learning reorganization plan for the AI Literacy course, transforming long scrollable lessons into focused, sequential pages.

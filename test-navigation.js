@@ -80,6 +80,11 @@ const lesson5Flow = [
     { file: 'lesson5/l5-p10-summary.html', nextLink: 'data-next-lesson' }
 ];
 
+// Minimal check for Lesson 6 capstone entry point
+const lesson6Flow = [
+    { file: 'lesson6-capstone.html', nextLink: 'Submit Capstone Project' }
+];
+
 let passed = 0;
 let failed = 0;
 
@@ -132,6 +137,9 @@ testNavigationFlow(lesson4Flow, 'Lesson 4');
 
 // Test Lesson 5
 testNavigationFlow(lesson5Flow, 'Lesson 5');
+
+// Test Lesson 6
+testNavigationFlow(lesson6Flow, 'Lesson 6');
 
 // Check that legacy files still exist
 console.log('📦 Checking Legacy Files:');

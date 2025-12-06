@@ -45,7 +45,7 @@
         { id: 'quiz1', label: 'Quiz 1', href: 'quiz1.html' },
         { id: 'lesson4', label: 'Lesson 4', href: 'lesson4/l4-p1-learn-intro.html' },
         { id: 'lesson5', label: 'Lesson 5', href: 'lesson5/l5-p1-learn-intro.html' },
-        { id: 'lesson6', label: 'Lesson 6', href: 'lesson6-capstone.html', locked: true, comingSoon: true }
+        { id: 'lesson6', label: 'Lesson 6', href: 'lesson6-capstone.html' }
     ];
     const LESSON_UNLOCK_RULES = {
         lesson2: 'lesson1',
@@ -143,6 +143,21 @@
             cachedProgressSnapshot = { lessons: {}, quizScores: {} };
         }
         return cachedProgressSnapshot;
+    }
+
+    function emitAnalytics(eventName, payload = {}) {
+        if (!eventName) return;
+        try {
+            const handler = typeof window.analyticsEvent === 'function' ? window.analyticsEvent : null;
+            if (handler && handler !== emitAnalytics) {
+                handler(eventName, payload);
+                return;
+            }
+            const layer = Array.isArray(window.dataLayer) ? window.dataLayer : (window.dataLayer = []);
+            layer.push({ event: eventName, ts: Date.now(), ...payload });
+        } catch (error) {
+            console.warn('[nav] Failed to push analytics event', error);
+        }
     }
 
     function getQuizStatus(snapshot, quizId) {
@@ -356,6 +371,11 @@
             const href = anchor.getAttribute('href');
             if (!href) return;
             event.preventDefault();
+            emitAnalytics('nav_click', {
+                navId: anchor.dataset.navId || null,
+                href,
+                group: anchor.className || 'link'
+            });
             setDrawerState(false);
             window.location.href = href;
         });

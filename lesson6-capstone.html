@@ -463,6 +463,21 @@
         let appProgress = null;
         let notificationTimer = null;
 
+        function emitAnalytics(eventName, payload = {}) {
+            if (!eventName) return;
+            try {
+                const handler = typeof window.analyticsEvent === 'function' ? window.analyticsEvent : null;
+                if (handler && handler !== emitAnalytics) {
+                    handler(eventName, { lessonId: LESSON_ID, ...payload });
+                    return;
+                }
+                const layer = Array.isArray(window.dataLayer) ? window.dataLayer : (window.dataLayer = []);
+                layer.push({ event: eventName, ts: Date.now(), lessonId: LESSON_ID, ...payload });
+            } catch (error) {
+                console.warn('[capstone] Failed to push analytics event', error);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             tracker = window.ProgressTracker || null;
             appProgress = window.AppProgress || null;
@@ -470,6 +485,7 @@
             hydrateFromStorage();
             updateProgress();
             updateUI();
+            emitAnalytics('lesson_opened', { submitted: state.submitted });
 
             if (state.submitted) {
                 revealCertificate(false);
@@ -514,6 +530,8 @@
                 tracker.setCheckpoint(LESSON_ID, checkpointId, newState);
             }
 
+            emitAnalytics('capstone_checkpoint', { checkpointId, value: newState });
+
             updateProgress();
         }
 
@@ -557,11 +575,13 @@
         function submitCapstone() {
             if (state.submitted) {
                 showNotification('Capstone already submitted. 🎖️');
+                emitAnalytics('capstone_submit_retry', { alreadySubmitted: true });
                 return;
             }
 
             if (!isLessonReadyToSubmit()) {
                 showNotification('Complete every deliverable to unlock submission.');
+                emitAnalytics('capstone_submit_blocked', { reason: 'incomplete-deliverables' });
                 return;
             }
 
@@ -573,6 +593,8 @@
             addXP(SUBMISSION_XP, 'Capstone submitted');
             revealCertificate();
             updateProgress();
+            markLessonComplete();
+            emitAnalytics('capstone_submitted', { xpAwarded: SUBMISSION_XP });
         }
 
         function revealCertificate(shouldScroll = true) {
@@ -610,6 +632,7 @@
             updateUI();
             const message = reason ? `${reason}! (+${increment} XP)` : `+${increment} XP earned!`;
             showNotification(message);
+            emitAnalytics('capstone_xp_awarded', { delta: increment, total: state.xp, reason });
         }
 
         function updateUI() {

@@ -59,8 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Lesson 6 · Capstone',
             summary: 'Ship your AI policy, lesson plan, or automation brief for certification.',
             path: 'lesson6-capstone.html',
-            requires: 'lesson5',
-            comingSoon: true
+            requires: 'lesson5'
         }
     ];
     const DEFAULT_TOTAL_LESSONS = DASHBOARD_ITEMS.filter((item) => item.type === 'lesson').length;
