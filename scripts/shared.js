@@ -442,6 +442,11 @@
         const index = findLessonIndex(lessonId);
         if (index === -1) return;
 
+        // Skip auto nav when a page declares its own navigation (progress-nav or data-manual-nav)
+        const hasManualNav = document.querySelector('[data-manual-nav], .progress-nav');
+        const disableAutoNav = document.body?.dataset?.disableAutoNav === 'true';
+        if (disableAutoNav || hasManualNav) return;
+
         let container = document.querySelector(containerSelector);
         if (!container) {
             const host = document.querySelector('.lesson-shell') || document.querySelector('.container');

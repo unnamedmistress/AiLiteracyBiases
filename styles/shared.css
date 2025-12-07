@@ -426,13 +426,13 @@ body.with-global-nav {
     margin-bottom: 4px;
 }
 
-/* Hide legacy per-page text rows now that the new progress bar is injected */
+/* Restore per-page progress text/CTAs for manual flows */
 .progress-indicator {
-    display: none;
+    display: block;
 }
 
 .progress-nav {
-    display: none;
+    display: flex;
 }
 
 .step-pill:hover,
@@ -575,8 +575,10 @@ a {
 
 .progress-indicator {
     text-align: center;
-    color: var(--color-muted);
+    color: var(--color-text);
     font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
     margin-bottom: 16px;
 }
 
@@ -586,6 +588,11 @@ a {
     justify-content: center;
     gap: 12px;
     flex-wrap: wrap;
+}
+
+.activity-progress {
+    color: var(--color-text);
+    font-weight: 600;
 }
 
 .btn-next {
