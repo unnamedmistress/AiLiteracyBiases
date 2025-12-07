@@ -78,6 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
     const DEFAULT_TOTAL_LESSONS = DASHBOARD_ITEMS.filter((item) => item.type === 'lesson').length;
 
+    function findLessonPath(lessonId) {
+        const match = DASHBOARD_ITEMS.find((item) => item.id === lessonId);
+        return match ? match.path : null;
+    }
+
     function requirementCopy(requirementId) {
         if (!requirementId) return '';
         if (requirementId === 'lesson1') return 'Complete Lesson 1 to unlock';
@@ -89,6 +94,19 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'Complete the prerequisite to unlock';
     }
 
+    function openLockModal({ message = 'Complete the prerequisite to continue.', requirement = null, comingSoon = false } = {}) {
+        const href = requirement ? findLessonPath(requirement) : null;
+        if (typeof window.showModal === 'function') {
+            window.showModal({
+                title: comingSoon ? 'Coming soon' : 'Locked',
+                message,
+                actionHref: href,
+                actionLabel: href ? 'Open prerequisite' : 'Okay'
+            });
+        } else {
+            alert(message);
+        }
+    }
     const els = {
         lessonGrid: document.getElementById('lessonGrid'),
         progressFill: document.getElementById('homeProgressFill'),
@@ -292,19 +310,28 @@ document.addEventListener('DOMContentLoaded', () => {
                         ${state.locked && item.requires ? `<span class="unlock-hint">${requirementCopy(item.requires)}</span>` : ''}
                         ${state.comingSoon ? '<span class="coming-soon-note">🚧 Launching soon · stay tuned</span>' : ''}
                     </div>
-                    <button type="button" data-path="${item.path}" data-locked="${state.locked}" aria-label="${ariaLabel}">${state.ctaLabel}</button>
+                    <button type="button" data-path="${item.path}" data-locked="${state.locked}" data-requirement="${item.requires || ''}" data-coming-soon="${state.comingSoon}" aria-label="${ariaLabel}">${state.ctaLabel}</button>
                 </article>
             `;
         }).join('');
         els.lessonGrid.innerHTML = cards;
         els.lessonGrid.querySelectorAll('button').forEach((button) => {
             const locked = button.dataset.locked === 'true';
-            if (locked) {
-                button.disabled = true;
-                return;
+            const requirement = button.dataset.requirement || '';
+            const comingSoon = button.dataset.comingSoon === 'true';
+            const path = button.dataset.path;
+            if (locked || comingSoon) {
+                button.setAttribute('aria-disabled', 'true');
             }
             button.addEventListener('click', () => {
-                window.location.href = button.dataset.path;
+                if (locked || comingSoon) {
+                    const message = comingSoon
+                        ? 'This lesson is launching soon. We will notify you when it is live.'
+                        : requirementCopy(requirement) || 'Complete the prerequisite to unlock.';
+                    openLockModal({ message, requirement, comingSoon });
+                    return;
+                }
+                window.location.href = path;
             });
         });
     }

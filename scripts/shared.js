@@ -34,6 +34,74 @@
         return `${getBasePrefix()}${href}`;
     }
 
+    let modalHost = null;
+    function hideModal() {
+        if (!modalHost) return;
+        modalHost.classList.remove('is-visible');
+    }
+
+    function ensureModalHost() {
+        if (modalHost) return modalHost;
+        modalHost = document.createElement('div');
+        modalHost.className = 'ui-modal';
+        modalHost.innerHTML = `
+            <div class="ui-modal__backdrop" data-modal-close="true"></div>
+            <div class="ui-modal__card" role="dialog" aria-modal="true" aria-labelledby="uiModalTitle" aria-describedby="uiModalBody">
+                <button class="ui-modal__close" type="button" data-modal-close="true" aria-label="Close">×</button>
+                <h3 class="ui-modal__title" id="uiModalTitle"></h3>
+                <p class="ui-modal__body" id="uiModalBody"></p>
+                <div class="ui-modal__actions">
+                    <button class="btn btn-secondary ui-modal__default" type="button" data-modal-close="true">Got it</button>
+                    <a class="btn btn-primary ui-modal__action" role="button" href="#">Go</a>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modalHost);
+        modalHost.querySelectorAll('[data-modal-close]').forEach((el) => {
+            el.addEventListener('click', hideModal);
+        });
+        const backdrop = modalHost.querySelector('.ui-modal__backdrop');
+        if (backdrop) {
+            backdrop.addEventListener('click', hideModal);
+        }
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') hideModal();
+        });
+        return modalHost;
+    }
+
+    function showModal({ title = 'Heads up', message = '', actionLabel = 'Go', actionHref = null } = {}) {
+        const host = ensureModalHost();
+        const titleEl = host.querySelector('.ui-modal__title');
+        const bodyEl = host.querySelector('.ui-modal__body');
+        const actionEl = host.querySelector('.ui-modal__action');
+        const defaultEl = host.querySelector('.ui-modal__default');
+
+        if (titleEl) titleEl.textContent = title;
+        if (bodyEl) bodyEl.textContent = message;
+
+        if (actionEl) {
+            if (actionHref) {
+                actionEl.href = resolveHref(actionHref);
+                actionEl.textContent = actionLabel || 'Go';
+                actionEl.style.display = 'inline-flex';
+            } else {
+                actionEl.href = '#';
+                actionEl.style.display = 'none';
+            }
+        }
+        if (defaultEl) {
+            defaultEl.textContent = actionHref ? 'Stay here' : actionLabel || 'Got it';
+        }
+
+        host.classList.add('is-visible');
+        requestAnimationFrame(() => {
+            if (defaultEl && typeof defaultEl.focus === 'function') {
+                defaultEl.focus();
+            }
+        });
+    }
+
     function ensureRewardsScript() {
         if (window.Rewards && typeof window.Rewards.showReward === 'function') return;
         const existing = document.querySelector('script[data-rewards]');
@@ -96,6 +164,30 @@
             href: 'certificate.html',
             label: 'View Certificate →'
         }
+    };
+
+    const PAGE_LABELS = {
+        'lesson1/l1-p1-learn-intro.html': 'Next: Play Prediction Game',
+        'lesson1/l1-p2-game-prediction.html': 'Next: Tone Lesson',
+        'lesson1/l1-p3-learn-tone.html': 'Next: Voice Game',
+        'lesson1/l1-p4-game-voice.html': 'Next: Tone Game',
+        'lesson1/l1-p5-game-tone.html': 'Next: Lesson 1 Summary',
+        'lesson1/l1-p6-summary.html': 'Next: Lesson 2 Intro',
+
+        'lesson2/l2-p1-learn-intro.html': 'Next: Hallucination Lesson',
+        'lesson2/l2-p2-learn-hallucinations.html': 'Next: Hallucination Game',
+        'lesson2/l2-p3-game-hallucinations.html': 'Next: Confidence Lesson',
+        'lesson2/l2-p4-learn-confidence.html': 'Next: Confidence Game',
+        'lesson2/l2-p5-game-confidence.html': 'Next: Values Lesson',
+        'lesson2/l2-p6-learn-values.html': 'Next: Values Game',
+        'lesson2/l2-p7-game-values.html': 'Next: Memory Lesson',
+        'lesson2/l2-p8-learn-memory.html': 'Next: Memory Game',
+        'lesson2/l2-p9-game-memory.html': 'Next: Facts Lesson',
+        'lesson2/l2-p10-learn-facts.html': 'Next: Disasters Game',
+        'lesson2/l2-p11-game-disasters.html': 'Next: Lesson 2 Summary',
+        'lesson2/l2-p12-summary.html': 'Next: Quiz 1',
+
+        'quiz1.html': 'Next: Lesson 3 Intro'
     };
 
     const PAGE_ORDER = {
@@ -339,13 +431,15 @@
 
         let nextHref = null;
         let nextLabel = 'Next →';
+        let nextNote = '';
 
         if (PAGE_ORDER[lessonId]) {
             const seq = PAGE_ORDER[lessonId];
             const idx = seq.findIndex((p) => current.endsWith(p));
             if (idx >= 0 && idx < seq.length - 1) {
                 nextHref = seq[idx + 1];
-                nextLabel = 'Next →';
+                nextLabel = PAGE_LABELS[nextHref] || 'Next →';
+                nextNote = nextLabel;
             } else if (idx === seq.length - 1) {
                 const override = CUSTOM_NEXT[lessonId];
                 const autoNext = getAutoNextDestination(lessonId);
@@ -353,6 +447,7 @@
                 if (target && target.href && target.href !== '#') {
                     nextHref = target.href;
                     nextLabel = target.label || 'Next Lesson →';
+                    nextNote = target.label || 'Next lesson';
                 }
             }
         } else {
@@ -377,7 +472,12 @@
                 if (target && target.href && target.href !== '#') {
                     nextHref = target.href;
                     nextLabel = target.label || 'Next →';
+                    nextNote = target.label || 'Next lesson';
                 }
+            }
+            if (nextHref && PAGE_LABELS[nextHref]) {
+                nextLabel = PAGE_LABELS[nextHref];
+                nextNote = PAGE_LABELS[nextHref];
             }
         }
 
@@ -391,6 +491,13 @@
             nextBtn.textContent = nextLabel;
             nextBtn.setAttribute('aria-disabled', 'true');
             container.appendChild(nextBtn);
+        }
+
+        if (nextHref && nextNote) {
+            const note = document.createElement('div');
+            note.className = 'nav-note';
+            note.textContent = nextNote;
+            container.appendChild(note);
         }
     }
 
@@ -589,11 +696,13 @@
         findLessonIndex,
         trackEvent: emitAnalytics,
         updateXP,
-        emitXPEvent
+        emitXPEvent,
+        showModal
     };
 
     window.updateXP = updateXP;
     window.emitXPEvent = emitXPEvent;
+    window.showModal = showModal;
 
     document.addEventListener('DOMContentLoaded', () => {
         const lessonId = document.body?.dataset?.lessonId;

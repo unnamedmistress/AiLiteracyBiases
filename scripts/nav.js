@@ -73,6 +73,56 @@
     const QUIZ_REQUIREMENTS = { quiz1: 75 };
     let cachedProgressSnapshot = null;
 
+    function requirementCopy(requirementId) {
+        if (!requirementId) return 'Finish the previous mission to unlock this one.';
+        if (requirementId === 'lesson1') return 'Complete Lesson 1 to unlock this mission.';
+        if (requirementId === 'lesson2') return 'Complete Lesson 2 to unlock this mission.';
+        if (requirementId === 'lesson3') return 'Complete Lesson 3 to unlock this mission.';
+        if (requirementId === 'lesson4') return 'Complete Lesson 4 to unlock this mission.';
+        if (requirementId === 'lesson5') return 'Complete Lesson 5 to unlock this mission.';
+        if (requirementId === 'lesson6') return 'Complete Lesson 6 to unlock this mission.';
+        if (requirementId === 'quiz1') return 'Score 75% or higher on Quiz 1 to unlock this mission.';
+        return 'Finish the prerequisite mission to continue.';
+    }
+
+    function findHrefById(id) {
+        if (!id) return null;
+        const pool = [...LESSON_LINKS, ...MAIN_LINKS, ...RESOURCE_LINKS];
+        const match = pool.find((entry) => entry.id === id);
+        return match ? match.href : null;
+    }
+
+    function showLockModal({ title = 'Locked', message = 'Finish the prerequisite to continue.', href = null, actionLabel = 'Go to prerequisite', comingSoon = false } = {}) {
+        const resolvedHref = href ? resolveHref(href) : null;
+        if (typeof window.showModal === 'function') {
+            window.showModal({
+                title: comingSoon ? 'Coming soon' : title,
+                message,
+                actionHref: resolvedHref,
+                actionLabel: resolvedHref ? actionLabel : 'Okay'
+            });
+        } else {
+            alert(message);
+        }
+    }
+
+    function attachLockModal(element, message, href, comingSoon) {
+        if (!element) return;
+        element.setAttribute('role', 'button');
+        element.setAttribute('tabindex', '0');
+        const handler = (event) => {
+            event.preventDefault();
+            showLockModal({ message, href, comingSoon });
+        };
+        element.addEventListener('click', handler);
+        element.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                handler(event);
+            }
+        });
+    }
+
     const PATH_TO_STATE = {
         '': { main: 'home' },
         'index.html': { main: 'home' },
@@ -233,6 +283,9 @@
             computedLock = computedLock || Boolean(statusMeta.locked);
         }
 
+        let lockMessage = 'Locked';
+        let lockHref = null;
+
         const element = document.createElement(computedLock ? 'span' : 'a');
         element.className = `nav-link nav-link-${group}`;
         element.dataset.navId = id;
@@ -251,6 +304,10 @@
             const lockCopy = comingSoon || statusMeta.comingSoon ? 'Coming soon' : 'Locked';
             element.setAttribute('title', lockCopy);
             element.setAttribute('aria-label', `${label} (${lockCopy})`);
+            lockHref = statusMeta.prerequisite ? findHrefById(statusMeta.prerequisite) : null;
+            lockMessage = statusMeta.comingSoon
+                ? 'This mission is launching soon. Check back shortly.'
+                : requirementCopy(statusMeta.prerequisite);
             if (comingSoon || statusMeta.comingSoon) {
                 const badge = document.createElement('span');
                 badge.className = 'nav-coming-soon';
@@ -262,6 +319,10 @@
             if (group === 'lesson') {
                 element.setAttribute('aria-label', `${label} · ${statusMeta.label}`);
             }
+        }
+
+        if (computedLock) {
+            attachLockModal(element, lockMessage, lockHref, comingSoon || statusMeta.comingSoon);
         }
 
         if (isActive) {

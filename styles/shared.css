@@ -252,7 +252,13 @@ body.with-global-nav {
 
 .nav-link.is-locked {
     color: var(--color-muted);
-    cursor: not-allowed;
+    cursor: pointer;
+}
+
+.nav-note {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    color: #4b5563;
 }
 
 .nav-status-badge {
@@ -1381,6 +1387,85 @@ textarea {
     margin: 2px 0;
 }
 
+.ui-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+}
+
+.ui-modal.is-visible {
+    display: flex;
+}
+
+.ui-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(4px);
+}
+
+.ui-modal__card {
+    position: relative;
+    width: min(520px, 92vw);
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 20px 55px rgba(15, 23, 42, 0.28);
+    padding: 24px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ui-modal__title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.ui-modal__body {
+    color: rgba(15, 23, 42, 0.82);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.ui-modal__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.ui-modal__action,
+.ui-modal__default {
+    min-width: 120px;
+    justify-content: center;
+    text-align: center;
+}
+
+.ui-modal__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: #fff;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.ui-modal__close:hover,
+.ui-modal__close:focus-visible {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+}
+
 @media (max-width: 640px) {
     .chatbox-section {
         padding: 12px;
@@ -1394,29 +1479,9 @@ textarea {
         width: 100%;
     }
 }
-        padding: 10px 12px;
-    }
-
-    .nav-brand a {
-        font-size: 18px;
-    }
-
-    .nav-group,
-    .lesson-links {
-        width: 100%;
-        justify-content: flex-start;
-    }
-
-    .nav-link {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .container {
-        padding: 16px 10px 36px;
-    }
-
-    .header {
+@media (max-width: 768px) {
+    .header,
+    .hero {
         padding: 18px;
         text-align: left;
     }
