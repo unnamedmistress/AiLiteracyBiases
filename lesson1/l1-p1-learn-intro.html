@@ -12,6 +12,12 @@
         .challenge-section { display: flex; flex-direction: column; gap: 24px; }
         .challenge-title { font-size: 34px; margin-bottom: 8px; }
         .challenge-desc { color: var(--color-muted); line-height: 1.6; font-size: 18px; }
+        .challenge-desc.lede { color: var(--color-text); background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: var(--radius-md); padding: 14px 16px; line-height: 1.7; font-size: 17px; box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08); }
+        .visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 12px 0 8px; }
+        .visual-card { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.14); background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12), transparent 45%), linear-gradient(135deg, rgba(16,185,129,0.15), rgba(59,130,246,0.08)); padding: 14px 16px; display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; box-shadow: 0 12px 26px rgba(0,0,0,0.12); }
+        .visual-icon { font-size: 32px; line-height: 1; }
+        .visual-card h4 { margin: 0; font-size: 16px; }
+        .visual-card p { margin: 4px 0 0; color: var(--color-muted); font-size: 14px; line-height: 1.4; }
         .learning-showcase { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; margin-top: 24px; }
         .story-card { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.04); padding: 20px; display: flex; flex-direction: column; gap: 16px; }
         .story-header h3 { margin-bottom: 4px; font-size: 20px; }
@@ -22,8 +28,21 @@
         .prompt-text { font-family: 'Courier New', Courier, monospace; font-size: 14px; background: rgba(0, 0, 0, 0.25); padding: 10px; border-radius: var(--radius-sm); margin-bottom: 10px; }
         .prompt-output { font-size: 15px; line-height: 1.5; }
         .prompt-weight { font-size: 12px; margin-top: 10px; color: var(--color-muted); }
+        .poll-card { margin: 16px 0 8px; padding: 14px 16px; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.06); display: grid; gap: 12px; }
+        .poll-actions { display: inline-flex; gap: 8px; flex-wrap: wrap; }
+        .poll-btn { padding: 10px 16px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.04); color: inherit; cursor: pointer; transition: transform var(--transition-base), border-color var(--transition-base); }
+        .poll-btn:hover { transform: translateY(-1px); border-color: var(--color-accent); }
+        .poll-btn.active { border-color: var(--color-accent); background: rgba(16, 185, 129, 0.14); }
+        .poll-result { display: none; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.16); background: rgba(255, 255, 255, 0.04); padding: 12px 14px; color: var(--color-text); }
+        .poll-result.show { display: block; }
+        .poll-bars { display: grid; gap: 8px; }
+        .poll-bar { display: grid; grid-template-columns: 110px 1fr auto; align-items: center; gap: 10px; font-size: 14px; }
+        .poll-track { height: 8px; border-radius: 999px; background: rgba(255,255,255,0.15); overflow: hidden; }
+        .poll-fill { height: 100%; border-radius: 999px; background: linear-gradient(135deg, #10B981, #059669); width: 0; }
         .cost-callout { margin-top: 18px; padding: 16px; border-radius: var(--radius-md); border: 1px dashed rgba(250, 204, 21, 0.7); background: rgba(250, 204, 21, 0.1); }
         .cost-callout strong { color: #facc15; }
+        .citation { margin-top: 22px; font-size: 13px; color: var(--color-muted); }
+        .citation a { color: var(--color-accent); }
         .progress-nav { margin-top: 32px; display: flex; justify-content: center; }
         .btn-next { padding: 14px 32px; font-size: 16px; font-weight: 600; border-radius: var(--radius-md); background: linear-gradient(135deg, #10B981, #059669); color: #fff; border: none; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
@@ -45,17 +64,31 @@
         </div>
 
         <div class="challenge-section">
-            <h1 class="challenge-title">Lesson 1 · Understanding AI Personalities</h1>
-            <p class="challenge-desc">AI isn’t coming. It’s already everywhere — in your phone, your apps, your job, your habits.
+            <h1 class="challenge-title">Lesson 1 · Understanding AI </h1>
+            <p class="challenge-desc lede">AI isn’t coming. It’s already everywhere — in your phone, your apps, your job, your habits.
 You can’t turn it off, but you can learn how to drive it.
-
 Convenience feels harmless until it starts thinking for you.
 If we stop learning, stop questioning, stop guiding it — who’s really in control?
-
 AI literacy isn’t optional anymore. It’s the last computer skill we still have to learn.
-
 Because let’s be honest — you’re not John Connor.
 And he didn’t stop Skynet either.</p>
+
+            <div class="visual-grid" aria-label="AI mood visuals">
+                <div class="visual-card">
+                    <div class="visual-icon" aria-hidden="true">🤖</div>
+                    <div>
+                        <h4>Robots listen to patterns</h4>
+                        <p>They aren’t plotting—just following probability rails you set. More context = calmer bots.</p>
+                    </div>
+                </div>
+                <div class="visual-card">
+                    <div class="visual-icon" aria-hidden="true">🛡️</div>
+                    <div>
+                        <h4>No Skynet endings</h4>
+                        <p>Guiding tone and guardrails keeps your AI from going full sci‑fi villain. You steer.</p>
+                    </div>
+                </div>
+            </div>
 
             <section class="learning-showcase">
                 <article class="story-card">
@@ -79,6 +112,31 @@ And he didn’t stop Skynet either.</p>
                         </div>
                     </div>
                     <p class="prompt-weight">Adding “please” raises apologetic verbs and inserts persuasion tokens because the model treats politeness as an empathy cue.</p>
+                    <div class="poll-card" aria-label="Quick poll about AI politeness">
+                        <div>
+                            <strong>Quick poll:</strong> Do you have to be polite to the AI?
+                            <p class="prompt-weight">Tap to see how people answered when asked about adding “please” to prompts.</p>
+                        </div>
+                        <div class="poll-actions">
+                            <button class="poll-btn" data-poll-choice="yes">Yes, politeness matters</button>
+                            <button class="poll-btn" data-poll-choice="no">No, it doesn’t</button>
+                        </div>
+                        <div class="poll-result" id="poll-result">
+                            <p class="prompt-weight">Preloaded results from a reader poll on saying “please” to voice assistants.</p>
+                            <div class="poll-bars" data-poll-bars>
+                                <div class="poll-bar">
+                                    <span>Yes</span>
+                                    <div class="poll-track"><div class="poll-fill" data-poll-fill="yes"></div></div>
+                                    <span data-poll-percent="yes">0%</span>
+                                </div>
+                                <div class="poll-bar">
+                                    <span>No</span>
+                                    <div class="poll-track"><div class="poll-fill" data-poll-fill="no"></div></div>
+                                    <span data-poll-percent="no">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="cost-callout">
                         <p><strong>Fun fact:</strong> Every extra “please” is still a token. At scale, small words add real cost.</p>
                     </div>
@@ -89,6 +147,7 @@ And he didn’t stop Skynet either.</p>
             <div class="progress-nav">
                 <button class="btn-next" onclick="window.location.href='l1-p2-game-prediction.html'">Next: Play the Prediction Game →</button>
             </div>
+            <div class="citation">Source: <a href="https://www.bbc.com/future/article/20161028-is-it-rude-not-to-say-please-to-alexa" target="_blank" rel="noopener noreferrer">BBC Future: “Is it rude not to say please to Alexa?”</a></div>
         </div>
     </div>
 
@@ -102,6 +161,39 @@ And he didn’t stop Skynet either.</p>
             if (window.ProgressTracker) {
                 window.ProgressTracker.setCheckpoint(lessonId, pageId, true);
             }
+
+            // Quick poll: reveal preset results on click
+            const pollData = { yes: 68, no: 32 };
+            const pollButtons = document.querySelectorAll('.poll-btn[data-poll-choice]');
+            const pollResult = document.getElementById('poll-result');
+            const pollFills = {
+                yes: document.querySelector('[data-poll-fill="yes"]'),
+                no: document.querySelector('[data-poll-fill="no"]')
+            };
+            const pollPercents = {
+                yes: document.querySelector('[data-poll-percent="yes"]'),
+                no: document.querySelector('[data-poll-percent="no"]')
+            };
+
+            const showPoll = (choice) => {
+                pollButtons.forEach(btn => {
+                    const isActive = btn.dataset.pollChoice === choice;
+                    btn.classList.toggle('active', isActive);
+                });
+
+                if (!pollResult) return;
+                pollResult.classList.add('show');
+
+                ['yes', 'no'].forEach(key => {
+                    const value = pollData[key] || 0;
+                    if (pollPercents[key]) pollPercents[key].textContent = `${value}%`;
+                    if (pollFills[key]) pollFills[key].style.width = `${value}%`;
+                });
+            };
+
+            pollButtons.forEach(btn => {
+                btn.addEventListener('click', () => showPoll(btn.dataset.pollChoice));
+            });
         });
     </script>
 </body>

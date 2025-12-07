@@ -217,7 +217,7 @@
                     const btn = document.createElement('button');
                     btn.className = 'word-option';
                     btn.dataset.word = opt.word;
-                    btn.innerHTML = `<strong>${opt.word}</strong><span class="word-hint">${opt.hint}</span>`;
+                    btn.innerHTML = `<strong>${opt.word}</strong>`;
                     btn.addEventListener('click', () => handleWordPick(opt.word));
                     elements.wordOptions.appendChild(btn);
                 });

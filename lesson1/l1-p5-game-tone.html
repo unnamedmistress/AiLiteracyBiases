@@ -21,9 +21,9 @@
         .tone-drop-zone.active { border-style: solid; border-color: var(--color-accent); background: rgba(16, 185, 129, 0.15); }
         .tone-drop-zone.filled { border-style: solid; border-color: #facc15; background: rgba(250, 204, 21, 0.15); color: #fde047; }
         .tone-word-bank { display: flex; flex-wrap: wrap; gap: 10px; }
-        .tone-word { padding: 8px 14px; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.04); cursor: grab; text-transform: capitalize; font-weight: 600; transition: background var(--transition-base), border-color var(--transition-base); }
+        .tone-word { padding: 8px 14px; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.22); background: rgba(15, 23, 42, 0.4); color: #e5e7eb; cursor: grab; text-transform: capitalize; font-weight: 600; transition: background var(--transition-base), border-color var(--transition-base), color var(--transition-base); }
         .tone-word:active { cursor: grabbing; }
-        .tone-word:hover { background: rgba(255, 255, 255, 0.12); }
+        .tone-word:hover { background: rgba(15, 23, 42, 0.65); border-color: rgba(16, 185, 129, 0.8); }
         .tone-word.selected { background: var(--color-accent); color: #0f172a; border-color: var(--color-accent); }
         .tone-output { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.18); padding: 16px; background: rgba(0, 0, 0, 0.3); font-size: 16px; line-height: 1.6; }
         .tone-accessibility { margin-top: 12px; padding: 14px; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.06); display: flex; flex-direction: column; gap: 10px; }
@@ -61,14 +61,14 @@
                 <article class="story-card">
                     <div class="story-header">
                         <h3>Mini Lesson: Tone recipe</h3>
-                        <p>Three sliders to steer voice without rewriting the prompt.</p>
+                        <p>Use the same facts about calling out sick, then swap tone to change the vibe without rewriting.</p>
                     </div>
                     <ul style="margin-left: 18px; line-height: 1.6; color: var(--color-muted);">
-                        <li><strong>Voice + intent:</strong> “You are a reassuring nurse. Keep it calm and clear.”</li>
-                        <li><strong>Pacing:</strong> Ask for bullet count or sentence length to set rhythm.</li>
-                        <li><strong>Emotion word:</strong> One adjective (“urgent”, “apologetic”, “friendly”) steers the reply.</li>
+                        <li><strong>Voice + intent:</strong> You are a considerate employee letting your manager know you are out sick. Keep it clear and brief.</li>
+                        <li><strong>Pacing:</strong> Ask for 1–2 sentences or a single bullet so they can scan it fast.</li>
+                        <li><strong>Emotion word:</strong> Pick one adjective ("urgent", "apologetic", "friendly") to steer the mood without changing the facts.</li>
                     </ul>
-                    <p class="tone-tip">Guardrail: If tone feels off, swap the adjective and re-run the same facts. Tone ≠ facts.</p>
+                    <p class="tone-tip">Guardrail: If tone feels off for your boss, swap the adjective and re-run the same facts. Tone ≠ facts.</p>
                 </article>
             </section>
 
