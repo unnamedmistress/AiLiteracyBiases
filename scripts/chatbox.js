@@ -204,11 +204,20 @@
 
         const subtitle = document.createElement('p');
         subtitle.className = 'section-subtitle';
-        subtitle.textContent = 'Try up to 3 attempts. We grade your prompt quality right here—no external tools needed.';
+        subtitle.textContent = `Try up to ${config.attempts || MAX_ATTEMPTS_DEFAULT} attempts. We grade on must-haves, supporting details, and clarity.`;
         section.appendChild(subtitle);
+
+        const xpMeta = document.createElement('div');
+        xpMeta.className = 'chatbox-meta';
+        xpMeta.textContent = `Worth ${config.xp || 0} XP • 3 attempts`;
+        section.appendChild(xpMeta);
 
         const card = document.createElement('div');
         card.className = 'chatbox-card';
+
+        const status = document.createElement('div');
+        status.className = 'chatbox-status';
+        card.appendChild(status);
 
         const prompt = document.createElement('div');
         prompt.className = 'chatbox-prompt';
@@ -235,10 +244,31 @@
         controls.appendChild(button);
         controls.appendChild(meta);
 
+        const hint = document.createElement('details');
+        hint.className = 'chatbox-hint';
+        const summary = document.createElement('summary');
+        summary.textContent = 'What we look for';
+        hint.appendChild(summary);
+        const list = document.createElement('ul');
+        (config.must || []).forEach((kw) => {
+            const li = document.createElement('li');
+            li.textContent = `Must include: ${kw}`;
+            list.appendChild(li);
+        });
+        (config.keywords || []).slice(0, 3).forEach((kw) => {
+            const li = document.createElement('li');
+            li.textContent = `Nice to have: ${kw}`;
+            list.appendChild(li);
+        });
+        hint.appendChild(list);
+
         const feedback = document.createElement('div');
         feedback.className = 'chatbox-feedback';
+        feedback.setAttribute('role', 'status');
+        feedback.setAttribute('aria-live', 'polite');
 
         card.appendChild(controls);
+        card.appendChild(hint);
         card.appendChild(feedback);
         section.appendChild(card);
 
@@ -249,7 +279,7 @@
             host.appendChild(section);
         }
 
-        return { section, textarea, button, feedback, meta };
+        return { section, textarea, button, feedback, meta, status };
     }
 
     function gradeResponse(text, config) {
@@ -320,8 +350,12 @@
             }
         }
 
-        function showFeedback(text) {
+        function showFeedback(text, passed) {
             ui.feedback.textContent = text;
+            ui.feedback.classList.add('is-visible');
+            ui.status.textContent = passed ? 'Passed' : 'Not yet';
+            ui.status.className = `chatbox-status ${passed ? 'pass' : 'fail'}`;
+            ui.feedback.focus && ui.feedback.focus();
         }
 
         function maybeAward(score) {
@@ -346,7 +380,7 @@
             const result = gradeResponse(text, config);
             attemptsUsed += 1;
             updateMeta();
-            showFeedback(result.feedback + (result.passed ? ' • Looks solid—nice work.' : ' • Add missing points and try again.'));
+            showFeedback(result.feedback + (result.passed ? ' • Looks solid—nice work.' : ' • Add missing points and try again.'), result.passed);
             maybeAward(result.score);
         });
 

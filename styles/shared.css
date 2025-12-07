@@ -1254,6 +1254,123 @@ textarea {
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
+
+/* Chatbox component enhancements */
+.chatbox-card {
+    border: 1px solid #e3e8ef;
+    border-radius: 10px;
+    padding: 14px;
+    background: linear-gradient(180deg, #ffffff, #fdfefe);
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+}
+
+.chatbox-prompt {
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #0f172a;
+}
+
+.chatbox-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.chatbox-input {
+    width: 100%;
+    min-height: 96px;
+    padding: 10px 12px;
+}
+
+.chatbox-submit {
+    align-self: flex-start;
+    min-width: 160px;
+}
+
+.chatbox-meta {
+    font-size: 0.9rem;
+    color: #4b5563;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.chatbox-feedback {
+    margin-top: 8px;
+    padding: 10px 12px;
+    background: #eef2ff;
+    border: 1px solid #e0e7ff;
+    border-radius: 8px;
+    color: #1e3a8a;
+    font-size: 0.95rem;
+    display: none;
+}
+
+.chatbox-feedback.is-visible {
+    display: block;
+}
+
+.chatbox-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.chatbox-status.pass {
+    background: #ecfdf3;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.chatbox-status.fail {
+    background: #fff7ed;
+    color: #9a3412;
+    border: 1px solid #fed7aa;
+}
+
+.chatbox-hint {
+    margin-top: 8px;
+    padding: 10px 12px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    background: #f8fafc;
+    color: #334155;
+    font-size: 0.95rem;
+}
+
+.chatbox-hint summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.chatbox-hint ul {
+    margin: 8px 0 0 18px;
+    padding: 0;
+    list-style: disc;
+}
+
+.chatbox-hint li {
+    margin: 2px 0;
+}
+
+@media (max-width: 640px) {
+    .chatbox-section {
+        padding: 12px;
+    }
+
+    .chatbox-card {
+        padding: 12px;
+    }
+
+    .chatbox-submit {
+        width: 100%;
+    }
+}
         padding: 10px 12px;
     }
 
