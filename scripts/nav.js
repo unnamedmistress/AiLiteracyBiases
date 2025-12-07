@@ -136,6 +136,7 @@
         'lesson5/l5-p10-summary.html': { lesson: 'lesson5' },
         'lesson5-ai-workflows.html': { lesson: 'lesson5' },
         'lesson6-capstone.html': { lesson: 'lesson6' },
+        'certificate.html': { lesson: 'lesson6' },
         'glossary.html': { resource: 'glossary' },
         'updates.html': { resource: 'updates' }
     };

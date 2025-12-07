@@ -9,6 +9,7 @@
     <script defer src="../scripts/shared.js"></script>
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
+    <script defer src="../scripts/dragdrop.js"></script>
 </head>
 <body data-lesson-id="lesson5" data-total-pages="10" data-page-number="3">
     <div class="container lesson-shell">
@@ -43,6 +44,12 @@
             </div>
         </div>
 
+        <section class="section" id="dd-l5-p3">
+            <h2>Drag & drop: Support triage flow</h2>
+            <p class="section-subtitle">Assemble a safe support triage workflow.</p>
+            <div id="dd-activity-l5-p3"></div>
+        </section>
+
         <div class="progress-indicator">Page 3 of 10 • Game: Builder</div>
         <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
             <button class="btn btn-secondary" type="button" onclick="window.location.href='l5-p2-learn-patterns.html'">← Back</button>
@@ -57,6 +64,32 @@
             const tracker = window.ProgressTracker || null;
             if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
             window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+
+            initDragDropActivity({
+                containerId: 'dd-activity-l5-p3',
+                activityId: 'l5-p3-triage',
+                lessonId: LESSON_ID,
+                xp: 15,
+                attempts: 3,
+                prompt: 'Order the steps for support email triage.',
+                hint: 'Queue + classify before drafting; review before sending.',
+                slots: [
+                    { id: 's1', label: 'Step 1', correct: 'intake' },
+                    { id: 's2', label: 'Step 2', correct: 'queue' },
+                    { id: 's3', label: 'Step 3', correct: 'retrieve-classify' },
+                    { id: 's4', label: 'Step 4', correct: 'draft' },
+                    { id: 's5', label: 'Step 5', correct: 'review' },
+                    { id: 's6', label: 'Step 6', correct: 'send' }
+                ],
+                chips: [
+                    { id: 'intake', label: 'Ingest email (structured fields)' },
+                    { id: 'queue', label: 'Queue + dedupe' },
+                    { id: 'retrieve-classify', label: 'Retrieve FAQs and classify intent' },
+                    { id: 'draft', label: 'LLM draft with context' },
+                    { id: 'review', label: 'Human review for edge cases' },
+                    { id: 'send', label: 'Send response + log' }
+                ]
+            });
         });
     </script>
 </body>

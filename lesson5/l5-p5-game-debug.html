@@ -9,6 +9,7 @@
     <script defer src="../scripts/shared.js"></script>
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
+    <script defer src="../scripts/dragdrop.js"></script>
 </head>
 <body data-lesson-id="lesson5" data-total-pages="10" data-page-number="5">
     <div class="container lesson-shell">
@@ -43,6 +44,12 @@
             </div>
         </div>
 
+        <section class="section" id="dd-l5-p5">
+            <h2>Drag & drop: Patch the workflow</h2>
+            <p class="section-subtitle">Drop the right fix onto each broken spot.</p>
+            <div id="dd-activity-l5-p5"></div>
+        </section>
+
         <div class="progress-indicator">Page 5 of 10 • Game: Debug</div>
         <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
             <button class="btn btn-secondary" type="button" onclick="window.location.href='l5-p4-learn-bottlenecks.html'">← Back</button>
@@ -57,6 +64,28 @@
             const tracker = window.ProgressTracker || null;
             if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
             window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+
+            initDragDropActivity({
+                containerId: 'dd-activity-l5-p5',
+                activityId: 'l5-p5-debug',
+                lessonId: LESSON_ID,
+                xp: 15,
+                attempts: 3,
+                prompt: 'Match each failure to the best patch.',
+                hint: 'Uploads → chunk/queue; hallucinations → retrieval + schema; rate limits → backoff; missing observability → logging/alerts.',
+                slots: [
+                    { id: 'uploads', label: 'Timeout on large uploads', correct: 'chunk-queue' },
+                    { id: 'hallucinations', label: 'Hallucinated outputs', correct: 'retrieval-schema' },
+                    { id: 'rate-limits', label: 'Frequent 429/5xx', correct: 'backoff-queue' },
+                    { id: 'observability', label: 'No visibility into failures', correct: 'logging-alerts' }
+                ],
+                chips: [
+                    { id: 'chunk-queue', label: 'Chunk files + async queue' },
+                    { id: 'retrieval-schema', label: 'Add retrieval + schema checks' },
+                    { id: 'backoff-queue', label: 'Retries with backoff + queue worker' },
+                    { id: 'logging-alerts', label: 'Structured logging + alerts + dashboards' }
+                ]
+            });
         });
     </script>
 </body>

@@ -9,6 +9,7 @@
     <script defer src="../scripts/shared.js"></script>
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
+    <script defer src="../scripts/dragdrop.js"></script>
 </head>
 <body data-lesson-id="lesson5" data-total-pages="10" data-page-number="6">
     <div class="container lesson-shell">
@@ -50,6 +51,12 @@
             </div>
         </div>
 
+        <section class="section" id="dd-l5-p6">
+            <h2>Drag & drop: Orchestrate the flow</h2>
+            <p class="section-subtitle">Arrange the automation components in order.</p>
+            <div id="dd-activity-l5-p6"></div>
+        </section>
+
         <div class="progress-indicator">Page 6 of 10 • Learn: Automation</div>
         <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
             <button class="btn btn-secondary" type="button" onclick="window.location.href='l5-p5-game-debug.html'">← Back</button>
@@ -64,6 +71,32 @@
             const tracker = window.ProgressTracker || null;
             if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
             window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+
+            initDragDropActivity({
+                containerId: 'dd-activity-l5-p6',
+                activityId: 'l5-p6-automation',
+                lessonId: LESSON_ID,
+                xp: 12,
+                attempts: 3,
+                prompt: 'Place automation/orchestration pieces in sequence.',
+                hint: 'Trigger → queue → worker → AI/tool → store → notify/monitor.',
+                slots: [
+                    { id: 's1', label: 'Step 1', correct: 'trigger' },
+                    { id: 's2', label: 'Step 2', correct: 'queue' },
+                    { id: 's3', label: 'Step 3', correct: 'worker' },
+                    { id: 's4', label: 'Step 4', correct: 'ai-step' },
+                    { id: 's5', label: 'Step 5', correct: 'store' },
+                    { id: 's6', label: 'Step 6', correct: 'notify-monitor' }
+                ],
+                chips: [
+                    { id: 'trigger', label: 'Trigger (webhook/schedule)' },
+                    { id: 'queue', label: 'Queue + backpressure' },
+                    { id: 'worker', label: 'Worker pulls jobs' },
+                    { id: 'ai-step', label: 'AI/tool step with retries' },
+                    { id: 'store', label: 'Store results (DB/files)' },
+                    { id: 'notify-monitor', label: 'Notify + monitor/kill switch' }
+                ]
+            });
         });
     </script>
 </body>

@@ -45,6 +45,16 @@
         document.head.appendChild(script);
     }
 
+    function ensurePracticeChat(lessonId) {
+        if (!(lessonId === 'lesson3' || lessonId === 'lesson4')) return;
+        if (document.querySelector('script[data-chatbox]')) return;
+        const script = document.createElement('script');
+        script.src = resolveHref('scripts/chatbox.js');
+        script.defer = true;
+        script.dataset.chatbox = 'true';
+        document.head.appendChild(script);
+    }
+
     const LANDING_PAGE = 'landing.html';
 
     const LESSON_SEQUENCE = [
@@ -545,6 +555,13 @@
         if (!guardLessonAccess(lessonId)) {
             return;
         }
+        const progressApi = window.AppProgress || window.ProgressTracker || null;
+        if (progressApi && typeof progressApi.getLessonStatus === 'function' && typeof progressApi.setLessonStatus === 'function') {
+            const status = progressApi.getLessonStatus(lessonId);
+            if (status !== 'completed' && status !== 'in-progress') {
+                progressApi.setLessonStatus(lessonId, 'in-progress');
+            }
+        }
         const breadcrumbSelector = document.body.dataset.breadcrumbSelector || '.breadcrumb';
         const footerSelector = document.body.dataset.footerSelector || '.footer-nav';
         window.AILesson.initLessonNavigation({ lessonId, breadcrumbSelector, footerSelector });
@@ -552,6 +569,7 @@
         scrollGameExperiencesToTop();
         initPageProgress();
 
+        ensurePracticeChat(lessonId);
         ensureRewardsScript();
         initAnswerFeedback();
 

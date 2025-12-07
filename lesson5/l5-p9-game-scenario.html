@@ -9,6 +9,7 @@
     <script defer src="../scripts/shared.js"></script>
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
+    <script defer src="../scripts/dragdrop.js"></script>
 </head>
 <body data-lesson-id="lesson5" data-total-pages="10" data-page-number="9">
     <div class="container lesson-shell">
@@ -43,6 +44,12 @@
             </div>
         </div>
 
+        <section class="section" id="dd-l5-p9">
+            <h2>Drag & drop: Design the flow</h2>
+            <p class="section-subtitle">Place each action in the right stage for this healthcare blog scenario.</p>
+            <div id="dd-activity-l5-p9"></div>
+        </section>
+
         <div class="progress-indicator">Page 9 of 10 • Game: Scenario</div>
         <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
             <button class="btn btn-secondary" type="button" onclick="window.location.href='l5-p8-learn-guardrails.html'">← Back</button>
@@ -57,6 +64,28 @@
             const tracker = window.ProgressTracker || null;
             if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
             window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+
+            initDragDropActivity({
+                containerId: 'dd-activity-l5-p9',
+                activityId: 'l5-p9-scenario',
+                lessonId: LESSON_ID,
+                xp: 15,
+                attempts: 3,
+                prompt: 'Place each task in the correct stage.',
+                hint: 'Ground with sources first, generate second, require human review, then log and publish.',
+                slots: [
+                    { id: 'grounding', label: 'Grounding & inputs', correct: 'retrieval' },
+                    { id: 'generation', label: 'Model drafting', correct: 'style-schema' },
+                    { id: 'review', label: 'Human review', correct: 'med-review' },
+                    { id: 'ship', label: 'Publish & monitor', correct: 'publish-log' }
+                ],
+                chips: [
+                    { id: 'retrieval', label: 'Retrieve facts + citations from approved sources' },
+                    { id: 'style-schema', label: 'Model drafts with style guide and schema validation' },
+                    { id: 'med-review', label: 'Medical reviewer approves/edits before release' },
+                    { id: 'publish-log', label: 'Publish with change log + alerts/rollback hooks' }
+                ]
+            });
         });
     </script>
 </body>

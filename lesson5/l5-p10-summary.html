@@ -9,6 +9,7 @@
     <script defer src="../scripts/shared.js"></script>
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
+    <script defer src="../scripts/dragdrop.js"></script>
 </head>
 <body data-lesson-id="lesson5" data-total-pages="10" data-page-number="10">
     <div class="container lesson-shell">
@@ -50,6 +51,12 @@
             </div>
         </div>
 
+        <section class="section" id="dd-l5-p10">
+            <h2>Drag & drop: Recap the build</h2>
+            <p class="section-subtitle">Drop each action into the right phase of a healthy AI workflow.</p>
+            <div id="dd-activity-l5-p10"></div>
+        </section>
+
         <div class="progress-indicator">Page 10 of 10 • Summary</div>
         <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
             <button class="btn btn-secondary" type="button" onclick="window.location.href='l5-p9-game-scenario.html'">← Back</button>
@@ -64,6 +71,28 @@
             const tracker = window.ProgressTracker || null;
             if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
             window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+
+            initDragDropActivity({
+                containerId: 'dd-activity-l5-p10',
+                activityId: 'l5-p10-recap',
+                lessonId: LESSON_ID,
+                xp: 12,
+                attempts: 3,
+                prompt: 'Place each move in the right phase.',
+                hint: 'Map the system, set metrics, guard actions, then monitor and roll back safely.',
+                slots: [
+                    { id: 'map', label: 'Map workflow', correct: 'contracts' },
+                    { id: 'measure', label: 'Measure & budget', correct: 'metrics' },
+                    { id: 'guard', label: 'Guard & approve', correct: 'controls' },
+                    { id: 'monitor', label: 'Launch & monitor', correct: 'logging' }
+                ],
+                chips: [
+                    { id: 'contracts', label: 'Document inputs/outputs, owners, and failure modes' },
+                    { id: 'metrics', label: 'Track latency, cost, reliability, and quality budgets' },
+                    { id: 'controls', label: 'Validation, allow/deny lists, and approvals for risky actions' },
+                    { id: 'logging', label: 'Structured logs, alerts, and rollback plan on deploy' }
+                ]
+            });
         });
     </script>
 </body>

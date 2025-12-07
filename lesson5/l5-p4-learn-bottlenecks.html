@@ -9,6 +9,7 @@
     <script defer src="../scripts/shared.js"></script>
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
+    <script defer src="../scripts/dragdrop.js"></script>
 </head>
 <body data-lesson-id="lesson5" data-total-pages="10" data-page-number="4">
     <div class="container lesson-shell">
@@ -50,6 +51,12 @@
             </div>
         </div>
 
+        <section class="section" id="dd-l5-p4">
+            <h2>Drag & drop: Fix the bottleneck</h2>
+            <p class="section-subtitle">Match each bottleneck to the best first fix.</p>
+            <div id="dd-activity-l5-p4"></div>
+        </section>
+
         <div class="progress-indicator">Page 4 of 10 • Learn: Bottlenecks</div>
         <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
             <button class="btn btn-secondary" type="button" onclick="window.location.href='l5-p3-game-builder.html'">← Back</button>
@@ -64,6 +71,28 @@
             const tracker = window.ProgressTracker || null;
             if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
             window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+
+            initDragDropActivity({
+                containerId: 'dd-activity-l5-p4',
+                activityId: 'l5-p4-bottlenecks',
+                lessonId: LESSON_ID,
+                xp: 12,
+                attempts: 3,
+                prompt: 'Drop the right fix onto each bottleneck.',
+                hint: 'Latency → chunk/stream; cost → cache/summarize; quality → retrieval/schema; reliability → retries/backoff.',
+                slots: [
+                    { id: 'latency', label: 'Latency spike', correct: 'chunk-stream' },
+                    { id: 'cost', label: 'Cost blowups', correct: 'cache-summarize' },
+                    { id: 'quality', label: 'Quality drift', correct: 'retrieval-schema' },
+                    { id: 'reliability', label: 'Flaky tools', correct: 'retries-backoff' }
+                ],
+                chips: [
+                    { id: 'chunk-stream', label: 'Chunk/stream inputs + parallelize safe steps' },
+                    { id: 'cache-summarize', label: 'Cache results and summarize context' },
+                    { id: 'retrieval-schema', label: 'Add retrieval + schema validation' },
+                    { id: 'retries-backoff', label: 'Retries with backoff + circuit breaker' }
+                ]
+            });
         });
     </script>
 </body>
