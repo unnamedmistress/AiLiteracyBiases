@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             ],
             answer: 1,
-            rationale: 'Grounding LLMs starts with reinforcing constraints. Have it restate the cutoff and provide sources or say "I do not know."'
+            rationale: 'Grounding AIs starts with reinforcing constraints. Have it restate the cutoff and provide sources or say "I do not know."'
         },
         {
             id: 'bias-audit',

@@ -396,10 +396,10 @@ body.with-global-nav {
 }
 
 .page-progress-wrapper {
-    margin: 12px 0 20px;
+    margin: 8px 0 12px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
 }
 
 .page-progress {
@@ -409,7 +409,7 @@ body.with-global-nav {
     background: rgba(255, 255, 255, 0.35);
     overflow: hidden;
     position: relative;
-    margin: 8px 0 16px;
+    margin: 6px 0 10px;
 }
 
 .page-progress-fill {
@@ -519,7 +519,7 @@ a {
 .container {
     max-width: var(--layout-max-width);
     margin: 0 auto;
-    padding: 32px 20px 60px;
+    padding: 16px 14px 32px;
 }
 
 .card,
@@ -537,10 +537,10 @@ a {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 12px;
+    gap: 10px;
     align-items: center;
-    padding: 12px 0 24px;
-    margin-bottom: 16px;
+    padding: 6px 0 12px;
+    margin-bottom: 8px;
     border-bottom: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: none;
     background: transparent;
@@ -548,29 +548,29 @@ a {
 
 .logo {
     font-family: var(--font-family-display);
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
 }
 
 .lesson-shell {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 16px;
     max-width: var(--layout-max-width);
     margin: 0 auto;
-    padding: 20px;
+    padding: 12px;
 }
 
 .lesson-shell .header {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
 }
 
 .challenge-section {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 16px;
 }
 
 .progress-indicator {

@@ -37,7 +37,7 @@ https://ai-literacy-biases-n828.vercel.app/lesson1-ai-intro.html
   4. Bias spotter
 - **Expanded content when clicked:**
   - "AI = Predictive Pattern Engine" section with bullet points
-  - Explains LLMs, token-by-token prediction, context narrowing
+  - Explains AIs, token-by-token prediction, context narrowing
 
 #### Section 4: "Tone dial sandbox"
 - **Subheading:** "Click a tone to preview how a single adjective alters the vibe."
@@ -60,7 +60,7 @@ https://ai-literacy-biases-n828.vercel.app/lesson1-ai-intro.html
 
 #### Section 7: Key Takeaways
 - **3 numbered takeaways:**
-  1. "LLMs remix probability" - explanation
+  1. "AIs remix probability" - explanation
   2. "Tone is a control knob" - explanation
   3. "Log the weird stuff" - explanation
 
