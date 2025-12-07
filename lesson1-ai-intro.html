@@ -11,6 +11,12 @@
         .lesson-shell { display: flex; flex-direction: column; gap: 24px; }
         .content-grid { display: flex; flex-direction: column; gap: 24px; }
         .mode-selector { display: flex; gap: 12px; margin-bottom: 16px; }
+        .page-launch-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin: 18px 0 6px; }
+        .launch-card { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.04); padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+        .launch-card h3 { margin: 0; font-size: 17px; }
+        .launch-card p { margin: 0; color: var(--color-muted); line-height: 1.45; font-size: 14px; }
+        .launch-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .launch-actions a { text-decoration: none; }
         .challenge-section { display: flex; flex-direction: column; gap: 24px; }
         .challenge-title { font-size: 34px; }
         .challenge-desc { color: var(--color-muted); line-height: 1.6; }
@@ -175,6 +181,42 @@
                     <button class="mode-btn active" id="presentBtn">📚 Learn</button>
                 </div>
 
+                <div class="launch-card" aria-label="Lesson 1 quick launcher">
+                    <h3>Prefer one page at a time?</h3>
+                    <p>Jump straight into the dedicated pages for each warm-up so you do not have to scroll this long overview.</p>
+                    <div class="page-launch-grid">
+                        <div class="launch-card">
+                            <h3>Learn Mode</h3>
+                            <p>Guided walkthrough of tone, probability, and prompt polish.</p>
+                            <div class="launch-actions">
+                                <a class="btn btn-primary" href="lesson1/l1-p1-learn-intro.html">Open Learn page</a>
+                                <a class="btn btn-secondary" href="lesson1/l1-p6-summary.html">Jump to summary</a>
+                            </div>
+                        </div>
+                        <div class="launch-card">
+                            <h3>Activity 1 · Prediction Radar</h3>
+                            <p>Pick the most likely next word. Fast, focused round.</p>
+                            <div class="launch-actions">
+                                <a class="btn btn-primary" href="lesson1/l1-p2-game-prediction.html">Start Activity 1</a>
+                            </div>
+                        </div>
+                        <div class="launch-card">
+                            <h3>Activity 2 · Voice Mimic</h3>
+                            <p>Rewrite the line in three voices to feel how style shifts.</p>
+                            <div class="launch-actions">
+                                <a class="btn btn-primary" href="lesson1/l1-p4-game-voice.html">Start Activity 2</a>
+                            </div>
+                        </div>
+                        <div class="launch-card">
+                            <h3>Activity 3 · Tone Lab</h3>
+                            <p>Drop in a tone word and see the message reshape.</p>
+                            <div class="launch-actions">
+                                <a class="btn btn-primary" href="lesson1/l1-p5-game-tone.html">Start Activity 3</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="gameMode" class="hidden">
                     <div class="challenge-section">
                         <h1 class="challenge-title">Build AI instincts through three mini-games</h1>
@@ -330,7 +372,7 @@
                             <p>Play with the characters, laugh at the wrong answers, and remind yourself that AI is a math-powered improv partner. The more specific you are about tone and audience, the more the model sounds like it belongs on your team.</p>
                             <p style="margin-top: 12px;">Ready for hands-on practice? Switch to Game Mode with any button labeled "Start mini-games."</p>
                             <div class="callout-actions">
-                                <button class="btn btn-primary" data-jump-game="true">Go to game warm-ups</button>
+                                <button class="btn btn-primary" data-jump-game="true" data-game-href="lesson1/l1-p2-game-prediction.html">Go to game warm-ups</button>
                                 <a class="btn btn-secondary" href="landing.html#modules">Review the curriculum map</a>
                             </div>
                         </div>
@@ -997,6 +1039,11 @@
                 jumpers.forEach((btn) => {
                     btn.addEventListener('click', (event) => {
                         event.preventDefault();
+                        const target = btn.dataset.gameHref;
+                        if (target) {
+                            window.location.href = target;
+                            return;
+                        }
                         if (window.lessonMode && typeof window.lessonMode.setMode === 'function') {
                             window.lessonMode.setMode('game');
                         }
