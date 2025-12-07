@@ -98,6 +98,69 @@
         }
     };
 
+    const PAGE_ORDER = {
+        lesson1: [
+            'lesson1/l1-p1-learn-intro.html',
+            'lesson1/l1-p2-game-prediction.html',
+            'lesson1/l1-p3-learn-tone.html',
+            'lesson1/l1-p4-game-voice.html',
+            'lesson1/l1-p5-game-tone.html',
+            'lesson1/l1-p6-summary.html'
+        ],
+        lesson2: [
+            'lesson2/l2-p1-learn-intro.html',
+            'lesson2/l2-p2-learn-hallucinations.html',
+            'lesson2/l2-p3-game-hallucinations.html',
+            'lesson2/l2-p4-learn-confidence.html',
+            'lesson2/l2-p5-game-confidence.html',
+            'lesson2/l2-p6-learn-values.html',
+            'lesson2/l2-p7-game-values.html',
+            'lesson2/l2-p8-learn-memory.html',
+            'lesson2/l2-p9-game-memory.html',
+            'lesson2/l2-p10-learn-facts.html',
+            'lesson2/l2-p11-game-disasters.html',
+            'lesson2/l2-p12-summary.html'
+        ],
+        lesson3: [
+            'lesson3/l3-p1-learn-intro.html',
+            'lesson3/l3-p2-learn-briefs.html',
+            'lesson3/l3-p3-game-brief-diagnostics.html',
+            'lesson3/l3-p4-learn-structure.html',
+            'lesson3/l3-p5-game-structure.html',
+            'lesson3/l3-p6-learn-style.html',
+            'lesson3/l3-p7-game-style.html',
+            'lesson3/l3-p8-learn-safety.html',
+            'lesson3/l3-p9-game-safety.html',
+            'lesson3/l3-p10-summary.html'
+        ],
+        lesson4: [
+            'lesson4/l4-p1-learn-intro.html',
+            'lesson4/l4-p2-learn-fewshot.html',
+            'lesson4/l4-p3-game-fewshot.html',
+            'lesson4/l4-p4-learn-cot.html',
+            'lesson4/l4-p5-game-cot.html',
+            'lesson4/l4-p6-learn-tools.html',
+            'lesson4/l4-p7-game-tools.html',
+            'lesson4/l4-p8-learn-rag.html',
+            'lesson4/l4-p9-game-rag.html',
+            'lesson4/l4-p10-learn-safety.html',
+            'lesson4/l4-p11-game-safety.html',
+            'lesson4/l4-p12-summary.html'
+        ],
+        lesson5: [
+            'lesson5/l5-p1-learn-intro.html',
+            'lesson5/l5-p2-learn-patterns.html',
+            'lesson5/l5-p3-game-builder.html',
+            'lesson5/l5-p4-learn-bottlenecks.html',
+            'lesson5/l5-p5-game-debug.html',
+            'lesson5/l5-p6-learn-automation.html',
+            'lesson5/l5-p7-game-automation.html',
+            'lesson5/l5-p8-learn-guardrails.html',
+            'lesson5/l5-p9-game-scenario.html',
+            'lesson5/l5-p10-summary.html'
+        ]
+    };
+
     function getLessonById(lessonId) {
         return LESSON_SEQUENCE.find((lesson) => lesson.id === lessonId);
     }
@@ -270,81 +333,64 @@
 
         container.innerHTML = '';
 
-        const pageTotal = Number(document.body?.dataset?.totalPages) || 0;
-        const pageNumber = Number(document.body?.dataset?.pageNumber) || 0;
+        const mainBtn = createNavButton('Back to Main Menu', LANDING_PAGE, 'btn-secondary');
         const path = (window.location && window.location.pathname) || '';
-        const file = path.split('/').filter(Boolean).pop() || '';
-        const folder = path.substring(0, path.lastIndexOf('/') + 1);
-        const fileMatch = file.match(/^(.*?p)(\d+)(-.+)?\.html$/i);
+        const current = path.split('/').filter(Boolean).join('/');
 
-        function buildSiblingPageHref(targetNumber) {
-            if (!fileMatch || !folder) return null;
-            const prefix = fileMatch[1];
-            const suffix = fileMatch[3] || '';
-            return `${folder}${prefix}${targetNumber}${suffix}.html`;
-        }
+        let nextHref = null;
+        let nextLabel = 'Next →';
 
-        const mainBtn = createNavButton('Main Menu', LANDING_PAGE, 'btn-secondary');
-
-        if (pageTotal && pageNumber) {
-            const prevHref = pageNumber > 1 ? buildSiblingPageHref(pageNumber - 1) : null;
-            if (prevHref) {
-                container.appendChild(createNavButton('← Previous', prevHref, 'btn-secondary'));
-            } else {
-                const prevBtn = document.createElement('span');
-                prevBtn.className = 'btn btn-secondary is-disabled';
-                prevBtn.textContent = '← Previous';
-                prevBtn.setAttribute('aria-disabled', 'true');
-                container.appendChild(prevBtn);
-            }
-
-            container.appendChild(mainBtn);
-
-            const nextHref = pageNumber < pageTotal ? buildSiblingPageHref(pageNumber + 1) : null;
-            if (nextHref) {
-                container.appendChild(createNavButton('Next →', nextHref, 'btn-primary'));
-            } else {
-                const nextBtn = document.createElement('span');
-                nextBtn.className = 'btn btn-primary is-disabled';
-                nextBtn.textContent = 'Next →';
-                nextBtn.setAttribute('aria-disabled', 'true');
-                container.appendChild(nextBtn);
+        if (PAGE_ORDER[lessonId]) {
+            const seq = PAGE_ORDER[lessonId];
+            const idx = seq.findIndex((p) => current.endsWith(p));
+            if (idx >= 0 && idx < seq.length - 1) {
+                nextHref = seq[idx + 1];
+                nextLabel = 'Next →';
+            } else if (idx === seq.length - 1) {
+                const override = CUSTOM_NEXT[lessonId];
+                const autoNext = getAutoNextDestination(lessonId);
+                const target = override || autoNext;
+                if (target && target.href && target.href !== '#') {
+                    nextHref = target.href;
+                    nextLabel = target.label || 'Next Lesson →';
+                }
             }
         } else {
-            // Fallback to lesson-level navigation only when page numbering is unavailable
-            if (index > 0) {
-                const prevLesson = LESSON_SEQUENCE[index - 1];
-                container.appendChild(createNavButton('← Previous', prevLesson.path, 'btn-secondary'));
-            } else {
-                const prevBtn = document.createElement('span');
-                prevBtn.className = 'btn btn-secondary is-disabled';
-                prevBtn.textContent = '← Previous';
-                prevBtn.setAttribute('aria-disabled', 'true');
-                container.appendChild(prevBtn);
+            const pageTotal = Number(document.body?.dataset?.totalPages) || 0;
+            const pageNumber = Number(document.body?.dataset?.pageNumber) || 0;
+            const file = path.split('/').filter(Boolean).pop() || '';
+            const folder = path.substring(0, path.lastIndexOf('/') + 1);
+            const fileMatch = file.match(/^(.*?p)(\d+)(-.+)?\.html$/i);
+            function buildSiblingPageHref(targetNumber) {
+                if (!fileMatch || !folder) return null;
+                const prefix = fileMatch[1];
+                const suffix = fileMatch[3] || '';
+                return `${folder}${prefix}${targetNumber}${suffix}.html`;
             }
-
-            container.appendChild(mainBtn);
-
-            if (index < LESSON_SEQUENCE.length - 2) {
-                const nextLesson = LESSON_SEQUENCE[index + 1];
-                container.appendChild(createNavButton('Next →', nextLesson.path, 'btn-primary'));
-            } else {
-                const nextBtn = document.createElement('span');
-                nextBtn.className = 'btn btn-primary is-disabled';
-                nextBtn.textContent = 'Next →';
-                nextBtn.setAttribute('aria-disabled', 'true');
-                container.appendChild(nextBtn);
+            if (pageTotal && pageNumber && pageNumber < pageTotal) {
+                nextHref = buildSiblingPageHref(pageNumber + 1);
+            }
+            if (!nextHref) {
+                const override = CUSTOM_NEXT[lessonId];
+                const autoNext = getAutoNextDestination(lessonId);
+                const target = override || autoNext;
+                if (target && target.href && target.href !== '#') {
+                    nextHref = target.href;
+                    nextLabel = target.label || 'Next →';
+                }
             }
         }
 
-        // If this is the final page of a lesson and a next-lesson override exists, surface it explicitly
-        if (pageTotal && pageNumber && pageNumber === pageTotal) {
-            const override = CUSTOM_NEXT[lessonId];
-            const autoNext = getAutoNextDestination(lessonId);
-            const target = override || autoNext;
-            if (target && target.href && target.href !== '#') {
-                container.appendChild(createNavButton(target.label || 'Next Lesson →', target.href, 'btn-primary'));
-            }
+        container.appendChild(mainBtn);
+
+        if (nextHref) {
+            container.appendChild(createNavButton(nextLabel, nextHref, 'btn-primary'));
+        } else {
+            const nextBtn = document.createElement('span');
+            nextBtn.className = 'btn btn-primary is-disabled';
+            nextBtn.textContent = nextLabel;
+            nextBtn.setAttribute('aria-disabled', 'true');
+            container.appendChild(nextBtn);
         }
     }
 

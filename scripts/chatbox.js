@@ -217,6 +217,9 @@
 
         const status = document.createElement('div');
         status.className = 'chatbox-status';
+        status.setAttribute('role', 'status');
+        status.setAttribute('aria-live', 'polite');
+        status.textContent = 'Awaiting submission';
         card.appendChild(status);
 
         const prompt = document.createElement('div');
@@ -266,6 +269,7 @@
         feedback.className = 'chatbox-feedback';
         feedback.setAttribute('role', 'status');
         feedback.setAttribute('aria-live', 'polite');
+        feedback.tabIndex = -1;
 
         card.appendChild(controls);
         card.appendChild(hint);
@@ -285,7 +289,8 @@
     function gradeResponse(text, config) {
         const clean = String(text || '').trim();
         const lower = clean.toLowerCase();
-        const words = clean ? clean.split(/\s+/).length : 0;
+        const tokens = clean ? clean.split(/\s+/).filter(Boolean) : [];
+        const words = tokens.length;
 
         const required = Array.isArray(config.must) ? config.must : [];
         const optional = Array.isArray(config.keywords) ? config.keywords : [];
@@ -312,11 +317,21 @@
             }
         });
 
+        const freq = {};
+        tokens.forEach((t) => {
+            const key = t.replace(/[^a-z0-9']/gi, '');
+            if (!key || key.length < 3) return;
+            freq[key] = (freq[key] || 0) + 1;
+        });
+        const maxCount = Object.values(freq).reduce((m, n) => Math.max(m, n), 0);
+        const repetitionRatio = words > 0 ? maxCount / words : 0;
+        const repetitionPenalty = words >= 10 && repetitionRatio > 0.35 ? 15 : 0;
+
         const reqScore = required.length ? Math.round((reqHits / required.length) * 100) : 100;
         const optScore = optional.length ? Math.round((optHits / optional.length) * 100) : 100;
         const lengthScore = words >= (config.minWords || 20) ? 100 : Math.round((words / (config.minWords || 20)) * 100);
 
-        const rawScore = Math.round((reqScore * 0.5) + (optScore * 0.3) + (lengthScore * 0.2));
+        const rawScore = Math.round((reqScore * 0.5) + (optScore * 0.3) + (lengthScore * 0.2)) - repetitionPenalty;
         const score = Math.max(0, Math.min(100, rawScore));
         const passScore = config.passScore || PASS_SCORE_DEFAULT;
         const passed = reqMissing.length === 0 && score >= passScore;
@@ -328,6 +343,9 @@
         feedbackLines.push(words >= (config.minWords || 20)
             ? 'Length: ✔️ meets suggested detail'
             : `Length: add ~${Math.max(0, (config.minWords || 20) - words)} more words for clarity`);
+        feedbackLines.push(repetitionPenalty
+            ? 'Variety: avoid repeating the same words—mix terms for clarity.'
+            : 'Variety: good mix of terms.');
 
         return { score, passed, feedback: feedbackLines.join(' • ') };
     }
@@ -339,7 +357,35 @@
         const attemptsMax = config.attempts || MAX_ATTEMPTS_DEFAULT;
         let attemptsUsed = 0;
         let awarded = false;
+        const storageKey = `chatbox-draft-${getPageKey()}`;
         const xpLabel = Number(config.xp || 0) > 0 ? ` • Worth ${config.xp} XP` : '';
+
+        if (storageKey && window.localStorage) {
+            try {
+                const cached = window.localStorage.getItem(storageKey);
+                if (cached) {
+                    ui.textarea.value = cached;
+                }
+            } catch (err) {
+                // localStorage may be unavailable; ignore
+            }
+        }
+
+        function persistDraft() {
+            if (!storageKey || !window.localStorage) return;
+            try {
+                const val = ui.textarea.value || '';
+                if (val.trim()) {
+                    window.localStorage.setItem(storageKey, val.slice(0, 2000));
+                } else {
+                    window.localStorage.removeItem(storageKey);
+                }
+            } catch (err) {
+                // ignore persistence errors
+            }
+        }
+
+        ui.textarea.addEventListener('input', persistDraft);
 
         function updateMeta() {
             ui.meta.textContent = `Attempts left: ${Math.max(0, attemptsMax - attemptsUsed)}${xpLabel}`;
@@ -381,6 +427,13 @@
             attemptsUsed += 1;
             updateMeta();
             showFeedback(result.feedback + (result.passed ? ' • Looks solid—nice work.' : ' • Add missing points and try again.'), result.passed);
+            if (result.passed && storageKey && window.localStorage) {
+                try {
+                    window.localStorage.removeItem(storageKey);
+                } catch (err) {
+                    // ignore
+                }
+            }
             maybeAward(result.score);
         });
 

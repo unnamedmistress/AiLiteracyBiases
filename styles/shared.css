@@ -1254,6 +1254,24 @@ textarea {
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
+        padding: 10px 12px;
+    }
+
+    .nav-brand a {
+        font-size: 18px;
+    }
+
+    .nav-group,
+    .lesson-links {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .nav-link {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
 
 /* Chatbox component enhancements */
 .chatbox-card {
@@ -1304,6 +1322,11 @@ textarea {
     color: #1e3a8a;
     font-size: 0.95rem;
     display: none;
+}
+
+.chatbox-feedback:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
 }
 
 .chatbox-feedback.is-visible {
