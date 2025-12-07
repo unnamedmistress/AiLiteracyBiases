@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson5">
+<body data-lesson-id="lesson5" data-total-pages="10" data-page-number="8">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🚀 Lesson 5: AI Workflows</div>
@@ -31,6 +31,23 @@
                 <li>Output checks: JSON schema validation, banned terms, fact checks.</li>
                 <li>Audit: logs with trace IDs, metrics, alerts, and rollback plans.</li>
             </ul>
+        </div>
+
+        <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+            <h2>Quick check</h2>
+            <p>Prove you can lock down a workflow.</p>
+            <div class="card" data-answer-group data-xp="10">
+                <p><strong>1) What to do before high-impact actions?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Scoped permissions plus approvals prevent risky tool use.">Use scoped permissions and require approval</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Full access increases blast radius." >Grant full permissions by default</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Skipping checks risks harm." >Skip checks to move faster</button>
+            </div>
+            <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                <p><strong>2) How to keep outputs safe?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Schema validation + banned-term and fact checks catch bad outputs.">Validate against schema and run banned-term/fact checks</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Logs alone don't block issues." >Only log outputs after the fact</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Longer answers don't add safety." >Make responses longer</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 8 of 10 • Learn: Guardrails</div>

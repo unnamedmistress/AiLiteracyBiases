@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson4">
+<body data-lesson-id="lesson4" data-total-pages="12" data-page-number="4">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🔮 Lesson 4: Advanced Prompting</div>
@@ -30,6 +30,23 @@
                 <li>Ask for alternatives, then choose.</li>
                 <li>Add a verification step: "Double-check for math & sources."</li>
             </ul>
+        </div>
+
+        <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+            <h2>Quick check</h2>
+            <p>See if you can spot solid CoT prompts.</p>
+            <div class="card" data-answer-group data-xp="10">
+                <p><strong>1) Why separate thoughts from answers?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Keeping reasoning distinct prevents it from leaking into the final response.">Prevents reasoning from polluting the final answer</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Token inflation isn't the goal.">To use more tokens</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Capitalization doesn't affect reasoning quality.">To uppercase section titles</button>
+            </div>
+            <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                <p><strong>2) What closes CoT loops safely?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="A verification step catches math/source errors before finalizing.">Add a verification step before finalizing</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Longer answers can still be wrong.">Make the final answer longer</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Removing alternatives reduces quality.">Skip alternative options</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 4 of 12 • Learn: CoT</div>

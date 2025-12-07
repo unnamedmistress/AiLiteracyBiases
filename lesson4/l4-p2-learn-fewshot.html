@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson4">
+<body data-lesson-id="lesson4" data-total-pages="12" data-page-number="2">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🔮 Lesson 4: Advanced Prompting</div>
@@ -30,6 +30,23 @@
                 <li>Label thoughts vs answers.</li>
                 <li>Pin failure modes: "never quote URLs", etc.</li>
             </ul>
+        </div>
+
+        <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+            <h2>Quick check</h2>
+            <p>Check your few-shot fundamentals.</p>
+            <div class="card" data-answer-group data-xp="10">
+                <p><strong>1) How many examples are ideal?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="3–5 consistent examples give enough pattern without bloat.">3–5 consistent examples</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="One example often under-specifies the pattern.">1 example</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="20 examples is overkill and adds noise.">20 examples</button>
+            </div>
+            <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                <p><strong>2) Why label thoughts vs answers?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Separating reasoning from final output keeps format clean.">Separates reasoning steps from final output</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="It doesn't change token costs meaningfully.">To increase token count</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Random capitalization isn't the goal.">To capitalize headers</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 2 of 12 • Learn: Few-shot</div>

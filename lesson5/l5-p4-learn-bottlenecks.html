@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson5">
+<body data-lesson-id="lesson5" data-total-pages="10" data-page-number="4">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🚀 Lesson 5: AI Workflows</div>
@@ -31,6 +31,23 @@
                 <li><strong>Quality:</strong> hallucinations, poor grounding → retrieval + schema validation.</li>
                 <li><strong>Reliability:</strong> flaky tools, rate limits → retries with jitter and backpressure.</li>
             </ul>
+        </div>
+
+        <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+            <h2>Quick check</h2>
+            <p>Catch the bottleneck fast.</p>
+            <div class="card" data-answer-group data-xp="10">
+                <p><strong>1) First move for latency pain?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Chunking/streaming large inputs reduces latency.">Chunk or stream large inputs</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Ignoring latency doesn't fix it.">Ignore and hope it speeds up</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Adding adjectives won't improve speed.">Make prompts more verbose</button>
+            </div>
+            <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                <p><strong>2) How to reduce runaway cost?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Summaries and reusing context cut tokens and calls.">Summarize and reuse context instead of re-fetching</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Longer prompts increase cost.">Increase prompt length</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="More models adds cost.">Add more model calls</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 4 of 10 • Learn: Bottlenecks</div>

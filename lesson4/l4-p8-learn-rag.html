@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson4">
+<body data-lesson-id="lesson4" data-total-pages="12" data-page-number="8">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🔮 Lesson 4: Advanced Prompting</div>
@@ -30,6 +30,23 @@
                 <li>Require inline citations; refuse if no support.</li>
                 <li>Summarize per-snippet before synthesizing.</li>
             </ul>
+        </div>
+
+        <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+            <h2>Quick check</h2>
+            <p>Can you ground answers correctly?</p>
+            <div class="card" data-answer-group data-xp="10">
+                <p><strong>1) What to do when retrieval returns nothing?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Refusing or asking for more context prevents hallucinated citations.">Refuse or ask for more context instead of guessing</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Hallucinating sources breaks trust.">Invent citations anyway</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Ignoring the issue keeps risk.">Ignore retrieval and proceed</button>
+            </div>
+            <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                <p><strong>2) How should citations be handled?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Inline IDs let users trace claims to snippets.">Require inline citations with snippet IDs</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Stylistic quotes don't ground facts.">Use quotes without IDs</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Copying whole snippets can leak PII.">Paste full snippets verbatim</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 8 of 12 • Learn: Retrieval</div>

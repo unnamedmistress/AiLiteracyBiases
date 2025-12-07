@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson4">
+<body data-lesson-id="lesson4" data-total-pages="12" data-page-number="6">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🔮 Lesson 4: Advanced Prompting</div>
@@ -30,6 +30,23 @@
                 <li>Ask for JSON-only calls; avoid prose.</li>
                 <li>Fallback when tool fails or returns empty.</li>
             </ul>
+        </div>
+
+        <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+            <h2>Quick check</h2>
+            <p>Validate your tool-calling instincts.</p>
+            <div class="card" data-answer-group data-xp="10">
+                <p><strong>1) What prevents tool call drift?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Explicit JSON schema and required params keep calls structured.">Specify JSON-only schema with required params</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="More adjectives don't improve API calls.">Use flowery prose</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Random retries without schema won't help.">Retry randomly without structure</button>
+            </div>
+            <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                <p><strong>2) Best fallback when a tool returns empty?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Ask for clarification or switch to a safer default behavior.">Ask for clarification or switch to a safe default</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Silence leaves the user stuck.">Return nothing</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Guessing breaks reliability.">Hallucinate the missing data</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 6 of 12 • Learn: Tools</div>

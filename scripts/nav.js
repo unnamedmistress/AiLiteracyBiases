@@ -216,7 +216,7 @@
             return { status, icon: '✓', label: 'Completed', locked: false };
         }
         if (status === 'in-progress') {
-            return { status, icon: '🔄', label: 'In progress', locked: false };
+            return { status, icon: '⏳', label: 'In progress', locked: false };
         }
         return { status: 'not-started', icon: '', label: 'Not started', locked: false };
     }
@@ -333,7 +333,7 @@
         toggle.setAttribute('aria-expanded', 'false');
         toggle.setAttribute('aria-controls', 'navDrawer');
         toggle.setAttribute('aria-label', 'Open menu');
-        toggle.innerHTML = '<span class="sr-only">Toggle navigation</span><span class="nav-toggle-bars" aria-hidden="true"></span>';
+        toggle.innerHTML = '<span class="sr-only">Menu</span><span class="nav-toggle-bars" aria-hidden="true"></span>';
 
         const overlay = document.createElement('div');
         overlay.className = 'nav-overlay';

@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson5">
+<body data-lesson-id="lesson5" data-total-pages="10" data-page-number="7">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🚀 Lesson 5: AI Workflows</div>
@@ -30,6 +30,17 @@
                 <li>Sketch the data contracts between steps (fields, formats, error states).</li>
                 <li>Add monitoring: logs, alerts for failures, and a kill-switch for bad runs.</li>
             </ol>
+        </div>
+
+        <div class="section" data-answer-group data-xp="15" style="margin-top:20px;">
+            <h2>Automation pick</h2>
+            <p>Choose the resilient design.</p>
+            <div class="card" data-answer-group data-xp="15">
+                <p><strong>Flow:</strong> Webhook → LLM → DB → Slack notify.</p>
+                <button class="btn btn-secondary" data-answer data-correct="true" data-explanation="Queues, retries, and kill-switch make this robust.">Queue the webhook, add retries/backoff, validate schema, and add a kill-switch</button>
+                <button class="btn btn-secondary" data-answer data-explanation="Skipping validation is brittle.">Skip validation and send everything to the DB</button>
+                <button class="btn btn-secondary" data-answer data-explanation="No retries means dropped work.">Disable retries to go faster</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 7 of 10 • Game: Automation</div>

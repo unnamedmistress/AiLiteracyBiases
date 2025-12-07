@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson4">
+<body data-lesson-id="lesson4" data-total-pages="12" data-page-number="3">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🔮 Lesson 4: Advanced Prompting</div>
@@ -30,6 +30,17 @@
                 <li>Write 3 labeled examples (thought + answer).</li>
                 <li>Add anti-examples or guardrails for common failures.</li>
             </ol>
+        </div>
+
+        <div class="section" data-answer-group data-xp="15" style="margin-top:20px;">
+            <h2>Few-shot check</h2>
+            <p>Pick the best exemplar set.</p>
+            <div class="card" data-answer-group data-xp="15">
+                <p><strong>Goal:</strong> Classify support vs sales emails.</p>
+                <button class="btn btn-secondary" data-answer data-correct="true" data-explanation="Labeled thoughts + answers + anti-example give clear pattern.">3 labeled examples with reasoning plus 1 anti-example</button>
+                <button class="btn btn-secondary" data-answer data-explanation="Unlabeled prose is ambiguous.">3 unlabeled paragraphs</button>
+                <button class="btn btn-secondary" data-answer data-explanation="One example under-specifies.">1 example only</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 3 of 12 • Game: Few-shot</div>

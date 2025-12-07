@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson4">
+<body data-lesson-id="lesson4" data-total-pages="12" data-page-number="9">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🔮 Lesson 4: Advanced Prompting</div>
@@ -30,6 +30,17 @@
                 <li>Specify k, filters, and what to do when nothing is found.</li>
                 <li>Add a final verification step citing each claim.</li>
             </ol>
+        </div>
+
+        <div class="section" data-answer-group data-xp="15" style="margin-top:20px;">
+            <h2>Retrieval sanity</h2>
+            <p>Pick the grounded response.</p>
+            <div class="card" data-answer-group data-xp="15">
+                <p><strong>Scenario:</strong> No snippets match the query.</p>
+                <button class="btn btn-secondary" data-answer data-correct="true" data-explanation="Refusing or asking for more context avoids hallucinated citations.">Refuse or ask for more context; do not answer</button>
+                <button class="btn btn-secondary" data-answer data-explanation="Making up sources is unsafe.">Invent citations to answer anyway</button>
+                <button class="btn btn-secondary" data-answer data-explanation="Partial guessing is still guessing.">Answer partially without sources</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 9 of 12 • Game: Retrieval</div>

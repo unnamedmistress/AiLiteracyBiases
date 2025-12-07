@@ -68,7 +68,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson2">
+<body data-lesson-id="lesson2" data-total-pages="12" data-page-number="12">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🤖 Lesson 2: Summary</div>
@@ -97,6 +97,23 @@
                     <h3>💥 Disaster Readiness</h3>
                     <p>Real-world fails (fake citations, glue pizza, Tay) are now teaching moments not repeat events.</p>
                 </article>
+            </div>
+
+            <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+                <h2>Quick check</h2>
+                <p>Confirm you can spot and fix the big failures.</p>
+                <div class="card" data-answer-group data-xp="10">
+                    <p><strong>1) What stops fake citations?</strong></p>
+                    <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Verifying sources (Find) catches hallucinated links or papers.">Use F — Find: verify every source exists</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Saving comes after quality checks.">Use S — Save: archive outputs</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Considering perspective doesn't validate sources.">Use C — Consider: scan for bias</button>
+                </div>
+                <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                    <p><strong>2) Fast fix for boundary dissolution?</strong></p>
+                    <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Explicit guardrails + escalation keep the model inside policy when pressured.">Reassert guardrails and escalate if it keeps pushing</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Ignoring drift invites more violations.">Ignore the behavior and move on</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="More tokens don't add safety.">Ask for a longer answer</button>
+                </div>
             </div>
 
             <div class="next-actions">

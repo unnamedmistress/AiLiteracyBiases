@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson5">
+<body data-lesson-id="lesson5" data-total-pages="10" data-page-number="5">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🚀 Lesson 5: AI Workflows</div>
@@ -30,6 +30,17 @@
                 <li>Propose fixes: batch uploads, add retrieval, schema-check outputs, add approvals.</li>
                 <li>Write a before/after flow showing the patched steps and why they help.</li>
             </ol>
+        </div>
+
+        <div class="section" data-answer-group data-xp="15" style="margin-top:20px;">
+            <h2>Debug pick</h2>
+            <p>Choose the best fix.</p>
+            <div class="card" data-answer-group data-xp="15">
+                <p><strong>Problem:</strong> Workflow times out on large uploads.</p>
+                <button class="btn btn-secondary" data-answer data-correct="true" data-explanation="Chunking + async processing reduces latency and failures.">Chunk uploads, queue them, and process asynchronously</button>
+                <button class="btn btn-secondary" data-answer data-explanation="Bigger prompts worsen timeouts.">Increase prompt length and hope</button>
+                <button class="btn btn-secondary" data-answer data-explanation="Disabling retries hides issues.">Disable retries entirely</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 5 of 10 • Game: Debug</div>

@@ -32,7 +32,7 @@
         document.head.appendChild(style);
     }
 
-    function showReward(xp = 0, message = 'Nice work!') {
+    function showReward(xp = 0, message = 'Nice work!', { credit = true } = {}) {
         ensureStyles();
         const reward = document.createElement('div');
         reward.id = `${REWARD_ID}-${Date.now()}`;
@@ -45,12 +45,14 @@
             reward.remove();
         }, 3200);
 
-        const app = window.AppProgress || window.ProgressTracker || null;
-        if (app && typeof app.addXP === 'function' && xp) {
-            app.addXP(xp, { source: 'reward' });
-            const total = app.getXP ? app.getXP() : null;
-            if (window.AILesson && window.AILesson.updateXPBar && total !== null) {
-                window.AILesson.updateXPBar({ xp: total, xpToNext: Math.max(100, total || 100) });
+        if (credit) {
+            const app = window.AppProgress || window.ProgressTracker || null;
+            if (app && typeof app.addXP === 'function' && xp) {
+                app.addXP(xp, { source: 'reward' });
+                const total = app.getXP ? app.getXP() : null;
+                if (window.AILesson && window.AILesson.updateXPBar && total !== null) {
+                    window.AILesson.updateXPBar({ xp: total, xpToNext: Math.max(100, total || 100) });
+                }
             }
         }
     }

@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson5">
+<body data-lesson-id="lesson5" data-total-pages="10" data-page-number="3">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🚀 Lesson 5: AI Workflows</div>
@@ -30,6 +30,17 @@
                 <li>Draft the ordered steps: ingest → enrich → AI generate → review → ship.</li>
                 <li>Add a checklist: validation, logging, and retry/fallback for fragile steps.</li>
             </ol>
+        </div>
+
+        <div class="section" data-answer-group data-xp="15" style="margin-top:20px;">
+            <h2>Workflow snap judgment</h2>
+            <p>Choose the best-first draft.</p>
+            <div class="card" data-answer-group data-xp="15">
+                <p><strong>Task:</strong> Support email triage.</p>
+                <button class="btn btn-secondary" data-answer data-correct="true" data-explanation="Typed inputs, AI + retrieval, HITL for edge cases is safest.">Structured inputs → classify with retrieval → route → human review for edge cases</button>
+                <button class="btn btn-secondary" data-answer data-explanation="Skipping review risks misroutes.">Free-text → AI route → auto-close tickets</button>
+                <button class="btn btn-secondary" data-answer data-explanation="No validation invites errors.">Skip validation and logging</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 3 of 10 • Game: Builder</div>

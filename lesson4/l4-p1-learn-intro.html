@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson4">
+<body data-lesson-id="lesson4" data-total-pages="12" data-page-number="1">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🔮 Lesson 4: Advanced Prompting</div>
@@ -31,6 +31,23 @@
                 <li>Tool calling and retrieval scaffolds.</li>
                 <li>Safety + constraint hardening.</li>
             </ul>
+        </div>
+
+        <div class="section" data-answer-group data-xp="10">
+            <h2>Quick check</h2>
+            <p>Warm up: pick the best answer for each.</p>
+            <div class="card">
+                <p><strong>1) Why use few-shot examples?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Examples anchor pattern, tone, and structure." data-correct="true">They anchor the model to the desired pattern</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Extra randomness increases drift.">To add randomness</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Examples help precision, not just length.">To make responses shorter</button>
+            </div>
+            <div class="card" style="margin-top:12px;" data-answer-group data-xp="10">
+                <p><strong>2) When should you call tools?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Tools handle facts, math, and actions better than the base model." data-correct="true">When you need facts, math, or external actions</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Guessing numbers is unreliable.">When you want the model to guess numbers</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Conciseness alone isn't a tooling signal.">Whenever answers must be short</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 1 of 12 • Overview</div>

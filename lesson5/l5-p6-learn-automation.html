@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson5">
+<body data-lesson-id="lesson5" data-total-pages="10" data-page-number="6">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🚀 Lesson 5: AI Workflows</div>
@@ -31,6 +31,23 @@
                 <li><strong>Retries/fallbacks:</strong> exponential backoff, circuit breakers, cached responses.</li>
                 <li><strong>Tooling:</strong> connectors (Zapier/Make), actions/plugins, and guarded APIs.</li>
             </ul>
+        </div>
+
+        <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+            <h2>Quick check</h2>
+            <p>Validate your automation instincts.</p>
+            <div class="card" data-answer-group data-xp="10">
+                <p><strong>1) Why use queues?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Queues decouple slow steps and absorb bursts with backpressure.">Decouple slow steps and absorb bursts</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Queues don't speed by themselves." >To guarantee every step is instant</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="They aren't for adding adjectives." >To make prompts more flowery</button>
+            </div>
+            <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                <p><strong>2) Good retry behavior?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Backoff + circuit breakers avoid thrashing and outages.">Use exponential backoff with circuit breakers</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Hammering increases failure chance." >Retry instantly without limits</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Ignoring errors isn't resiliency." >Ignore errors and continue</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 6 of 10 • Learn: Automation</div>

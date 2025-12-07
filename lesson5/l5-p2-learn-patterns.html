@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson5">
+<body data-lesson-id="lesson5" data-total-pages="10" data-page-number="2">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🚀 Lesson 5: AI Workflows</div>
@@ -31,6 +31,23 @@
                 <li><strong>Human-in-the-loop:</strong> approvals for high-risk or ambiguous cases.</li>
                 <li><strong>Outputs:</strong> typed schemas (JSON), post-checks, and logging.</li>
             </ul>
+        </div>
+
+        <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+            <h2>Quick check</h2>
+            <p>Lock in the workflow building blocks.</p>
+            <div class="card" data-answer-group data-xp="10">
+                <p><strong>1) What keeps outputs reliable?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Typed schemas + post-checks catch bad outputs." >Use typed schemas and post-check validation</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Pure prose is inconsistent." >Return unstructured prose</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Skipping checks misses errors." >Skip validation to save time</button>
+            </div>
+            <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                <p><strong>2) When do you add humans-in-the-loop?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="High-risk or ambiguous steps need approvals." >At high-risk or ambiguous steps</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Lower risk stages still need autonomy." >On every single step regardless of risk</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Skipping humans invites errors." >Never include humans</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 2 of 10 • Learn: Building Blocks</div>

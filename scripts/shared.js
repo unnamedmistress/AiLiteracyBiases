@@ -209,10 +209,28 @@
     function applyFeedback(clickedBtn, isCorrect, explanation) {
         const group = clickedBtn.closest('[data-answer-group]') || clickedBtn.parentElement;
         const buttons = group ? Array.from(group.querySelectorAll('[data-answer]')) : [clickedBtn];
+        let correctBtn = null;
+
         buttons.forEach((btn) => {
             btn.classList.remove('correct', 'incorrect');
+            const markedCorrect = btn.dataset.correct === 'true' || btn.dataset.answer === 'correct';
+            if (markedCorrect) {
+                correctBtn = btn;
+            }
         });
+
         clickedBtn.classList.add(isCorrect ? 'correct' : 'incorrect');
+        if (!isCorrect && correctBtn) {
+            correctBtn.classList.add('correct');
+        }
+
+        if (isCorrect && group && !group.dataset.xpAwarded) {
+            const xpAward = Number(group.dataset.xp || clickedBtn.dataset.xp || 10);
+            if (Number.isFinite(xpAward) && xpAward > 0 && typeof window.updateXP === 'function') {
+                window.updateXP(xpAward, { source: 'quiz', lessonId: document.body?.dataset?.lessonId || null });
+            }
+            group.dataset.xpAwarded = 'true';
+        }
 
         if (explanation) {
             let expl = group ? group.querySelector('.answer-explanation') : null;
@@ -231,44 +249,92 @@
         const index = findLessonIndex(lessonId);
         if (index === -1) return;
 
-        const container = document.querySelector(containerSelector);
-        if (!container) return;
+        let container = document.querySelector(containerSelector);
+        if (!container) {
+            const host = document.querySelector('.lesson-shell') || document.querySelector('.container');
+            if (!host) return;
+            container = document.createElement('div');
+            container.className = containerSelector.replace('.', '') || 'footer-nav';
+            host.appendChild(container);
+        }
 
         container.innerHTML = '';
 
+        const pageTotal = Number(document.body?.dataset?.totalPages) || 0;
+        const pageNumber = Number(document.body?.dataset?.pageNumber) || 0;
+        const path = (window.location && window.location.pathname) || '';
+        const file = path.split('/').filter(Boolean).pop() || '';
+        const folder = path.substring(0, path.lastIndexOf('/') + 1);
+        const fileMatch = file.match(/^(.*?p)(\d+)(-.+)?\.html$/i);
+
+        function buildSiblingPageHref(targetNumber) {
+            if (!fileMatch || !folder) return null;
+            const prefix = fileMatch[1];
+            const suffix = fileMatch[3] || '';
+            return `${folder}${prefix}${targetNumber}${suffix}.html`;
+        }
+
         const mainBtn = createNavButton('Main Menu', LANDING_PAGE, 'btn-secondary');
 
-        if (index > 0) {
-            const prevLesson = LESSON_SEQUENCE[index - 1];
-            const prevBtn = createNavButton(`← Previous`, prevLesson.path, 'btn-secondary');
-            container.appendChild(prevBtn);
+        if (pageTotal && pageNumber) {
+            const prevHref = pageNumber > 1 ? buildSiblingPageHref(pageNumber - 1) : null;
+            if (prevHref) {
+                container.appendChild(createNavButton('← Previous', prevHref, 'btn-secondary'));
+            } else {
+                const prevBtn = document.createElement('span');
+                prevBtn.className = 'btn btn-secondary is-disabled';
+                prevBtn.textContent = '← Previous';
+                prevBtn.setAttribute('aria-disabled', 'true');
+                container.appendChild(prevBtn);
+            }
+
+            container.appendChild(mainBtn);
+
+            const nextHref = pageNumber < pageTotal ? buildSiblingPageHref(pageNumber + 1) : null;
+            if (nextHref) {
+                container.appendChild(createNavButton('Next →', nextHref, 'btn-primary'));
+            } else {
+                const nextBtn = document.createElement('span');
+                nextBtn.className = 'btn btn-primary is-disabled';
+                nextBtn.textContent = 'Next →';
+                nextBtn.setAttribute('aria-disabled', 'true');
+                container.appendChild(nextBtn);
+            }
         } else {
-            const prevBtn = document.createElement('span');
-            prevBtn.className = 'btn btn-secondary is-disabled';
-            prevBtn.textContent = '← Previous';
-            prevBtn.setAttribute('aria-disabled', 'true');
-            container.appendChild(prevBtn);
+            // Fallback to lesson-level navigation only when page numbering is unavailable
+            if (index > 0) {
+                const prevLesson = LESSON_SEQUENCE[index - 1];
+                container.appendChild(createNavButton('← Previous', prevLesson.path, 'btn-secondary'));
+            } else {
+                const prevBtn = document.createElement('span');
+                prevBtn.className = 'btn btn-secondary is-disabled';
+                prevBtn.textContent = '← Previous';
+                prevBtn.setAttribute('aria-disabled', 'true');
+                container.appendChild(prevBtn);
+            }
+
+            container.appendChild(mainBtn);
+
+            if (index < LESSON_SEQUENCE.length - 2) {
+                const nextLesson = LESSON_SEQUENCE[index + 1];
+                container.appendChild(createNavButton('Next →', nextLesson.path, 'btn-primary'));
+            } else {
+                const nextBtn = document.createElement('span');
+                nextBtn.className = 'btn btn-primary is-disabled';
+                nextBtn.textContent = 'Next →';
+                nextBtn.setAttribute('aria-disabled', 'true');
+                container.appendChild(nextBtn);
+            }
         }
 
-        container.appendChild(mainBtn);
-
-        const override = CUSTOM_NEXT[lessonId];
-        if (override) {
-            const overrideBtn = createNavButton(override.label || 'Next →', override.href, 'btn-primary');
-            container.appendChild(overrideBtn);
-            return;
-        }
-
-        if (index < LESSON_SEQUENCE.length - 2) {
-            const nextLesson = LESSON_SEQUENCE[index + 1];
-            const nextBtn = createNavButton(`Next →`, nextLesson.path, 'btn-primary');
-            container.appendChild(nextBtn);
-        } else {
-            const nextBtn = document.createElement('span');
-            nextBtn.className = 'btn btn-primary is-disabled';
-            nextBtn.textContent = 'Next →';
-            nextBtn.setAttribute('aria-disabled', 'true');
-            container.appendChild(nextBtn);
+        // If this is the final page of a lesson and a next-lesson override exists, surface it explicitly
+        if (pageTotal && pageNumber && pageNumber === pageTotal) {
+            const override = CUSTOM_NEXT[lessonId];
+            const autoNext = getAutoNextDestination(lessonId);
+            const target = override || autoNext;
+            if (target && target.href && target.href !== '#') {
+                container.appendChild(createNavButton(target.label || 'Next Lesson →', target.href, 'btn-primary'));
+            }
         }
     }
 
@@ -393,6 +459,62 @@
         });
     }
 
+    function initPageProgress() {
+        const total = Number(document.body?.dataset?.totalPages) || 0;
+        const current = Number(document.body?.dataset?.pageNumber) || 0;
+        if (!total || !current || current > total) return;
+        const host = document.querySelector('.lesson-shell') || document.querySelector('.container');
+        if (!host) return;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'page-progress-wrapper';
+
+        const label = document.createElement('div');
+        label.className = 'page-progress-label';
+        label.textContent = `Page ${current} of ${total}`;
+
+        const bar = document.createElement('div');
+        bar.className = 'page-progress';
+        const fill = document.createElement('div');
+        fill.className = 'page-progress-fill';
+        const pct = Math.min(100, Math.round((current / total) * 100));
+        fill.style.width = `${pct}%`;
+        bar.appendChild(fill);
+
+        wrapper.appendChild(label);
+        wrapper.appendChild(bar);
+
+        const header = host.querySelector('.header') || host.firstElementChild;
+        if (header && header.nextSibling) {
+            header.parentNode.insertBefore(wrapper, header.nextSibling);
+        } else {
+            host.prepend(wrapper);
+        }
+    }
+
+    function emitXPEvent({ delta = 0, total = 0, source = 'activity', lessonId = null } = {}) {
+        const detail = { delta, total, source, lessonId };
+        document.dispatchEvent(new CustomEvent('xpUpdated', { detail }));
+        window.dispatchEvent(new CustomEvent('xpUpdated', { detail }));
+    }
+
+    function updateXP(points = 0, { message = null, source = 'activity', lessonId = null } = {}) {
+        const delta = Math.round(Number(points) || 0);
+        if (!Number.isFinite(delta) || delta <= 0) return;
+        const app = window.AppProgress || window.ProgressTracker || null;
+        if (!app || typeof app.addXP !== 'function') return;
+        const total = app.addXP(delta, { source, lessonId });
+        ensureRewardsScript();
+        if (window.Rewards && typeof window.Rewards.showReward === 'function') {
+            const copy = message || `+${delta} XP earned!`;
+            window.Rewards.showReward(delta, copy, { credit: false });
+        }
+        emitXPEvent({ delta, total, source, lessonId });
+        if (window.AILesson && typeof window.AILesson.updateXPBar === 'function') {
+            window.AILesson.updateXPBar({ xp: total, xpToNext: Math.max(100, total || 100) });
+        }
+    }
+
     if (typeof window.analyticsEvent !== 'function') {
         window.analyticsEvent = emitAnalytics;
     }
@@ -409,8 +531,13 @@
         initModeToggle,
         updateXPBar,
         findLessonIndex,
-        trackEvent: emitAnalytics
+        trackEvent: emitAnalytics,
+        updateXP,
+        emitXPEvent
     };
+
+    window.updateXP = updateXP;
+    window.emitXPEvent = emitXPEvent;
 
     document.addEventListener('DOMContentLoaded', () => {
         const lessonId = document.body?.dataset?.lessonId;
@@ -423,6 +550,7 @@
         window.AILesson.initLessonNavigation({ lessonId, breadcrumbSelector, footerSelector });
         initNextLessonButtons(lessonId);
         scrollGameExperiencesToTop();
+        initPageProgress();
 
         ensureRewardsScript();
         initAnswerFeedback();

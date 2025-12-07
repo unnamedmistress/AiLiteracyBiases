@@ -388,6 +388,67 @@ body.with-global-nav {
     box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
 }
 
+.page-progress-wrapper {
+    margin: 12px 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.page-progress {
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.35);
+    overflow: hidden;
+    position: relative;
+    margin: 8px 0 16px;
+}
+
+.page-progress-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(135deg, #10B981, #059669);
+    border-radius: 999px;
+    transition: width 0.3s ease;
+}
+
+.page-progress-label {
+    font-size: 13px;
+    color: var(--color-muted);
+    margin-bottom: 4px;
+}
+
+/* Hide legacy per-page text rows now that the new progress bar is injected */
+.progress-indicator {
+    display: none;
+}
+
+.progress-nav {
+    display: none;
+}
+
+.step-pill:hover,
+.step-pill:focus-visible,
+.tone-btn:hover,
+.tone-btn:focus-visible,
+.tone-word:hover,
+.tone-word:focus-visible,
+.tone-drop-zone:hover,
+.tone-drop-zone:focus-visible {
+    border-color: var(--color-accent);
+    box-shadow: 0 6px 12px rgba(16, 185, 129, 0.25);
+    outline: none;
+}
+
+.lesson-card button:hover,
+.lesson-card button:focus-visible,
+.choice-card:hover,
+.choice-card:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.15);
+}
+
 .correct {
     background: rgba(16, 185, 129, 0.12) !important;
     border-color: rgba(16, 185, 129, 0.4) !important;
@@ -714,8 +775,9 @@ a {
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 48px;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
 }
 
 .section-title {

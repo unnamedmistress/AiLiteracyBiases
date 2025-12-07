@@ -57,7 +57,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson1">
+<body data-lesson-id="lesson1" data-total-pages="6" data-page-number="2">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🎯 Game: Word Prediction</div>
@@ -172,8 +172,8 @@
                 const optionButtons = elements.wordOptions ? elements.wordOptions.querySelectorAll('button') : [];
                 if (word === 'Policy') {
                     wordComplete = true;
-                    setWordFeedback('Correct! You think like an AI on this one. Ready to move on...', 'success');
-                    setWordProgress('Word radar progress: Complete! 🎉', true);
+                    setWordFeedback('Correct! You think like an AI on this one. Ready to move on... (+10 XP)', 'success');
+                    setWordProgress('Word radar progress: Complete! 🎉 +10 XP earned.', true);
                     optionButtons.forEach((btn) => {
                         if (btn.dataset.word === word) {
                             btn.classList.add('correct');
@@ -181,6 +181,9 @@
                         btn.disabled = true;
                     });
                     showWordCelebration();
+                    if (window.updateXP) {
+                        window.updateXP(10, { lessonId: LESSON_ID, source: 'word-prediction', message: 'Word Prediction mastered! +10 XP' });
+                    }
                     
                     // Enable next button
                     if (elements.nextPageBtn) {
@@ -193,6 +196,10 @@
                         tracker.setCheckpoint(LESSON_ID, 'wordComplete', true);
                     }
                 } else {
+                    const correctOption = Array.from(optionButtons).find((btn) => btn.dataset.word === 'Policy');
+                    if (correctOption) {
+                        correctOption.classList.add('correct');
+                    }
                     setWordFeedback(`Not quite. "${word}" is ${probabilityConfig.find((o) => o.word === word)?.hint || 'not the best choice.'}`, 'error');
                     setWordProgress('Word radar progress: Try again!');
                     optionButtons.forEach((btn) => {

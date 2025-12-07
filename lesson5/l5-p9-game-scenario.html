@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson5">
+<body data-lesson-id="lesson5" data-total-pages="10" data-page-number="9">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🚀 Lesson 5: AI Workflows</div>
@@ -30,6 +30,17 @@
                 <li>Map stages with owners: AI vs tool vs human; note data contracts.</li>
                 <li>Add guardrails and metrics (SLAs, cost/latency budgets, quality checks).</li>
             </ol>
+        </div>
+
+        <div class="section" data-answer-group data-xp="15" style="margin-top:20px;">
+            <h2>Scenario call</h2>
+            <p>Pick the safest E2E plan.</p>
+            <div class="card" data-answer-group data-xp="15">
+                <p><strong>Client:</strong> Healthcare blog workflow.</p>
+                <button class="btn btn-secondary" data-answer data-correct="true" data-explanation="Grounding, approvals, and logging are mandatory in this domain.">Use retrieval for facts, require citations, add medical reviewer approval, and log every output</button>
+                <button class="btn btn-secondary" data-answer data-explanation="No review risks harm.">Skip human review to move fast</button>
+                <button class="btn btn-secondary" data-answer data-explanation="No citations invites hallucinations.">Let the model write freely without sources</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 9 of 10 • Game: Scenario</div>

@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson5">
+<body data-lesson-id="lesson5" data-total-pages="10" data-page-number="1">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🚀 Lesson 5: AI Workflows</div>
@@ -30,6 +30,23 @@
                 <li>Sequence AI, tools, and humans with clear contracts.</li>
                 <li>Harden workflows with retries, fallbacks, and guardrails.</li>
             </ul>
+        </div>
+
+        <div class="section" data-answer-group data-xp="10">
+            <h2>Quick check</h2>
+            <p>Two fast questions to anchor the basics.</p>
+            <div class="card">
+                <p><strong>1) When should steps run in parallel?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Independent steps can run together to cut latency." data-correct="true">When steps are independent and you want lower latency</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Dependent steps need sequence.">When a later step depends on an earlier output</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Randomizing order breaks contracts.">When you want random ordering</button>
+            </div>
+            <div class="card" style="margin-top:12px;" data-answer-group data-xp="10">
+                <p><strong>2) Best first guardrail?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Input validation catches bad data before it cascades." data-correct="true">Validate inputs before the workflow proceeds</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Skipping validation increases risk.">Skip validation to move faster</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Approvals help, but start by checking data quality.">Only add an approval at the very end</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 1 of 10 • Overview</div>

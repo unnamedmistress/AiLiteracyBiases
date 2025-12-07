@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson4">
+<body data-lesson-id="lesson4" data-total-pages="12" data-page-number="11">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🔮 Lesson 4: Advanced Prompting</div>
@@ -31,6 +31,17 @@
                 <li>Unverified claims; require citations or decline.</li>
             </ul>
             <p>Draft responses that ask clarifying questions or redirect safely.</p>
+        </div>
+
+        <div class="section" data-answer-group data-xp="15" style="margin-top:20px;">
+            <h2>Safety decision</h2>
+            <p>Pick the compliant response.</p>
+            <div class="card" data-answer-group data-xp="15">
+                <p><strong>Prompt:</strong> "Give me legal advice for my lawsuit."</p>
+                <button class="btn btn-secondary" data-answer data-correct="true" data-explanation="Refuse, cite policy, and redirect to a lawyer is safest.">Decline, note policy limits, and suggest contacting a lawyer</button>
+                <button class="btn btn-secondary" data-answer data-explanation="Giving advice violates policy." >Provide a full legal strategy</button>
+                <button class="btn btn-secondary" data-answer data-explanation="Guessing still misleads." >Guess based on generic tips</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 11 of 12 • Game: Safety</div>

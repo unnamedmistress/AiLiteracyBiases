@@ -78,6 +78,17 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
     const DEFAULT_TOTAL_LESSONS = DASHBOARD_ITEMS.filter((item) => item.type === 'lesson').length;
 
+    function requirementCopy(requirementId) {
+        if (!requirementId) return '';
+        if (requirementId === 'lesson1') return 'Complete Lesson 1 to unlock';
+        if (requirementId === 'lesson2') return 'Complete Lesson 2 to unlock';
+        if (requirementId === 'quiz1') return 'Score 75% on Quiz 1 to unlock';
+        if (requirementId === 'lesson3') return 'Complete Lesson 3 to unlock';
+        if (requirementId === 'lesson4') return 'Complete Lesson 4 to unlock';
+        if (requirementId === 'lesson5') return 'Complete Lesson 5 to unlock';
+        return 'Complete the prerequisite to unlock';
+    }
+
     const els = {
         lessonGrid: document.getElementById('lessonGrid'),
         progressFill: document.getElementById('homeProgressFill'),
@@ -95,9 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
         modeDescription: document.getElementById('modeToggleDescription')
     };
 
-    const RESET_CONFIRM_WINDOW = 8000;
-    let resetConfirmTimer = null;
-    let awaitingResetConfirm = false;
     let professionalModeEnabled = false;
 
     function readProfessionalModePreference() {
@@ -133,8 +141,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (els.modeDescription) {
             els.modeDescription.textContent = enabled
-                ? 'Professional Mode strips XP, streaks, and badges to spotlight lesson progress only.'
-                : 'Learner Mode keeps XP, badges, and quests visible for extra motivation.';
+                ? 'Professional Mode hides XP, streaks, and badges for a clean, content-first view.'
+                : 'Learner Mode shows XP, badges, and quests so every activity feels rewarding.';
         }
     }
 
@@ -174,25 +182,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (els.resetBtn) {
-        const defaultLabel = els.resetBtn.textContent || 'Reset Progress';
         els.resetBtn.addEventListener('click', () => {
-            if (!awaitingResetConfirm) {
-                awaitingResetConfirm = true;
-                els.resetBtn.textContent = 'Confirm Reset';
-                showResetWarning('This wipes all XP and lesson unlocks. Click "Confirm Reset" within 8 seconds to continue.');
-                clearTimeout(resetConfirmTimer);
-                resetConfirmTimer = setTimeout(() => {
-                    awaitingResetConfirm = false;
-                    els.resetBtn.textContent = defaultLabel;
-                    hideResetWarning();
-                }, RESET_CONFIRM_WINDOW);
-                return;
-            }
-
-            awaitingResetConfirm = false;
-            clearTimeout(resetConfirmTimer);
-            els.resetBtn.textContent = defaultLabel;
-            hideResetWarning();
+            const confirmReset = window.confirm('Are you sure you want to reset all your progress? This action cannot be undone.');
+            if (!confirmReset) return;
             performProgressReset();
         });
     }
@@ -244,9 +236,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let modifier = '';
         let statusLabel = 'Not Started';
 
-        if (locked) {
-            modifier = comingSoon ? 'coming-soon' : 'locked';
-            statusLabel = comingSoon ? 'Coming Soon' : 'Locked';
+            if (locked) {
+                modifier = comingSoon ? 'coming-soon' : 'locked';
+                statusLabel = comingSoon ? '🚧 Coming soon' : '🔒 Locked';
         } else if (completed) {
             modifier = 'completed';
             statusLabel = 'Completed';
@@ -255,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
             statusLabel = 'In Progress';
         }
 
-        const ctaLabel = locked ? (comingSoon ? 'Coming Soon' : 'Locked') : completed ? 'Review' : 'Start';
+        const ctaLabel = locked ? (comingSoon ? '🚧 Coming soon' : '🔒 Locked') : completed ? 'Review' : 'Start';
         return { locked, completed, modifier, statusLabel, ctaLabel, comingSoon };
     }
 
@@ -297,6 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p>${item.summary}</p>
                     <div class="lesson-meta">
                         <span class="time-estimate">⏱ ${item.time || '10 min'}</span>
+                        ${state.locked && item.requires ? `<span class="unlock-hint">${requirementCopy(item.requires)}</span>` : ''}
                         ${state.comingSoon ? '<span class="coming-soon-note">🚧 Launching soon · stay tuned</span>' : ''}
                     </div>
                     <button type="button" data-path="${item.path}" data-locked="${state.locked}" aria-label="${ariaLabel}">${state.ctaLabel}</button>

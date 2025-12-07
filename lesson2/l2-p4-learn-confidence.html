@@ -65,7 +65,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson2">
+<body data-lesson-id="lesson2" data-total-pages="12" data-page-number="4">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">💪 Learn: Confidence Pathologies</div>
@@ -105,6 +105,23 @@
                     <p>The system literally does not know what it does not know. It cannot recognize its own training gaps or uncertainty zones.</p>
                     <p class="confidence-tip">🧭 Guardrail it: Bake in prompts like “Tell me what might be missing” so you surface blind spots before acting.</p>
                 </article>
+            </div>
+
+            <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+                <h2>Quick check</h2>
+                <p>Two fast questions to lock in the patterns.</p>
+                <div class="card" data-answer-group data-xp="10">
+                    <p><strong>1) How to spot overclaiming confidence?</strong></p>
+                    <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="High certainty without evidence is overclaiming.">High-certainty language with little evidence</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Short answers aren't inherently overconfident.">Any short answer</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Politeness isn't confidence.">Polite tone</button>
+                </div>
+                <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                    <p><strong>2) Mitigation for authority fallacy?</strong></p>
+                    <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Ask for sources or make it cite ground truth.">Require sources or verified citations</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Adding more adjectives doesn't fix it.">Use more adjectives</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Longer answers can still be wrong.">Make answers longer</button>
+                </div>
             </div>
 
             <div class="progress-indicator">Page 4 of 12 • Confidence Pathologies</div>

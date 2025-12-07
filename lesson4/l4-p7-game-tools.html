@@ -10,7 +10,7 @@
     <script defer src="../scripts/progress.js"></script>
     <script defer src="../scripts/nav.js"></script>
 </head>
-<body data-lesson-id="lesson4">
+<body data-lesson-id="lesson4" data-total-pages="12" data-page-number="7">
     <div class="container lesson-shell">
         <div class="header">
             <div class="logo">🔮 Lesson 4: Advanced Prompting</div>
@@ -30,6 +30,17 @@
                 <li>Write the JSON call schema and a sample call.</li>
                 <li>Add a retry/fallback path and post-check summary.</li>
             </ol>
+        </div>
+
+        <div class="section" data-answer-group data-xp="15" style="margin-top:20px;">
+            <h2>Tool call sanity check</h2>
+            <p>Choose the safest plan.</p>
+            <div class="card" data-answer-group data-xp="15">
+                <p><strong>Task:</strong> Book a meeting via calendar API.</p>
+                <button class="btn btn-secondary" data-answer data-correct="true" data-explanation="Schema + retries + dry-run keeps it safe.">Use JSON schema, dry-run preview, retry with backoff, then confirm</button>
+                <button class="btn btn-secondary" data-answer data-explanation="Prose invites malformed calls.">Send free-form prose to the tool</button>
+                <button class="btn btn-secondary" data-answer data-explanation="No validation risks bad bookings.">Call the tool without validation or preview</button>
+            </div>
         </div>
 
         <div class="progress-indicator">Page 7 of 12 • Game: Tools</div>
