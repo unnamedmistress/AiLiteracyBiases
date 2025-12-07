@@ -75,13 +75,13 @@
 
     function requirementCopy(requirementId) {
         if (!requirementId) return 'Finish the previous mission to unlock this one.';
-        if (requirementId === 'lesson1') return 'Complete Lesson 1 to unlock this mission.';
-        if (requirementId === 'lesson2') return 'Complete Lesson 2 to unlock this mission.';
-        if (requirementId === 'lesson3') return 'Complete Lesson 3 to unlock this mission.';
-        if (requirementId === 'lesson4') return 'Complete Lesson 4 to unlock this mission.';
-        if (requirementId === 'lesson5') return 'Complete Lesson 5 to unlock this mission.';
-        if (requirementId === 'lesson6') return 'Complete Lesson 6 to unlock this mission.';
-        if (requirementId === 'quiz1') return 'Score 75% or higher on Quiz 1 to unlock this mission.';
+        if (requirementId === 'lesson1') return 'Finish Lesson 1 to get your game ticket punched.';
+        if (requirementId === 'lesson2') return 'Wrap Lesson 2 so the quiz door opens.';
+        if (requirementId === 'lesson3') return 'Lesson 3 awaits—clear its checkpoints first.';
+        if (requirementId === 'lesson4') return 'Lesson 4 first; no skipping the wizardry labs.';
+        if (requirementId === 'lesson5') return 'Lesson 5 is the key—complete it to unlock the finale.';
+        if (requirementId === 'lesson6') return 'Capstone comes last. Finish the earlier missions.';
+        if (requirementId === 'quiz1') return 'Score 75%+ on Quiz 1 to prove you’re ready.';
         return 'Finish the prerequisite mission to continue.';
     }
 

@@ -1466,6 +1466,36 @@ textarea {
     box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
 }
 
+.ui-toast-stack {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1300;
+    pointer-events: none;
+}
+
+.ui-toast {
+    background: #0f172a;
+    color: #f8fafc;
+    padding: 12px 16px;
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.35);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: auto;
+    font-weight: 600;
+    max-width: 320px;
+}
+
+.ui-toast.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 @media (max-width: 640px) {
     .chatbox-section {
         padding: 12px;

@@ -85,12 +85,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function requirementCopy(requirementId) {
         if (!requirementId) return '';
-        if (requirementId === 'lesson1') return 'Complete Lesson 1 to unlock';
-        if (requirementId === 'lesson2') return 'Complete Lesson 2 to unlock';
-        if (requirementId === 'quiz1') return 'Score 75% on Quiz 1 to unlock';
-        if (requirementId === 'lesson3') return 'Complete Lesson 3 to unlock';
-        if (requirementId === 'lesson4') return 'Complete Lesson 4 to unlock';
-        if (requirementId === 'lesson5') return 'Complete Lesson 5 to unlock';
+        if (requirementId === 'lesson1') return 'Complete Lesson 1 to get your game pass stamped.';
+        if (requirementId === 'lesson2') return 'Finish Lesson 2 so the quiz lights up.';
+        if (requirementId === 'quiz1') return 'Score 75%+ on Quiz 1 to pop the lock.';
+        if (requirementId === 'lesson3') return 'Lesson 3 first—no speedrunning the ladder.';
+        if (requirementId === 'lesson4') return 'Close Lesson 4 to earn the next key.';
+        if (requirementId === 'lesson5') return 'Lesson 5 is your ticket to the capstone.';
         return 'Complete the prerequisite to unlock';
     }
 

@@ -390,7 +390,7 @@
         function updateMeta() {
             ui.meta.textContent = `Attempts left: ${Math.max(0, attemptsMax - attemptsUsed)}${xpLabel}`;
             if (attemptsUsed >= attemptsMax) {
-                ui.button.disabled = true;
+                ui.button.setAttribute('aria-disabled', 'true');
                 ui.button.classList.add('is-disabled');
                 ui.meta.textContent += ' • Limit reached';
             }
@@ -421,7 +421,12 @@
         }
 
         ui.button.addEventListener('click', () => {
-            if (attemptsUsed >= attemptsMax) return;
+            if (attemptsUsed >= attemptsMax) {
+                if (typeof window.showToast === 'function') {
+                    window.showToast('Attempt limit reached. Tweak your draft and reset to try again.');
+                }
+                return;
+            }
             const text = ui.textarea.value;
             const result = gradeResponse(text, config);
             attemptsUsed += 1;

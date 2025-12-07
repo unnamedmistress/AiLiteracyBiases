@@ -35,6 +35,7 @@
     }
 
     let modalHost = null;
+    let toastHost = null;
     function hideModal() {
         if (!modalHost) return;
         modalHost.classList.remove('is-visible');
@@ -99,6 +100,33 @@
             if (defaultEl && typeof defaultEl.focus === 'function') {
                 defaultEl.focus();
             }
+        });
+    }
+
+    function ensureToastHost() {
+        if (toastHost) return toastHost;
+        toastHost = document.createElement('div');
+        toastHost.className = 'ui-toast-stack';
+        document.body.appendChild(toastHost);
+        return toastHost;
+    }
+
+    function showToast(message, { duration = 3200 } = {}) {
+        if (!message) return;
+        const host = ensureToastHost();
+        const item = document.createElement('div');
+        item.className = 'ui-toast';
+        item.textContent = message;
+        host.appendChild(item);
+        requestAnimationFrame(() => item.classList.add('is-visible'));
+        const hide = () => {
+            item.classList.remove('is-visible');
+            setTimeout(() => item.remove(), 300);
+        };
+        const timer = setTimeout(hide, duration);
+        item.addEventListener('click', () => {
+            clearTimeout(timer);
+            hide();
         });
     }
 
@@ -697,12 +725,14 @@
         trackEvent: emitAnalytics,
         updateXP,
         emitXPEvent,
-        showModal
+        showModal,
+        showToast
     };
 
     window.updateXP = updateXP;
     window.emitXPEvent = emitXPEvent;
     window.showModal = showModal;
+    window.showToast = showToast;
 
     document.addEventListener('DOMContentLoaded', () => {
         const lessonId = document.body?.dataset?.lessonId;
