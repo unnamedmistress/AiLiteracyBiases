@@ -663,7 +663,7 @@
         if (!host) return;
 
         const wrapper = document.createElement('div');
-        wrapper.className = 'page-progress-wrapper';
+        wrapper.className = 'page-progress-wrapper compact-progress';
 
         const label = document.createElement('div');
         label.className = 'page-progress-label';
@@ -681,8 +681,8 @@
         wrapper.appendChild(bar);
 
         const header = host.querySelector('.header') || host.firstElementChild;
-        if (header && header.nextSibling) {
-            header.parentNode.insertBefore(wrapper, header.nextSibling);
+        if (header) {
+            header.appendChild(wrapper);
         } else {
             host.prepend(wrapper);
         }
