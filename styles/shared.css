@@ -839,25 +839,6 @@ a {
     padding: 0;
 }
 
-.footer-nav {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 32px;
-}
-
-.section-title {
-    font-size: 28px;
-    margin-bottom: 14px;
-}
-
-.section-subtitle {
-    font-size: 16px;
-    color: var(--color-muted);
-}
-
 .tool-grid,
 .card-grid {
     display: grid;
@@ -1048,20 +1029,25 @@ a {
     }
 
     .global-nav {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
         padding: 4px 8px;
         gap: 4px;
         flex-wrap: nowrap;
         white-space: nowrap;
+        overflow: hidden;
     }
 
     .nav-brand a {
-        font-size: 13px;
-        max-width: 72vw;
+        font-size: 12.5px;
+        max-width: 74vw;
     }
 
     .nav-toggle {
         width: 32px;
         height: 32px;
+        justify-self: end;
     }
 
     .card,
