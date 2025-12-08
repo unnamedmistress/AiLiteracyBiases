@@ -77,7 +77,7 @@ body.with-global-nav {
     background: rgba(255, 255, 255, 0.9);
     border-bottom: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: 0 16px 45px rgba(148, 163, 184, 0.45);
-    z-index: 999;
+    z-index: 2000;
     backdrop-filter: blur(12px);
     color: var(--color-text);
 }
@@ -154,7 +154,7 @@ body.with-global-nav {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s ease;
-    z-index: 998;
+    z-index: 1998;
 }
 
 .nav-drawer {
@@ -172,7 +172,7 @@ body.with-global-nav {
     gap: 28px;
     overflow-y: auto;
     transition: right 0.3s ease;
-    z-index: 999;
+    z-index: 1999;
 }
 
 .nav-close {
