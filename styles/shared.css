@@ -541,7 +541,7 @@ a {
 .container {
     max-width: var(--layout-max-width);
     margin: 0 auto;
-    padding: 16px 14px 32px;
+    padding: clamp(10px, 1.6vw, 16px) clamp(10px, 2vw, 18px) clamp(18px, 3vw, 28px);
 }
 
 .card,
@@ -559,10 +559,10 @@ a {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 10px;
+    gap: 8px;
     align-items: center;
-    padding: 6px 0 12px;
-    margin-bottom: 8px;
+    padding: 4px 0 8px;
+    margin-bottom: 6px;
     border-bottom: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: none;
     background: transparent;
@@ -578,10 +578,10 @@ a {
 .lesson-shell {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: clamp(10px, 1.4vw, 14px);
     max-width: var(--layout-max-width);
     margin: 0 auto;
-    padding: 12px;
+    padding: clamp(8px, 1vw, 12px);
 }
 
 .lesson-shell .header {
@@ -606,7 +606,7 @@ a {
 }
 
 .progress-nav {
-    margin-top: 32px;
+    margin-top: clamp(12px, 2vw, 20px);
     display: flex;
     justify-content: center;
     gap: 12px;

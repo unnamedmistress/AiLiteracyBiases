@@ -8,26 +8,26 @@
     
     <link rel="stylesheet" href="../styles/shared.css">
     <style>
-        .lesson-shell { display: flex; flex-direction: column; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .hero-section { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, rgba(157, 78, 221, 0.1), rgba(0, 217, 255, 0.1)); border-radius: var(--radius-lg); margin-bottom: 32px; }
+        .lesson-shell { display: flex; flex-direction: column; gap: 18px; max-width: 1100px; margin: 0 auto; padding: 12px; }
+        .hero-section { text-align: center; padding: clamp(18px, 4vw, 28px) clamp(14px, 3vw, 22px); background: linear-gradient(135deg, rgba(157, 78, 221, 0.1), rgba(0, 217, 255, 0.1)); border-radius: var(--radius-lg); margin-bottom: clamp(14px, 3vw, 22px); }
         .emoji-large { font-size: 64px; margin-bottom: 16px; }
-        .hero-title { font-size: 36px; margin-bottom: 12px; line-height: 1.2; }
-        .subtitle { font-size: 18px; color: var(--color-muted); margin-bottom: 24px; }
+        .hero-title { font-size: clamp(26px, 4vw, 34px); margin-bottom: 10px; line-height: 1.2; }
+        .subtitle { font-size: clamp(15px, 2.6vw, 18px); color: var(--color-muted); margin-bottom: 16px; }
         .did-you-know { background: rgba(255, 255, 255, 0.05); border-radius: var(--radius-md); padding: 16px; margin-top: 24px; border: 1px solid rgba(255, 255, 255, 0.15); }
         .dyk-title { font-weight: 600; font-size: 16px; margin-bottom: 8px; }
-        .agenda-section { margin-top: 32px; }
-        .section-title { font-size: 28px; margin-bottom: 20px; }
-        .agenda-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-        .agenda-item { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.04); padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; transition: transform 0.2s ease, border-color 0.2s ease; cursor: pointer; }
+        .agenda-section { margin-top: clamp(12px, 3vw, 20px); }
+        .section-title { font-size: clamp(22px, 3.4vw, 28px); margin-bottom: 12px; }
+        .agenda-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+        .agenda-item { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.04); padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; transition: transform 0.2s ease, border-color 0.2s ease; cursor: pointer; }
         .agenda-item:hover { transform: translateY(-4px); border-color: var(--color-accent); }
         .agenda-icon { font-size: 32px; }
-        .agenda-title { font-weight: 600; font-size: 14px; }
-        .progress-nav { margin-top: 32px; display: flex; justify-content: center; }
-        .btn-next { padding: 14px 32px; font-size: 16px; font-weight: 600; border-radius: var(--radius-md); background: linear-gradient(135deg, #10B981, #059669); color: #fff; border: none; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .agenda-title { font-weight: 600; font-size: 13px; }
+        .progress-nav { display: flex; justify-content: center; }
+        .btn-next { padding: 12px 28px; font-size: 15px; font-weight: 600; border-radius: var(--radius-md); background: linear-gradient(135deg, #10B981, #059669); color: #fff; border: none; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
-        .progress-indicator { text-align: center; color: var(--color-muted); font-size: 14px; margin-bottom: 16px; }
+        .progress-indicator { text-align: center; color: var(--color-muted); font-size: 13px; margin-bottom: 10px; }
         @media (max-width: 768px) {
-            .hero-title { font-size: 28px; }
+            .hero-title { font-size: 26px; }
             .agenda-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
         }
     </style>
