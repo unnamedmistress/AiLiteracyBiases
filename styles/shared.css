@@ -77,7 +77,7 @@ body.with-global-nav {
     background: rgba(255, 255, 255, 0.9);
     border-bottom: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: 0 16px 45px rgba(148, 163, 184, 0.45);
-    z-index: 2000;
+    z-index: 4000;
     backdrop-filter: blur(12px);
     color: var(--color-text);
 }
@@ -154,7 +154,7 @@ body.with-global-nav {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s ease;
-    z-index: 1998;
+    z-index: 3998;
 }
 
 .nav-drawer {
@@ -172,7 +172,7 @@ body.with-global-nav {
     gap: 28px;
     overflow-y: auto;
     transition: right 0.3s ease;
-    z-index: 1999;
+    z-index: 3999;
 }
 
 .nav-close {
@@ -1029,10 +1029,10 @@ a {
     }
 
     .global-nav {
-        display: grid;
-        grid-template-columns: 1fr auto;
+        display: flex;
         align-items: center;
-        padding: 4px 8px;
+        justify-content: space-between;
+        padding: 4px 6px;
         gap: 4px;
         flex-wrap: nowrap;
         white-space: nowrap;
@@ -1040,14 +1040,13 @@ a {
     }
 
     .nav-brand a {
-        font-size: 12.5px;
-        max-width: 74vw;
+        font-size: 12px;
+        max-width: 62vw;
     }
 
     .nav-toggle {
-        width: 32px;
-        height: 32px;
-        justify-self: end;
+        width: 30px;
+        height: 30px;
     }
 
     .card,
