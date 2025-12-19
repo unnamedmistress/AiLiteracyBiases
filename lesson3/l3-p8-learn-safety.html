@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety Guardrails - Lesson 3</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <link rel="stylesheet" href="../styles/lesson-responsive.css">
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-brand">AI Detective Academy</a>
+            <button class="nav-toggle" id="navToggle">☰</button>
+        </div>
+    </nav>
+    <div class="nav-menu" id="navMenu">
+        <button class="nav-close" id="navClose">×</button>
+        <div class="nav-section"><h3>MAIN</h3><a href="../index.html">Home</a></div>
+    </div>
+    <main class="lesson-container">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a><span>/</span>
+            <a href="l3-p1-intro.html">Lesson 3</a><span>/</span>
+            <span>Safety Guardrails</span>
+        </div>
+        <div class="lesson-header">
+            <h1>🛡️ Safety Guardrails: Play It Safe When AI Writes for You</h1>
+            <p class="lesson-subtitle">Because lawsuits are expensive</p>
+        </div>
+        <div class="progress-display">
+            <div class="xp-bar-container">
+                <div class="xp-bar-label"><span>Lesson Progress</span><span id="lessonXP">0/100 XP</span></div>
+                <div class="xp-bar"><div class="xp-fill" id="lessonXPFill" style="width: 0%"></div></div>
+            </div>
+            <p class="progress-text">Page 8 of 10</p>
+        </div>
+        <div class="content-section">
+            <h2>Plain-Language Rules</h2>
+            <ul style="line-height: 1.8; margin-left: 24px;">
+                <li>Don't share private info (PII, passwords, confidential data)</li>
+                <li>Don't copy someone else's content without permission</li>
+                <li>Always cite facts or sources</li>
+                <li>Use disclaimers if needed (e.g. "AI-generated")</li>
+            </ul>
+            
+            <h2>Why It Matters</h2>
+            <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-md); padding: 16px; margin: 20px 0;">
+                <strong style="color: #f87171;">Real Examples of What Not to Do:</strong>
+                <ul style="line-height: 1.8; margin-left: 24px; margin-top: 12px;">
+                    <li>Chatbot blurbs that leak personal data</li>
+                    <li>Bot posting unverified health or legal advice</li>
+                    <li>AI-generated content that plagiarizes existing work</li>
+                </ul>
+            </div>
+            
+            <h2>Guardrail Matrix</h2>
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                <thead>
+                    <tr style="background: rgba(59, 130, 246, 0.2);">
+                        <th style="border: 1px solid rgba(255, 255, 255, 0.2); padding: 12px; text-align: left;">When</th>
+                        <th style="border: 1px solid rgba(255, 255, 255, 0.2); padding: 12px; text-align: left;">What to Do</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px;"><strong>Before (input)</strong></td>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px;">Filter private or sensitive data</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px;"><strong>During (process)</strong></td>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px;">Limit what AI can output</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px;"><strong>After (output)</strong></td>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px;">Validate content, check for plagiarism</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px;"><strong>Post-run (log & review)</strong></td>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px;">Record what was generated, who approved it</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="lesson-nav">
+            <a href="l3-p7-game-style-remix.html" class="btn btn-secondary">← Previous</a>
+            <a href="l3-p9-game-safety-triage.html" class="btn btn-primary">Next: Safety Triage Game →</a>
+        </div>
+    </main>
+    <script src="../scripts/nav.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const progress = JSON.parse(localStorage.getItem('lesson3')) || { xp: 0, gamesComplete: 0 };
+            document.getElementById('lessonXP').textContent = `${progress.xp}/100 XP`;
+            document.getElementById('lessonXPFill').style.width = `${progress.xp}%`;
+        });
+    </script>
+</body>
+</html>

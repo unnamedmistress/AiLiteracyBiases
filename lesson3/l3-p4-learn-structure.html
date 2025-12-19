@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structure: Give Your Content Some Backbone - Lesson 3</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <link rel="stylesheet" href="../styles/lesson-responsive.css">
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-brand">AI Detective Academy</a>
+            <button class="nav-toggle" id="navToggle">☰</button>
+        </div>
+    </nav>
+    <div class="nav-menu" id="navMenu">
+        <button class="nav-close" id="navClose">×</button>
+        <div class="nav-section"><h3>MAIN</h3><a href="../index.html">Home</a></div>
+    </div>
+    <main class="lesson-container">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a><span>/</span>
+            <a href="l3-p1-intro.html">Lesson 3</a><span>/</span>
+            <span>Structure: Give Your Content Some Backbone</span>
+        </div>
+        <div class="lesson-header">
+            <h1>🏗️ Structure: Give Your Content Some Backbone</h1>
+            <p class="lesson-subtitle">Because rambling doesn't work</p>
+        </div>
+        <div class="progress-display">
+            <div class="xp-bar-container">
+                <div class="xp-bar-label"><span>Lesson Progress</span><span id="lessonXP">0/100 XP</span></div>
+                <div class="xp-bar"><div class="xp-fill" id="lessonXPFill" style="width: 0%"></div></div>
+            </div>
+            <p class="progress-text">Page 4 of 10</p>
+        </div>
+        <div class="content-section">
+            
+                <h2>Writing is like telling a story</h2>
+                <p>Start strong, build up, end with a clear point. Nobody wants to read a wall of text that goes nowhere.</p>
+                
+                <h3>Example Outline (for a blog post about "screen time and eye health")</h3>
+                <ol style="line-height: 1.8; margin-left: 24px;">
+                    <li><strong>Hook</strong> — Interesting fact about eye strain</li>
+                    <li><strong>Problem</strong> — Why screen time hurts eyes</li>
+                    <li><strong>Solution</strong> — 3 practical eye-care tips</li>
+                    <li><strong>Call to action</strong> — Try the tips / share with a friend</li>
+                </ol>
+                
+                <h3>Tips for Good Structure</h3>
+                <ul style="line-height: 1.8; margin-left: 24px;">
+                    <li>Keep one idea per section</li>
+                    <li>Lead with what grabs attention (hook)</li>
+                    <li>End with action or takeaway</li>
+                </ul>
+                
+                <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: var(--radius-md); padding: 16px; margin: 20px 0;">
+                    <strong>💡 Pro Tip:</strong> If you can't explain your structure in 4 bullet points, it's too complicated.
+                </div>
+            
+        </div>
+        <div class="lesson-nav">
+            <a href="l3-p3-*.html" class="btn btn-secondary">← Previous</a>
+            <a href="l3-p5-*.html" class="btn btn-primary">Next →</a>
+        </div>
+    </main>
+    <script src="../scripts/nav.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const progress = JSON.parse(localStorage.getItem('lesson3')) || { xp: 0, gamesComplete: 0 };
+            document.getElementById('lessonXP').textContent = `${progress.xp}/100 XP`;
+            document.getElementById('lessonXPFill').style.width = `${progress.xp}%`;
+        });
+    </script>
+</body>
+</html>

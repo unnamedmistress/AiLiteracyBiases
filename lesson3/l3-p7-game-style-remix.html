@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Remix Game - Lesson 3</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <link rel="stylesheet" href="../styles/lesson-responsive.css">
+    <style>
+        .game-container { background: rgba(236, 72, 153, 0.05); border: 1px solid rgba(236, 72, 153, 0.2); border-radius: var(--radius-lg); padding: 24px; margin: 24px 0; }
+        .rewrite-box { background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: var(--radius-md); padding: 16px; margin: 16px 0; }
+        .rewrite-box textarea { width: 100%; min-height: 100px; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: var(--radius-sm); padding: 12px; color: #fff; font-family: inherit; resize: vertical; }
+        .feedback-box { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); padding: 16px; margin: 20px 0; display: none; }
+        .feedback-box.show { display: block; }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-brand">AI Detective Academy</a>
+            <button class="nav-toggle" id="navToggle">☰</button>
+        </div>
+    </nav>
+    <div class="nav-menu" id="navMenu">
+        <button class="nav-close" id="navClose">×</button>
+        <div class="nav-section"><h3>MAIN</h3><a href="../index.html">Home</a></div>
+    </div>
+    <main class="lesson-container">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a><span>/</span>
+            <a href="l3-p1-intro.html">Lesson 3</a><span>/</span>
+            <span>Style Remix Game</span>
+        </div>
+        <div class="lesson-header">
+            <h1>🎮 Style Remix</h1>
+            <p class="lesson-subtitle">Rewrite for different audiences</p>
+        </div>
+        <div class="progress-display">
+            <div class="xp-bar-container">
+                <div class="xp-bar-label"><span>Lesson Progress</span><span id="lessonXP">0/100 XP</span></div>
+                <div class="xp-bar"><div class="xp-fill" id="lessonXPFill" style="width: 0%"></div></div>
+            </div>
+            <p class="progress-text">Page 7 of 10 • Game 3/5</p>
+        </div>
+        <div class="game-container">
+            <h2>Your Mission</h2>
+            <p>Rewrite this paragraph for three different audiences. Focus on changing tone, not facts.</p>
+            
+            <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: var(--radius-md); padding: 16px; margin: 20px 0;">
+                <strong>Original:</strong>
+                <p style="margin-top: 8px; font-family: 'Courier New', monospace; font-size: 14px;">"Our new project management tool helps teams collaborate more effectively by centralizing communication and task tracking."</p>
+            </div>
+            
+            <div class="rewrite-box">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #60a5fa;">Rewrite for: CEO / Executive</label>
+                <textarea id="ceoRewrite" placeholder="Make it strategic and ROI-focused..."></textarea>
+            </div>
+            
+            <div class="rewrite-box">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #ec4899;">Rewrite for: Peer / Coworker</label>
+                <textarea id="peerRewrite" placeholder="Make it casual and relatable..."></textarea>
+            </div>
+            
+            <div class="rewrite-box">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34d399;">Rewrite for: New Team Member</label>
+                <textarea id="newbieRewrite" placeholder="Make it simple and welcoming..."></textarea>
+            </div>
+            
+            <button class="btn btn-primary" onclick="submitRewrites()">Submit Rewrites</button>
+            
+            <div class="feedback-box" id="feedbackBox">
+                <h3>✅ Great Work!</h3>
+                <p><strong>What you learned:</strong> The same information can be delivered in completely different ways depending on who's reading it.</p>
+                <ul style="line-height: 1.8; margin-left: 24px; margin-top: 12px;">
+                    <li><strong>CEO:</strong> Focus on business impact, efficiency, ROI</li>
+                    <li><strong>Peer:</strong> Casual, relatable, "we're in this together" energy</li>
+                    <li><strong>New member:</strong> Simple, welcoming, no jargon</li>
+                </ul>
+                <p style="margin-top: 12px;"><strong>Badge Unlocked:</strong> 🎭 Tone Chameleon</p>
+                <div style="margin-top: 20px; padding: 12px; background: rgba(34, 197, 94, 0.2); border-radius: var(--radius-md); text-align: center;">
+                    <strong style="color: #34d399;">+20 XP Earned!</strong>
+                </div>
+            </div>
+        </div>
+        <div class="lesson-nav">
+            <a href="l3-p6-learn-tone.html" class="btn btn-secondary">← Previous</a>
+            <a href="l3-p8-learn-safety.html" class="btn btn-primary" id="nextBtn">Next →</a>
+        </div>
+    </main>
+    <script src="../scripts/nav.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script>
+        function submitRewrites() {
+            const ceo = document.getElementById('ceoRewrite').value.trim();
+            const peer = document.getElementById('peerRewrite').value.trim();
+            const newbie = document.getElementById('newbieRewrite').value.trim();
+            
+            if (!ceo || !peer || !newbie) {
+                alert('Please fill in all three rewrites!');
+                return;
+            }
+            
+            document.getElementById('feedbackBox').classList.add('show');
+            
+            const progress = JSON.parse(localStorage.getItem('lesson3')) || { xp: 0, gamesComplete: 0 };
+            progress.xp = Math.min(100, progress.xp + 20);
+            progress.gamesComplete = Math.max(progress.gamesComplete, 3);
+            localStorage.setItem('lesson3', JSON.stringify(progress));
+            
+            document.getElementById('lessonXP').textContent = `${progress.xp}/100 XP`;
+            document.getElementById('lessonXPFill').style.width = `${progress.xp}%`;
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const progress = JSON.parse(localStorage.getItem('lesson3')) || { xp: 0, gamesComplete: 0 };
+            document.getElementById('lessonXP').textContent = `${progress.xp}/100 XP`;
+            document.getElementById('lessonXPFill').style.width = `${progress.xp}%`;
+        });
+    </script>
+</body>
+</html>

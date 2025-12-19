@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 3 Summary</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <link rel="stylesheet" href="../styles/lesson-responsive.css">
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-brand">AI Detective Academy</a>
+            <button class="nav-toggle" id="navToggle">☰</button>
+        </div>
+    </nav>
+    <div class="nav-menu" id="navMenu">
+        <button class="nav-close" id="navClose">×</button>
+        <div class="nav-section"><h3>MAIN</h3><a href="../index.html">Home</a></div>
+    </div>
+    <main class="lesson-container">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a><span>/</span>
+            <a href="l3-p1-intro.html">Lesson 3</a><span>/</span>
+            <span>Summary</span>
+        </div>
+        <div class="lesson-header">
+            <h1>🎉 Lesson 3 Complete!</h1>
+            <p class="lesson-subtitle">You're no longer a content creation rookie</p>
+        </div>
+        <div class="progress-display">
+            <div class="xp-bar-container">
+                <div class="xp-bar-label"><span>Lesson Progress</span><span id="lessonXP">100/100 XP</span></div>
+                <div class="xp-bar"><div class="xp-fill" id="lessonXPFill" style="width: 100%"></div></div>
+            </div>
+            <p class="progress-text">Page 10 of 10 • All games complete! 🎉</p>
+        </div>
+        <div class="content-section">
+            <h2>📝 What You Learned</h2>
+            <div style="display: grid; gap: 16px; margin: 24px 0;">
+                <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: var(--radius-md); padding: 20px;">
+                    <strong style="color: #60a5fa;">✅ Strong Briefs</strong>
+                    <p style="margin-top: 8px;">You know how to write clear, specific briefs that include audience, tone, and key points.</p>
+                </div>
+                <div style="background: rgba(236, 72, 153, 0.1); border: 1px solid rgba(236, 72, 153, 0.3); border-radius: var(--radius-md); padding: 20px;">
+                    <strong style="color: #ec4899;">✅ Content Structure</strong>
+                    <p style="margin-top: 8px;">You can organize content with a clear flow: Hook → Problem → Solution → Action.</p>
+                </div>
+                <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); padding: 20px;">
+                    <strong style="color: #34d399;">✅ Tone Matching</strong>
+                    <p style="margin-top: 8px;">You can adapt your writing style for different audiences (CEO vs. coworker vs. newbie).</p>
+                </div>
+                <div style="background: rgba(250, 204, 21, 0.1); border: 1px solid rgba(250, 204, 21, 0.3); border-radius: var(--radius-md); padding: 20px;">
+                    <strong style="color: #facc15;">✅ Safety Guardrails</strong>
+                    <p style="margin-top: 8px;">You know when to refuse, ask follow-ups, or add disclaimers to avoid legal/privacy issues.</p>
+                </div>
+            </div>
+            
+            <h2>🎯 Action Checklist</h2>
+            <ul style="line-height: 1.8; margin-left: 24px;">
+                <li>Clarify your brief (audience, tone, key points)</li>
+                <li>Outline your content (hook, problem, solution, CTA)</li>
+                <li>Choose tone & style for your audience</li>
+                <li>Add guardrails before posting</li>
+            </ul>
+            
+            <h2>💭 Reflection Prompt</h2>
+            <div style="background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: var(--radius-md); padding: 20px; margin: 20px 0;">
+                <p><strong>Describe one way you'll apply these steps in your next content piece:</strong></p>
+                <textarea style="width: 100%; min-height: 100px; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: var(--radius-sm); padding: 12px; color: #fff; font-family: inherit; margin-top: 12px;" placeholder="e.g., I'll write a brief for my next social post that includes audience and tone..."></textarea>
+            </div>
+            
+            <h2>🚀 What's Next?</h2>
+            <p>Ready to level up? <strong>Lesson 4: Advanced Prompting</strong> teaches you few-shot learning, chain-of-thought reasoning, and tool use.</p>
+        </div>
+        <div class="lesson-nav">
+            <a href="l3-p9-game-safety-triage.html" class="btn btn-secondary">← Previous</a>
+            <a href="../lesson4/l4-p1-intro.html" class="btn btn-primary">Next: Lesson 4 →</a>
+        </div>
+    </main>
+    <script src="../scripts/nav.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mark lesson as complete
+            const progress = { xp: 100, gamesComplete: 5 };
+            localStorage.setItem('lesson3', JSON.stringify(progress));
+            document.getElementById('lessonXP').textContent = '100/100 XP';
+            document.getElementById('lessonXPFill').style.width = '100%';
+        });
+    </script>
+</body>
+</html>

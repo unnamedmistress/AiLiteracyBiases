@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 3: Content Creation 📱</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <link rel="stylesheet" href="../styles/lesson-responsive.css">
+    <style>
+        .theme-icon { font-size: 48px; margin-bottom: 16px; }
+        .scenario-card { background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(168, 85, 247, 0.15)); border: 1px solid rgba(236, 72, 153, 0.3); border-radius: var(--radius-lg); padding: 24px; margin: 24px 0; }
+        .learning-objectives { display: grid; gap: 12px; margin: 24px 0; }
+        .objective-item { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: var(--radius-md); padding: 16px; display: flex; align-items: start; gap: 12px; }
+        .objective-icon { font-size: 24px; flex-shrink: 0; }
+        .quick-check { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: var(--radius-lg); padding: 20px; margin: 24px 0; }
+        .quick-check h3 { margin-bottom: 16px; color: #60a5fa; }
+        .check-question { background: rgba(0, 0, 0, 0.25); border-radius: var(--radius-md); padding: 12px; margin: 12px 0; }
+        .why-it-works { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-lg); padding: 20px; margin: 24px 0; }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-brand">AI Detective Academy</a>
+            <button class="nav-toggle" id="navToggle" aria-label="Open menu">☰</button>
+        </div>
+    </nav>
+
+    <div class="nav-menu" id="navMenu">
+        <button class="nav-close" id="navClose" aria-label="Close menu">×</button>
+        <div class="nav-section">
+            <h3>MAIN</h3>
+            <a href="../index.html">Home</a>
+            <a href="../about.html">About</a>
+        </div>
+        <div class="nav-section">
+            <h3>RESOURCES</h3>
+            <a href="../glossary.html">Glossary</a>
+            <a href="../updates.html">Updates</a>
+        </div>
+        <div class="nav-section">
+            <h3>LESSONS</h3>
+            <a href="../lesson1-ai-intro.html">Lesson 1</a>
+            <a href="../presentation.html">Lesson 2</a>
+            <a href="l3-p1-intro.html" class="active">Lesson 3</a>
+            <a href="../lesson4-advanced-prompting.html">Lesson 4</a>
+            <a href="../lesson5-ai-workflows.html">Lesson 5</a>
+        </div>
+    </div>
+
+    <main class="lesson-container">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <span>Lesson 3: Content Creation</span>
+        </div>
+
+        <div class="lesson-header">
+            <div class="theme-icon">📱</div>
+            <h1>Lesson 3: Content Creation</h1>
+            <p class="lesson-subtitle">Social Media Meltdowns Edition</p>
+        </div>
+
+        <div class="progress-display">
+            <div class="xp-bar-container">
+                <div class="xp-bar-label">
+                    <span>Lesson Progress</span>
+                    <span id="lessonXP">0/100 XP</span>
+                </div>
+                <div class="xp-bar">
+                    <div class="xp-fill" id="lessonXPFill" style="width: 0%"></div>
+                </div>
+            </div>
+            <p class="progress-text">Page 1 of 10 • 0/5 games complete</p>
+        </div>
+
+        <div class="scenario-card">
+            <h2>🧠 Real-Life Setup</h2>
+            <p>It's 2am. Your brand's Twitter intern just posted "ratio + L + touch grass" in response to a customer complaint. Your phone is blowing up. The tweet has 50K likes. Your boss is calling.</p>
+            <p><strong>This could have been avoided.</strong></p>
+            <p>Welcome to the world of AI-powered content creation, where one poorly-written brief can turn your brand into a meme for all the wrong reasons.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>What You'll Learn</h2>
+            <div class="learning-objectives">
+                <div class="objective-item">
+                    <span class="objective-icon">📝</span>
+                    <div>
+                        <strong>Write a clear brief</strong> so AI understands your idea (not just vibes)
+                    </div>
+                </div>
+                <div class="objective-item">
+                    <span class="objective-icon">🏗️</span>
+                    <div>
+                        <strong>Build an outline</strong> so content flows instead of rambles
+                    </div>
+                </div>
+                <div class="objective-item">
+                    <span class="objective-icon">🎭</span>
+                    <div>
+                        <strong>Match tone and vibe</strong> to your audience (not your mood)
+                    </div>
+                </div>
+                <div class="objective-item">
+                    <span class="objective-icon">🛡️</span>
+                    <div>
+                        <strong>Keep outputs safe</strong>, accurate, and professional
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-check">
+            <h3>Quick Check</h3>
+            <div class="check-question">
+                <p><strong>Why start with a brief?</strong></p>
+                <p style="color: var(--color-muted); font-size: 14px; margin-top: 8px;">Think about it before clicking next. We'll test this later.</p>
+            </div>
+            <div class="check-question">
+                <p><strong>What makes structure work?</strong></p>
+                <p style="color: var(--color-muted); font-size: 14px; margin-top: 8px;">Hint: It's not just bullet points.</p>
+            </div>
+        </div>
+
+        <div class="why-it-works">
+            <h3>Why It Works</h3>
+            <p>AI doesn't read your mind. It reads your prompt. The better your brief, the less time you spend editing garbage output. The better your structure, the more your content actually makes sense. The better your tone matching, the less likely you end up on r/FellowKids.</p>
+            <p><strong>Translation:</strong> Clear prompts → structure → tone checks → guardrails = content that doesn't make you want to delete your account.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>What's Next?</h2>
+            <p>In this lesson, you'll learn how to:</p>
+            <ul style="line-height: 1.8; margin-left: 24px;">
+                <li>Write briefs that actually work (not "make it pop")</li>
+                <li>Structure content like a human, not a robot</li>
+                <li>Match tone to audience (formal vs. "bestie energy")</li>
+                <li>Add safety guardrails so you don't accidentally leak PII or get sued</li>
+            </ul>
+            <p style="margin-top: 16px;"><strong>Ready to stop sounding like a corporate bot?</strong> Let's go.</p>
+        </div>
+
+        <div class="lesson-nav">
+            <a href="../index.html" class="btn btn-secondary">← Main Menu</a>
+            <a href="l3-p2-learn-briefs.html" class="btn btn-primary">Next: Strong Briefs →</a>
+        </div>
+    </main>
+
+    <script src="../scripts/nav.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script>
+        // Initialize lesson progress
+        document.addEventListener('DOMContentLoaded', () => {
+            const lessonKey = 'lesson3';
+            const progress = JSON.parse(localStorage.getItem(lessonKey)) || { xp: 0, gamesComplete: 0 };
+            
+            document.getElementById('lessonXP').textContent = `${progress.xp}/100 XP`;
+            document.getElementById('lessonXPFill').style.width = `${progress.xp}%`;
+            
+            const progressText = document.querySelector('.progress-text');
+            progressText.textContent = `Page 1 of 10 • ${progress.gamesComplete}/5 games complete`;
+        });
+    </script>
+</body>
+</html>
