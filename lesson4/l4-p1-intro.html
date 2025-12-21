@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 4: Advanced Prompting 🎧</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <link rel="stylesheet" href="../styles/lesson-responsive.css">
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-brand">AI Detective Academy</a>
+            <button class="nav-toggle" id="navToggle">☰</button>
+        </div>
+    </nav>
+    <div class="nav-menu" id="navMenu">
+        <button class="nav-close" id="navClose">×</button>
+        <div class="nav-section"><h3>MAIN</h3><a href="../index.html">Home</a></div>
+    </div>
+    <main class="lesson-container">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a><span>/</span>
+            <span>Lesson 4: Advanced Prompting</span>
+        </div>
+        <div class="lesson-header">
+            <div style="font-size: 48px; margin-bottom: 16px;">🎧</div>
+            <h1>Lesson 4: Advanced Prompting</h1>
+            <p class="lesson-subtitle">Customer Support Roulette Edition</p>
+        </div>
+        <div class="progress-display">
+            <div class="xp-bar-container">
+                <div class="xp-bar-label"><span>Lesson Progress</span><span id="lessonXP">0/100 XP</span></div>
+                <div class="xp-bar"><div class="xp-fill" id="lessonXPFill" style="width: 0%"></div></div>
+            </div>
+            <p class="progress-text">Page 1 of 12 • 0/5 games complete</p>
+        </div>
+        <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.15)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-lg); padding: 24px; margin: 24px 0;">
+            <h2>🧠 Real-Life Setup</h2>
+            <p>It's Monday. You have 47 support tickets. Half are "it's not working" with zero details. One is "I DEMAND A REFUND" in all caps. Another is a 500-word essay about someone's weekend.</p>
+            <p><strong>You need AI to help triage this chaos.</strong></p>
+            <p>But "summarize this ticket" isn't going to cut it. You need advanced prompting techniques: few-shot learning, chain-of-thought reasoning, tool use, and retrieval.</p>
+        </div>
+        <div class="content-section">
+            <h2>What You'll Learn</h2>
+            <ul style="line-height: 1.8; margin-left: 24px;">
+                <li><strong>Few-Shot Prompting:</strong> Show the model examples so it learns what "good" looks like</li>
+                <li><strong>Chain-of-Thought (CoT):</strong> Ask AI to show its work step-by-step</li>
+                <li><strong>Tool Use & Function Calling:</strong> Tell AI how to use real tools (APIs, databases)</li>
+                <li><strong>Retrieval & Grounding:</strong> Pull in real facts before asking questions</li>
+                <li><strong>Safety & Constraints:</strong> Know when to say "I can't help with that"</li>
+            </ul>
+        </div>
+        <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: var(--radius-md); padding: 16px; margin: 20px 0;">
+            <strong>💡 Pro Tip:</strong> These techniques turn AI from "sometimes helpful" to "actually reliable." Worth learning.
+        </div>
+        <div class="lesson-nav">
+            <a href="../index.html" class="btn btn-secondary">← Main Menu</a>
+            <a href="l4-p2-learn-few-shot.html" class="btn btn-primary">Next: Few-Shot Prompting →</a>
+        </div>
+    </main>
+    <script src="../scripts/nav.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const progress = JSON.parse(localStorage.getItem('lesson4')) || { xp: 0, gamesComplete: 0 };
+            document.getElementById('lessonXP').textContent = `${progress.xp}/100 XP`;
+            document.getElementById('lessonXPFill').style.width = `${progress.xp}%`;
+        });
+    </script>
+</body>
+</html>

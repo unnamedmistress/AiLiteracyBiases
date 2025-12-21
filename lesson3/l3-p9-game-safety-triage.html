@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety Triage Game - Lesson 3</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <link rel="stylesheet" href="../styles/lesson-responsive.css">
+    <style>
+        .game-container { background: rgba(236, 72, 153, 0.05); border: 1px solid rgba(236, 72, 153, 0.2); border-radius: var(--radius-lg); padding: 24px; margin: 24px 0; }
+        .scenario-card { background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: var(--radius-md); padding: 20px; margin: 20px 0; }
+        .action-options { display: grid; gap: 12px; margin: 20px 0; }
+        .action-option { background: rgba(0, 0, 0, 0.25); border: 2px solid rgba(255, 255, 255, 0.15); border-radius: var(--radius-md); padding: 16px; cursor: pointer; transition: all 0.2s ease; }
+        .action-option:hover { border-color: rgba(59, 130, 246, 0.5); transform: translateY(-2px); }
+        .action-option.selected { border-color: #60a5fa; background: rgba(59, 130, 246, 0.1); }
+        .action-option.correct { border-color: #34d399; background: rgba(16, 185, 129, 0.15); }
+        .action-option.incorrect { border-color: #f87171; background: rgba(239, 68, 68, 0.15); }
+        .feedback-box { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); padding: 16px; margin: 20px 0; display: none; }
+        .feedback-box.show { display: block; }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-brand">AI Detective Academy</a>
+            <button class="nav-toggle" id="navToggle">☰</button>
+        </div>
+    </nav>
+    <div class="nav-menu" id="navMenu">
+        <button class="nav-close" id="navClose">×</button>
+        <div class="nav-section"><h3>MAIN</h3><a href="../index.html">Home</a></div>
+    </div>
+    <main class="lesson-container">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a><span>/</span>
+            <a href="l3-p1-intro.html">Lesson 3</a><span>/</span>
+            <span>Safety Triage Game</span>
+        </div>
+        <div class="lesson-header">
+            <h1>🎮 Safety Triage</h1>
+            <p class="lesson-subtitle">Choose the safest response</p>
+        </div>
+        <div class="progress-display">
+            <div class="xp-bar-container">
+                <div class="xp-bar-label"><span>Lesson Progress</span><span id="lessonXP">0/100 XP</span></div>
+                <div class="xp-bar"><div class="xp-fill" id="lessonXPFill" style="width: 0%"></div></div>
+            </div>
+            <p class="progress-text">Page 9 of 10 • Game 4/5</p>
+        </div>
+        <div class="game-container">
+            <h2>Scenario 1</h2>
+            <div class="scenario-card">
+                <p><strong>Request:</strong> "Write a social post using a customer's testimonial with their full name and email address."</p>
+            </div>
+            <p><strong>What should you do?</strong></p>
+            <div class="action-options">
+                <div class="action-option" data-answer="refuse" onclick="selectAction(1, 'refuse')">
+                    <strong>Refuse</strong> — Don't share PII without explicit permission
+                </div>
+                <div class="action-option" data-answer="ask" onclick="selectAction(1, 'ask')">
+                    <strong>Ask follow-up</strong> — "Do we have permission to use their email publicly?"
+                </div>
+                <div class="action-option" data-answer="proceed" onclick="selectAction(1, 'proceed')">
+                    <strong>Proceed</strong> — Post it as requested
+                </div>
+            </div>
+            
+            <h2 style="margin-top: 40px;">Scenario 2</h2>
+            <div class="scenario-card">
+                <p><strong>Request:</strong> "Answer a medical question as a chatbot: 'Should I take ibuprofen for my headache?'"</p>
+            </div>
+            <p><strong>What should you do?</strong></p>
+            <div class="action-options">
+                <div class="action-option" data-answer="refuse" onclick="selectAction(2, 'refuse')">
+                    <strong>Refuse</strong> — "I can't provide medical advice. Please consult a doctor."
+                </div>
+                <div class="action-option" data-answer="general" onclick="selectAction(2, 'general')">
+                    <strong>Provide general info</strong> — "Ibuprofen is commonly used for headaches, but consult a healthcare professional."
+                </div>
+                <div class="action-option" data-answer="diagnose" onclick="selectAction(2, 'diagnose')">
+                    <strong>Diagnose</strong> — "Yes, take 200mg every 4 hours."
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="checkAnswers()" style="margin-top: 24px;">Check Answers</button>
+            
+            <div class="feedback-box" id="feedbackBox">
+                <h3>✅ Safety First!</h3>
+                <p><strong>Scenario 1:</strong> Correct answer is "Ask follow-up" or "Refuse". Sharing someone's email without permission violates privacy laws (GDPR, CCPA).</p>
+                <p style="margin-top: 12px;"><strong>Scenario 2:</strong> Correct answer is "Refuse" or "Provide general info with disclaimer". Never diagnose or prescribe medication.</p>
+                <p style="margin-top: 12px;"><strong>Pro Tip:</strong> When in doubt, add a disclaimer or refuse. Better safe than sued.</p>
+                <div style="margin-top: 20px; padding: 12px; background: rgba(34, 197, 94, 0.2); border-radius: var(--radius-md); text-align: center;">
+                    <strong style="color: #34d399;">+20 XP Earned!</strong>
+                </div>
+            </div>
+        </div>
+        <div class="lesson-nav">
+            <a href="l3-p8-learn-safety.html" class="btn btn-secondary">← Previous</a>
+            <a href="l3-p10-summary.html" class="btn btn-primary" id="nextBtn">Next: Summary →</a>
+        </div>
+    </main>
+    <script src="../scripts/nav.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script>
+        let answers = { 1: null, 2: null };
+        
+        function selectAction(scenario, answer) {
+            answers[scenario] = answer;
+            document.querySelectorAll(`[data-answer]`).forEach(el => {
+                if (el.closest('.action-options').previousElementSibling.textContent.includes(`Scenario ${scenario}`)) {
+                    el.classList.remove('selected');
+                }
+            });
+            event.target.closest('.action-option').classList.add('selected');
+        }
+        
+        function checkAnswers() {
+            const correct1 = answers[1] === 'refuse' || answers[1] === 'ask';
+            const correct2 = answers[2] === 'refuse' || answers[2] === 'general';
+            
+            if (!answers[1] || !answers[2]) {
+                alert('Please answer both scenarios!');
+                return;
+            }
+            
+            if (correct1 && correct2) {
+                document.getElementById('feedbackBox').classList.add('show');
+                const progress = JSON.parse(localStorage.getItem('lesson3')) || { xp: 0, gamesComplete: 0 };
+                progress.xp = Math.min(100, progress.xp + 20);
+                progress.gamesComplete = Math.max(progress.gamesComplete, 4);
+                localStorage.setItem('lesson3', JSON.stringify(progress));
+                document.getElementById('lessonXP').textContent = `${progress.xp}/100 XP`;
+                document.getElementById('lessonXPFill').style.width = `${progress.xp}%`;
+            } else {
+                alert('Not quite! Think about privacy laws and liability. Try again.');
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const progress = JSON.parse(localStorage.getItem('lesson3')) || { xp: 0, gamesComplete: 0 };
+            document.getElementById('lessonXP').textContent = `${progress.xp}/100 XP`;
+            document.getElementById('lessonXPFill').style.width = `${progress.xp}%`;
+        });
+    </script>
+</body>
+</html>

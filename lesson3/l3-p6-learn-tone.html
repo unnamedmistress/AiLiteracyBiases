@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tone & Style - Lesson 3</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <link rel="stylesheet" href="../styles/lesson-responsive.css">
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-brand">AI Detective Academy</a>
+            <button class="nav-toggle" id="navToggle">☰</button>
+        </div>
+    </nav>
+    <div class="nav-menu" id="navMenu">
+        <button class="nav-close" id="navClose">×</button>
+        <div class="nav-section"><h3>MAIN</h3><a href="../index.html">Home</a></div>
+    </div>
+    <main class="lesson-container">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a><span>/</span>
+            <a href="l3-p1-intro.html">Lesson 3</a><span>/</span>
+            <span>Tone & Style</span>
+        </div>
+        <div class="lesson-header">
+            <h1>🎭 Tone & Style: Speak Like a Human (Not a Robot)</h1>
+            <p class="lesson-subtitle">Because "synergize" is not a real word</p>
+        </div>
+        <div class="progress-display">
+            <div class="xp-bar-container">
+                <div class="xp-bar-label"><span>Lesson Progress</span><span id="lessonXP">0/100 XP</span></div>
+                <div class="xp-bar"><div class="xp-fill" id="lessonXPFill" style="width: 0%"></div></div>
+            </div>
+            <p class="progress-text">Page 6 of 10</p>
+        </div>
+        <div class="content-section">
+            <h2>Three Example Messages</h2>
+            <div style="display: grid; gap: 16px; margin: 24px 0;">
+                <div style="background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: var(--radius-md); padding: 16px;">
+                    <strong style="color: #60a5fa;">Formal (Press Release Vibes)</strong>
+                    <p style="margin-top: 8px; font-family: 'Courier New', monospace; font-size: 14px;">"We are pleased to announce our new productivity initiative."</p>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: var(--radius-md); padding: 16px;">
+                    <strong style="color: #ec4899;">Playful (Social Media Energy)</strong>
+                    <p style="margin-top: 8px; font-family: 'Courier New', monospace; font-size: 14px;">"New productivity hack just dropped 👀 You're gonna want this one"</p>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: var(--radius-md); padding: 16px;">
+                    <strong style="color: #34d399;">Empathetic (Support-Focused)</strong>
+                    <p style="margin-top: 8px; font-family: 'Courier New', monospace; font-size: 14px;">"I know you're overwhelmed. Here's a simple way to get more done without burning out."</p>
+                </div>
+            </div>
+            
+            <h2>Breakdown</h2>
+            <ul style="line-height: 1.8; margin-left: 24px;">
+                <li><strong>Voice:</strong> Personality / attitude (e.g. friendly, serious)</li>
+                <li><strong>Cadence:</strong> Sentence length, rhythm</li>
+                <li><strong>Lexicon:</strong> Word choice (simple vs. technical)</li>
+            </ul>
+            
+            <h2>Real-World Sample</h2>
+            <p>Two social media blurbs about "coffee & focus":</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0;">
+                <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-md); padding: 16px;">
+                    <strong style="color: #f87171;">Corporate Lingo</strong>
+                    <p style="margin-top: 8px; font-size: 14px;">"Leverage caffeine to optimize cognitive performance metrics."</p>
+                </div>
+                <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); padding: 16px;">
+                    <strong style="color: #34d399;">Casual Meme</strong>
+                    <p style="margin-top: 8px; font-size: 14px;">"Coffee: because adulting is hard and spreadsheets don't fill themselves."</p>
+                </div>
+            </div>
+            <p><strong>Question:</strong> For a stressed startup worker, which fits better?</p>
+            <p style="color: var(--color-muted); margin-top: 8px;">Hint: Nobody says "optimize cognitive performance metrics" at 9am on a Monday.</p>
+        </div>
+        <div class="lesson-nav">
+            <a href="l3-p5-game-outline-fixer.html" class="btn btn-secondary">← Previous</a>
+            <a href="l3-p7-game-style-remix.html" class="btn btn-primary">Next: Style Remix Game →</a>
+        </div>
+    </main>
+    <script src="../scripts/nav.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const progress = JSON.parse(localStorage.getItem('lesson3')) || { xp: 0, gamesComplete: 0 };
+            document.getElementById('lessonXP').textContent = `${progress.xp}/100 XP`;
+            document.getElementById('lessonXPFill').style.width = `${progress.xp}%`;
+        });
+    </script>
+</body>
+</html>
