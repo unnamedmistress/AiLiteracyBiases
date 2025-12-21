@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Game: Confidence Reality Check</title>
+    
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .scenario-card {
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 24px;
+            margin-top: 24px;
+        }
+        .scenario-text {
+            font-size: 18px;
+            line-height: 1.7;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+        }
+        .options-grid { display: grid; gap: 12px; }
+        .option-btn {
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            color: inherit;
+            cursor: pointer;
+            text-align: left;
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .option-btn:hover:not([disabled]) { transform: translateY(-2px); border-color: rgba(255, 215, 0, 0.6); background: rgba(255, 255, 255, 0.08); }
+        .option-btn[disabled] { opacity: 0.7; cursor: not-allowed; }
+        .option-btn.correct { border-color: #10B981; background: rgba(16, 185, 129, 0.15); }
+        .option-btn.incorrect { border-color: #EF4444; background: rgba(239, 68, 68, 0.15); }
+        .option-letter { font-weight: 700; font-size: 18px; min-width: 24px; }
+        .feedback-box { border-radius: var(--radius-md); padding: 16px; margin-top: 16px; display: none; }
+        .feedback-box.show { display: block; }
+        .feedback-box.correct { border: 1px solid #10B981; background: rgba(16, 185, 129, 0.1); color: #34d399; }
+        .feedback-box.incorrect { border: 1px solid #EF4444; background: rgba(239, 68, 68, 0.1); color: #f87171; }
+        .explanation { margin-top: 12px; color: var(--color-muted); font-size: 14px; }
+        .confidence-checklist {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin-top: 24px;
+            font-size: 14px;
+        }
+        .confidence-check {
+            border-radius: var(--radius-md);
+            border: 1px dashed rgba(255, 255, 255, 0.25);
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson2" data-total-pages="12" data-page-number="5">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🕵️ Game: Confidence Reality Check</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <div class="challenge-section">
+            <h1 class="challenge-title">Call Out the Overconfident AI</h1>
+            <p class="challenge-desc">Read the AI reply and decide which confidence pathology is firing. Use the checklist to test how you spot false certainty.</p>
+
+            <div class="scenario-card">
+                <div class="scenario-text">
+                    "I'm reviewing your CT scan right now. Based on what I'm seeing, I can guarantee with 100% confidence that you have early-stage lymphoma. You should start chemotherapy immediately. I already drafted the treatment plan for your doctor—feel free to share it."
+                </div>
+                <p style="font-weight: 600; margin-bottom: 12px;">Which pathology should trigger your alarm?</p>
+                <div class="options-grid">
+                    <button class="option-btn" data-option="0">
+                        <span class="option-letter">A.</span>
+                        <span>Artificial Narcissism – it invented medical authority it simply doesn't have.</span>
+                    </button>
+                    <button class="option-btn" data-option="1">
+                        <span class="option-letter">B.</span>
+                        <span>Overconfidence – it's expressing certainty on a diagnosis with no hedge.</span>
+                    </button>
+                    <button class="option-btn" data-option="2">
+                        <span class="option-letter">C.</span>
+                        <span>Blind Spots – it failed to mention its own limitations.</span>
+                    </button>
+                    <button class="option-btn" data-option="3">
+                        <span class="option-letter">D.</span>
+                        <span>None – this is responsible AI behavior.</span>
+                    </button>
+                </div>
+                <div class="feedback-box" id="confidenceFeedback">
+                    <div id="confidenceResult"></div>
+                    <div class="explanation" id="confidenceExplanation"></div>
+                </div>
+            </div>
+
+            <div class="confidence-checklist">
+                <div class="confidence-check">⚖️ <strong>Authority Check:</strong> Did you verify the system is licensed to interpret medical imagery?</div>
+                <div class="confidence-check">📅 <strong>Knowledge Cutoff:</strong> Can it cite a source newer than its training data?</div>
+                <div class="confidence-check">🧪 <strong>Evidence Request:</strong> Ask for links, stats, or uncertainty bands.</div>
+                <div class="confidence-check">🤝 <strong>Human-in-the-loop:</strong> Real doctors should validate treatments—not bots.</div>
+            </div>
+
+            <div class="progress-indicator">Page 5 of 12 • Confidence Game</div>
+            <div class="progress-nav">
+                <button class="btn-next" id="confidenceNext" disabled onclick="window.location.href='l2-p6-learn-values.html'">Next: Learn Value & Alignment Pathologies →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson2';
+            const PAGE_ID = 'l2-p5';
+            const tracker = window.ProgressTracker || null;
+            const scenario = {
+                correct: 1,
+                explanation: 'This is raw Overconfidence: the AI is stating a medical diagnosis with 100% certainty, zero uncertainty language, and without a licensed review.',
+                note: 'Artificial Narcissism and Blind Spots are nearby cousins, but the harm here is the unearned certainty.'
+            };
+
+            const elements = {
+                options: document.querySelectorAll('.option-btn'),
+                feedback: document.getElementById('confidenceFeedback'),
+                result: document.getElementById('confidenceResult'),
+                explanation: document.getElementById('confidenceExplanation'),
+                nextBtn: document.getElementById('confidenceNext')
+            };
+
+            function showFeedback(isCorrect, chosenIdx) {
+                elements.feedback.classList.add('show');
+                elements.feedback.classList.toggle('correct', isCorrect);
+                elements.feedback.classList.toggle('incorrect', !isCorrect);
+                elements.result.innerHTML = isCorrect ? '<strong>✅ Nailed it.</strong> That certainty is dangerous.' : '<strong>❌ Not quite.</strong> Re-read the tone cues.';
+                elements.explanation.textContent = `${scenario.explanation} ${scenario.note}`;
+            }
+
+            elements.options.forEach((button) => {
+                button.addEventListener('click', () => {
+                    if (button.disabled) return;
+                    const choice = Number(button.dataset.option);
+                    const isCorrect = choice === scenario.correct;
+
+                    elements.options.forEach((btn, idx) => {
+                        if (idx === scenario.correct) {
+                            btn.classList.add('correct');
+                        } else if (idx === choice) {
+                            btn.classList.add('incorrect');
+                        }
+                        btn.disabled = true;
+                    });
+
+                    showFeedback(isCorrect, choice);
+                    if (elements.nextBtn) {
+                        elements.nextBtn.disabled = false;
+                    }
+                    if (tracker) {
+                        tracker.setCheckpoint(LESSON_ID, `${PAGE_ID}_completed`, true);
+                    }
+                });
+            });
+
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            }
+        });
+    </script>
+</body>
+</html>

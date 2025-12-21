@@ -3,212 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strong Briefs - Lesson 3</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 3: Content Creation · Briefs</title>
     <link rel="stylesheet" href="../styles/shared.css">
-    <link rel="stylesheet" href="../styles/lesson-responsive.css">
-    <style>
-        .scenario-box { background: rgba(236, 72, 153, 0.1); border: 1px solid rgba(236, 72, 153, 0.3); border-radius: var(--radius-lg); padding: 20px; margin: 20px 0; }
-        .example-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 24px 0; }
-        .example-box { background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: var(--radius-md); padding: 16px; }
-        .example-box.bad { border-color: rgba(239, 68, 68, 0.5); }
-        .example-box.good { border-color: rgba(16, 185, 129, 0.5); }
-        .example-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; font-weight: 600; }
-        .example-box.bad .example-label { color: #f87171; }
-        .example-box.good .example-label { color: #34d399; }
-        .checklist-interactive { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: var(--radius-lg); padding: 24px; margin: 24px 0; }
-        .checklist-item { background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: var(--radius-md); padding: 16px; margin: 12px 0; display: flex; align-items: center; gap: 12px; }
-        .checklist-icon { font-size: 24px; }
-        .brief-input-area { background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: var(--radius-md); padding: 16px; margin: 20px 0; }
-        .brief-input-area textarea { width: 100%; min-height: 120px; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: var(--radius-sm); padding: 12px; color: #fff; font-family: inherit; font-size: 14px; resize: vertical; }
-        .brief-field { margin: 16px 0; }
-        .brief-field label { display: block; margin-bottom: 8px; font-weight: 600; color: #60a5fa; }
-        .brief-field input { width: 100%; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: var(--radius-sm); padding: 10px 12px; color: #fff; font-family: inherit; }
-        @media (max-width: 768px) {
-            .example-comparison { grid-template-columns: 1fr; }
-        }
-    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
 </head>
-<body>
-    <nav class="nav-bar">
-        <div class="nav-content">
-            <a href="../index.html" class="nav-brand">AI Detective Academy</a>
-            <button class="nav-toggle" id="navToggle">☰</button>
+<body data-lesson-id="lesson3" data-total-pages="10" data-page-number="2">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🎨 Lesson 3: Content Creation</div>
+            <div class="breadcrumb"></div>
         </div>
-    </nav>
 
-    <div class="nav-menu" id="navMenu">
-        <button class="nav-close" id="navClose">×</button>
-        <div class="nav-section">
-            <h3>MAIN</h3>
-            <a href="../index.html">Home</a>
+        <section class="hero-section">
+            <div class="emoji-large">📝</div>
+            <h1 class="hero-title">Great briefs = great outputs</h1>
+            <p class="subtitle">Clarity on audience, intent, constraints, and examples drives stable generations.</p>
+        </section>
+
+        <div class="section">
+            <h2>Brief checklist</h2>
+            <ul>
+                <li>Audience, goal, and channel.</li>
+                <li>Voice, format, and length limits.</li>
+                <li>In/out-of-scope topics and safety guardrails.</li>
+                <li>Good vs bad exemplars.</li>
+            </ul>
         </div>
-        <div class="nav-section">
-            <h3>LESSONS</h3>
-            <a href="l3-p1-intro.html">Lesson 3</a>
+
+        <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+            <h2>Quick check</h2>
+            <p>Two fast questions to lock in what a good brief needs.</p>
+            <div class="card" data-answer-group data-xp="10">
+                <p><strong>1) What makes a brief actionable?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Audience, goal, constraints, and examples give the model clear rails.">Audience, goal, constraints, and examples</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Vibes only won't steer outputs.">Vibe adjectives only</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Asking for more tokens isn't briefing.">Ask for max tokens</button>
+            </div>
+            <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                <p><strong>2) How do you prevent off-brand content?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Voice, banned topics, and bad examples narrow the lane.">Specify voice, banned topics, and bad examples</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Longer prompts alone don't set brand.">Make the prompt longer</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="A single emoji isn't guidance.">Add an emoji for tone</button>
+            </div>
         </div>
+
+        <div class="progress-indicator">Page 2 of 10 • Learn: Briefs</div>
+        <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
+            <button class="btn btn-secondary" type="button" onclick="window.location.href='l3-p1-learn-intro.html'">← Back</button>
+            <button class="btn btn-primary" type="button" onclick="window.location.href='l3-p3-game-brief-diagnostics.html'">Next: Brief Diagnostics →</button>
+        </div>
+        <div class="footer-nav"></div>
     </div>
-
-    <main class="lesson-container">
-        <div class="breadcrumb">
-            <a href="../index.html">Home</a>
-            <span>/</span>
-            <a href="l3-p1-intro.html">Lesson 3</a>
-            <span>/</span>
-            <span>Strong Briefs</span>
-        </div>
-
-        <div class="lesson-header">
-            <h1>📝 Strong Briefs: Tell AI What You Actually Want</h1>
-            <p class="lesson-subtitle">Not "make it pop" — actual instructions</p>
-        </div>
-
-        <div class="progress-display">
-            <div class="xp-bar-container">
-                <div class="xp-bar-label">
-                    <span>Lesson Progress</span>
-                    <span id="lessonXP">0/100 XP</span>
-                </div>
-                <div class="xp-bar">
-                    <div class="xp-fill" id="lessonXPFill" style="width: 0%"></div>
-                </div>
-            </div>
-            <p class="progress-text">Page 2 of 10</p>
-        </div>
-
-        <div class="scenario-box">
-            <h2>Scenario Setup</h2>
-            <p>You're about to ask AI to write a tweet about "work-life balance tips."</p>
-            <p>But you only type: <strong>"Write a tweet about work-life balance."</strong></p>
-            <p>It replies: <em>"Work-life balance helps you relax."</em></p>
-            <p><strong>Meh.</strong> That's the kind of tweet that gets 2 likes (one from your mom, one from a bot).</p>
-            <p style="margin-top: 16px;">Instead, if you tell it <strong>who</strong> the audience is, <strong>what</strong> tone, <strong>what</strong> vibe — it already feels more like you wrote it yourself.</p>
-        </div>
-
-        <div class="content-section">
-            <h2>Why a Good Brief Matters</h2>
-            <ul style="line-height: 1.8; margin-left: 24px;">
-                <li><strong>Avoid vague or meaningless output</strong> — no more "synergy" and "leverage"</li>
-                <li><strong>Control tone, length, and style upfront</strong> — not after 5 rounds of edits</li>
-                <li><strong>Save time</strong> — less editing later means more time for doom-scrolling</li>
-            </ul>
-        </div>
-
-        <div class="example-comparison">
-            <div class="example-box bad">
-                <div class="example-label">❌ Weak Brief</div>
-                <p style="font-family: 'Courier New', monospace; font-size: 14px;">"Write a tweet about work-life balance."</p>
-                <p style="margin-top: 12px; color: var(--color-muted); font-size: 14px;">Result: Generic, forgettable, sounds like a LinkedIn bot.</p>
-            </div>
-            <div class="example-box good">
-                <div class="example-label">✅ Strong Brief</div>
-                <p style="font-family: 'Courier New', monospace; font-size: 14px;">"Write a tweet for stressed startup workers, age 25-35. Tone: empathetic but funny. Include one actionable tip. Keep it under 240 characters."</p>
-                <p style="margin-top: 12px; color: var(--color-muted); font-size: 14px;">Result: Specific, relatable, actually useful.</p>
-            </div>
-        </div>
-
-        <div class="checklist-interactive">
-            <h2>Interactive Brief Checklist</h2>
-            <p style="margin-bottom: 20px;">A strong brief includes these elements:</p>
-            
-            <div class="checklist-item">
-                <span class="checklist-icon">👥</span>
-                <div>
-                    <strong>Target Audience</strong>
-                    <p style="color: var(--color-muted); font-size: 14px; margin-top: 4px;">Who's reading this? (e.g., "young professionals, 25-35, stressed at work")</p>
-                </div>
-            </div>
-
-            <div class="checklist-item">
-                <span class="checklist-icon">🎯</span>
-                <div>
-                    <strong>Purpose</strong>
-                    <p style="color: var(--color-muted); font-size: 14px; margin-top: 4px;">What's the goal? (inform, entertain, sell, educate)</p>
-                </div>
-            </div>
-
-            <div class="checklist-item">
-                <span class="checklist-icon">🎭</span>
-                <div>
-                    <strong>Tone / Voice</strong>
-                    <p style="color: var(--color-muted); font-size: 14px; margin-top: 4px;">How should it sound? (friendly, sarcastic, serious, playful)</p>
-                </div>
-            </div>
-
-            <div class="checklist-item">
-                <span class="checklist-icon">📌</span>
-                <div>
-                    <strong>Key Points</strong>
-                    <p style="color: var(--color-muted); font-size: 14px; margin-top: 4px;">What must be included? (specific facts, tips, or messages)</p>
-                </div>
-            </div>
-
-            <div class="checklist-item">
-                <span class="checklist-icon">✨</span>
-                <div>
-                    <strong>Examples or References</strong>
-                    <p style="color: var(--color-muted); font-size: 14px; margin-top: 4px;">Style sample, brand voice, or similar content</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="content-section">
-            <h2>Your Turn: Fill in the Blanks</h2>
-            <p>Practice writing a brief for a social media post about "productivity hacks."</p>
-            
-            <div class="brief-input-area">
-                <div class="brief-field">
-                    <label>Audience:</label>
-                    <input type="text" id="audience" placeholder="e.g., remote workers, 30-40, overwhelmed by meetings">
-                </div>
-                <div class="brief-field">
-                    <label>Purpose:</label>
-                    <input type="text" id="purpose" placeholder="e.g., inform, entertain">
-                </div>
-                <div class="brief-field">
-                    <label>Tone:</label>
-                    <input type="text" id="tone" placeholder="e.g., casual, funny, empathetic">
-                </div>
-                <div class="brief-field">
-                    <label>Key Points:</label>
-                    <textarea id="keyPoints" placeholder="e.g., Must include: time-blocking tip, mention Pomodoro technique"></textarea>
-                </div>
-                <div class="brief-field">
-                    <label>Example Style (optional):</label>
-                    <input type="text" id="exampleStyle" placeholder="e.g., like @productivityguru on Twitter">
-                </div>
-            </div>
-
-            <p style="margin-top: 16px; padding: 16px; background: rgba(59, 130, 246, 0.1); border-radius: var(--radius-md); border: 1px solid rgba(59, 130, 246, 0.3);">
-                <strong>💡 Pro Tip:</strong> The more specific you are, the less time you'll spend editing AI output. "Make it pop" is not a brief. "Write 3 bullet points in a friendly tone for busy parents" is.
-            </p>
-        </div>
-
-        <div class="content-section">
-            <h2>What Makes a Brief Strong?</h2>
-            <p><strong>Must include:</strong> Audience, purpose, tone, at least one key point</p>
-            <p><strong>Nice-to-have:</strong> Style example, suggested length or output format</p>
-            <p style="margin-top: 16px;"><strong>Feedback example:</strong></p>
-            <ul style="line-height: 1.8; margin-left: 24px; margin-top: 8px;">
-                <li>✅ <span style="color: #34d399;">Strong brief! You included all key elements.</span></li>
-                <li>⚠️ <span style="color: #facc15;">Missing audience — who's reading this?</span></li>
-            </ul>
-        </div>
-
-        <div class="lesson-nav">
-            <a href="l3-p1-intro.html" class="btn btn-secondary">← Previous</a>
-            <a href="l3-p3-game-brief-diagnostics.html" class="btn btn-primary">Next: Brief Diagnostics Game →</a>
-        </div>
-    </main>
-
-    <script src="../scripts/nav.js"></script>
-    <script src="../scripts/progress.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const lessonKey = 'lesson3';
-            const progress = JSON.parse(localStorage.getItem(lessonKey)) || { xp: 0, gamesComplete: 0 };
-            
-            document.getElementById('lessonXP').textContent = `${progress.xp}/100 XP`;
-            document.getElementById('lessonXPFill').style.width = `${progress.xp}%`;
+            const LESSON_ID = 'lesson3';
+            const PAGE_ID = 'l3-p2';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
         });
     </script>
 </body>

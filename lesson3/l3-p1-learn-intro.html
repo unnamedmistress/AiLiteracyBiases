@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 3: Content Creation · Intro</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .lesson-shell { max-width: 1100px; gap: 14px; padding: 12px; }
+        .hero-section { text-align: center; padding: clamp(18px, 4vw, 28px) clamp(14px, 3vw, 22px); background: rgba(255, 255, 255, 0.1); border-radius: var(--radius-lg); margin-bottom: clamp(12px, 3vw, 20px); }
+        .emoji-large { font-size: clamp(42px, 7vw, 64px); margin-bottom: 10px; }
+        .hero-title { font-size: clamp(26px, 4vw, 32px); margin-bottom: 8px; }
+        .subtitle { font-size: clamp(15px, 2.6vw, 18px); color: var(--color-muted); }
+        .section { margin-top: clamp(10px, 2.8vw, 18px); }
+        .section h2 { font-size: clamp(20px, 3.2vw, 26px); margin-bottom: 8px; }
+        .section ul { padding-left: 18px; line-height: 1.5; }
+        .card { padding: clamp(12px, 2vw, 16px); }
+        .progress-nav { margin-top: clamp(10px, 2vw, 16px); }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson3" data-total-pages="10" data-page-number="1">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🎨 Lesson 3: Content Creation</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <section class="hero-section">
+            <div class="emoji-large">🧭</div>
+            <h1 class="hero-title">Your AI Content Studio</h1>
+            <p class="subtitle">Roadmap for briefs, structure, tone, safety, and applied challenges.</p>
+        </section>
+
+        <div class="section">
+            <h2>What you'll do</h2>
+            <ul>
+                <li>Break down solid creative briefs.</li>
+                <li>Build outlines that keep outputs on-rail.</li>
+                <li>Shape tone & style to match audience.</li>
+                <li>Harden outputs for safety and factuality.</li>
+            </ul>
+        </div>
+
+        <div class="section" data-answer-group data-xp="10">
+            <h2>Quick check</h2>
+            <p>Pick the best answer for each to lock in the basics.</p>
+            <div class="card" data-answer-group data-xp="10">
+                <p><strong>1) Why start with a brief?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="A clear brief sets scope, examples, and constraints so outputs stay on-rail." data-correct="true">To set scope, constraints, and examples up front</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Letting the model improvise usually drifts off-brief.">To let the model improvise freely</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Fewer words do not guarantee quality." >To shorten prompts as much as possible</button>
+            </div>
+            <div class="card" style="margin-top:12px;" data-answer-group data-xp="10">
+                <p><strong>2) Best way to keep structure on track?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Outlines act like rails, especially for longer pieces." data-correct="true">Provide an outline with sections and length guidance</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Randomizing sections weakens coherence.">Shuffle sections randomly</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Avoiding constraints leads to drift.">Avoid constraints so the model is creative</button>
+            </div>
+        </div>
+
+        <div class="progress-indicator">Page 1 of 10 • Overview</div>
+        <div class="progress-nav" style="margin-top:16px; display:flex; justify-content:flex-end;">
+            <button class="btn btn-primary" type="button" onclick="window.location.href='l3-p2-learn-briefs.html'">Next: Strong Briefs →</button>
+        </div>
+        <div class="footer-nav"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson3';
+            const PAGE_ID = 'l3-p1';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            }
+            window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+        });
+    </script>
+</body>
+</html>

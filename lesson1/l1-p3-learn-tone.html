@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 1: Controlling AI Tone</title>
+    
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .lesson-shell { display: flex; flex-direction: column; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .challenge-section { display: flex; flex-direction: column; gap: 24px; }
+        .challenge-title { font-size: 34px; margin-bottom: 8px; }
+        .challenge-desc { color: var(--color-muted); line-height: 1.6; font-size: 16px; }
+        .learning-showcase { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; margin-top: 24px; }
+        .story-card { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.04); padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+        .story-header h3 { margin-bottom: 4px; font-size: 20px; }
+        .story-header p { margin: 0; color: var(--color-muted); }
+        .step-selector { display: flex; flex-wrap: wrap; gap: 8px; }
+        .step-pill { flex: 1 1 45%; border-radius: 999px; padding: 10px 16px; border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(0, 0, 0, 0.25); color: inherit; cursor: pointer; font-weight: 600; transition: background var(--transition-base), border-color var(--transition-base); }
+        .step-pill.active { background: var(--color-accent); color: #0f172a; border-color: var(--color-accent); }
+        .step-detail { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.15); padding: 16px; background: rgba(255, 255, 255, 0.03); min-height: 180px; margin-top: 12px; }
+        .step-detail ul { margin-left: 20px; line-height: 1.6; }
+        .tone-palette { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tone-btn { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.05); color: inherit; padding: 8px 14px; cursor: pointer; font-weight: 600; transition: background var(--transition-base), border-color var(--transition-base); }
+        .tone-btn.active { background: linear-gradient(135deg, #22d3ee, #0ea5e9); color: #0f172a; border-color: rgba(14, 165, 233, 0.6); }
+        .tone-transcript { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.15); padding: 14px; min-height: 110px; line-height: 1.6; background: rgba(15, 23, 42, 0.35); margin-top: 12px; }
+        .tone-tip { font-size: 13px; color: var(--color-muted); margin-top: 8px; }
+        .progress-nav { margin-top: 32px; display: flex; justify-content: center; }
+        .btn-next { padding: 14px 32px; font-size: 16px; font-weight: 600; border-radius: var(--radius-md); background: linear-gradient(135deg, #10B981, #059669); color: #fff; border: none; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+        .progress-indicator { text-align: center; color: var(--color-muted); font-size: 14px; margin-bottom: 16px; }
+        @media (max-width: 768px) {
+            .challenge-title { font-size: 26px; }
+            .step-pill { flex: 1 1 100%; }
+        }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson1" data-total-pages="6" data-page-number="3">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">⚡️ Lesson 1: Controlling AI Tone</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <div class="challenge-section">
+            <h1 class="challenge-title">Understanding How AI Tone Works</h1>
+            <p class="challenge-desc">Tone is a control knob. One word can reshoot the same facts with a brand-new voiceover.</p>
+
+            <section class="learning-showcase">
+                <article class="story-card">
+                    <div class="story-header">
+                        <h3>Choose a topic to explore</h3>
+                        <p>Tap each pill and get a quick breakdown of what to watch for.</p>
+                    </div>
+                    <div class="step-selector" role="tablist" aria-label="Lesson 1 learning beats">
+                        <button class="step-pill active" data-learning-step="pattern">Pattern engine</button>
+                        <button class="step-pill" data-learning-step="probability">Probability radar</button>
+                        <button class="step-pill" data-learning-step="tone">Tone switches</button>
+                        <button class="step-pill" data-learning-step="bias">Bias spotter</button>
+                    </div>
+                    <div class="step-detail" aria-live="polite">
+                        <h4 id="learningStepTitle">AI = Predictive Pattern Engine</h4>
+                        <p id="learningStepBody">AIs read billions of sentences and keep score of what tends to follow. They remix probability, not original thought.</p>
+                        <ul id="learningStepList">
+                            <li>It chains predictions token-by-token like improv for words.</li>
+                            <li>Extra context narrows the possibilities and keeps replies on-brand.</li>
+                            <li>If you stay vague, it defaults to a polite corporate coworker vibe.</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <article class="story-card">
+                    <div class="story-header">
+                        <h3>Tone dial sandbox</h3>
+                        <p>Click a tone to preview how a single adjective alters the vibe.</p>
+                    </div>
+                    <div class="tone-palette">
+                        <button class="tone-btn active" data-tone-explain="friendly">Friendly</button>
+                        <button class="tone-btn" data-tone-explain="urgent">Urgent</button>
+                        <button class="tone-btn" data-tone-explain="dramatic">Dramatic</button>
+                        <button class="tone-btn" data-tone-explain="skeptical">Skeptical</button>
+                    </div>
+                    <div class="tone-transcript" id="toneExplainOutput">Hey team! I'm testing prompts today and want a cheerful "camp counselor" vibe. Keep it upbeat, sprinkle emojis, and stay concise.</div>
+                    <p class="tone-tip">Hint: stack tone word + audience + intent. Ex: "Give me a confident note for anxious parents."</p>
+                </article>
+            </section>
+
+            <div class="progress-indicator">Page 3 of 6 • Learning About Tone</div>
+            <div class="progress-nav">
+                <button class="btn-next" onclick="window.location.href='l1-p4-game-voice.html'">Next: Play the Voice Mimic Game →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson1';
+            const PAGE_ID = 'l1-p3';
+            const tracker = window.ProgressTracker || null;
+            
+            const learningStepsContent = {
+                pattern: {
+                    title: 'AI = Predictive Pattern Engine',
+                    body: "AIs read billions of sentences and keep score of what tends to follow. They remix probability, not original thought.",
+                    bullets: [
+                        'It chains predictions token-by-token like improv for words.',
+                        'Extra context narrows the possibilities and keeps replies on-brand.',
+                        'If you stay vague, it defaults to a polite corporate coworker vibe.'
+                    ]
+                },
+                probability: {
+                    title: 'Probability Radar Brain',
+                    body: 'Every option gets ranked. The model boosts words that statistically fit the prompt and tones you set.',
+                    bullets: [
+                        'Temperature sliders decide how adventurous those picks get.',
+                        'Ask "show me the top three alternates" to compare reasoning.',
+                        'Pair odds with intuition: if the % feels wrong, rewrite the cue.'
+                    ]
+                },
+                tone: {
+                    title: 'Tone Switchboard',
+                    body: 'Tone cues treat the AI like a voice actor. Specific adjectives, audiences, and intents reframe the same facts.',
+                    bullets: [
+                        'Anchor the voice ("You are a sarcastic teen journalist...").',
+                        'Layer emotion + pacing ("urgent + three short sentences").',
+                        'Audit for stereotypes before you hit send; you are the director.'
+                    ]
+                },
+                bias: {
+                    title: 'Bias + Safety Spotter',
+                    body: 'Your job is to pause when the model sounds overconfident, exclusionary, or forgetful.',
+                    bullets: [
+                        'Challenge big claims: "What sources back that up?"',
+                        'Swap one perspective for many ("give me the student + parent POV").',
+                        'Document weird replies so you can retrain or escalate later.'
+                    ]
+                }
+            };
+
+            const toneExplainSamples = {
+                friendly: "Hey team! I'm testing prompts today and want a cheerful 'camp counselor' vibe. Keep it upbeat, sprinkle emojis, and stay concise.",
+                urgent: "Heads up! I need a straight-to-the-point status update in the next 5 minutes—no fluff, just actionable bullets.",
+                dramatic: "Picture this like a movie trailer. Build suspense, add sensory words, and end with a bold call to action.",
+                skeptical: "I appreciate the enthusiasm, but walk me through the evidence calmly. Cite the source or flag if you're unsure."
+            };
+
+            const elements = {
+                learningStepButtons: document.querySelectorAll('[data-learning-step]'),
+                learningStepTitle: document.getElementById('learningStepTitle'),
+                learningStepBody: document.getElementById('learningStepBody'),
+                learningStepList: document.getElementById('learningStepList'),
+                toneExplainButtons: document.querySelectorAll('[data-tone-explain]'),
+                toneExplainOutput: document.getElementById('toneExplainOutput')
+            };
+
+            // Learning steps interaction
+            elements.learningStepButtons.forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    elements.learningStepButtons.forEach((b) => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const step = btn.dataset.learningStep;
+                    const content = learningStepsContent[step];
+                    if (content) {
+                        elements.learningStepTitle.textContent = content.title;
+                        elements.learningStepBody.textContent = content.body;
+                        elements.learningStepList.innerHTML = content.bullets.map((bullet) => `<li>${bullet}</li>`).join('');
+                    }
+                });
+            });
+
+            // Tone explanation interaction
+            elements.toneExplainButtons.forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    elements.toneExplainButtons.forEach((b) => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const tone = btn.dataset.toneExplain;
+                    if (toneExplainSamples[tone]) {
+                        elements.toneExplainOutput.textContent = toneExplainSamples[tone];
+                    }
+                });
+            });
+
+            // Mark page as visited
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            }
+        });
+    </script>
+</body>
+</html>

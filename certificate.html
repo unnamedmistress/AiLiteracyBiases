@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate of Completion</title>
+    <link rel="stylesheet" href="styles/shared.css">
+    <link rel="stylesheet" href="styles/lesson-responsive.css">
+    <style>
+        .certificate-hero {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .certificate-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.25);
+            text-align: center;
+        }
+
+        .certificate-title {
+            font-family: var(--font-family-display);
+            font-size: 28px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .certificate-subtitle {
+            font-size: 18px;
+            margin: 14px 0 6px;
+            color: var(--color-muted-strong);
+        }
+
+        .certificate-name {
+            font-size: 26px;
+            font-weight: 700;
+            margin: 12px 0;
+        }
+
+        .certificate-pillars {
+            margin: 18px auto 10px;
+            max-width: 520px;
+            text-align: left;
+            line-height: 1.7;
+            color: var(--color-text);
+        }
+
+        .certificate-pillars li {
+            margin: 4px 0;
+        }
+
+        .certificate-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .certificate-meta .pill {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            font-weight: 700;
+            color: #065f46;
+            text-align: center;
+        }
+
+        .certificate-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 22px;
+        }
+
+        @media (max-width: 768px) {
+            .certificate-card {
+                padding: 22px;
+            }
+
+            .certificate-title {
+                font-size: 24px;
+            }
+
+            .certificate-name {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .certificate-card {
+                padding: 18px;
+            }
+
+            .certificate-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .certificate-pillars {
+                padding-left: 4px;
+            }
+        }
+    </style>
+    <script defer src="scripts/shared.js"></script>
+    <script defer src="scripts/progress.js"></script>
+    <script defer src="scripts/nav.js"></script>
+</head>
+<body class="with-global-nav" data-lesson-id="certificate" data-total-pages="1" data-page-number="1">
+    <main class="container lesson-shell" aria-labelledby="certificateHeading">
+        <header class="header">
+            <div class="certificate-hero">
+                <p class="breadcrumb"></p>
+                <h1 id="certificateHeading" class="logo">Certificate of Completion</h1>
+                <p class="section-subtitle">Celebrate your AI Detective Academy journey.</p>
+            </div>
+            <div class="stats">
+                <div class="xp-readout" id="xpReadout" aria-live="polite"></div>
+            </div>
+        </header>
+
+        <section class="certificate-card" aria-label="AI Literacy certificate">
+            <div class="certificate-title">AI Literacy Master Certificate</div>
+            <p class="certificate-subtitle">Awarded to</p>
+            <div class="certificate-name" id="certName">You</div>
+            <p class="certificate-subtitle">For completing Lesson 6: Capstone</p>
+            <ul class="certificate-pillars">
+                <li>AI pathologies & bias detection</li>
+                <li>Ethical content strategy & review</li>
+                <li>Advanced prompt engineering</li>
+                <li>Multi-AI workflow design</li>
+                <li>Critical evaluation & guardrails</li>
+            </ul>
+            <div class="certificate-meta">
+                <div class="pill">+500 XP earned</div>
+                <div class="pill">Status: Completed</div>
+                <div class="pill">Lesson 6: Capstone</div>
+            </div>
+            <div class="certificate-actions">
+                <a class="btn btn-primary" href="landing.html">Return to dashboard</a>
+                <a class="btn btn-secondary" href="lesson6-capstone.html">Review capstone</a>
+            </div>
+        </section>
+
+        <div class="footer-nav"></div>
+    </main>
+
+    <script>
+        (function () {
+            function hydrateProgress() {
+                const app = window.AppProgress || window.ProgressTracker || null;
+                if (!app || typeof app.getLessonStatus !== 'function') return;
+                const status = app.getLessonStatus('lesson6');
+                if (status !== 'completed') {
+                    window.location.href = 'lesson6-capstone.html';
+                    return;
+                }
+                if (typeof app.markLessonComplete === 'function') {
+                    app.markLessonComplete('lesson6');
+                }
+                if (typeof app.getXP === 'function') {
+                    const xp = app.getXP();
+                    const readout = document.getElementById('xpReadout');
+                    if (readout) {
+                        readout.textContent = `${xp} XP total`;
+                    }
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', hydrateProgress);
+        })();
+    </script>
+</body>
+</html>

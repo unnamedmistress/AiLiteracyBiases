@@ -3,97 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Safety Guardrails - Lesson 3</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 3: Content Creation · Safety</title>
     <link rel="stylesheet" href="../styles/shared.css">
-    <link rel="stylesheet" href="../styles/lesson-responsive.css">
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
 </head>
-<body>
-    <nav class="nav-bar">
-        <div class="nav-content">
-            <a href="../index.html" class="nav-brand">AI Detective Academy</a>
-            <button class="nav-toggle" id="navToggle">☰</button>
+<body data-lesson-id="lesson3" data-total-pages="10" data-page-number="8">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🎨 Lesson 3: Content Creation</div>
+            <div class="breadcrumb"></div>
         </div>
-    </nav>
-    <div class="nav-menu" id="navMenu">
-        <button class="nav-close" id="navClose">×</button>
-        <div class="nav-section"><h3>MAIN</h3><a href="../index.html">Home</a></div>
-    </div>
-    <main class="lesson-container">
-        <div class="breadcrumb">
-            <a href="../index.html">Home</a><span>/</span>
-            <a href="l3-p1-intro.html">Lesson 3</a><span>/</span>
-            <span>Safety Guardrails</span>
-        </div>
-        <div class="lesson-header">
-            <h1>🛡️ Safety Guardrails: Play It Safe When AI Writes for You</h1>
-            <p class="lesson-subtitle">Because lawsuits are expensive</p>
-        </div>
-        <div class="progress-display">
-            <div class="xp-bar-container">
-                <div class="xp-bar-label"><span>Lesson Progress</span><span id="lessonXP">0/100 XP</span></div>
-                <div class="xp-bar"><div class="xp-fill" id="lessonXPFill" style="width: 0%"></div></div>
-            </div>
-            <p class="progress-text">Page 8 of 10</p>
-        </div>
-        <div class="content-section">
-            <h2>Plain-Language Rules</h2>
-            <ul style="line-height: 1.8; margin-left: 24px;">
-                <li>Don't share private info (PII, passwords, confidential data)</li>
-                <li>Don't copy someone else's content without permission</li>
-                <li>Always cite facts or sources</li>
-                <li>Use disclaimers if needed (e.g. "AI-generated")</li>
+
+        <section class="hero-section">
+            <div class="emoji-large">🛡️</div>
+            <h1 class="hero-title">Safety guardrails</h1>
+            <p class="subtitle">Fact sourcing, citation prompts, and disallowed content keep outputs trustworthy.</p>
+        </section>
+
+        <div class="section">
+            <h2>Guardrail prompts</h2>
+            <ul>
+                <li>Always cite sources or state "no source".</li>
+                <li>Refuse unsafe or copyrighted requests; offer safer alternatives.</li>
+                <li>Ask for missing context before answering.</li>
             </ul>
-            
-            <h2>Why It Matters</h2>
-            <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-md); padding: 16px; margin: 20px 0;">
-                <strong style="color: #f87171;">Real Examples of What Not to Do:</strong>
-                <ul style="line-height: 1.8; margin-left: 24px; margin-top: 12px;">
-                    <li>Chatbot blurbs that leak personal data</li>
-                    <li>Bot posting unverified health or legal advice</li>
-                    <li>AI-generated content that plagiarizes existing work</li>
-                </ul>
+        </div>
+
+        <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+            <h2>Quick check</h2>
+            <p>Spot the right safety moves.</p>
+            <div class="card" data-answer-group data-xp="10">
+                <p><strong>1) Best way to stop fake citations?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Require sources or an explicit 'no source' statement.">Require real sources or say "no source"</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="More adjectives won't verify facts.">Add more adjectives</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Ignoring doesn't reduce risk.">Ignore citations entirely</button>
             </div>
-            
-            <h2>Guardrail Matrix</h2>
-            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-                <thead>
-                    <tr style="background: rgba(59, 130, 246, 0.2);">
-                        <th style="border: 1px solid rgba(255, 255, 255, 0.2); padding: 12px; text-align: left;">When</th>
-                        <th style="border: 1px solid rgba(255, 255, 255, 0.2); padding: 12px; text-align: left;">What to Do</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px;"><strong>Before (input)</strong></td>
-                        <td style="border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px;">Filter private or sensitive data</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px;"><strong>During (process)</strong></td>
-                        <td style="border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px;">Limit what AI can output</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px;"><strong>After (output)</strong></td>
-                        <td style="border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px;">Validate content, check for plagiarism</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px;"><strong>Post-run (log & review)</strong></td>
-                        <td style="border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px;">Record what was generated, who approved it</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                <p><strong>2) What to do when a prompt is unsafe?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Refuse and redirect to safer alternatives keeps within policy.">Refuse and suggest a safer alternative</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Being casual doesn't fix safety.">Respond more casually</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Giving a partial unsafe answer still violates policy.">Give a partial answer anyway</button>
+            </div>
         </div>
-        <div class="lesson-nav">
-            <a href="l3-p7-game-style-remix.html" class="btn btn-secondary">← Previous</a>
-            <a href="l3-p9-game-safety-triage.html" class="btn btn-primary">Next: Safety Triage Game →</a>
+
+        <div class="progress-indicator">Page 8 of 10 • Learn: Safety</div>
+        <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
+            <button class="btn btn-secondary" type="button" onclick="window.location.href='l3-p7-game-style.html'">← Back</button>
+            <button class="btn btn-primary" type="button" onclick="window.location.href='l3-p9-game-safety.html'">Next: Safety Triage →</button>
         </div>
-    </main>
-    <script src="../scripts/nav.js"></script>
-    <script src="../scripts/progress.js"></script>
+        <div class="footer-nav"></div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const progress = JSON.parse(localStorage.getItem('lesson3')) || { xp: 0, gamesComplete: 0 };
-            document.getElementById('lessonXP').textContent = `${progress.xp}/100 XP`;
-            document.getElementById('lessonXPFill').style.width = `${progress.xp}%`;
+            const LESSON_ID = 'lesson3';
+            const PAGE_ID = 'l3-p8';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
         });
     </script>
 </body>

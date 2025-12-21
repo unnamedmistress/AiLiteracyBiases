@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 1: Summary & Next Steps</title>
+    
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .lesson-shell { display: flex; flex-direction: column; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .challenge-section { display: flex; flex-direction: column; gap: 24px; }
+        .challenge-title { font-size: 34px; margin-bottom: 8px; }
+        .challenge-desc { color: var(--color-muted); line-height: 1.6; font-size: 16px; }
+        .key-takeaways { margin-top: 32px; }
+        .section-title { font-size: 28px; margin-bottom: 20px; }
+        .takeaway-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .takeaway-card { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.04); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .takeaway-label { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--color-accent); color: #0f172a; font-weight: 700; font-size: 16px; }
+        .takeaway-card h3 { font-size: 18px; margin: 0; }
+        .takeaway-card p { margin: 0; line-height: 1.6; color: var(--color-muted); }
+        .activity-card { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); padding: 24px; display: flex; flex-direction: column; gap: 16px; margin-top: 32px; }
+        .activity-meta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; font-size: 14px; color: var(--color-muted); }
+        .activity-meta span { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(255, 255, 255, 0.08); border-radius: 999px; }
+        .activity-body { display: grid; gap: 18px; }
+        .progress-nav { margin-top: 32px; display: flex; justify-content: center; }
+        .btn-next { padding: 14px 32px; font-size: 16px; font-weight: 600; border-radius: var(--radius-md); background: linear-gradient(135deg, #10B981, #059669); color: #fff; border: none; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+        .next-lesson-hint { margin-top: 10px; font-size: 14px; color: var(--color-muted); text-align: center; }
+        .next-lesson-hint.unlocked { color: #34d399; }
+        .progress-indicator { text-align: center; color: var(--color-muted); font-size: 14px; margin-bottom: 16px; }
+        .completion-badge { text-align: center; padding: 24px; border-radius: var(--radius-lg); background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); margin-bottom: 24px; }
+        .completion-badge h2 { font-size: 24px; color: #34d399; margin-bottom: 8px; }
+        @media (max-width: 768px) {
+            .challenge-title { font-size: 26px; }
+            .takeaway-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson1" data-total-pages="6" data-page-number="6">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">⚡️ Lesson 1: Summary</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <div class="challenge-section">
+            <h1 class="challenge-title">Lesson 1 Complete!</h1>
+            <p class="challenge-desc">You've mastered the fundamentals of AI personalities, tone control, and prediction patterns. Here's what you've learned:</p>
+
+            <div class="completion-badge" id="completionBadge" style="display: none;">
+                <h2>🎉 All Activities Complete!</h2>
+                <p style="color: var(--color-muted); margin: 0;">You've earned the full experience points for Lesson 1.</p>
+            </div>
+
+            <section class="key-takeaways" aria-label="Lesson 1 key takeaways">
+                <h2 class="section-title">Key Takeaways</h2>
+                <div class="takeaway-grid">
+                    <article class="takeaway-card">
+                        <span class="takeaway-label">1</span>
+                        <h3>AIs remix probability</h3>
+                        <p>Every response is a ranked guess. Add specifics (audience, stakes, tone) to collapse the probability space and avoid generic replies.</p>
+                    </article>
+                    <article class="takeaway-card">
+                        <span class="takeaway-label">2</span>
+                        <h3>Tone is a control knob</h3>
+                        <p>Named characters, adjectives, and pacing cues instantly reshape delivery. Treat prompts like stage directions for your improv partner.</p>
+                    </article>
+                    <article class="takeaway-card">
+                        <span class="takeaway-label">3</span>
+                        <h3>Log the weird stuff</h3>
+                        <p>Screenshot hallucinations, bias, or overconfidence. Those artifacts become fuel for future guardrails, escalations, or retraining.</p>
+                    </article>
+                </div>
+            </section>
+
+            <div class="activity-card">
+                <div class="activity-meta">
+                    <span>✅ Next Mission</span>
+                    <span>Lesson 2 · AI Literacy</span>
+                </div>
+                <div class="activity-body">
+                    <p>Feeling confident after the warm-up reps? Jump straight into Lesson 2's learn mode to dig into AI literacy drills and the full F.A.C.T.S. framework.</p>
+                    <button class="btn btn-primary" id="lesson1NextBtn" type="button">Go to Lesson 2 · Learn Mode</button>
+                    <p class="next-lesson-hint" id="nextLessonHint">Keep practicing the warm-ups, or hop into Lesson 2 whenever you're ready.</p>
+                </div>
+            </div>
+
+            <div class="progress-indicator">Page 6 of 6 • Lesson 1 Complete!</div>
+            <div class="progress-nav">
+                <button class="btn-next" onclick="window.location.href='../lesson2/l2-p1-learn-intro.html'">Finish Lesson 1 & Start Lesson 2 →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson1';
+            const PAGE_ID = 'l1-p6';
+            const tracker = window.ProgressTracker || null;
+            const appProgress = window.AppProgress || null;
+            
+            const elements = {
+                nextLessonButton: document.getElementById('lesson1NextBtn'),
+                nextLessonHint: document.getElementById('nextLessonHint'),
+                completionBadge: document.getElementById('completionBadge')
+            };
+
+            function getCompletedActivitiesCount() {
+                if (!tracker) return 0;
+                const saved = tracker.getCheckpoints(LESSON_ID);
+                let count = 0;
+                if (saved.mimicComplete) count++;
+                if (saved.wordComplete) count++;
+                if (saved.toneComplete) count++;
+                return count;
+            }
+
+            function completeLesson() {
+                if (appProgress && typeof appProgress.markLessonComplete === 'function') {
+                    appProgress.markLessonComplete(LESSON_ID);
+                } else if (tracker && typeof tracker.markLessonComplete === 'function') {
+                    tracker.markLessonComplete(LESSON_ID);
+                } else if (tracker && typeof tracker.setLessonStatus === 'function') {
+                    tracker.setLessonStatus(LESSON_ID, 'completed');
+                }
+            }
+
+            function updateNextLessonGate() {
+                if (!elements.nextLessonButton || !elements.nextLessonHint) return;
+                const remaining = 3 - getCompletedActivitiesCount();
+                if (remaining <= 0) {
+                    elements.nextLessonButton.disabled = false;
+                    elements.nextLessonHint.textContent = 'Warm-ups cleared! Lesson 2 is unlocked.';
+                    elements.nextLessonHint.classList.add('unlocked');
+                    elements.nextLessonButton.setAttribute('title', 'Launch Lesson 2 learn mode');
+                    
+                    // Show completion badge
+                    if (elements.completionBadge) {
+                        elements.completionBadge.style.display = 'block';
+                    }
+                    
+                    // Mark lesson as complete
+                    completeLesson();
+                } else {
+                    elements.nextLessonButton.disabled = true;
+                    elements.nextLessonHint.classList.remove('unlocked');
+                    const activityLabel = remaining === 1 ? 'activity' : 'activities';
+                    elements.nextLessonHint.textContent = `Go back and complete ${remaining} more ${activityLabel} to unlock Lesson 2.`;
+                    elements.nextLessonButton.setAttribute('title', 'Complete every warm-up to unlock Lesson 2');
+                }
+            }
+
+            // Add event listener for lesson 2 button
+            if (elements.nextLessonButton) {
+                elements.nextLessonButton.addEventListener('click', () => {
+                    window.location.href = '../lesson2/l2-p1-learn-intro.html';
+                });
+            }
+
+            // Initialize
+            updateNextLessonGate();
+
+            // Mark page as visited
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            }
+        });
+    </script>
+</body>
+</html>

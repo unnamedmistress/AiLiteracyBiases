@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Learn: Hallucination Pathologies</title>
+    
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .lesson-shell { display: flex; flex-direction: column; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .challenge-section { display: flex; flex-direction: column; gap: 24px; }
+        .challenge-title { font-size: 34px; margin-bottom: 8px; }
+        .challenge-desc { color: var(--color-muted); line-height: 1.6; font-size: 16px; }
+        .pathology-category { margin-top: 24px; }
+        .category-header { border-left: 4px solid #FF6B9D; padding: 16px; background: rgba(255, 107, 157, 0.1); border-radius: var(--radius-md); margin-bottom: 16px; display: flex; gap: 12px; align-items: center; }
+        .category-icon { font-size: 32px; }
+        .category-title { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+        .pathology-grid-hint { background: rgba(255, 255, 255, 0.05); border-radius: var(--radius-md); padding: 12px; margin-bottom: 16px; display: flex; gap: 12px; align-items: center; }
+        .pathology-hint-icon { font-size: 24px; }
+        .pathology-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+        .pathology-card { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.04); padding: 16px; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease; }
+        .pathology-card:hover { transform: translateY(-4px); border-color: var(--color-accent); background: rgba(255, 255, 255, 0.08); }
+        .pathology-card.expanded { background: rgba(255, 255, 255, 0.1); border-color: var(--color-accent); }
+        .pathology-name { font-weight: 600; font-size: 16px; margin-bottom: 8px; }
+        .pathology-description { font-size: 14px; line-height: 1.6; color: var(--color-muted); display: none; }
+        .pathology-card.expanded .pathology-description { display: block; }
+        .progress-nav { margin-top: 32px; display: flex; justify-content: center; }
+        .btn-next { padding: 14px 32px; font-size: 16px; font-weight: 600; border-radius: var(--radius-md); background: linear-gradient(135deg, #10B981, #059669); color: #fff; border: none; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+        .progress-indicator { text-align: center; color: var(--color-muted); font-size: 14px; margin-bottom: 16px; }
+        @media (max-width: 768px) {
+            .challenge-title { font-size: 26px; }
+            .pathology-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson2" data-total-pages="12" data-page-number="2">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">👻 Learn: Hallucinations</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <div class="challenge-section">
+            <h1 class="challenge-title">Hallucination Pathologies</h1>
+            <p class="challenge-desc">When AI makes stuff up with confidence. These are some of the most dangerous AI failures because they seem so plausible!</p>
+
+            <div class="pathology-category">
+                <div class="category-header" style="border-left-color: #FF6B9D;">
+                    <div class="category-icon">👻</div>
+                    <div>
+                        <div class="category-title">Hallucination Pathologies</div>
+                        <p style="margin: 0; color: var(--color-muted);">When AI makes stuff up with confidence</p>
+                    </div>
+                </div>
+                <div class="pathology-grid-hint">
+                    <span class="pathology-hint-icon">👆</span>
+                    <div>
+                        <strong>Tap a card to reveal the failure mode.</strong><br>
+                        Each pathology expands with symptoms and how to spot it.
+                    </div>
+                </div>
+                <div class="pathology-grid">
+                    <div class="pathology-card" onclick="togglePathology(this)">
+                        <div class="pathology-name">👻 Fabrication</div>
+                        <div class="pathology-description">
+                            AI invents information that sounds plausible but is completely false. Like a creative writer who forgot they're supposed to tell the truth.
+                        </div>
+                    </div>
+                    <div class="pathology-card" onclick="togglePathology(this)">
+                        <div class="pathology-name">🎭 Confabulation</div>
+                        <div class="pathology-description">
+                            AI fills gaps in knowledge with made-up details. Imagine someone who can't say "I don't know" so they improvise badly.
+                        </div>
+                    </div>
+                    <div class="pathology-card" onclick="togglePathology(this)">
+                        <div class="pathology-name">🌀 Synthetic Psychosis</div>
+                        <div class="pathology-description">
+                            AI loses touch with reality and generates completely nonsensical responses. Think of it as AI having a fever dream.
+                        </div>
+                    </div>
+                    <div class="pathology-card" onclick="togglePathology(this)">
+                        <div class="pathology-name">📚 Making Up Sources</div>
+                        <div class="pathology-description">
+                            AI cites fake academic papers, URLs, or experts that don't exist. It's like your friend saying "trust me, I read it somewhere" but worse.
+                        </div>
+                    </div>
+                    <div class="pathology-card" onclick="togglePathology(this)">
+                        <div class="pathology-name">🔗 Citation Invention</div>
+                        <div class="pathology-description">
+                            AI creates realistic-looking references that lead nowhere. The academic equivalent of a Potemkin village.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+                <h2>Quick check</h2>
+                <p>Two fast questions to lock in the concepts.</p>
+                <div class="card" data-answer-group data-xp="10">
+                    <p><strong>1) What is fabrication?</strong></p>
+                    <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Fabrication is making up information that sounds plausible.">Making up plausible but false information</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Missing info is not the same as inventing it.">Leaving out critical information</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Speed is unrelated to fabrication.">Answering too quickly</button>
+                </div>
+                <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                    <p><strong>2) How do you spot citation invention?</strong></p>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Fake-looking URLs or sources that can't be found are red flags." data-correct="true">References or URLs that don’t exist when you click them</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Polite tone isn't evidence of truth.">Polite tone in the answer</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Token count doesn't signal truth." >Very long responses</button>
+                </div>
+            </div>
+
+            <div class="progress-indicator">Page 2 of 12 • Learning About Hallucinations</div>
+            <div class="progress-nav">
+                <button class="btn-next" onclick="window.location.href='l2-p3-game-hallucinations.html'">Apply Your Knowledge: Play the Hallucination Case →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePathology(card) {
+            card.classList.toggle('expanded');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson2';
+            const PAGE_ID = 'l2-p2';
+            const tracker = window.ProgressTracker || null;
+            
+            // Mark this page as visited
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            }
+        });
+    </script>
+</body>
+</html>

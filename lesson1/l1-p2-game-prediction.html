@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Game: Word Prediction</title>
+    
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .lesson-shell { display: flex; flex-direction: column; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .challenge-section { display: flex; flex-direction: column; gap: 24px; }
+        .challenge-title { font-size: 34px; margin-bottom: 8px; }
+        .challenge-desc { color: var(--color-muted); line-height: 1.6; font-size: 16px; }
+        .activity-card { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+        .activity-meta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; font-size: 14px; color: var(--color-muted); }
+        .activity-meta span { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(255, 255, 255, 0.08); border-radius: 999px; }
+        .activity-body { display: grid; gap: 18px; }
+        .status-pill { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text); }
+        .probability-visuals { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.12); padding: 18px; background: rgba(0, 0, 0, 0.25); display: flex; flex-direction: column; gap: 12px; }
+        .probability-row { display: flex; align-items: center; gap: 12px; }
+        .probability-word { width: 90px; font-size: 14px; }
+        .probability-track { flex: 1; height: 20px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+        .probability-fill { height: 100%; border-radius: 10px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 12px; font-weight: 600; color: #fff; }
+        .prob-high { background: linear-gradient(135deg, #16a34a, #22c55e); }
+        .prob-low { background: linear-gradient(135deg, #ef4444, #f97316); }
+        .word-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+        .word-option { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.18); padding: 12px; background: rgba(255, 255, 255, 0.04); color: inherit; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 6px; transition: transform var(--transition-base), border-color var(--transition-base); }
+        .word-option:hover:not([disabled]) { transform: translateY(-2px); border-color: var(--color-accent); }
+        .word-option[disabled] { opacity: 0.6; cursor: not-allowed; }
+        .word-option.correct { border-color: rgba(16, 185, 129, 0.8); background: rgba(16, 185, 129, 0.15); color: #bbf7d0; position: relative; }
+        .word-option.correct::after { content: '✔'; position: absolute; top: 12px; right: 12px; font-weight: 700; color: #22c55e; }
+        .word-option.incorrect { border-color: rgba(248, 113, 113, 0.9); animation: shake 0.25s ease; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+        .word-hint { font-size: 12px; color: var(--color-muted); }
+        .feedback { border-radius: var(--radius-md); padding: 12px 16px; font-weight: 600; }
+        .feedback .feedback-icon { margin-right: 8px; font-size: 18px; }
+        .feedback-success { border: 1px solid rgba(16, 185, 129, 0.6); background: rgba(16, 185, 129, 0.1); color: #34d399; }
+        .feedback-error { border: 1px solid rgba(248, 113, 113, 0.6); background: rgba(248, 113, 113, 0.15); color: #f87171; }
+        .word-celebration { margin-top: 16px; padding: 14px 16px; border-radius: var(--radius-lg); background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); display: flex; align-items: center; gap: 12px; opacity: 0; transform: translateY(8px); transition: opacity 0.25s ease, transform 0.25s ease; }
+        .word-celebration.show { opacity: 1; transform: translateY(0); }
+        .celebration-icon { font-size: 26px; }
+        .activity-progress { font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); }
+        .activity-progress.complete { color: #34d399; }
+        .hidden { display: none; }
+        .progress-nav { margin-top: 32px; display: flex; justify-content: center; }
+        .btn-next { padding: 14px 32px; font-size: 16px; font-weight: 600; border-radius: var(--radius-md); background: linear-gradient(135deg, #10B981, #059669); color: #fff; border: none; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+        .progress-indicator { text-align: center; color: var(--color-muted); font-size: 14px; margin-bottom: 16px; }
+        @media (max-width: 768px) {
+            .challenge-title { font-size: 26px; }
+            .word-options { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson1" data-total-pages="6" data-page-number="2">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🎯 Game: Word Prediction</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <div class="challenge-section">
+            <h1 class="challenge-title">Activity 1: Word Prediction Radar</h1>
+            <p class="challenge-desc">AI ranks likely next words. Scan the odds, pick your champ, and see if you and the model high-five.</p>
+
+            <div class="activity-card" id="wordPrediction">
+                <div class="activity-meta">
+                    <span>🎯 Activity 1</span>
+                    <span>Word Prediction Radar</span>
+                    <span>Goal: choose the most likely completion</span>
+                </div>
+                <div class="activity-body">
+                    <div class="status-pill">Sentence starter: Honesty is the best ___</div>
+                    <p>AI predicts the next word by ranking what usually follows. Study the probabilities, then make your pick.</p>
+                    <div class="probability-visuals" id="probabilityVisualization"></div>
+                    <div class="word-options" id="wordOptions"></div>
+                    <div class="activity-progress" id="wordProgress" aria-live="polite">Word radar progress: Choose the best completion.</div>
+                    <div class="word-celebration hidden" id="wordCelebration" aria-live="polite"></div>
+                    <div class="feedback hidden" id="wordFeedback"></div>
+                </div>
+            </div>
+
+            <div class="progress-indicator">Page 2 of 6 • Word Prediction Game</div>
+            <div class="progress-nav">
+                <button class="btn-next" id="nextPageBtn" disabled onclick="window.location.href='l1-p3-learn-tone.html'">Next: Learn About AI Tone →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson1';
+            const PAGE_ID = 'l1-p2';
+            const tracker = window.ProgressTracker || null;
+            
+            const probabilityConfig = [
+                { word: 'Policy', probability: 94, type: 'high', hint: 'This is the most common phrase completion.' },
+                { word: 'Banana', probability: 2, type: 'low', hint: "This doesn't fit the pattern." },
+                { word: 'Spaceship', probability: 1, type: 'low', hint: 'AI rarely predicts random words.' },
+                { word: 'Revenge', probability: 3, type: 'low', hint: 'This contradicts the meaning.' }
+            ];
+
+            let wordComplete = false;
+            
+            const elements = {
+                probabilityVisualization: document.getElementById('probabilityVisualization'),
+                wordOptions: document.getElementById('wordOptions'),
+                wordFeedback: document.getElementById('wordFeedback'),
+                wordCelebration: document.getElementById('wordCelebration'),
+                wordProgress: document.getElementById('wordProgress'),
+                nextPageBtn: document.getElementById('nextPageBtn')
+            };
+
+            function buildProbabilityBars() {
+                if (!elements.probabilityVisualization) return;
+                probabilityConfig.forEach((opt) => {
+                    const row = document.createElement('div');
+                    row.className = 'probability-row';
+                    const label = document.createElement('span');
+                    label.className = 'probability-word';
+                    label.textContent = opt.word;
+                    const track = document.createElement('div');
+                    track.className = 'probability-track';
+                    const fill = document.createElement('div');
+                    fill.className = `probability-fill ${opt.type === 'high' ? 'prob-high' : 'prob-low'}`;
+                    fill.style.width = `${opt.probability}%`;
+                    fill.textContent = `${opt.probability}%`;
+                    track.appendChild(fill);
+                    row.appendChild(label);
+                    row.appendChild(track);
+                    elements.probabilityVisualization.appendChild(row);
+                });
+            }
+
+            function setWordFeedback(message, type) {
+                if (!elements.wordFeedback) return;
+                const icon = type === 'success' ? '✅' : '⚠️';
+                elements.wordFeedback.innerHTML = `<span class="feedback-icon">${icon}</span><span>${message}</span>`;
+                elements.wordFeedback.className = `feedback ${type === 'success' ? 'feedback-success' : 'feedback-error'}`;
+                elements.wordFeedback.classList.remove('hidden');
+            }
+
+            function setWordProgress(message, isComplete = false) {
+                if (!elements.wordProgress) return;
+                elements.wordProgress.textContent = message;
+                elements.wordProgress.classList.toggle('complete', Boolean(isComplete));
+            }
+
+            function showWordCelebration() {
+                if (!elements.wordCelebration) return;
+                elements.wordCelebration.innerHTML = `
+                    <span class="celebration-icon">✅</span>
+                    <div>
+                        <strong>Policy locked in!</strong>
+                        <p style="margin: 4px 0 0; font-size: 14px;">Prediction radar mastered—ready for the next challenge!</p>
+                    </div>
+                `;
+                elements.wordCelebration.classList.remove('hidden');
+                elements.wordCelebration.classList.add('show');
+            }
+
+            function handleWordPick(word) {
+                if (wordComplete) {
+                    setWordProgress('Word radar progress: Complete! 🎉', true);
+                    return;
+                }
+                const optionButtons = elements.wordOptions ? elements.wordOptions.querySelectorAll('button') : [];
+                if (word === 'Policy') {
+                    wordComplete = true;
+                    setWordFeedback('Correct! You think like an AI on this one. Ready to move on... (+10 XP)', 'success');
+                    setWordProgress('Word radar progress: Complete! 🎉 +10 XP earned.', true);
+                    optionButtons.forEach((btn) => {
+                        if (btn.dataset.word === word) {
+                            btn.classList.add('correct');
+                        }
+                        btn.disabled = true;
+                    });
+                    showWordCelebration();
+                    if (window.updateXP) {
+                        window.updateXP(10, { lessonId: LESSON_ID, source: 'word-prediction', message: 'Word Prediction mastered! +10 XP' });
+                    }
+                    
+                    // Enable next button
+                    if (elements.nextPageBtn) {
+                        elements.nextPageBtn.disabled = false;
+                    }
+                    
+                    // Save progress
+                    if (tracker) {
+                        tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+                        tracker.setCheckpoint(LESSON_ID, 'wordComplete', true);
+                    }
+                } else {
+                    const correctOption = Array.from(optionButtons).find((btn) => btn.dataset.word === 'Policy');
+                    if (correctOption) {
+                        correctOption.classList.add('correct');
+                    }
+                    setWordFeedback(`Not quite. "${word}" is ${probabilityConfig.find((o) => o.word === word)?.hint || 'not the best choice.'}`, 'error');
+                    setWordProgress('Word radar progress: Try again!');
+                    optionButtons.forEach((btn) => {
+                        if (btn.dataset.word === word) {
+                            btn.classList.add('incorrect');
+                            setTimeout(() => btn.classList.remove('incorrect'), 300);
+                        }
+                    });
+                }
+            }
+
+            function buildWordOptions() {
+                if (!elements.wordOptions) return;
+                probabilityConfig.forEach((opt) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'word-option';
+                    btn.dataset.word = opt.word;
+                    btn.innerHTML = `<strong>${opt.word}</strong>`;
+                    btn.addEventListener('click', () => handleWordPick(opt.word));
+                    elements.wordOptions.appendChild(btn);
+                });
+            }
+
+            // Initialize
+            buildProbabilityBars();
+            buildWordOptions();
+            
+            // Check if already completed
+            if (tracker) {
+                const saved = tracker.getCheckpoints(LESSON_ID);
+                if (saved.wordComplete) {
+                    wordComplete = true;
+                    setWordProgress('Word radar progress: Complete! 🎉', true);
+                    if (elements.nextPageBtn) {
+                        elements.nextPageBtn.disabled = false;
+                    }
+                    const optionButtons = elements.wordOptions.querySelectorAll('button');
+                    optionButtons.forEach((btn) => {
+                        if (btn.dataset.word === 'Policy') {
+                            btn.classList.add('correct');
+                        }
+                        btn.disabled = true;
+                    });
+                }
+            }
+            
+            // Mark page as visited
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            }
+        });
+    </script>
+</body>
+</html>

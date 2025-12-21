@@ -11,15 +11,19 @@ document.addEventListener('DOMContentLoaded', () => {
             type: 'lesson',
             title: 'Lesson 1 · Warm-Up',
             summary: 'Tone basics, probability radar, and three Prompt Wizardry mini-games.',
-            path: 'lesson1-ai-intro.html'
+            path: 'lesson1/l1-p1-learn-intro.html',
+            icon: '⚡️',
+            time: '8 min'
         },
         {
             id: 'lesson2',
             type: 'lesson',
             title: 'Lesson 2 · AI Literacy',
             summary: '32 machine pathologies, F.A.C.T.S. framework, and real disaster drills.',
-            path: 'presentation.html',
-            requires: 'lesson1'
+            path: 'lesson2/l2-p1-learn-intro.html',
+            requires: 'lesson1',
+            icon: '🧭',
+            time: '25 min'
         },
         {
             id: 'quiz1',
@@ -27,32 +31,39 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Quiz 1 · Warm-Up Review',
             summary: 'Check your instincts before unlocking Lesson 3.',
             path: 'quiz1.html',
-            requires: 'lesson2'
+            requires: 'lesson2',
+            icon: '🎯',
+            time: '5 min'
         },
         {
             id: 'lesson3',
             type: 'lesson',
             title: 'Lesson 3 · Content Creation',
             summary: 'Ethical content systems, AI collaborator roles, and guardrails.',
-            path: 'lesson3-content-creation.html',
-            requires: 'quiz1'
+            path: 'lesson3/l3-p1-learn-intro.html',
+            requires: 'quiz1',
+            icon: '🎨',
+            time: '18 min'
         },
         {
             id: 'lesson4',
             type: 'lesson',
             title: 'Lesson 4 · Advanced Prompting',
             summary: 'Layered prompting blueprints for research, marketing, and ops.',
-            path: 'lesson4-advanced-prompting.html',
-            requires: 'lesson3'
+            path: 'lesson4/l4-p1-learn-intro.html',
+            requires: 'lesson3',
+            icon: '🔮',
+            time: '22 min'
         },
         {
             id: 'lesson5',
             type: 'lesson',
             title: 'Lesson 5 · AI Workflows',
             summary: 'Chain multiple models, automate reviews, and add human escalation.',
-            path: 'lesson5-ai-workflows.html',
+            path: 'lesson5/l5-p1-learn-intro.html',
             requires: 'lesson4',
-            comingSoon: true
+            icon: '🌐',
+            time: '20 min'
         },
         {
             id: 'lesson6',
@@ -61,11 +72,41 @@ document.addEventListener('DOMContentLoaded', () => {
             summary: 'Ship your AI policy, lesson plan, or automation brief for certification.',
             path: 'lesson6-capstone.html',
             requires: 'lesson5',
-            comingSoon: true
+            icon: '🎓',
+            time: '30 min'
         }
     ];
     const DEFAULT_TOTAL_LESSONS = DASHBOARD_ITEMS.filter((item) => item.type === 'lesson').length;
 
+    function findLessonPath(lessonId) {
+        const match = DASHBOARD_ITEMS.find((item) => item.id === lessonId);
+        return match ? match.path : null;
+    }
+
+    function requirementCopy(requirementId) {
+        if (!requirementId) return '';
+        if (requirementId === 'lesson1') return 'Complete Lesson 1 to get your game pass stamped.';
+        if (requirementId === 'lesson2') return 'Finish Lesson 2 so the quiz lights up.';
+        if (requirementId === 'quiz1') return 'Score 75%+ on Quiz 1 to pop the lock.';
+        if (requirementId === 'lesson3') return 'Lesson 3 first—no speedrunning the ladder.';
+        if (requirementId === 'lesson4') return 'Close Lesson 4 to earn the next key.';
+        if (requirementId === 'lesson5') return 'Lesson 5 is your ticket to the capstone.';
+        return 'Complete the prerequisite to unlock';
+    }
+
+    function openLockModal({ message = 'Complete the prerequisite to continue.', requirement = null, comingSoon = false } = {}) {
+        const href = requirement ? findLessonPath(requirement) : null;
+        if (typeof window.showModal === 'function') {
+            window.showModal({
+                title: comingSoon ? 'Coming soon' : 'Locked',
+                message,
+                actionHref: href,
+                actionLabel: href ? 'Open prerequisite' : 'Okay'
+            });
+        } else {
+            alert(message);
+        }
+    }
     const els = {
         lessonGrid: document.getElementById('lessonGrid'),
         progressFill: document.getElementById('homeProgressFill'),
@@ -83,9 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
         modeDescription: document.getElementById('modeToggleDescription')
     };
 
-    const RESET_CONFIRM_WINDOW = 8000;
-    let resetConfirmTimer = null;
-    let awaitingResetConfirm = false;
     let professionalModeEnabled = false;
 
     function readProfessionalModePreference() {
@@ -121,8 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (els.modeDescription) {
             els.modeDescription.textContent = enabled
-                ? 'Professional Mode strips XP, streaks, and badges to spotlight lesson progress only.'
-                : 'Learner Mode keeps XP, badges, and quests visible for extra motivation.';
+                ? 'Professional Mode hides XP, streaks, and badges for a clean, content-first view.'
+                : 'Learner Mode shows XP, badges, and quests so every activity feels rewarding.';
         }
     }
 
@@ -162,56 +200,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (els.resetBtn) {
-        const defaultLabel = els.resetBtn.textContent || 'Reset Progress';
         els.resetBtn.addEventListener('click', () => {
-            if (!awaitingResetConfirm) {
-                awaitingResetConfirm = true;
-                els.resetBtn.textContent = 'Confirm Reset';
-                showResetWarning('This wipes all XP and lesson unlocks. Click "Confirm Reset" within 8 seconds to continue.');
-                clearTimeout(resetConfirmTimer);
-                resetConfirmTimer = setTimeout(() => {
-                    awaitingResetConfirm = false;
-                    els.resetBtn.textContent = defaultLabel;
-                    hideResetWarning();
-                }, RESET_CONFIRM_WINDOW);
-                return;
-            }
-
-            awaitingResetConfirm = false;
-            clearTimeout(resetConfirmTimer);
-            els.resetBtn.textContent = defaultLabel;
-            hideResetWarning();
+            const confirmReset = window.confirm('Are you sure you want to reset all your progress? This action cannot be undone.');
+            if (!confirmReset) return;
             performProgressReset();
         });
     }
 
     function getLessonStatus(id) {
         if (!progressApi) return 'not-started';
-        
-        // Special handling for Lesson 2 (Presentation OR Game)
-        if (id === 'lesson2') {
-            const status = progressApi.getLessonStatus ? progressApi.getLessonStatus(id) : 'not-started';
-            if (status === 'completed') return 'completed';
-            
-            const gameStatus = progressApi.getLessonStatus ? progressApi.getLessonStatus('lesson2-game') : 'not-started';
-            if (gameStatus === 'completed') return 'completed';
-            
-            if (status === 'in-progress' || gameStatus === 'in-progress') return 'in-progress';
-            return 'not-started';
-        }
-
         return progressApi.getLessonStatus ? progressApi.getLessonStatus(id) : 'not-started';
     }
 
     function isLessonComplete(id) {
         if (!progressApi) return false;
-
-        // Special handling for Lesson 2
-        if (id === 'lesson2') {
-            if (progressApi.isLessonComplete && progressApi.isLessonComplete('lesson2')) return true;
-            if (progressApi.isLessonComplete && progressApi.isLessonComplete('lesson2-game')) return true;
-        }
-
         if (progressApi.isLessonComplete) return progressApi.isLessonComplete(id);
         return getLessonStatus(id) === 'completed';
     }
@@ -252,9 +254,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let modifier = '';
         let statusLabel = 'Not Started';
 
-        if (locked) {
-            modifier = comingSoon ? 'coming-soon' : 'locked';
-            statusLabel = comingSoon ? 'Coming Soon' : 'Locked';
+            if (locked) {
+                modifier = comingSoon ? 'coming-soon' : 'locked';
+                statusLabel = comingSoon ? '🚧 Coming soon' : '🔒 Locked';
         } else if (completed) {
             modifier = 'completed';
             statusLabel = 'Completed';
@@ -263,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
             statusLabel = 'In Progress';
         }
 
-        const ctaLabel = locked ? (comingSoon ? 'Coming Soon' : 'Locked') : completed ? 'Review' : 'Start';
+        const ctaLabel = locked ? (comingSoon ? '🚧 Coming soon' : '🔒 Locked') : completed ? 'Review' : 'Start';
         return { locked, completed, modifier, statusLabel, ctaLabel, comingSoon };
     }
 
@@ -295,23 +297,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 : `${state.ctaLabel} ${item.title}`;
             return `
                 <article class="lesson-card ${state.locked ? 'locked' : ''}"${state.comingSoon ? ' data-coming-soon="true"' : ''}>
-                    <div class="status-pill${state.modifier ? ` ${state.modifier}` : ''}">${state.statusLabel}</div>
-                    <h3>${item.title}</h3>
+                    <div class="lesson-header">
+                        <span class="lesson-icon" aria-hidden="true">${item.icon || '📘'}</span>
+                        <div class="lesson-titles">
+                            <div class="status-pill${state.modifier ? ` ${state.modifier}` : ''}">${state.statusLabel}</div>
+                            <h3>${item.title}</h3>
+                        </div>
+                    </div>
                     <p>${item.summary}</p>
-                    ${state.comingSoon ? '<p class="coming-soon-note">🚧 Launching soon · stay tuned</p>' : ''}
-                    <button type="button" data-path="${item.path}" data-locked="${state.locked}" aria-label="${ariaLabel}">${state.ctaLabel}</button>
+                    <div class="lesson-meta">
+                        <span class="time-estimate">⏱ ${item.time || '10 min'}</span>
+                        ${state.locked && item.requires ? `<span class="unlock-hint">${requirementCopy(item.requires)}</span>` : ''}
+                        ${state.comingSoon ? '<span class="coming-soon-note">🚧 Launching soon · stay tuned</span>' : ''}
+                    </div>
+                    <button type="button" data-path="${item.path}" data-locked="${state.locked}" data-requirement="${item.requires || ''}" data-coming-soon="${state.comingSoon}" aria-label="${ariaLabel}">${state.ctaLabel}</button>
                 </article>
             `;
         }).join('');
         els.lessonGrid.innerHTML = cards;
         els.lessonGrid.querySelectorAll('button').forEach((button) => {
             const locked = button.dataset.locked === 'true';
-            if (locked) {
-                button.disabled = true;
-                return;
+            const requirement = button.dataset.requirement || '';
+            const comingSoon = button.dataset.comingSoon === 'true';
+            const path = button.dataset.path;
+            if (locked || comingSoon) {
+                button.setAttribute('aria-disabled', 'true');
             }
             button.addEventListener('click', () => {
-                window.location.href = button.dataset.path;
+                if (locked || comingSoon) {
+                    const message = comingSoon
+                        ? 'This lesson is launching soon. We will notify you when it is live.'
+                        : requirementCopy(requirement) || 'Complete the prerequisite to unlock.';
+                    openLockModal({ message, requirement, comingSoon });
+                    return;
+                }
+                window.location.href = path;
             });
         });
     }
@@ -366,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initHeroButtons() {
         const destination = getNextStartDestination();
-        const startPath = destination?.path || 'lesson1-ai-intro.html';
+        const startPath = destination?.path || 'lesson1/l1-p1-learn-intro.html';
         const ctaLabel = getStartButtonLabel(destination);
         els.startButtons.forEach((button) => {
             button.textContent = ctaLabel;

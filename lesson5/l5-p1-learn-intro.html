@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 5: AI Workflows · Intro</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .lesson-shell { max-width: 1100px; gap: 14px; padding: 12px; }
+        .hero-section { text-align: center; padding: clamp(18px, 4vw, 28px) clamp(14px, 3vw, 22px); background: rgba(255, 255, 255, 0.1); border-radius: var(--radius-lg); margin-bottom: clamp(12px, 3vw, 20px); }
+        .emoji-large { font-size: clamp(42px, 7vw, 64px); margin-bottom: 10px; }
+        .hero-title { font-size: clamp(26px, 4vw, 32px); margin-bottom: 8px; }
+        .subtitle { font-size: clamp(15px, 2.6vw, 18px); color: var(--color-muted); }
+        .section { margin-top: clamp(10px, 2.8vw, 18px); }
+        .section h2 { font-size: clamp(20px, 3.2vw, 26px); margin-bottom: 8px; }
+        .section ul { padding-left: 18px; line-height: 1.5; }
+        .card { padding: clamp(12px, 2vw, 16px); }
+        .progress-nav { margin-top: clamp(10px, 2vw, 16px); }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+    <script defer src="../scripts/dragdrop.js"></script>
+</head>
+<body data-lesson-id="lesson5" data-total-pages="10" data-page-number="1">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🚀 Lesson 5: AI Workflows</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <section class="hero-section">
+            <div class="emoji-large">🧭</div>
+            <h1 class="hero-title">Design reliable AI workflows</h1>
+            <p class="subtitle">From inputs to outputs: orchestrate tools, models, humans, and checks.</p>
+        </section>
+
+        <div class="section">
+            <h2>What you'll practice</h2>
+            <ul>
+                <li>Map end-to-end flows for content, support, and analytics.</li>
+                <li>Sequence AI, tools, and humans with clear contracts.</li>
+                <li>Harden workflows with retries, fallbacks, and guardrails.</li>
+            </ul>
+        </div>
+
+        <div class="section" data-answer-group data-xp="10">
+            <h2>Quick check</h2>
+            <p>Two fast questions to anchor the basics.</p>
+            <div class="card">
+                <p><strong>1) When should steps run in parallel?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Independent steps can run together to cut latency." data-correct="true">When steps are independent and you want lower latency</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Dependent steps need sequence.">When a later step depends on an earlier output</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Randomizing order breaks contracts.">When you want random ordering</button>
+            </div>
+            <div class="card" style="margin-top:12px;" data-answer-group data-xp="10">
+                <p><strong>2) Best first guardrail?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Input validation catches bad data before it cascades." data-correct="true">Validate inputs before the workflow proceeds</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Skipping validation increases risk.">Skip validation to move faster</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Approvals help, but start by checking data quality.">Only add an approval at the very end</button>
+            </div>
+        </div>
+
+        <section class="section" id="dd-l5-p1">
+            <h2>Drag & drop: Workflow shape</h2>
+            <p class="section-subtitle">Order a simple AI workflow from start to finish.</p>
+            <div id="dd-activity-l5-p1"></div>
+        </section>
+
+        <div class="progress-indicator">Page 1 of 10 • Overview</div>
+        <div class="progress-nav" style="display:flex; justify-content:flex-end; margin-top:16px;">
+            <button class="btn btn-primary" type="button" onclick="window.location.href='l5-p2-learn-patterns.html'">Next: Workflow Building Blocks →</button>
+        </div>
+        <div class="footer-nav"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson5';
+            const PAGE_ID = 'l5-p1';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+
+            initDragDropActivity({
+                containerId: 'dd-activity-l5-p1',
+                activityId: 'l5-p1-shape',
+                lessonId: LESSON_ID,
+                xp: 10,
+                prompt: 'Place the workflow steps in the right order.',
+                hint: 'Start from trigger/ingest, end with publish + log.',
+                attempts: 3,
+                slots: [
+                    { id: 's1', label: 'Step 1', correct: 'trigger' },
+                    { id: 's2', label: 'Step 2', correct: 'validate' },
+                    { id: 's3', label: 'Step 3', correct: 'ai-draft' },
+                    { id: 's4', label: 'Step 4', correct: 'human-review' },
+                    { id: 's5', label: 'Step 5', correct: 'publish-log' }
+                ],
+                chips: [
+                    { id: 'trigger', label: 'Trigger / intake' },
+                    { id: 'validate', label: 'Validate inputs' },
+                    { id: 'ai-draft', label: 'AI draft / generation' },
+                    { id: 'human-review', label: 'Human review' },
+                    { id: 'publish-log', label: 'Publish + log' }
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

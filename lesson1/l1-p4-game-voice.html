@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Game: Voice Mimic</title>
+    
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .lesson-shell { display: flex; flex-direction: column; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .challenge-section { display: flex; flex-direction: column; gap: 24px; }
+        .challenge-title { font-size: 34px; margin-bottom: 8px; }
+        .challenge-desc { color: var(--color-muted); line-height: 1.6; font-size: 16px; }
+        .activity-card { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+        .activity-meta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; font-size: 14px; color: var(--color-muted); }
+        .activity-meta span { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(255, 255, 255, 0.08); border-radius: 999px; }
+        .xp-chip { padding: 6px 12px; border-radius: 999px; background: rgba(34, 197, 94, 0.2); border: 1px solid rgba(34, 197, 94, 0.5); color: #bbf7d0; font-weight: 600; }
+        .voice-progress-chip { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+        .voice-progress-chip.goal-met { background: rgba(34, 197, 94, 0.25); border-color: rgba(34, 197, 94, 0.8); color: #ecfccb; }
+        .activity-body { display: grid; gap: 18px; }
+        .status-pill { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); }
+        .voice-grid { display: grid; gap: 16px; }
+        .chat-window { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(0, 0, 0, 0.25); padding: 18px; height: 350px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; scroll-behavior: smooth; }
+        .message-bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; line-height: 1.5; font-size: 15px; display: inline-flex; flex-direction: column; gap: 6px; }
+        .message-meta { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.7; }
+        .message-user { align-self: flex-end; background: linear-gradient(135deg, #10B981, #059669); color: #fff; border-bottom-right-radius: 4px; }
+        .message-ai { align-self: flex-start; background: rgba(255, 255, 255, 0.12); border-bottom-left-radius: 4px; }
+        .empty-state { color: var(--color-muted); text-align: center; font-size: 14px; padding: 24px 0; }
+        .chat-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+        .chat-controls select { flex: 1; min-width: 180px; padding: 10px 12px; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.25); background: rgba(0, 0, 0, 0.35); color: inherit; }
+        .voice-selection-note { font-size: 13px; color: rgba(255, 255, 255, 0.7); margin: 0; }
+        .hidden { display: none; }
+        .progress-nav { margin-top: 32px; display: flex; justify-content: center; }
+        .btn-next { padding: 14px 32px; font-size: 16px; font-weight: 600; border-radius: var(--radius-md); background: linear-gradient(135deg, #10B981, #059669); color: #fff; border: none; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+        .progress-indicator { text-align: center; color: var(--color-muted); font-size: 14px; margin-bottom: 16px; }
+        @media (max-width: 768px) {
+            .challenge-title { font-size: 26px; }
+            .chat-controls { flex-direction: column; align-items: stretch; }
+            .chat-controls select { width: 100%; }
+        }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson1" data-total-pages="6" data-page-number="4">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🎤 Game: Voice Mimic</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <div class="challenge-section">
+            <h1 class="challenge-title">Activity 2: Voice Mimic Chat</h1>
+            <p class="challenge-desc">See how AI slips into character. Try any 3 voices and watch the same line shapeshift.</p>
+
+            <div class="activity-card" id="voiceMimic">
+                <div class="activity-meta">
+                    <span>🎤 Activity 2</span>
+                    <span>Voice Mimic Chat</span>
+                    <span>Goal: try 3 characters</span>
+                    <span class="xp-chip voice-progress-chip" id="voiceProgressChip">Voices tried: 0/3</span>
+                </div>
+                <div class="activity-body voice-grid">
+                    <div class="status-pill">Prompt: "Honesty is the best policy."</div>
+                    <div class="chat-window" id="mimicMessages">
+                        <div class="empty-state" id="mimicEmpty">Select a character voice and press Send to see how the AI response shifts.</div>
+                    </div>
+                    <div class="chat-controls">
+                        <label for="characterSelect" style="font-size: 14px; opacity: 0.8;">Rewrite it in the voice of</label>
+                        <select id="characterSelect" aria-label="Select a character voice"></select>
+                        <button class="btn btn-primary" id="sendMimic">Send</button>
+                    </div>
+                    <p class="voice-selection-note" id="voiceSelectionNote">Selected voice: Mickey Mouse</p>
+                </div>
+            </div>
+
+            <div class="progress-indicator">Page 4 of 6 • Voice Mimic Game</div>
+            <div class="progress-nav">
+                <button class="btn-next" id="nextPageBtn" disabled onclick="window.location.href='l1-p5-game-tone.html'">Next: Play the Tone Lab Game →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson1';
+            const PAGE_ID = 'l1-p4';
+            const REQUIRED_MIMIC_VARIETY = 3;
+            const tracker = window.ProgressTracker || null;
+            
+            const characters = [
+                { id: 'mickey', name: 'Mickey Mouse', response: 'Gosh! Being truthful is always the top policy!' },
+                { id: 'scrooge', name: 'Ebenezer Scrooge', response: 'Bah! Yet honesty remains the soundest policy for profit.' },
+                { id: 'cat', name: 'A Cat', response: 'Mew... honesty keeps the bowl full.' },
+                { id: 'dog', name: 'A Dog', response: 'Woof! Honesty is the best bone to chew on!' },
+                { id: 'santa', name: 'Santa Claus', response: 'Ho ho ho! Honesty is the merriest policy of all.' },
+                { id: 'sherlock', name: 'Sherlock Holmes', response: 'Elementary, my dear Watson: honesty is the best policy.' },
+                { id: 'yoda', name: 'Yoda', response: 'Best policy, honesty is, hmmm.' },
+                { id: 'pirate', name: 'Pirate', response: "Arrr, speakin' true be the finest code o' conduct." },
+                { id: 'shakespeare', name: 'Shakespeare', response: 'Verily, honesty doth prove the noblest policy.' }
+            ];
+
+            const savedCheckpoints = tracker ? tracker.getCheckpoints(LESSON_ID) : {};
+            const savedVoiceAttempts = Array.isArray(savedCheckpoints.voiceAttempts)
+                ? savedCheckpoints.voiceAttempts.filter(Boolean)
+                : [];
+
+            const state = {
+                voiceAttempts: new Set(savedVoiceAttempts),
+                mimicComplete: Boolean(savedCheckpoints.mimicComplete),
+                messages: []
+            };
+
+            const elements = {
+                mimicMessages: document.getElementById('mimicMessages'),
+                mimicEmpty: document.getElementById('mimicEmpty'),
+                characterSelect: document.getElementById('characterSelect'),
+                sendMimic: document.getElementById('sendMimic'),
+                voiceProgressChip: document.getElementById('voiceProgressChip'),
+                voiceSelectionNote: document.getElementById('voiceSelectionNote'),
+                nextPageBtn: document.getElementById('nextPageBtn')
+            };
+
+            function persistVoiceAttempts() {
+                if (!tracker) return;
+                tracker.setCheckpoint(LESSON_ID, 'voiceAttempts', Array.from(state.voiceAttempts));
+            }
+
+            function updateVoiceProgress() {
+                if (!elements.voiceProgressChip) return;
+                const voicesTried = Math.min(state.voiceAttempts.size, REQUIRED_MIMIC_VARIETY);
+                elements.voiceProgressChip.textContent = `Voices tried: ${voicesTried}/${REQUIRED_MIMIC_VARIETY}`;
+                elements.voiceProgressChip.classList.toggle('goal-met', voicesTried >= REQUIRED_MIMIC_VARIETY);
+            }
+
+            function updateVoiceSelectionNote() {
+                if (!elements.voiceSelectionNote || !elements.characterSelect) return;
+                const selectedId = elements.characterSelect.value;
+                const character = characters.find((entry) => entry.id === selectedId);
+                if (character) {
+                    elements.voiceSelectionNote.textContent = `Selected voice: ${character.name}`;
+                } else {
+                    elements.voiceSelectionNote.textContent = 'Select a voice to get started.';
+                }
+            }
+
+            function renderMessages() {
+                if (!elements.mimicMessages) return;
+                elements.mimicMessages.innerHTML = '';
+                if (!state.messages.length) {
+                    elements.mimicEmpty.classList.remove('hidden');
+                    return;
+                }
+                elements.mimicEmpty.classList.add('hidden');
+                state.messages.forEach((msg) => {
+                    const bubble = document.createElement('div');
+                    bubble.className = `message-bubble ${msg.role === 'user' ? 'message-user' : 'message-ai'}`;
+                    const meta = document.createElement('div');
+                    meta.className = 'message-meta';
+                    meta.textContent = msg.role === 'user' ? 'You' : 'AI Assistant';
+                    const text = document.createElement('div');
+                    text.className = 'message-text';
+                    text.textContent = msg.text;
+                    bubble.appendChild(meta);
+                    bubble.appendChild(text);
+                    elements.mimicMessages.appendChild(bubble);
+                });
+                elements.mimicMessages.scrollTop = elements.mimicMessages.scrollHeight;
+            }
+
+            function handleSend() {
+                const selectedId = elements.characterSelect.value;
+                const character = characters.find((c) => c.id === selectedId);
+                if (!character) return;
+                
+                state.messages.push({ 
+                    role: 'user', 
+                    text: `Honesty is the best policy. Rewrite this in the voice of ${character.name}.` 
+                });
+                state.messages.push({ 
+                    role: 'assistant', 
+                    text: character.response 
+                });
+                state.voiceAttempts.add(character.id);
+                persistVoiceAttempts();
+                renderMessages();
+                updateVoiceProgress();
+                
+                if (!state.mimicComplete && state.voiceAttempts.size >= REQUIRED_MIMIC_VARIETY) {
+                    state.mimicComplete = true;
+                    if (tracker) {
+                        tracker.setCheckpoint(LESSON_ID, 'mimicComplete', true);
+                    }
+                    if (window.updateXP) {
+                        window.updateXP(15, { lessonId: LESSON_ID, source: 'voice-mimic', message: 'Voice Mimic complete! +15 XP' });
+                    }
+                    if (elements.nextPageBtn) {
+                        elements.nextPageBtn.disabled = false;
+                    }
+                    if (elements.voiceProgressChip) {
+                        elements.voiceProgressChip.textContent = 'Voices tried: 3/3 · +15 XP';
+                    }
+                }
+            }
+
+            // Initialize character dropdown
+            characters.forEach((char) => {
+                const option = document.createElement('option');
+                option.value = char.id;
+                option.textContent = char.name;
+                elements.characterSelect.appendChild(option);
+            });
+
+            // Event listeners
+            if (elements.sendMimic) {
+                elements.sendMimic.addEventListener('click', handleSend);
+            }
+            if (elements.characterSelect) {
+                elements.characterSelect.addEventListener('change', updateVoiceSelectionNote);
+            }
+
+            // Initialize
+            updateVoiceProgress();
+            updateVoiceSelectionNote();
+            
+            // Check if already completed
+            if (state.mimicComplete) {
+                if (elements.nextPageBtn) {
+                    elements.nextPageBtn.disabled = false;
+                }
+            }
+
+            // Mark page as visited
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 4: Advanced Prompting · Few-Shot</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson4" data-total-pages="12" data-page-number="2">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🔮 Lesson 4: Advanced Prompting</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <section class="hero-section">
+            <div class="emoji-large">📚</div>
+            <h1 class="hero-title">Few-shot patterns</h1>
+            <p class="subtitle">Show, don't tell: exemplars anchor format, style, and reasoning.</p>
+        </section>
+
+        <div class="section">
+            <h2>Pattern tips</h2>
+            <ul>
+                <li>3–5 tight examples, same schema.</li>
+                <li>Label thoughts vs answers.</li>
+                <li>Pin failure modes: "never quote URLs", etc.</li>
+            </ul>
+        </div>
+
+        <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+            <h2>Quick check</h2>
+            <p>Check your few-shot fundamentals.</p>
+            <div class="card" data-answer-group data-xp="10">
+                <p><strong>1) How many examples are ideal?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="3–5 consistent examples give enough pattern without bloat.">3–5 consistent examples</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="One example often under-specifies the pattern.">1 example</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="20 examples is overkill and adds noise.">20 examples</button>
+            </div>
+            <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                <p><strong>2) Why label thoughts vs answers?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Separating reasoning from final output keeps format clean.">Separates reasoning steps from final output</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="It doesn't change token costs meaningfully.">To increase token count</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Random capitalization isn't the goal.">To capitalize headers</button>
+            </div>
+        </div>
+
+        <div class="progress-indicator">Page 2 of 12 • Learn: Few-shot</div>
+        <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
+            <button class="btn btn-secondary" type="button" onclick="window.location.href='l4-p1-learn-intro.html'">← Back</button>
+            <button class="btn btn-primary" type="button" onclick="window.location.href='l4-p3-game-fewshot.html'">Next: Few-shot Lab →</button>
+        </div>
+        <div class="footer-nav"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson4';
+            const PAGE_ID = 'l4-p2';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+        });
+    </script>
+</body>
+</html>

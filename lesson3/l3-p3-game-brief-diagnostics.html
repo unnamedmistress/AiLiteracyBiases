@@ -3,220 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brief Diagnostics Game - Lesson 3</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 3: Content Creation · Game: Brief Diagnostics</title>
     <link rel="stylesheet" href="../styles/shared.css">
-    <link rel="stylesheet" href="../styles/lesson-responsive.css">
-    <style>
-        .game-container { background: rgba(236, 72, 153, 0.05); border: 1px solid rgba(236, 72, 153, 0.2); border-radius: var(--radius-lg); padding: 24px; margin: 24px 0; }
-        .slack-thread { background: rgba(0, 0, 0, 0.4); border-radius: var(--radius-lg); padding: 20px; margin: 20px 0; }
-        .slack-message { background: rgba(255, 255, 255, 0.05); border-left: 3px solid #facc15; padding: 12px 16px; margin: 12px 0; border-radius: var(--radius-sm); }
-        .slack-author { font-weight: 600; color: #60a5fa; margin-bottom: 6px; }
-        .brief-options { display: grid; gap: 16px; margin: 24px 0; }
-        .brief-option { background: rgba(0, 0, 0, 0.25); border: 2px solid rgba(255, 255, 255, 0.15); border-radius: var(--radius-md); padding: 20px; cursor: pointer; transition: all 0.2s ease; }
-        .brief-option:hover { border-color: rgba(59, 130, 246, 0.5); transform: translateY(-2px); }
-        .brief-option.selected { border-color: #60a5fa; background: rgba(59, 130, 246, 0.1); }
-        .brief-option.correct { border-color: #34d399; background: rgba(16, 185, 129, 0.15); }
-        .brief-option.incorrect { border-color: #f87171; background: rgba(239, 68, 68, 0.15); }
-        .option-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); margin-bottom: 8px; }
-        .fix-area { background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: var(--radius-md); padding: 20px; margin: 20px 0; display: none; }
-        .fix-area.active { display: block; }
-        .fix-field { margin: 16px 0; }
-        .fix-field label { display: block; margin-bottom: 8px; font-weight: 600; color: #facc15; }
-        .fix-field input, .fix-field textarea { width: 100%; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: var(--radius-sm); padding: 10px 12px; color: #fff; font-family: inherit; }
-        .fix-field textarea { min-height: 80px; resize: vertical; }
-        .feedback-box { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); padding: 16px; margin: 20px 0; display: none; }
-        .feedback-box.show { display: block; }
-        .attempts-counter { text-align: center; margin: 16px 0; font-size: 14px; color: var(--color-muted); }
-    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
 </head>
-<body>
-    <nav class="nav-bar">
-        <div class="nav-content">
-            <a href="../index.html" class="nav-brand">AI Detective Academy</a>
-            <button class="nav-toggle" id="navToggle">☰</button>
+<body data-lesson-id="lesson3" data-total-pages="10" data-page-number="3">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🎨 Lesson 3: Content Creation</div>
+            <div class="breadcrumb"></div>
         </div>
-    </nav>
 
-    <div class="nav-menu" id="navMenu">
-        <button class="nav-close" id="navClose">×</button>
-        <div class="nav-section">
-            <h3>MAIN</h3>
-            <a href="../index.html">Home</a>
+        <section class="hero-section">
+            <div class="emoji-large">🎮</div>
+            <h1 class="hero-title">Brief Diagnostics</h1>
+            <p class="subtitle">Spot and repair weak prompts before they derail generation quality.</p>
+        </section>
+
+        <div class="section">
+            <h2>Mini-game</h2>
+            <p>Review the draft briefs below. For each, mark issues (missing audience, weak constraints, no examples) and propose a fix.</p>
+            <ol>
+                <li>"Write a blog about AI"</li>
+                <li>"Give me 3 tweets about launch"</li>
+                <li>"Make a video script about safety"</li>
+            </ol>
+            <p>Add scope, audience, format, voice, and examples to tighten them.</p>
         </div>
+
+        <div class="section" data-answer-group data-xp="15" style="margin-top:20px;">
+            <h2>Grade a brief</h2>
+            <p>Pick the strongest fix for a weak brief.</p>
+            <div class="card" data-answer-group data-xp="15">
+                <p><strong>Brief:</strong> "Write a blog about AI." What’s the best repair?</p>
+                <button class="btn btn-secondary" data-answer data-correct="true" data-explanation="Audience + angle + format + examples make it actionable.">Add audience, angle, 800-word limit, tone, and 2 good examples</button>
+                <button class="btn btn-secondary" data-answer data-explanation="Longer without structure stays weak.">Make it 2,000 words with no constraints</button>
+                <button class="btn btn-secondary" data-answer data-explanation="Listing buzzwords isn't a brief.">Just list trending AI buzzwords</button>
+            </div>
+        </div>
+
+        <div class="progress-indicator">Page 3 of 10 • Game: Brief Diagnostics</div>
+        <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
+            <button class="btn btn-secondary" type="button" onclick="window.location.href='l3-p2-learn-briefs.html'">← Back</button>
+            <button class="btn btn-primary" type="button" onclick="window.location.href='l3-p4-learn-structure.html'">Next: Learn Structure →</button>
+        </div>
+        <div class="footer-nav"></div>
     </div>
-
-    <main class="lesson-container">
-        <div class="breadcrumb">
-            <a href="../index.html">Home</a>
-            <span>/</span>
-            <a href="l3-p1-intro.html">Lesson 3</a>
-            <span>/</span>
-            <span>Brief Diagnostics Game</span>
-        </div>
-
-        <div class="lesson-header">
-            <h1>🎮 Brief Diagnostics</h1>
-            <p class="lesson-subtitle">Spot the weak brief and fix it</p>
-        </div>
-
-        <div class="progress-display">
-            <div class="xp-bar-container">
-                <div class="xp-bar-label">
-                    <span>Lesson Progress</span>
-                    <span id="lessonXP">0/100 XP</span>
-                </div>
-                <div class="xp-bar">
-                    <div class="xp-fill" id="lessonXPFill" style="width: 0%"></div>
-                </div>
-            </div>
-            <p class="progress-text">Page 3 of 10 • Game 1/5</p>
-        </div>
-
-        <div class="game-container">
-            <h2>Situation</h2>
-            <div class="slack-thread">
-                <div class="slack-message">
-                    <div class="slack-author">@sarah_marketing</div>
-                    <p>"Hey AI — write up a product blurb."</p>
-                </div>
-                <div class="slack-message">
-                    <div class="slack-author">You</div>
-                    <p>You see the brief: <strong>"Product blurb for cool water bottle."</strong></p>
-                </div>
-                <div class="slack-message">
-                    <div class="slack-author">You (thinking)</div>
-                    <p>That's way too vague. This needs fixing before we waste time on garbage output.</p>
-                </div>
-            </div>
-
-            <h2>Your Mission</h2>
-            <p>Choose which brief is weak, then fix it by adding the missing elements.</p>
-
-            <div class="brief-options">
-                <div class="brief-option" data-option="a" onclick="selectBrief('a')">
-                    <div class="option-label">Option A</div>
-                    <p style="font-family: 'Courier New', monospace;">"Product blurb for cool water bottle."</p>
-                </div>
-                <div class="brief-option" data-option="b" onclick="selectBrief('b')">
-                    <div class="option-label">Option B</div>
-                    <p style="font-family: 'Courier New', monospace;">"Write a 50-word product blurb for a stainless steel water bottle. Target audience: gym-goers, 20-35. Tone: energetic and motivational. Highlight: keeps drinks cold for 24 hours, eco-friendly."</p>
-                </div>
-            </div>
-
-            <button class="btn btn-primary" id="checkBtn" onclick="checkAnswer()" disabled>Check Answer</button>
-
-            <div class="fix-area" id="fixArea">
-                <h3>Fix the Weak Brief</h3>
-                <p style="margin-bottom: 20px;">Add the missing elements to make this brief actually useful:</p>
-                
-                <div class="fix-field">
-                    <label>Target Audience:</label>
-                    <input type="text" id="fixAudience" placeholder="Who's this for?">
-                </div>
-                <div class="fix-field">
-                    <label>Tone:</label>
-                    <input type="text" id="fixTone" placeholder="How should it sound?">
-                </div>
-                <div class="fix-field">
-                    <label>Key Points:</label>
-                    <textarea id="fixKeyPoints" placeholder="What must be included?"></textarea>
-                </div>
-                <div class="fix-field">
-                    <label>Length/Format:</label>
-                    <input type="text" id="fixFormat" placeholder="e.g., 50 words, 2 sentences">
-                </div>
-
-                <button class="btn btn-primary" onclick="submitFix()">Submit Fix</button>
-                <div class="attempts-counter" id="attemptsCounter">Attempts remaining: 3</div>
-            </div>
-
-            <div class="feedback-box" id="feedbackBox">
-                <h3>✅ Nice Work!</h3>
-                <p><strong>What was wrong:</strong> The original brief was too vague. "Cool water bottle" doesn't tell AI who the audience is, what tone to use, or what features to highlight.</p>
-                <p style="margin-top: 12px;"><strong>Why your fix works:</strong> You added specific details about the audience, tone, and key selling points. Now AI can write something actually useful instead of generic fluff.</p>
-                <p style="margin-top: 12px;"><strong>Pro Tip:</strong> Stronger briefs = less editing later. Always include audience, tone, and at least 2-3 key points.</p>
-                <div style="margin-top: 20px; padding: 12px; background: rgba(34, 197, 94, 0.2); border-radius: var(--radius-md); text-align: center;">
-                    <strong style="color: #34d399;">+20 XP Earned!</strong>
-                </div>
-            </div>
-        </div>
-
-        <div class="lesson-nav">
-            <a href="l3-p2-learn-briefs.html" class="btn btn-secondary">← Previous</a>
-            <a href="l3-p4-learn-structure.html" class="btn btn-primary" id="nextBtn" style="display: none;">Next: Structure →</a>
-        </div>
-    </main>
-
-    <script src="../scripts/nav.js"></script>
-    <script src="../scripts/progress.js"></script>
     <script>
-        let selectedOption = null;
-        let attempts = 3;
-        let gameComplete = false;
-
-        function selectBrief(option) {
-            selectedOption = option;
-            document.querySelectorAll('.brief-option').forEach(el => {
-                el.classList.remove('selected');
-            });
-            document.querySelector(`[data-option="${option}"]`).classList.add('selected');
-            document.getElementById('checkBtn').disabled = false;
-        }
-
-        function checkAnswer() {
-            if (selectedOption === 'a') {
-                document.querySelector('[data-option="a"]').classList.add('incorrect');
-                document.querySelector('[data-option="b"]').classList.add('correct');
-                document.getElementById('fixArea').classList.add('active');
-                document.getElementById('checkBtn').style.display = 'none';
-            } else {
-                alert('That brief is already strong! Try selecting the weak one (Option A).');
-            }
-        }
-
-        function submitFix() {
-            const audience = document.getElementById('fixAudience').value.trim();
-            const tone = document.getElementById('fixTone').value.trim();
-            const keyPoints = document.getElementById('fixKeyPoints').value.trim();
-            const format = document.getElementById('fixFormat').value.trim();
-
-            if (!audience || !tone || !keyPoints) {
-                attempts--;
-                document.getElementById('attemptsCounter').textContent = `Attempts remaining: ${attempts}`;
-                
-                if (attempts > 0) {
-                    alert('Missing required fields! Make sure to fill in audience, tone, and key points.');
-                } else {
-                    alert('Out of attempts. Here\'s a hint: Think about who would buy this water bottle and what makes it special.');
-                    attempts = 3;
-                    document.getElementById('attemptsCounter').textContent = `Attempts remaining: ${attempts}`;
-                }
-                return;
-            }
-
-            // Success!
-            gameComplete = true;
-            document.getElementById('feedbackBox').classList.add('show');
-            document.getElementById('fixArea').style.display = 'none';
-            document.getElementById('nextBtn').style.display = 'inline-block';
-
-            // Update progress
-            const lessonKey = 'lesson3';
-            const progress = JSON.parse(localStorage.getItem(lessonKey)) || { xp: 0, gamesComplete: 0 };
-            progress.xp = Math.min(100, progress.xp + 20);
-            progress.gamesComplete = Math.max(progress.gamesComplete, 1);
-            localStorage.setItem(lessonKey, JSON.stringify(progress));
-
-            document.getElementById('lessonXP').textContent = `${progress.xp}/100 XP`;
-            document.getElementById('lessonXPFill').style.width = `${progress.xp}%`;
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
-            const lessonKey = 'lesson3';
-            const progress = JSON.parse(localStorage.getItem(lessonKey)) || { xp: 0, gamesComplete: 0 };
-            
-            document.getElementById('lessonXP').textContent = `${progress.xp}/100 XP`;
-            document.getElementById('lessonXPFill').style.width = `${progress.xp}%`;
+            const LESSON_ID = 'lesson3';
+            const PAGE_ID = 'l3-p3';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
         });
     </script>
 </body>

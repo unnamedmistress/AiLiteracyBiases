@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 1: What is an AI?</title>
+    
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .lesson-shell { display: flex; flex-direction: column; gap: 18px; max-width: 1100px; margin: 0 auto; padding: 12px; }
+        .challenge-section { display: flex; flex-direction: column; gap: 18px; }
+        .challenge-title { font-size: clamp(28px, 4vw, 32px); margin-bottom: 4px; }
+        .challenge-desc { color: var(--color-muted); line-height: 1.55; font-size: 17px; }
+        .challenge-desc.lede { color: var(--color-text); background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: var(--radius-md); padding: clamp(12px, 2vw, 16px); line-height: 1.6; font-size: 16px; box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08); }
+        .visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 12px 0 8px; }
+        .visual-card { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.14); background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12), transparent 45%), linear-gradient(135deg, rgba(16,185,129,0.15), rgba(59,130,246,0.08)); padding: 14px 16px; display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; box-shadow: 0 12px 26px rgba(0,0,0,0.12); }
+        .visual-icon { font-size: 32px; line-height: 1; }
+        .visual-card h4 { margin: 0; font-size: 16px; }
+        .visual-card p { margin: 4px 0 0; color: var(--color-muted); font-size: 14px; line-height: 1.4; }
+        .learning-showcase { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 14px; }
+        .story-card { border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.04); padding: clamp(14px, 2vw, 18px); display: flex; flex-direction: column; gap: 12px; }
+        .story-header h3 { margin-bottom: 4px; font-size: 20px; }
+        .story-header p { margin: 0; color: var(--color-muted); }
+        .prompt-compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; }
+        .prompt-block { border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.18); padding: 16px; background: rgba(255, 255, 255, 0.06); }
+        .prompt-label { font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 8px; }
+        .prompt-text { font-family: 'Courier New', Courier, monospace; font-size: 14px; background: rgba(0, 0, 0, 0.25); padding: 10px; border-radius: var(--radius-sm); margin-bottom: 10px; }
+        .prompt-output { font-size: 15px; line-height: 1.5; }
+        .prompt-weight { font-size: 12px; margin-top: 10px; color: var(--color-muted); }
+        .poll-card { margin: 16px 0 8px; padding: 14px 16px; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.06); display: grid; gap: 12px; }
+        .poll-actions { display: inline-flex; gap: 8px; flex-wrap: wrap; }
+        .poll-btn { padding: 10px 16px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.04); color: inherit; cursor: pointer; transition: transform var(--transition-base), border-color var(--transition-base); }
+        .poll-btn:hover { transform: translateY(-1px); border-color: var(--color-accent); }
+        .poll-btn.active { border-color: var(--color-accent); background: rgba(16, 185, 129, 0.14); }
+        .poll-result { display: none; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.16); background: rgba(255, 255, 255, 0.04); padding: 12px 14px; color: var(--color-text); }
+        .poll-result.show { display: block; }
+        .poll-bars { display: grid; gap: 8px; }
+        .poll-bar { display: grid; grid-template-columns: 110px 1fr auto; align-items: center; gap: 10px; font-size: 14px; }
+        .poll-track { height: 8px; border-radius: 999px; background: rgba(255,255,255,0.15); overflow: hidden; }
+        .poll-fill { height: 100%; border-radius: 999px; background: linear-gradient(135deg, #10B981, #059669); width: 0; }
+        .cost-callout { margin-top: 18px; padding: 16px; border-radius: var(--radius-md); border: 1px dashed rgba(250, 204, 21, 0.7); background: rgba(250, 204, 21, 0.1); }
+        .cost-callout strong { color: #facc15; }
+        .citation { margin-top: 22px; font-size: 13px; color: var(--color-muted); }
+        .citation a { color: var(--color-accent); }
+        .progress-nav { margin-top: clamp(10px, 2vw, 16px); display: flex; justify-content: center; }
+        .btn-next { padding: 12px 26px; font-size: 15px; font-weight: 600; border-radius: var(--radius-md); background: linear-gradient(135deg, #10B981, #059669); color: #fff; border: none; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+        .progress-indicator { text-align: center; color: var(--color-muted); font-size: 13px; margin-bottom: 10px; }
+        @media (max-width: 768px) {
+            .challenge-title { font-size: 26px; }
+            .prompt-compare { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson1" data-total-pages="6" data-page-number="1">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">⚡️ Lesson 1: What is an AI?</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <div class="challenge-section">
+            <h1 class="challenge-title">Lesson 1 · Understanding AI </h1>
+            <p class="challenge-desc lede">AI isn’t coming. It’s already everywhere — in your phone, your apps, your job, your habits.
+You can’t turn it off, but you can learn how to drive it.
+Convenience feels harmless until it starts thinking for you.
+If we stop learning, stop questioning, stop guiding it — who’s really in control?
+AI literacy isn’t optional anymore. It’s the last computer skill we still have to learn.
+Because let’s be honest — you’re not John Connor.
+And he didn’t stop Skynet either.</p>
+
+            <div class="visual-grid" aria-label="AI mood visuals">
+                <div class="visual-card">
+                    <div class="visual-icon" aria-hidden="true">🤖</div>
+                    <div>
+                        <h4>Robots listen to patterns</h4>
+                        <p>They aren’t plotting—just following probability rails you set. More context = calmer bots.</p>
+                    </div>
+                </div>
+                <div class="visual-card">
+                    <div class="visual-icon" aria-hidden="true">🛡️</div>
+                    <div>
+                        <h4>No Skynet endings</h4>
+                        <p>Guiding tone and guardrails keeps your AI from going full sci‑fi villain. You steer.</p>
+                    </div>
+                </div>
+            </div>
+
+            <section class="learning-showcase">
+                <article class="story-card">
+                    <div class="story-header">
+                        <h3>Do you have to be polite to the AI?</h3>
+                        <p>Toggle one word and track how probability weights, tone, and even cloud costs shift.</p>
+                    </div>
+                    <p>Try this sentence pair and watch one “please” shove the model toward softer, apologetic verbs.</p>
+                    <div class="prompt-compare" aria-label="Prompt comparison">
+                        <div class="prompt-block">
+                            <div class="prompt-label">Prompt A</div>
+                            <div class="prompt-text">Write a loving message to my spouse that I'll be late tonight.</div>
+                            <p class="prompt-output"><strong>Model reply:</strong> "Hey love, running late tonight but I can't wait to catch up when I'm home."</p>
+                            <p class="prompt-weight">Top token confidence: "running" 62%, "late" 21%, "love" 8%</p>
+                        </div>
+                        <div class="prompt-block">
+                            <div class="prompt-label">Prompt B</div>
+                            <div class="prompt-text">Write a loving message to my spouse that I'll be late tonight please.</div>
+                            <p class="prompt-output"><strong>Model reply:</strong> "Hey love, I'm so sorry but I'll be late tonight—please save me a hug when I get in."</p>
+                            <p class="prompt-weight">Top token confidence: "sorry" 74%, "please" 18%, "hug" 6%</p>
+                        </div>
+                    </div>
+                    <p class="prompt-weight">Adding “please” raises apologetic verbs and inserts persuasion tokens because the model treats politeness as an empathy cue.</p>
+                    <div class="poll-card" aria-label="Quick poll about AI politeness">
+                        <div>
+                            <strong>Quick poll:</strong> Do you have to be polite to the AI?
+                            <p class="prompt-weight">Tap to see how people answered when asked about adding “please” to prompts.</p>
+                        </div>
+                        <div class="poll-actions">
+                            <button class="poll-btn" data-poll-choice="yes">Yes, politeness matters</button>
+                            <button class="poll-btn" data-poll-choice="no">No, it doesn’t</button>
+                        </div>
+                        <div class="poll-result" id="poll-result">
+                            <p class="prompt-weight">Preloaded results from a reader poll on saying “please” to voice assistants.</p>
+                            <div class="poll-bars" data-poll-bars>
+                                <div class="poll-bar">
+                                    <span>Yes</span>
+                                    <div class="poll-track"><div class="poll-fill" data-poll-fill="yes"></div></div>
+                                    <span data-poll-percent="yes">0%</span>
+                                </div>
+                                <div class="poll-bar">
+                                    <span>No</span>
+                                    <div class="poll-track"><div class="poll-fill" data-poll-fill="no"></div></div>
+                                    <span data-poll-percent="no">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cost-callout">
+                        <p><strong>Fun fact:</strong> Every extra “please” is still a token. At scale, small words add real cost.</p>
+                    </div>
+                </article>
+            </section>
+
+            <div class="progress-indicator">Page 1 of 6 • Understanding AI</div>
+            <div class="progress-nav">
+                <button class="btn-next" onclick="window.location.href='l1-p2-game-prediction.html'">Next: Play the Prediction Game →</button>
+            </div>
+            <div class="citation">Source: <a href="https://www.bbc.com/future/article/20161028-is-it-rude-not-to-say-please-to-alexa" target="_blank" rel="noopener noreferrer">BBC Future: “Is it rude not to say please to Alexa?”</a></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize progress tracking for multi-page lesson
+            const lessonId = 'lesson1';
+            const pageId = 'l1-p1';
+            
+            // Mark this page as visited
+            if (window.ProgressTracker) {
+                window.ProgressTracker.setCheckpoint(lessonId, pageId, true);
+            }
+
+            // Quick poll: reveal preset results on click
+            const pollData = { yes: 68, no: 32 };
+            const pollButtons = document.querySelectorAll('.poll-btn[data-poll-choice]');
+            const pollResult = document.getElementById('poll-result');
+            const pollFills = {
+                yes: document.querySelector('[data-poll-fill="yes"]'),
+                no: document.querySelector('[data-poll-fill="no"]')
+            };
+            const pollPercents = {
+                yes: document.querySelector('[data-poll-percent="yes"]'),
+                no: document.querySelector('[data-poll-percent="no"]')
+            };
+
+            const showPoll = (choice) => {
+                pollButtons.forEach(btn => {
+                    const isActive = btn.dataset.pollChoice === choice;
+                    btn.classList.toggle('active', isActive);
+                });
+
+                if (!pollResult) return;
+                pollResult.classList.add('show');
+
+                ['yes', 'no'].forEach(key => {
+                    const value = pollData[key] || 0;
+                    if (pollPercents[key]) pollPercents[key].textContent = `${value}%`;
+                    if (pollFills[key]) pollFills[key].style.width = `${value}%`;
+                });
+            };
+
+            pollButtons.forEach(btn => {
+                btn.addEventListener('click', () => showPoll(btn.dataset.pollChoice));
+            });
+        });
+    </script>
+</body>
+</html>

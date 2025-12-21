@@ -3,55 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Automation & Orchestration - Lesson 5</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 5: AI Workflows · Automation & Orchestration</title>
     <link rel="stylesheet" href="../styles/shared.css">
-    <link rel="stylesheet" href="../styles/lesson-responsive.css">
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+    <script defer src="../scripts/dragdrop.js"></script>
 </head>
-<body>
-    <nav class="nav-bar">
-        <div class="nav-content">
-            <a href="../index.html" class="nav-brand">AI Detective Academy</a>
-            <button class="nav-toggle" id="navToggle">☰</button>
+<body data-lesson-id="lesson5" data-total-pages="10" data-page-number="6">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🚀 Lesson 5: AI Workflows</div>
+            <div class="breadcrumb"></div>
         </div>
-    </nav>
-    <div class="nav-menu" id="navMenu">
-        <button class="nav-close" id="navClose">×</button>
-        <div class="nav-section"><h3>MAIN</h3><a href="../index.html">Home</a></div>
-    </div>
-    <main class="lesson-container">
-        <div class="breadcrumb">
-            <a href="../index.html">Home</a><span>/</span>
-            <a href="l5-p1-intro.html">Lesson 5</a><span>/</span>
-            <span>Automation & Orchestration</span>
+
+        <section class="hero-section">
+            <div class="emoji-large">🤖</div>
+            <h1 class="hero-title">Automation & orchestration</h1>
+            <p class="subtitle">Triggers, queues, retries, and tool calls that keep flows moving.</p>
+        </section>
+
+        <div class="section">
+            <h2>Patterns</h2>
+            <ul>
+                <li><strong>Triggers:</strong> webhooks, schedulers, or inbox rules that start the flow.</li>
+                <li><strong>Queues:</strong> decouple slow steps; process in workers with backpressure.</li>
+                <li><strong>Retries/fallbacks:</strong> exponential backoff, circuit breakers, cached responses.</li>
+                <li><strong>Tooling:</strong> connectors (Zapier/Make), actions/plugins, and guarded APIs.</li>
+            </ul>
         </div>
-        <div class="lesson-header">
-            <h1>📚 Automation & Orchestration</h1>
-            <p class="lesson-subtitle">Inbox Chaos</p>
-        </div>
-        <div class="progress-display">
-            <div class="xp-bar-container">
-                <div class="xp-bar-label"><span>Lesson Progress</span><span id="lessonXP">0/100 XP</span></div>
-                <div class="xp-bar"><div class="xp-fill" id="lessonXPFill" style="width: 0%"></div></div>
+
+        <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+            <h2>Quick check</h2>
+            <p>Validate your automation instincts.</p>
+            <div class="card" data-answer-group data-xp="10">
+                <p><strong>1) Why use queues?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Queues decouple slow steps and absorb bursts with backpressure.">Decouple slow steps and absorb bursts</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Queues don't speed by themselves." >To guarantee every step is instant</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="They aren't for adding adjectives." >To make prompts more flowery</button>
             </div>
-            <p class="progress-text">Page 6 of 10</p>
+            <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                <p><strong>2) Good retry behavior?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Backoff + circuit breakers avoid thrashing and outages.">Use exponential backoff with circuit breakers</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Hammering increases failure chance." >Retry instantly without limits</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Ignoring errors isn't resiliency." >Ignore errors and continue</button>
+            </div>
         </div>
-        <div class="content-section">
-            <h2>Automation & Orchestration</h2>
-            <p>Content for Automation & Orchestration - Full implementation with games, examples, and millennial humor.</p>
-            <p><em>(This is a placeholder - full content follows the curriculum from your documents)</em></p>
+
+        <section class="section" id="dd-l5-p6">
+            <h2>Drag & drop: Orchestrate the flow</h2>
+            <p class="section-subtitle">Arrange the automation components in order.</p>
+            <div id="dd-activity-l5-p6"></div>
+        </section>
+
+        <div class="progress-indicator">Page 6 of 10 • Learn: Automation</div>
+        <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
+            <button class="btn btn-secondary" type="button" onclick="window.location.href='l5-p5-game-debug.html'">← Back</button>
+            <button class="btn btn-primary" type="button" onclick="window.location.href='l5-p7-game-automation.html'">Next: Automation Challenge →</button>
         </div>
-        <div class="lesson-nav">
-            <a href="l5-p5-*.html" class="btn btn-secondary">← Previous</a>
-            <a href='l5-p7-*.html' class='btn btn-primary'>Next →</a>
-        </div>
-    </main>
-    <script src="../scripts/nav.js"></script>
-    <script src="../scripts/progress.js"></script>
+        <div class="footer-nav"></div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const progress = JSON.parse(localStorage.getItem('lesson5')) || { xp: 0, gamesComplete: 0 };
-            document.getElementById('lessonXP').textContent = `${progress.xp}/100 XP`;
-            document.getElementById('lessonXPFill').style.width = `${progress.xp}%`;
+            const LESSON_ID = 'lesson5';
+            const PAGE_ID = 'l5-p6';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+
+            initDragDropActivity({
+                containerId: 'dd-activity-l5-p6',
+                activityId: 'l5-p6-automation',
+                lessonId: LESSON_ID,
+                xp: 12,
+                attempts: 3,
+                prompt: 'Place automation/orchestration pieces in sequence.',
+                hint: 'Trigger → queue → worker → AI/tool → store → notify/monitor.',
+                slots: [
+                    { id: 's1', label: 'Step 1', correct: 'trigger' },
+                    { id: 's2', label: 'Step 2', correct: 'queue' },
+                    { id: 's3', label: 'Step 3', correct: 'worker' },
+                    { id: 's4', label: 'Step 4', correct: 'ai-step' },
+                    { id: 's5', label: 'Step 5', correct: 'store' },
+                    { id: 's6', label: 'Step 6', correct: 'notify-monitor' }
+                ],
+                chips: [
+                    { id: 'trigger', label: 'Trigger (webhook/schedule)' },
+                    { id: 'queue', label: 'Queue + backpressure' },
+                    { id: 'worker', label: 'Worker pulls jobs' },
+                    { id: 'ai-step', label: 'AI/tool step with retries' },
+                    { id: 'store', label: 'Store results (DB/files)' },
+                    { id: 'notify-monitor', label: 'Notify + monitor/kill switch' }
+                ]
+            });
         });
     </script>
 </body>

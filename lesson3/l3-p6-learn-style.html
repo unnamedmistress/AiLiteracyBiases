@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 3: Content Creation · Tone & Style</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson3" data-total-pages="10" data-page-number="6">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🎨 Lesson 3: Content Creation</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <section class="hero-section">
+            <div class="emoji-large">🎙️</div>
+            <h1 class="hero-title">Control tone, voice, and style</h1>
+            <p class="subtitle">Style guides, banned phrases, and cadence notes keep outputs on-brand.</p>
+        </section>
+
+        <div class="section">
+            <h2>Style levers</h2>
+            <ul>
+                <li>Voice: first/second/third person, authority vs friendly.</li>
+                <li>Cadence: sentence length, bullet density, headings.</li>
+                <li>Lexicon: preferred verbs, banned terms, domain nouns.</li>
+            </ul>
+        </div>
+
+        <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+            <h2>Quick check</h2>
+            <p>Can you steer tone and style?</p>
+            <div class="card" data-answer-group data-xp="10">
+                <p><strong>1) Fastest way to fix tone drift?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Providing a style guide plus banned phrases anchors tone.">Give a mini style guide with banned phrases</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="More tokens don't set tone." >Ask for a longer response</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Capitalization isn't tone control.">Use more capitalization</button>
+            </div>
+            <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                <p><strong>2) How to control cadence?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Sentence length and bullet density directives set cadence." >Specify sentence length and bullet density</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Emojis don't change pacing.">Add more emojis</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Random synonyms don't manage rhythm.">Tell it to use random synonyms</button>
+            </div>
+        </div>
+
+        <div class="progress-indicator">Page 6 of 10 • Learn: Style</div>
+        <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
+            <button class="btn btn-secondary" type="button" onclick="window.location.href='l3-p5-game-structure.html'">← Back</button>
+            <button class="btn btn-primary" type="button" onclick="window.location.href='l3-p7-game-style.html'">Next: Style Remix →</button>
+        </div>
+        <div class="footer-nav"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson3';
+            const PAGE_ID = 'l3-p6';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+        });
+    </script>
+</body>
+</html>

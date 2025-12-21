@@ -25,6 +25,7 @@
             const raw = localStorage.getItem(STORAGE_KEY);
             if (!raw) return cloneDefault();
             const parsed = JSON.parse(raw);
+            if (!parsed || typeof parsed !== 'object') return cloneDefault();
             return {
                 xp: typeof parsed.xp === 'number' ? parsed.xp : 0,
                 lessons: typeof parsed.lessons === 'object' && parsed.lessons ? parsed.lessons : {},
@@ -64,6 +65,27 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         } catch (error) {
             console.warn('[ProgressTracker] Unable to persist progress state.', error);
+        }
+    }
+
+    function getDataLayer() {
+        if (!Array.isArray(window.dataLayer)) {
+            window.dataLayer = [];
+        }
+        return window.dataLayer;
+    }
+
+    function emitAnalytics(eventName, payload = {}) {
+        if (!eventName) return;
+        try {
+            const handler = typeof window.analyticsEvent === 'function' ? window.analyticsEvent : null;
+            if (handler && handler !== emitAnalytics) {
+                handler(eventName, payload);
+                return;
+            }
+            getDataLayer().push({ event: eventName, ts: Date.now(), ...payload });
+        } catch (error) {
+            console.warn('[ProgressTracker] Failed to push analytics event', error);
         }
     }
 
@@ -201,6 +223,7 @@
             mutateLessonXP(delta, metadata);
             recomputeTotalXP();
             persist();
+            emitAnalytics('xp_awarded', { delta, xpTotal: state.xp, lessonId: resolveLessonKey(metadata) });
             return state.xp;
         },
         adjustXP(amount = 0, metadata = {}) {
@@ -209,6 +232,7 @@
             mutateLessonXP(delta, metadata);
             recomputeTotalXP();
             persist();
+            emitAnalytics('xp_adjusted', { delta, xpTotal: state.xp, lessonId: resolveLessonKey(metadata) });
             return state.xp;
         },
         getLessonStatus(lessonId) {
@@ -219,6 +243,7 @@
             ensureLessonStructures(lessonId);
             state.lessons[lessonId] = status;
             persist();
+            emitAnalytics('lesson_status_set', { lessonId, status });
         },
         resetLesson(lessonId) {
             if (!lessonId) return;
@@ -230,12 +255,14 @@
             }
             recomputeTotalXP();
             persist();
+            emitAnalytics('lesson_reset', { lessonId });
         },
         markLessonComplete(lessonId) {
             if (!lessonId) return;
             ensureLessonStructures(lessonId);
             state.lessons[lessonId] = 'completed';
             persist();
+            emitAnalytics('lesson_completed', { lessonId, status: 'completed' });
         },
         getOverview() {
             const lessonIds = getTrackedLessonIds();
@@ -262,7 +289,12 @@
             if (!lessonId || !checkpointId) return;
             ensureLessonStructures(lessonId);
             state.checkpoints[lessonId][checkpointId] = value;
+            const currentStatus = this.getLessonStatus ? this.getLessonStatus(lessonId) : state.lessons[lessonId];
+            if (currentStatus === 'not-started') {
+                this.setLessonStatus(lessonId, 'in-progress');
+            }
             persist();
+            emitAnalytics('checkpoint_set', { lessonId, checkpointId, value });
         },
         getCheckpoint(lessonId, checkpointId) {
             if (!lessonId || !checkpointId) return false;
@@ -279,6 +311,7 @@
             const normalized = Math.max(0, Number(score) || 0);
             state.quizScores[quizId] = normalized;
             persist();
+            emitAnalytics('quiz_scored', { quizId, score: normalized });
         },
         getQuizScore(quizId) {
             if (!quizId) return 0;
@@ -292,9 +325,11 @@
         },
         reset() {
             resetAllState();
+            emitAnalytics('progress_reset', { scope: 'all' });
         },
         resetProgress() {
             resetAllState();
+            emitAnalytics('progress_reset', { scope: 'all' });
         }
     };
 

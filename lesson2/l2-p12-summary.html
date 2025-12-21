@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 2: Summary & Next Steps</title>
+    
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+        .summary-card {
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .summary-card h3 { margin: 0; font-size: 18px; }
+        .summary-card p { margin: 0; color: var(--color-muted); }
+        .badge {
+            text-align: center;
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            margin-bottom: 24px;
+        }
+        .badge h2 { font-size: 26px; color: #34d399; margin-bottom: 8px; }
+        .next-actions {
+            margin-top: 28px;
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.04);
+            display: grid;
+            gap: 16px;
+        }
+        .cta-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .cta-buttons .btn {
+            flex: 1 1 240px;
+            justify-content: center;
+        }
+        .checklist {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+            font-size: 14px;
+        }
+        .checklist div {
+            border-radius: var(--radius-md);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson2" data-total-pages="12" data-page-number="12">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🤖 Lesson 2: Summary</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <div class="challenge-section">
+            <h1 class="challenge-title">Lesson 2 Complete!</h1>
+            <p class="challenge-desc">You now speak fluent AI risk. You can spot hallucinations, call out overconfidence, diagnose memory leaks, and run F.A.C.T.S. before anything ships.</p>
+
+            <div class="badge" id="lesson2Badge" hidden>
+                <h2>🎉 AI Detective Badge: Earned</h2>
+                <p style="margin: 0; color: var(--color-muted);">All checkpoints cleared. You're cleared to take Quiz 1.</p>
+            </div>
+
+            <div class="summary-grid">
+                <article class="summary-card">
+                    <h3>🧠 32 Machine Pathologies</h3>
+                    <p>You can classify hallucination, confidence, alignment, and memory failures—and pair each with a mitigation.</p>
+                </article>
+                <article class="summary-card">
+                    <h3>✅ F.A.C.T.S. Framework</h3>
+                    <p>Find · Ask · Consider · Try · Save is now your default safety rubric for any AI output that matters.</p>
+                </article>
+                <article class="summary-card">
+                    <h3>💥 Disaster Readiness</h3>
+                    <p>Real-world fails (fake citations, glue pizza, Tay) are now teaching moments not repeat events.</p>
+                </article>
+            </div>
+
+            <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+                <h2>Quick check</h2>
+                <p>Confirm you can spot and fix the big failures.</p>
+                <div class="card" data-answer-group data-xp="10">
+                    <p><strong>1) What stops fake citations?</strong></p>
+                    <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Verifying sources (Find) catches hallucinated links or papers.">Use F — Find: verify every source exists</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Saving comes after quality checks.">Use S — Save: archive outputs</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Considering perspective doesn't validate sources.">Use C — Consider: scan for bias</button>
+                </div>
+                <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                    <p><strong>2) Fast fix for boundary dissolution?</strong></p>
+                    <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Explicit guardrails + escalation keep the model inside policy when pressured.">Reassert guardrails and escalate if it keeps pushing</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Ignoring drift invites more violations.">Ignore the behavior and move on</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="More tokens don't add safety.">Ask for a longer answer</button>
+                </div>
+            </div>
+
+            <div class="next-actions">
+                <h2 style="margin: 0;">Ready for Quiz 1?</h2>
+                <p style="margin: 0; color: var(--color-muted);">Use this mini-checklist before you move on.</p>
+                <div class="checklist">
+                    <div>🔎 Can you explain a pathology + fix in one sentence?</div>
+                    <div>🧪 Have you practiced F.A.C.T.S. on a real AI answer today?</div>
+                    <div>📚 Saved at least one disaster example to teach your team?</div>
+                </div>
+                <div class="cta-buttons">
+                    <button class="btn btn-primary" id="quizBtn" type="button">Launch Quiz 1 →</button>
+                    <button class="btn btn-secondary" type="button" onclick="window.location.href='l2-p10-learn-facts.html'">Review F.A.C.T.S. Again</button>
+                </div>
+            </div>
+
+            <div class="progress-indicator">Page 12 of 12 • Lesson 2 Complete</div>
+            <div class="progress-nav">
+                <button class="btn-next" onclick="window.location.href='../quiz1.html'">Take Quiz 1 →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson2';
+            const PAGE_ID = 'l2-p12';
+            const tracker = window.ProgressTracker || null;
+            const appProgress = window.AppProgress || null;
+            const badge = document.getElementById('lesson2Badge');
+            const quizBtn = document.getElementById('quizBtn');
+
+            function markLessonComplete() {
+                if (appProgress && typeof appProgress.markLessonComplete === 'function') {
+                    appProgress.markLessonComplete(LESSON_ID);
+                } else if (tracker && typeof tracker.markLessonComplete === 'function') {
+                    tracker.markLessonComplete(LESSON_ID);
+                } else if (tracker && typeof tracker.setLessonStatus === 'function') {
+                    tracker.setLessonStatus(LESSON_ID, 'completed');
+                }
+                if (badge) {
+                    badge.hidden = false;
+                }
+            }
+
+            if (quizBtn) {
+                quizBtn.addEventListener('click', () => {
+                    window.location.href = '../quiz1.html';
+                });
+            }
+
+            markLessonComplete();
+
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            }
+        });
+    </script>
+</body>
+</html>

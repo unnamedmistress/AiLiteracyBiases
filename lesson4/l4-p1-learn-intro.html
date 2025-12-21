@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 4: Advanced Prompting · Intro</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .lesson-shell { max-width: 1100px; gap: 14px; padding: 12px; }
+        .hero-section { text-align: center; padding: clamp(18px, 4vw, 28px) clamp(14px, 3vw, 22px); background: rgba(255, 255, 255, 0.1); border-radius: var(--radius-lg); margin-bottom: clamp(12px, 3vw, 20px); }
+        .emoji-large { font-size: clamp(42px, 7vw, 64px); margin-bottom: 10px; }
+        .hero-title { font-size: clamp(26px, 4vw, 32px); margin-bottom: 8px; }
+        .subtitle { font-size: clamp(15px, 2.6vw, 18px); color: var(--color-muted); }
+        .section { margin-top: clamp(10px, 2.8vw, 18px); }
+        .section h2 { font-size: clamp(20px, 3.2vw, 26px); margin-bottom: 8px; }
+        .section ul { padding-left: 18px; line-height: 1.5; }
+        .card { padding: clamp(12px, 2vw, 16px); }
+        .progress-nav { margin-top: clamp(10px, 2vw, 16px); }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson4" data-total-pages="12" data-page-number="1">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🔮 Lesson 4: Advanced Prompting</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <section class="hero-section">
+            <div class="emoji-large">🧭</div>
+            <h1 class="hero-title">Prompt systems, not single prompts</h1>
+            <p class="subtitle">Few-shot, CoT, tools, retrieval, constraints—all in one guided path.</p>
+        </section>
+
+        <div class="section">
+            <h2>What you'll practice</h2>
+            <ul>
+                <li>Few-shot and pattern anchoring.</li>
+                <li>Chain-of-Thought and verification.</li>
+                <li>Tool calling and retrieval scaffolds.</li>
+                <li>Safety + constraint hardening.</li>
+            </ul>
+        </div>
+
+        <div class="section" data-answer-group data-xp="10">
+            <h2>Quick check</h2>
+            <p>Warm up: pick the best answer for each.</p>
+            <div class="card">
+                <p><strong>1) Why use few-shot examples?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Examples anchor pattern, tone, and structure." data-correct="true">They anchor the model to the desired pattern</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Extra randomness increases drift.">To add randomness</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Examples help precision, not just length.">To make responses shorter</button>
+            </div>
+            <div class="card" style="margin-top:12px;" data-answer-group data-xp="10">
+                <p><strong>2) When should you call tools?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Tools handle facts, math, and actions better than the base model." data-correct="true">When you need facts, math, or external actions</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Guessing numbers is unreliable.">When you want the model to guess numbers</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Conciseness alone isn't a tooling signal.">Whenever answers must be short</button>
+            </div>
+        </div>
+
+        <div class="progress-indicator">Page 1 of 12 • Overview</div>
+        <div class="progress-nav" style="display:flex; justify-content:flex-end; margin-top:16px;">
+            <button class="btn btn-primary" type="button" onclick="window.location.href='l4-p2-learn-fewshot.html'">Next: Few-shot Basics →</button>
+        </div>
+        <div class="footer-nav"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson4';
+            const PAGE_ID = 'l4-p1';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+        });
+    </script>
+</body>
+</html>

@@ -3,55 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lesson 5 Summary - Lesson 5</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 5: AI Workflows · Summary</title>
     <link rel="stylesheet" href="../styles/shared.css">
-    <link rel="stylesheet" href="../styles/lesson-responsive.css">
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+    <script defer src="../scripts/dragdrop.js"></script>
 </head>
-<body>
-    <nav class="nav-bar">
-        <div class="nav-content">
-            <a href="../index.html" class="nav-brand">AI Detective Academy</a>
-            <button class="nav-toggle" id="navToggle">☰</button>
+<body data-lesson-id="lesson5" data-total-pages="10" data-page-number="10">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🚀 Lesson 5: AI Workflows</div>
+            <div class="breadcrumb"></div>
         </div>
-    </nav>
-    <div class="nav-menu" id="navMenu">
-        <button class="nav-close" id="navClose">×</button>
-        <div class="nav-section"><h3>MAIN</h3><a href="../index.html">Home</a></div>
-    </div>
-    <main class="lesson-container">
-        <div class="breadcrumb">
-            <a href="../index.html">Home</a><span>/</span>
-            <a href="l5-p1-intro.html">Lesson 5</a><span>/</span>
-            <span>Lesson 5 Summary</span>
+
+        <section class="hero-section">
+            <div class="emoji-large">✅</div>
+            <h1 class="hero-title">Wrap-up & next steps</h1>
+            <p class="subtitle">You can map, automate, and harden AI workflows end-to-end.</p>
+        </section>
+
+        <div class="section">
+            <h2>Key takeaways</h2>
+            <ul>
+                <li>Model steps sit inside systems: triggers, queues, tools, and humans.</li>
+                <li>Optimize for latency, cost, reliability, and quality—measure each.</li>
+                <li>Guardrails (validation, approvals, logging) make automation trustworthy.</li>
+                <li>Document data contracts so every step knows inputs/outputs and failure modes.</li>
+            </ul>
         </div>
-        <div class="lesson-header">
-            <h1>📚 Lesson 5 Summary</h1>
-            <p class="lesson-subtitle">Inbox Chaos</p>
-        </div>
-        <div class="progress-display">
-            <div class="xp-bar-container">
-                <div class="xp-bar-label"><span>Lesson Progress</span><span id="lessonXP">0/100 XP</span></div>
-                <div class="xp-bar"><div class="xp-fill" id="lessonXPFill" style="width: 0%"></div></div>
+
+        <div class="section" data-answer-group data-xp="12">
+            <h2>Quick check</h2>
+            <p>Two last questions before you move on.</p>
+            <div class="card">
+                <p><strong>1) First thing to instrument?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Measure latency, cost, reliability, quality to spot regressions." data-correct="true">Latency, cost, reliability, and quality metrics</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Hiding metrics obscures issues.">Hide metrics until after launch</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Copying prompts doesn't add observability.">Copy prompts from other workflows</button>
             </div>
-            <p class="progress-text">Page 10 of 10</p>
+            <div class="card" style="margin-top:12px;" data-answer-group data-xp="12">
+                <p><strong>2) Easiest early guardrail?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Validation and approvals prevent bad data/action early." data-correct="true">Validate inputs and add an approval for risky actions</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Skipping checks is risky.">Skip validation to move faster</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="More tools don't fix bad inputs.">Add more tools instead of checks</button>
+            </div>
         </div>
-        <div class="content-section">
-            <h2>Lesson 5 Summary</h2>
-            <p>Content for Lesson 5 Summary - Full implementation with games, examples, and millennial humor.</p>
-            <p><em>(This is a placeholder - full content follows the curriculum from your documents)</em></p>
+
+        <section class="section" id="dd-l5-p10">
+            <h2>Drag & drop: Recap the build</h2>
+            <p class="section-subtitle">Drop each action into the right phase of a healthy AI workflow.</p>
+            <div id="dd-activity-l5-p10"></div>
+        </section>
+
+        <div class="progress-indicator">Page 10 of 10 • Summary</div>
+        <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
+            <button class="btn btn-secondary" type="button" onclick="window.location.href='l5-p9-game-scenario.html'">← Back</button>
+            <button class="btn btn-primary" type="button" data-next-lesson>Next Lesson →</button>
         </div>
-        <div class="lesson-nav">
-            <a href="l5-p9-*.html" class="btn btn-secondary">← Previous</a>
-            <a href='../index.html' class='btn btn-primary'>Complete →</a>
-        </div>
-    </main>
-    <script src="../scripts/nav.js"></script>
-    <script src="../scripts/progress.js"></script>
+        <div class="footer-nav"></div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const progress = JSON.parse(localStorage.getItem('lesson5')) || { xp: 0, gamesComplete: 0 };
-            document.getElementById('lessonXP').textContent = `${progress.xp}/100 XP`;
-            document.getElementById('lessonXPFill').style.width = `${progress.xp}%`;
+            const LESSON_ID = 'lesson5';
+            const PAGE_ID = 'l5-p10';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+
+            initDragDropActivity({
+                containerId: 'dd-activity-l5-p10',
+                activityId: 'l5-p10-recap',
+                lessonId: LESSON_ID,
+                xp: 12,
+                attempts: 3,
+                prompt: 'Place each move in the right phase.',
+                hint: 'Map the system, set metrics, guard actions, then monitor and roll back safely.',
+                slots: [
+                    { id: 'map', label: 'Map workflow', correct: 'contracts' },
+                    { id: 'measure', label: 'Measure & budget', correct: 'metrics' },
+                    { id: 'guard', label: 'Guard & approve', correct: 'controls' },
+                    { id: 'monitor', label: 'Launch & monitor', correct: 'logging' }
+                ],
+                chips: [
+                    { id: 'contracts', label: 'Document inputs/outputs, owners, and failure modes' },
+                    { id: 'metrics', label: 'Track latency, cost, reliability, and quality budgets' },
+                    { id: 'controls', label: 'Validation, allow/deny lists, and approvals for risky actions' },
+                    { id: 'logging', label: 'Structured logs, alerts, and rollback plan on deploy' }
+                ]
+            });
         });
     </script>
 </body>

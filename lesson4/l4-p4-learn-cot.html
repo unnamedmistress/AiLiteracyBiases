@@ -3,55 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chain-of-Thought Reasoning - Lesson 4</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 4: Advanced Prompting · Chain-of-Thought</title>
     <link rel="stylesheet" href="../styles/shared.css">
-    <link rel="stylesheet" href="../styles/lesson-responsive.css">
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
 </head>
-<body>
-    <nav class="nav-bar">
-        <div class="nav-content">
-            <a href="../index.html" class="nav-brand">AI Detective Academy</a>
-            <button class="nav-toggle" id="navToggle">☰</button>
+<body data-lesson-id="lesson4" data-total-pages="12" data-page-number="4">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🔮 Lesson 4: Advanced Prompting</div>
+            <div class="breadcrumb"></div>
         </div>
-    </nav>
-    <div class="nav-menu" id="navMenu">
-        <button class="nav-close" id="navClose">×</button>
-        <div class="nav-section"><h3>MAIN</h3><a href="../index.html">Home</a></div>
-    </div>
-    <main class="lesson-container">
-        <div class="breadcrumb">
-            <a href="../index.html">Home</a><span>/</span>
-            <a href="l4-p1-intro.html">Lesson 4</a><span>/</span>
-            <span>Chain-of-Thought Reasoning</span>
+
+        <section class="hero-section">
+            <div class="emoji-large">🧠</div>
+            <h1 class="hero-title">Chain-of-Thought (CoT)</h1>
+            <p class="subtitle">Force the model to reason step-by-step, then verify before final answers.</p>
+        </section>
+
+        <div class="section">
+            <h2>CoT patterns</h2>
+            <ul>
+                <li>Thoughts vs answers: separate channels.</li>
+                <li>Ask for alternatives, then choose.</li>
+                <li>Add a verification step: "Double-check for math & sources."</li>
+            </ul>
         </div>
-        <div class="lesson-header">
-            <h1>📚 Chain-of-Thought Reasoning</h1>
-            <p class="lesson-subtitle">Customer Support Roulette</p>
-        </div>
-        <div class="progress-display">
-            <div class="xp-bar-container">
-                <div class="xp-bar-label"><span>Lesson Progress</span><span id="lessonXP">0/100 XP</span></div>
-                <div class="xp-bar"><div class="xp-fill" id="lessonXPFill" style="width: 0%"></div></div>
+
+        <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+            <h2>Quick check</h2>
+            <p>See if you can spot solid CoT prompts.</p>
+            <div class="card" data-answer-group data-xp="10">
+                <p><strong>1) Why separate thoughts from answers?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Keeping reasoning distinct prevents it from leaking into the final response.">Prevents reasoning from polluting the final answer</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Token inflation isn't the goal.">To use more tokens</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Capitalization doesn't affect reasoning quality.">To uppercase section titles</button>
             </div>
-            <p class="progress-text">Page 4 of 12</p>
+            <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                <p><strong>2) What closes CoT loops safely?</strong></p>
+                <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="A verification step catches math/source errors before finalizing.">Add a verification step before finalizing</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Longer answers can still be wrong.">Make the final answer longer</button>
+                <button class="btn btn-secondary" type="button" data-answer data-explanation="Removing alternatives reduces quality.">Skip alternative options</button>
+            </div>
         </div>
-        <div class="content-section">
-            <h2>Chain-of-Thought Reasoning</h2>
-            <p>Content for Chain-of-Thought Reasoning - Full implementation with games, examples, and millennial humor.</p>
-            <p><em>(This is a placeholder - full content follows the curriculum from your documents)</em></p>
+
+        <div class="progress-indicator">Page 4 of 12 • Learn: CoT</div>
+        <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
+            <button class="btn btn-secondary" type="button" onclick="window.location.href='l4-p3-game-fewshot.html'">← Back</button>
+            <button class="btn btn-primary" type="button" onclick="window.location.href='l4-p5-game-cot.html'">Next: CoT Lab →</button>
         </div>
-        <div class="lesson-nav">
-            <a href="l4-p3-*.html" class="btn btn-secondary">← Previous</a>
-            <a href='l4-p5-*.html' class='btn btn-primary'>Next →</a>
-        </div>
-    </main>
-    <script src="../scripts/nav.js"></script>
-    <script src="../scripts/progress.js"></script>
+        <div class="footer-nav"></div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const progress = JSON.parse(localStorage.getItem('lesson4')) || { xp: 0, gamesComplete: 0 };
-            document.getElementById('lessonXP').textContent = `${progress.xp}/100 XP`;
-            document.getElementById('lessonXPFill').style.width = `${progress.xp}%`;
+            const LESSON_ID = 'lesson4';
+            const PAGE_ID = 'l4-p4';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
         });
     </script>
 </body>

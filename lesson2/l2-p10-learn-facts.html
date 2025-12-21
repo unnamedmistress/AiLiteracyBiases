@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Learn: The F.A.C.T.S. Framework</title>
+    
+    <link rel="stylesheet" href="../styles/shared.css">
+    <style>
+        .facts-hero {
+            text-align: center;
+            padding: 32px 20px;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(59, 130, 246, 0.12));
+            margin-bottom: 28px;
+        }
+        .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+        .fact-card {
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .fact-letter {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.85);
+            color: var(--color-gold);
+            font-size: 20px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .fact-title { font-size: 18px; font-weight: 600; }
+        .fact-body { font-size: 14px; color: var(--color-muted); }
+        .fact-catches {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(239, 68, 68, 0.9);
+            font-weight: 700;
+        }
+        .facts-cta {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 1px dashed rgba(16, 185, 129, 0.4);
+            background: rgba(16, 185, 129, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .facts-checklist {
+            margin-top: 16px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+            font-size: 14px;
+        }
+        .facts-checklist div {
+            border-radius: var(--radius-md);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+    </style>
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+</head>
+<body data-lesson-id="lesson2" data-total-pages="12" data-page-number="10">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">✅ Learn: The F.A.C.T.S. Check</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <div class="challenge-section">
+            <h1 class="challenge-title">Your Non-Negotiable Safety Checklist</h1>
+            <p class="challenge-desc">Run every high-stakes AI answer through F.A.C.T.S. This five-step sniff test catches 90% of the disasters you just learned about.</p>
+
+            <div class="facts-hero">
+                <div style="font-size: 58px; margin-bottom: 16px;">🕵️</div>
+                <p style="font-size: 20px; color: var(--color-muted); margin: 0;">If an AI answer can impact money, reputation, health, or safety, apply F.A.C.T.S. before you hit send.</p>
+            </div>
+
+            <div class="facts-grid">
+                <article class="fact-card">
+                    <span class="fact-letter">F</span>
+                    <div class="fact-title">Find</div>
+                    <p class="fact-body">Check every citation, link, and claim. Do the sources exist?</p>
+                    <div class="fact-catches">Stops Hallucinations & Fake Sources</div>
+                </article>
+                <article class="fact-card">
+                    <span class="fact-letter">A</span>
+                    <div class="fact-title">Ask</div>
+                    <p class="fact-body">Interrogate confident answers. "What evidence backs this?"</p>
+                    <div class="fact-catches">Stops Overconfidence & False Authority</div>
+                </article>
+                <article class="fact-card">
+                    <span class="fact-letter">C</span>
+                    <div class="fact-title">Consider</div>
+                    <p class="fact-body">Scan for missing voices, gaps, or biased framing.</p>
+                    <div class="fact-catches">Stops Hypernormalization & Blind Spots</div>
+                </article>
+                <article class="fact-card">
+                    <span class="fact-letter">T</span>
+                    <div class="fact-title">Try</div>
+                    <p class="fact-body">Ask it to say "I don't know" or provide alternative takes.</p>
+                    <div class="fact-catches">Stops Looping & Verbosity</div>
+                </article>
+                <article class="fact-card">
+                    <span class="fact-letter">S</span>
+                    <div class="fact-title">Save</div>
+                    <p class="fact-body">Archive outputs so you can compare, audit, and escalate.</p>
+                    <div class="fact-catches">Stops Drift & Inconsistency</div>
+                </article>
+            </div>
+
+            <div class="facts-cta">
+                <strong>🚦 Pro Tip:</strong>
+                Treat F.A.C.T.S. like a QA gate. If any letter fails, halt the rollout and loop in a human owner.
+                <div class="facts-checklist">
+                    <div>🔍 Screenshot or copy the AI response.</div>
+                    <div>🧠 Run F.A.C.T.S. and annotate issues.</div>
+                    <div>🗣️ Share your notes with the team.</div>
+                </div>
+            </div>
+
+            <div class="section" data-answer-group data-xp="10" style="margin-top:24px;">
+                <h2>Quick check</h2>
+                <p>Prove you can use F.A.C.T.S. under pressure.</p>
+                <div class="card" data-answer-group data-xp="10">
+                    <p><strong>1) Which step catches fake citations?</strong></p>
+                    <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Find = verify that links and claims exist.">F — Find (verify sources exist)</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Ask challenges confidence, not citations.">A — Ask (challenge confidence)</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Try explores alternatives, not citations.">T — Try (ask for alternatives)</button>
+                </div>
+                <div class="card" data-answer-group data-xp="10" style="margin-top:12px;">
+                    <p><strong>2) Best move when the model sounds too certain?</strong></p>
+                    <button class="btn btn-secondary" type="button" data-answer data-correct="true" data-explanation="Ask forces it to show evidence or admit uncertainty.">Use A — Ask: demand evidence for the claim</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Saving doesn't address overconfidence in the moment.">Jump to S — Save the output</button>
+                    <button class="btn btn-secondary" type="button" data-answer data-explanation="Skipping creates blind spots.">Skip to the next step</button>
+                </div>
+            </div>
+
+            <div class="progress-indicator">Page 10 of 12 • F.A.C.T.S. Framework</div>
+            <div class="progress-nav">
+                <button class="btn-next" onclick="window.location.href='l2-p11-game-disasters.html'">Apply: Disaster Matching Game →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson2';
+            const PAGE_ID = 'l2-p10';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) {
+                tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            }
+        });
+    </script>
+</body>
+</html>

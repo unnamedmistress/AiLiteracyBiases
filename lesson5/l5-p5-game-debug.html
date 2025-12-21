@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
+    <title>Lesson 5: AI Workflows · Game: Fix the Workflow</title>
+    <link rel="stylesheet" href="../styles/shared.css">
+    <script defer src="../scripts/shared.js"></script>
+    <script defer src="../scripts/progress.js"></script>
+    <script defer src="../scripts/nav.js"></script>
+    <script defer src="../scripts/dragdrop.js"></script>
+</head>
+<body data-lesson-id="lesson5" data-total-pages="10" data-page-number="5">
+    <div class="container lesson-shell">
+        <div class="header">
+            <div class="logo">🚀 Lesson 5: AI Workflows</div>
+            <div class="breadcrumb"></div>
+        </div>
+
+        <section class="hero-section">
+            <div class="emoji-large">🧩</div>
+            <h1 class="hero-title">Game: Fix the workflow</h1>
+            <p class="subtitle">Patch latency, quality, and safety gaps in a broken pipeline.</p>
+        </section>
+
+        <div class="section">
+            <h2>Activity</h2>
+            <ol>
+                <li>Identify issues: missing retries, no grounding, long prompts, no review step.</li>
+                <li>Propose fixes: batch uploads, add retrieval, schema-check outputs, add approvals.</li>
+                <li>Write a before/after flow showing the patched steps and why they help.</li>
+            </ol>
+        </div>
+
+        <div class="section" data-answer-group data-xp="15" style="margin-top:20px;">
+            <h2>Debug pick</h2>
+            <p>Choose the best fix.</p>
+            <div class="card" data-answer-group data-xp="15">
+                <p><strong>Problem:</strong> Workflow times out on large uploads.</p>
+                <button class="btn btn-secondary" data-answer data-correct="true" data-explanation="Chunking + async processing reduces latency and failures.">Chunk uploads, queue them, and process asynchronously</button>
+                <button class="btn btn-secondary" data-answer data-explanation="Bigger prompts worsen timeouts.">Increase prompt length and hope</button>
+                <button class="btn btn-secondary" data-answer data-explanation="Disabling retries hides issues.">Disable retries entirely</button>
+            </div>
+        </div>
+
+        <section class="section" id="dd-l5-p5">
+            <h2>Drag & drop: Patch the workflow</h2>
+            <p class="section-subtitle">Drop the right fix onto each broken spot.</p>
+            <div id="dd-activity-l5-p5"></div>
+        </section>
+
+        <div class="progress-indicator">Page 5 of 10 • Game: Debug</div>
+        <div class="progress-nav" style="display:flex; justify-content:space-between; margin-top:16px;">
+            <button class="btn btn-secondary" type="button" onclick="window.location.href='l5-p4-learn-bottlenecks.html'">← Back</button>
+            <button class="btn btn-primary" type="button" onclick="window.location.href='l5-p6-learn-automation.html'">Next: Automation & Orchestration →</button>
+        </div>
+        <div class="footer-nav"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LESSON_ID = 'lesson5';
+            const PAGE_ID = 'l5-p5';
+            const tracker = window.ProgressTracker || null;
+            if (tracker) tracker.setCheckpoint(LESSON_ID, PAGE_ID, true);
+            window.AILesson?.initLessonNavigation({ lessonId: LESSON_ID });
+
+            initDragDropActivity({
+                containerId: 'dd-activity-l5-p5',
+                activityId: 'l5-p5-debug',
+                lessonId: LESSON_ID,
+                xp: 15,
+                attempts: 3,
+                prompt: 'Match each failure to the best patch.',
+                hint: 'Uploads → chunk/queue; hallucinations → retrieval + schema; rate limits → backoff; missing observability → logging/alerts.',
+                slots: [
+                    { id: 'uploads', label: 'Timeout on large uploads', correct: 'chunk-queue' },
+                    { id: 'hallucinations', label: 'Hallucinated outputs', correct: 'retrieval-schema' },
+                    { id: 'rate-limits', label: 'Frequent 429/5xx', correct: 'backoff-queue' },
+                    { id: 'observability', label: 'No visibility into failures', correct: 'logging-alerts' }
+                ],
+                chips: [
+                    { id: 'chunk-queue', label: 'Chunk files + async queue' },
+                    { id: 'retrieval-schema', label: 'Add retrieval + schema checks' },
+                    { id: 'backoff-queue', label: 'Retries with backoff + queue worker' },
+                    { id: 'logging-alerts', label: 'Structured logging + alerts + dashboards' }
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

@@ -4,16 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
-    <title>AI Detective Academy - Choose Your Path</title>
+    <title>AI Detective Academy - Redirecting to Landing</title>
+    <meta http-equiv="refresh" content="0; url=landing.html">
+    <link rel="canonical" href="landing.html">
     <link rel="stylesheet" href="styles/shared.css">
-    <script defer src="scripts/nav.js"></script>
+    <script>
+        (function () {
+            var target = 'landing.html';
+            if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '') {
+                window.location.replace(target);
+            }
+        })();
+    </script>
+    <noscript>
+        <meta http-equiv="refresh" content="0; url=landing.html">
+    </noscript>
     <link rel="stylesheet" href="styles/home.css">
 </head>
 <body class="home-page">
     <main class="home-shell">
         <section class="home-card home-hero">
             <h1>AI Detective Academy</h1>
-            <p>Master AI literacy, spot hallucinations in the wild, and earn XP as you progress through six premium lessons plus live-fire warm-up quizzes.</p>
+            <p>Master AI literacy, spot hallucinations in real-world AI examples, and earn XP as you progress through six premium lessons plus live-fire warm-up quizzes.</p>
             <div class="hero-actions">
                 <button class="home-btn-primary" data-start-course aria-label="Start or resume AI Detective Academy">Start Course →</button>
             </div>
